@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/api', apiRouter);
+app.use('/api/v0', apiRouter);
 
 app.listen(process.env.PORT || '8080', () => {
     console.log(`Listening on ${process.env.PORT || '8080'}`);
