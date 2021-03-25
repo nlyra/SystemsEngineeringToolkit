@@ -6,10 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Login()
 {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
     const [email, setEmail] = useState('')
-
+    const [password, setPassword] = useState('')
 
     return (
         <form>
@@ -19,22 +17,18 @@ function Login()
                 </div>
 
                 <div className = "loginContent">
-                    <label htmlFor = "name">Name: </label><br></br>
-                    <input type= "text" name= "username" onChange={e => setUsername(e.target.value)}/>
+                    <label htmlFor = "email">Email: </label><br></br>
+                    <input type= "text" name = "email" id = "email" onChange={e => setEmail(e.target.value)}/>
                 </div>
-                
+
                 <div className = "loginContent">
                     <label htmlFor = "password">Password: </label><br></br>
                     <input type= "text" name = "password" id = "password" onChange={e => setPassword(e.target.value)}/>
                 </div>
 
-                <div className = "loginContent">
-                    <label htmlFor = "email">Email: </label><br></br>
-                    <input type= "text" name = "email" id = "email" onChange={e => setEmail(e.target.value)}/>
-                </div>
                 <div className="loginButton">
                 {/* Testing to see if username can be accessed naturally */}
-                <Button variant="danger" size="md" onClick={() => console.log(username)}>
+                <Button variant="danger" size="md">
                 Login
                 </Button>
                 </div>
