@@ -8,7 +8,6 @@ import config from '../config.json'
 function Login(props) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [isLogged, setIsLogged] = useState(false)
 
     const onSubmit = (e) => {
         e.preventDefault()
@@ -32,7 +31,8 @@ function Login(props) {
         })
 
         const data = await res.json()
-        if (data.message === "success") {
+        console.log(data)
+        if (data.message === undefined) {
             props.history.push('dashboard')
 
             // Still needs to create something to handle authentication (token)
