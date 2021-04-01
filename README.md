@@ -1,3 +1,1 @@
-# SystemsEngineeringToolkit
-
-This is a readme
+### SystemsEngineeringToolkit
