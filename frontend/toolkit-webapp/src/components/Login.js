@@ -31,8 +31,7 @@ function Login(props) {
         })
 
         const data = await res.json()
-        // const data1 = await res.status
-        // console.log(data1, "hola");
+
         if (data.message === undefined) {
             localStorage.setItem("token", data.token);
             props.history.push('dashboard')
@@ -42,8 +41,6 @@ function Login(props) {
         }else{ // this is to check if there are errors not being addressed already
             console.log(data)
         }
-
-        // Still needs to create something to handle failure
 
     }
 
@@ -66,7 +63,6 @@ function Login(props) {
                 </div>
 
                 <div className="loginButton">
-                    {/* Testing to see if username can be accessed naturally */}
                     <Button type='submit' variant="danger" size="md" className='btn'>
                         Login
                     </Button>

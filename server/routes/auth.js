@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
+const config = require('../config.json');
 
 const router = express.Router();
 
@@ -29,8 +30,8 @@ router.post('/login', async (req, res) => {
                 // everything is correct
 
                 // token handling  (we might discuss what will be the secret key)
-                const token = jwt.sign({ email: req.body.email }, 'secretkey', { expiresIn: '2h' });
-                
+                const token = jwt.sign({ email: req.body.email }, config.key, { expiresIn: '2h' });
+
                 // set payload and return response
                 res.json({ token: token });
                 return
@@ -56,7 +57,7 @@ function verifyToken(req, res, next) {
         res.sendStatus(403);
     }
 
-    jwt.verify(token, 'secretkey', function (err, decoded) {
+    jwt.verify(token, config.key, function (err, decoded) {
         if (err) {
             console.log(err.message)
             res.sendStatus(403)
