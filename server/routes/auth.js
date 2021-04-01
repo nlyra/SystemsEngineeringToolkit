@@ -22,7 +22,6 @@ router.post('/hola', verifyToken, async (req, res) => {
 router.post('/login', async (req, res) => {
     try {
         // get user from DB
-        console.log(req.body.email)
         const user = await User.findOne({ email: req.body.email });
         if (user != undefined) {
             // check if passwords match
@@ -31,7 +30,7 @@ router.post('/login', async (req, res) => {
 
                 // token handling  (we might discuss what will be the secret key)
                 const token = jwt.sign({ email: req.body.email }, 'secretkey', { expiresIn: '2h' });
-
+                
                 // set payload and return response
                 res.json({ token: token });
                 return

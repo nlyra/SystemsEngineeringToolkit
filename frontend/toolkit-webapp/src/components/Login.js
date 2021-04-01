@@ -31,8 +31,10 @@ function Login(props) {
         })
 
         const data = await res.json()
-        console.log(data)
+        // console.log(data.token)
+
         if (data.message === undefined) {
+            localStorage.setItem("token", data.token);
             props.history.push('dashboard')
 
             // Still needs to create something to handle authentication (token)
