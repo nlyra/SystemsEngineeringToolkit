@@ -31,13 +31,16 @@ function Login(props) {
         })
 
         const data = await res.json()
-        // console.log(data.token)
-
+        // const data1 = await res.status
+        // console.log(data1, "hola");
         if (data.message === undefined) {
             localStorage.setItem("token", data.token);
             props.history.push('dashboard')
 
-            // Still needs to create something to handle authentication (token)
+        }else if (data.message === "wrong email or password"){
+            alert("Wrong email or password, please try again.");
+        }else{ // this is to check if there are errors not being addressed already
+            console.log(data)
         }
 
         // Still needs to create something to handle failure
