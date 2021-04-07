@@ -10,8 +10,9 @@ function App() {
   return (
     <Router>
       <div className="App" >
-        <Route path='/' exact component={Login} /> {/* should we make like a landing page, or the sanding page is login */}
-        <Route path='/login' component={Login} />
+        {/* these two lines should have 'Login' not 'Dashboard' */}
+        <Route path='/' exact component={Dashboard} /> {/* should we make like a landing page, or the sanding page is login */}
+        <Route path='/login' component={Dashboard} />
         <Route path='/Dashboard' component={Dashboard} />
         <Route path='/registration' component={Registration} />
         <Route path='/forgot' component={ForgotPassword} />
