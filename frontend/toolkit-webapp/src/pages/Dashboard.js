@@ -5,6 +5,8 @@ import {AppBar, Toolbar, Button, Card, CardActions, Container, CssBaseline,
 import MenuIcon from '@material-ui/icons/Menu'
 import SearchIcon from '@material-ui/icons/Search'
 import '../css/dashboard.css'
+import '../components/TopNavBar'
+import TopNavBar from '../components/TopNavBar'
 
 const useStyles = makeStyles((theme) => ({
 
@@ -34,10 +36,6 @@ const useStyles = makeStyles((theme) => ({
     {
         flexGrow: 1
     },
-    toolBarColor:
-    {
-        background: "black"
-    }
 }))
 
 const cards = [1, 2, 3, 4, 5, 6]
@@ -46,15 +44,8 @@ const Dashboard = () => {
     const classes = useStyles()
     return (
         <div>
-            <div className={classes.grow}>
-                <AppBar position="static" className={classes.toolBarColor}>
-                    <Toolbar>
-                        <IconButton>
-                            <MenuIcon style={{color: "white"}}></MenuIcon>
-                        </IconButton>
-                    </Toolbar>
-                </AppBar>
-            </div>
+            <TopNavBar>
+            </TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
                 <div className='createModules'>
