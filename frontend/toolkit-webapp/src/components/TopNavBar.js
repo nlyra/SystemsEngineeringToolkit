@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
-import { fade, makeStyles, IconButton, Menu, AppBar, Toolbar, InputBase } from "@material-ui/core";
+import { fade, makeStyles, IconButton, Menu, AppBar, Toolbar, InputBase, Badge } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu'
 import SearchIcon from '@material-ui/icons/Search'
+import MailIcon from '@material-ui/icons/Mail'
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import NotificationsIcon from '@material-ui/icons/Notifications'
 import logo from '../img/peostrilogo.png'
 
 const useStyles = makeStyles((theme) => ({
@@ -58,11 +61,15 @@ const useStyles = makeStyles((theme) => ({
           textAlign: 'center',
           margin: 'auto'
       },
-      horizontalCentering: {
+      horizontalCenteringLogo: {
         position: 'absolute', 
         left: '50%', 
         top: '50%',
         transform: 'translate(-50%, -50%)'
+      },
+      test: {
+        display: 'flex',
+        alignItems: 'space-between'
       }
 }))
 
@@ -72,30 +79,52 @@ export default function TopNavBar() {
 
     return (
         <div className={classes.grow}>
-        <AppBar position="static" className={classes.toolBarColor}>
-            <Toolbar>
-                <IconButton>
-                    <MenuIcon style={{color: "white"}}></MenuIcon>
-                </IconButton>
-                <div className={classes.search}>
-                    <div className={classes.searchIcon}>
-                        <SearchIcon></SearchIcon>
+            <AppBar position="static" className={classes.toolBarColor}>
+                <Toolbar>
+                    <IconButton>
+                        <MenuIcon style={{color: "white"}}></MenuIcon>
+                    </IconButton>
+                    <div className={classes.search}>
+                        <div className={classes.searchIcon}>
+                            <SearchIcon></SearchIcon>
+                        </div>
+                        <InputBase 
+                            placeholder="Search..."
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput,
+                            }}
+                            inputProps={{ 'aria-label': 'search' }}
+                        />
                     </div>
-                    <InputBase 
-                        placeholder="Search..."
-                        classes={{
-                            root: classes.inputRoot,
-                            input: classes.inputInput,
-                        }}
-                        inputProps={{ 'aria-label': 'search' }}
-                    />
-                </div>
-                <div className={classes.horizontalCentering}>
-                    <img src={logo} alt="logo" className={classes.logoStyle}/>
-                </div>
-            </Toolbar>
-        </AppBar>
-    </div>
+                    <div className={classes.horizontalCenteringLogo}>
+                        <img src={logo} alt="logo" className={classes.logoStyle}/>
+                    </div>
+                    <div>
+                        <IconButton aria-label="show 4 new mails" color="inherit">
+                            <Badge badgeContent={4} color="secondary">
+                                <MailIcon />
+                            </Badge>
+                        </IconButton>
+                        <IconButton aria-label="show 17 new notifications" color="inherit">
+                            <Badge badgeContent={17} color="secondary">
+                                <NotificationsIcon />
+                            </Badge>
+                        </IconButton>
+                        <IconButton
+                            edge="end"
+                            aria-label="account of current user"
+                            //aria-controls={menuId}
+                            aria-haspopup="true"
+                            //onClick={handleProfileMenuOpen}
+                            color="inherit"
+                        >
+                            <AccountCircle />
+                        </IconButton>
+                    </div>
+                </Toolbar>
+            </AppBar>
+        </div>
     )
 
 }
