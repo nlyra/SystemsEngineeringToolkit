@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { fade, makeStyles, IconButton, Menu, AppBar, Toolbar, InputBase } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu'
 import SearchIcon from '@material-ui/icons/Search'
+import logo from '../img/peostrilogo.png'
 
 const useStyles = makeStyles((theme) => ({
 
@@ -52,6 +53,17 @@ const useStyles = makeStyles((theme) => ({
           width: '20ch',
         },
       },
+      logoStyle: {
+          maxWidth: '10%',
+          textAlign: 'center',
+          margin: 'auto'
+      },
+      horizontalCentering: {
+        position: 'absolute', 
+        left: '50%', 
+        top: '50%',
+        transform: 'translate(-50%, -50%)'
+      }
 }))
 
 export default function TopNavBar() {
@@ -77,6 +89,9 @@ export default function TopNavBar() {
                         }}
                         inputProps={{ 'aria-label': 'search' }}
                     />
+                </div>
+                <div className={classes.horizontalCentering}>
+                    <img src={logo} alt="logo" className={classes.logoStyle}/>
                 </div>
             </Toolbar>
         </AppBar>
