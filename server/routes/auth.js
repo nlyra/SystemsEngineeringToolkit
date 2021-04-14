@@ -6,20 +6,6 @@ const config = require('../config.json');
 
 const router = express.Router();
 
-router.post('/hola', verifyToken, async (req, res) => {
-    try {
-        // set payload and return res
-        let payload = {
-            "status": "Welcome to SE Toolkit Server"
-        }
-        res.json(payload);
-
-    } catch (e) {
-        console.log(e);
-        res.sendStatus(500);
-    }
-});
-
 router.post('/login', async (req, res) => {
     try {
         // get user from DB
@@ -52,7 +38,6 @@ router.post('/login', async (req, res) => {
 function verifyToken(req, res, next) {
     // get auth header value
     const token = req.body.token;
-    console.log(token)
     if (token === undefined) {
         res.sendStatus(403);
     }
@@ -64,10 +49,14 @@ function verifyToken(req, res, next) {
         }
     });
 
+    // console.log("verified")
     next();
 
 }
 
 
-
-module.exports = router;
+// module.exports= verifyToken;
+module.exports = {
+    router,
+    verifyToken
+};
