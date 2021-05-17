@@ -54,6 +54,7 @@ const Dashboard = (props) => {
 
         const data = await res.json()
         if (data.message === undefined) {
+            console.log(data.courses);
             // localStorage.setItem("token", data.token);
             setCourses(data.courses);
 
@@ -110,7 +111,7 @@ const Dashboard = (props) => {
                                 <Card className={classes.card}>
                                     <CardMedia
                                         className={classes.cardMedia}
-                                        image="https://source.unsplash.com/random"
+                                        image={course.url}
                                         title="Title"
                                     />
                                     <CardContent className={classes.CardContent}>

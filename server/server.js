@@ -27,6 +27,10 @@ mongoose.connect(config.db_url,
     () => console.log('connected to DB!')
 );
 
+//serve static files
+app.use(express.static('public'));
+
+
 app.use('/api/v0/auth', authRoute);
 app.use('/api/v0/courses', coursesRoute);
 

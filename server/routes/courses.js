@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/info', VerifyToken, async (req, res) => {
   try {
-    const courses = await Course.find({}, '_id name description', {limit:10});
+    const courses = await Course.find({}, '_id name description url', {limit:10});
     // console.log(courses)
 
     res.json({ "courses": courses });
