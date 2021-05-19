@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, Card, CardActions, Container, CssBaseline, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
 import '../css/dashboard.css'
 import config from '../config.json'
+import TopNavBar from '../components/topNavBar'
 
 const dashStyles = makeStyles((theme) => ({
 
@@ -32,6 +33,7 @@ const dashStyles = makeStyles((theme) => ({
 
 const Dashboard = (props) => {
     const [courses, setCourses] = useState([])
+    // const [searchQuery, setSearchQuery] = useState([])
 
     const classes = dashStyles()
 
@@ -41,16 +43,27 @@ const Dashboard = (props) => {
     }, []);
 
     // function to get the courses 
-    const loadCourses = async () => {
+    const loadCourses = async (query) => {
         const token = localStorage.getItem("token");
-
-        const res = await fetch(config.server_url + config.paths.dashboardCourses, {
+        let res = undefined
+        // if (query == "") {
+        //     res = await fetch(config.server_url + config.paths.dashboardCourses, {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-type': 'application/json'
+        //         },
+        //         body: JSON.stringify({ "token": token })
+        //     })
+        // } else {
+        res = await fetch(config.server_url + config.paths.dashboardCourses, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token })
+            body: JSON.stringify({ "token": token, "search_query": query })
         })
+        // }
+
 
         const data = await res.json()
         if (data.message === undefined) {
@@ -71,15 +84,17 @@ const Dashboard = (props) => {
 
     return (
         <div >
-
+            <TopNavBar
+                search={loadCourses}
+            ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
-                <div className='createModules'>
+                {/* <div className='createModules'>
                     <Grid container spacing={3} justify="center">
                         <Grid item>
-                            {/* <Button variant="contained" onClick={loadCourses}>
+                            <Button variant="contained" onClick={loadCourses}>
                                 courses
-                        </Button> */}
+                        </Button>
                         </Grid>
 
                         <Grid item>
@@ -101,7 +116,7 @@ const Dashboard = (props) => {
                         </Grid>
 
                     </Grid>
-                </div>
+                </div> */}
 
                 <div className='modules'>
                     <Grid container spacing={3}>

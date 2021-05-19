@@ -6,7 +6,18 @@ const router = express.Router();
 
 router.post('/info', VerifyToken, async (req, res) => {
   try {
-    const courses = await Course.find({}, '_id name description url', {limit:10});
+    let courses = []
+    if (req.body.search_query != undefined) {
+      const query = req.body.search_query.toLowerCase();
+      courses = await Course.find({$or: [
+        {"category": { "$regex": req.body.search_query }},
+        {"name": { "$regex": req.body.search_query }},
+      ]});
+      // , '_id name description url', { limit: 10 }
+      // console.log(courses)
+    } else {
+      courses = await Course.find({}, '_id name description url', { limit: 10 });
+    }
     // console.log(courses)
 
     res.json({ "courses": courses });
