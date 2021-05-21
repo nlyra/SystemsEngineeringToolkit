@@ -7,6 +7,8 @@ import SearchIcon from '@material-ui/icons/Search'
 import '../css/dashboard.css'
 import '../components/TopNavBar'
 import TopNavBar from '../components/TopNavBar'
+import DragDrop from '../components/DragDrop'
+
 
 const useStyles = makeStyles((theme) => ({
 
@@ -110,6 +112,8 @@ const Dashboard = () => {
                         ))}
                     </Grid>
                 </div>
+                <br/>
+                <DragDrop/>
             </Container>
         </div>
     )
