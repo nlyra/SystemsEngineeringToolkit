@@ -5,7 +5,8 @@ import SearchIcon from '@material-ui/icons/Search'
 import MailIcon from '@material-ui/icons/Mail'
 import AccountCircle from '@material-ui/icons/AccountCircle'
 import NotificationsIcon from '@material-ui/icons/Notifications'
-import logo from '../img/peostrilogo.png'
+//import logo from '../img/peostrilogo.jpg'
+const logo_url = "http://localhost:4000/misc_files/logo.jpg"
 
 const useStyles = makeStyles((theme) => ({
 
@@ -99,7 +100,7 @@ export default function TopNavBar({ search }) {
                         />
                     </div>
                     <div className={classes.horizontalCenteringLogo}>
-                        <img src={logo} alt="logo" className={classes.logoStyle} />
+                        <img src={logo_url} alt="logo" className={classes.logoStyle} />
                     </div>
                     <div>
                         {/* <IconButton aria-label="show 4 new mails" color="inherit"> */}
@@ -128,4 +129,4 @@ export default function TopNavBar({ search }) {
         </div>
     )
 
-}
+} 
