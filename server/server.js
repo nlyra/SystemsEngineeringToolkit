@@ -2,7 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const authRoute = require('./routes/auth');
+const authRoute = require('./routes/auth').router;
+const coursesRoute = require('./routes/courses');
 const config = require('./config.json');
 
 const app = express();
@@ -26,7 +27,12 @@ mongoose.connect(config.db_url,
     () => console.log('connected to DB!')
 );
 
+//serve static files
+app.use(express.static('public'));
+
+
 app.use('/api/v0/auth', authRoute);
+app.use('/api/v0/courses', coursesRoute);
 
 app.listen(process.env.PORT || '4000', () => {
     console.log(`Listening on ${process.env.PORT || '4000'}`);
