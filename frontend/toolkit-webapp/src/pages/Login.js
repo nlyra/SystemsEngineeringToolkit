@@ -1,62 +1,14 @@
 import React, { useState } from 'react'
-import Button from '@material-ui/core/Button'
-import Container from '@material-ui/core/Container'
-import TextField from '@material-ui/core/TextField'
-import { makeStyles } from '@material-ui/core/styles'
-import { Typography } from '@material-ui/core'
-import purple from '@material-ui/core/colors/purple'
-import Paper from '@material-ui/core/Paper'
-import Box from '@material-ui/core/Box'
+import {Button, Container, TextField, Typography, Paper, Box} from '@material-ui/core'
 import config from '../config.json'
+import useStyles from './styles'
 import '../css/Login.css';
-
-const useStyles = makeStyles((theme) => ({
-
-    Title:
-    {
-        fontWeight: "bold"
-    },
-    container: {
-        height: "100%",
-    },
-
-    paper:
-    {
-        padding: '5px 40px 5px 40px',
-        borderRadius: 15,
-        marginTop: theme.spacing(25),
-    },
-
-    block:
-    {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-
-    button:
-    {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-        background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
-    },
-
-    button2:
-    {
-        fontSize: 10,
-        background: 'linear-gradient(45deg, #90a4ae 10%, #e0e0e0 90%)',
-        marginBottom: theme.spacing(2),
-        marginLeft:  theme.spacing(2)
-    }
-
-}))
 
 function Login(props) {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const classes = useStyles()
-    const color = purple['A200']
     
     const onRegister = (e) => {
         props.history.push('registration');
