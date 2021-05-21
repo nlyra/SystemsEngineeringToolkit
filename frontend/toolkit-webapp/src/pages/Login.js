@@ -29,11 +29,11 @@ function Login(props) {
     }
 
     const onLogin = async (creds) => {
-        const res = await fetch(config.server_url + config.paths.login, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
+    const res = await fetch(config.server_url + config.paths.login, {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        },
             body: JSON.stringify({ "email": creds.email, "password": creds.password })
         })
 
