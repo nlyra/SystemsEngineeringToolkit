@@ -4,7 +4,7 @@ import '../css/dashboard.css'
 import config from '../config.json'
 import TopNavBar from '../components/topNavBar'
 
-const useStyles = makeStyles((theme) => ({
+const dashStyles = makeStyles((theme) => ({
 
     container:
     {
