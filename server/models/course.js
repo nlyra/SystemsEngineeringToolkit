@@ -17,6 +17,10 @@ const CourseSchema = mongoose.Schema({
     type: String,
     // required: true
   },
+  totalStudent: {
+    type: Number,
+    "default": 0
+  },
   modules: [
     {
       name: String,

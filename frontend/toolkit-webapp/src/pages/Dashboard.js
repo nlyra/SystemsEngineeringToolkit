@@ -130,7 +130,7 @@ const Dashboard = (props) => {
                                 <Card className={classes.card}>
                                     <CardMedia
                                         className={classes.cardMedia}
-                                        image={course.url}
+                                        image={course.urlImage}
                                         title="Title"
                                     />
                                     <CardContent className={classes.CardContent}>
