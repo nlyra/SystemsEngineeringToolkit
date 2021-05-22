@@ -16,7 +16,7 @@ router.post('/info', VerifyToken, async (req, res) => {
       // , '_id name description url', { limit: 10 }
       // console.log(courses)
     } else {
-      courses = await Course.find({}, '_id name description url', { limit: 10 });
+      courses = await Course.find({}, '_id name description urlImage', { limit: 10 }).sort( { totalStudents : -1 } );
     }
     // console.log(courses)
 
