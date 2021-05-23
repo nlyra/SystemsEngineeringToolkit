@@ -21,6 +21,11 @@ const CourseSchema = mongoose.Schema({
     type: Number,
     "default": 0
   },
+  
+  urlImage: {
+    type: String,
+    required: true
+  },
   modules: [
     {
       name: String,
