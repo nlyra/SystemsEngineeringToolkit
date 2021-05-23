@@ -3,6 +3,7 @@ import { Button, Card, CardActions, Container, CssBaseline, makeStyles, Grid, Ca
 import '../css/dashboard.css'
 import config from '../config.json'
 import TopNavBar from '../components/topNavBar'
+import Pagination from '@material-ui/lab/Pagination'
 
 const dashStyles = makeStyles((theme) => ({
 
@@ -34,9 +35,21 @@ const dashStyles = makeStyles((theme) => ({
     },
 }))
 
+const changeParams = (start, finish) => {
+    start = start + 1
+    finish = finish + 1
+    console.log("start " + start)
+
+}
+
+const worked = () => {
+    console.log("works")
+}
 
 const Dashboard = (props) => {
     const [courses, setCourses] = useState([])
+    const [page, setPage] = useState(1)
+    const [coursesPerPage, setCoursesPerPage] = useState(5)
     // const [searchQuery, setSearchQuery] = useState([])
 
     const classes = dashStyles()
@@ -46,25 +59,26 @@ const Dashboard = (props) => {
         loadCourses();
     }, []);
 
+    const handlePage = (event, value) => {
+        // console.log(value)
+        // console.log(page)
+        setPage(value)
+        // console.log(page)
+        // loadCourses()
+    }
+
     // function to get the courses 
     const loadCourses = async (query) => {
         const token = localStorage.getItem("token");
         let res = undefined
-        // if (query == "") {
-        //     res = await fetch(config.server_url + config.paths.dashboardCourses, {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-type': 'application/json'
-        //         },
-        //         body: JSON.stringify({ "token": token })
-        //     })
-        // } else {
+        // let skip = (page-1)*5
+
         res = await fetch(config.server_url + config.paths.dashboardCourses, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "search_query": query })
+            body: JSON.stringify({ "token": token, "search_query": query}) // + "skip": skip
         })
         // }
 
@@ -130,7 +144,7 @@ const Dashboard = (props) => {
                                 <Card className={classes.card}>
                                     <CardMedia
                                         className={classes.cardMedia}
-                                        image={course.url}
+                                        image={course.urlImage}
                                         title="Title"
                                     />
                                     <CardContent className={classes.CardContent}>
@@ -157,6 +171,8 @@ const Dashboard = (props) => {
 
                     </Grid>
                 </div>
+                {/* <Typography>Page: {page}</Typography>
+                <Pagination count={6} page={page} onChange = {handlePage} variant="outlined" shape="rounded" /> */}
             </Container>
         </div>
     )

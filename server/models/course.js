@@ -17,6 +17,10 @@ const CourseSchema = mongoose.Schema({
     type: String,
     // required: true
   },
+  urlImage: {
+    type: String,
+    required: true
+  },
   modules: [
     {
       name: String,
