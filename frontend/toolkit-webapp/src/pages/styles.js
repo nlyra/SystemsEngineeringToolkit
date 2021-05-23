@@ -37,6 +37,20 @@ const useStyles = makeStyles((theme) => ({
         background: 'linear-gradient(45deg, #90a4ae 10%, #e0e0e0 90%)',
         marginBottom: theme.spacing(2),
         marginLeft:  theme.spacing(2)
+    },
+
+    button3:
+    {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+        marginRight: theme.spacing(35)
+    },
+
+    button4:
+    {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+        marginLeft: theme.spacing(10)
     }
 
 }))
