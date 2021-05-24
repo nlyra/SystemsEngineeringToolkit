@@ -12,8 +12,6 @@ function NewCourse(props) {
     const [courseTitle, setCourseTitle] = useState('')
     const [category, setCategory] = useState('')
     const [description, setDescription] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
     const classes = useStyles()
 
     const handleChange = (event) => {
@@ -22,42 +20,39 @@ function NewCourse(props) {
 
     const onSubmit = (e) => {
         e.preventDefault()
-        if (!email || !password) {
-            alert('Please enter Email and Password')
+        if (!courseTitle || !category || !description) {
+            alert('Please enter all required fields')
             return
         }
-        onLogin({ email, password })
-        setEmail('')
-        setPassword('')
+        onFinish({ courseTitle, category, description })
+        setCourseTitle('')
+        setCategory('')
+        setDescription('')
     }
 
-    /*
     const onUpload = (e) => {
-
+        alert('feature undefined')
+        return
     }
-    */
 
-    const onLogin = async (creds) => {
-        const res = await fetch(config.server_url + config.paths.login, {
+
+    const onFinish = async (creds) => {
+        const res = await fetch(config.server_url + config.paths.createCourse, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "email": creds.email, "password": creds.password })
+            body: JSON.stringify({ "modules": [], "name": creds.courseTitle, "category": creds.category, "description": creds.description, "url": 'http://localhost:4000/java.jpg'})
         })
 
         const data = await res.json()
 
         if (data.message === undefined) {
-            localStorage.setItem("token", data.token);
             props.history.push('dashboard')
-
-        } else if (data.message === "wrong email or password") {
-            alert("Wrong email or password, please try again.");
-        } else { // this is to check if there are errors not being addressed already
+        }
+        else { // this is to check if there are errors not being addressed already
             console.log(data)
         }
-
     }
     /*
     <Paper className={classes.paper} elevation={5} square={false}>
@@ -77,7 +72,7 @@ function NewCourse(props) {
     return (
         <div>
             <TopNavBar></TopNavBar>
-            <Container className={classes.container} maxWidth="lg">
+            <Container className={classes.container} >
                 <div className={classes.block}>
                     <form autoComplete="off" onSubmit={onSubmit}>
 
@@ -98,15 +93,16 @@ function NewCourse(props) {
                             />
 
                             <FormControl required className={classes.formControl} fullWidth={true}>
-                                <InputLabel htmlFor="age-native-required">Category</InputLabel>
+                                <InputLabel htmlFor="category-native-required">Category</InputLabel>
                                 <Select
                                     native
                                     value={category}
                                     onChange={handleChange}
                                     name="category"
                                     inputProps={{
-                                        id: 'age-native-required',
+                                        id: 'category-native-required',
                                     }}
+                                    onChange={e => setCategory(e.target.value)}
                                 >
                                     <option aria-label="None" value="" />
                                     <option value={"Code"}>Code</option>
@@ -132,10 +128,10 @@ function NewCourse(props) {
                             />
 
                         </div>
-                        <Button type='upload' className={classes.button3} size="medium" variant="contained" startIcon={<CloudUploadIcon />}>
+                        <Button type='submit' className={classes.button3} size="medium" variant="contained" startIcon={<CloudUploadIcon/>} onClick={onUpload}>
                             Insert Cover Photo
                         </Button>
-                        <Button type='submit' className={classes.button4} size="medium" variant="contained" startIcon={<ArrowForwardIcon />}>
+                        <Button type='submit' className={classes.button4} size="medium" variant="contained" startIcon={<ArrowForwardIcon/>} onClick={onSubmit}>
                             Submit
                         </Button>
 
