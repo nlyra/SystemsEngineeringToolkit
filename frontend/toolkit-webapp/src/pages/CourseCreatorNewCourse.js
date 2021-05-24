@@ -54,10 +54,7 @@ function NewCourse(props) {
             console.log(data)
         }
     }
-    /*
 
-
-    */
     return (
         <div>
             <TopNavBar></TopNavBar>
