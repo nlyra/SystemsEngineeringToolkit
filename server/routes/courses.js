@@ -10,14 +10,16 @@ router.post('/info', VerifyToken, async (req, res) => {
     let courses = []
     if (req.body.search_query != undefined) {
       const query = req.body.search_query;
-      courses = await Course.find({$or: [
-        {"category": { "$regex": query , $options: 'i'}},
-        {"name": { "$regex": query , $options: 'i'}},
-      ]}, '_id name description urlImage category', { limit: 15 }); // + .skip( req.body.skip )
+      courses = await Course.find({
+        $or: [
+          { "category": { "$regex": query, $options: 'i' } },
+          { "name": { "$regex": query, $options: 'i' } },
+        ]
+      }, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
       // , '_id name description url', { limit: 10 }
       // console.log(courses)
     } else {
-      courses = await Course.find({}, '_id name description urlImage category', { limit: 15 }); // + .skip( req.body.skip )
+      courses = await Course.find({}, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
     }
     // console.log(courses)
 

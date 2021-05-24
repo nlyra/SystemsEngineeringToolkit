@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-export default function TopNavBar({ search }) {
+export default function TopNavBar({ search, page, cardAmount }) {
 
     const classes = useStyles()
 
@@ -96,7 +96,7 @@ export default function TopNavBar({ search }) {
                                 input: classes.inputInput,
                             }}
                             inputProps={{ 'aria-label': 'search' }}
-                            onChange={e => search(e.target.value)}
+                            onChange={e => search(e.target.value, page)}
                         />
                     </div>
                     <div className={classes.horizontalCenteringLogo}>
@@ -129,4 +129,4 @@ export default function TopNavBar({ search }) {
         </div>
     )
 
-} 
+}
