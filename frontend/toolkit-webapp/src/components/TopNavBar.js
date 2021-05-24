@@ -85,12 +85,14 @@ const useStyles = makeStyles((theme) => ({
         transition: theme.transitions.create('width', {
           easing: theme.transitions.easing.sharp,
           duration: theme.transitions.duration.enteringScreen,
+          background: "grey",
         }),
       },
       drawerClose: {
         transition: theme.transitions.create('width', {
           easing: theme.transitions.easing.sharp,
           duration: theme.transitions.duration.leavingScreen,
+          background: "grey",
         }),
         overflowX: 'hidden',
         width: theme.spacing(7) + 1,
