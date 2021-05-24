@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, FormControl, Container, TextField, Typography, Box, Select, InputLabel, FormHelperText } from '@material-ui/core'
+import { Button, FormControl, Container, TextField, Typography, Box, Select, InputLabel, FormHelperText, Paper } from '@material-ui/core'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import config from '../config.json'
@@ -55,19 +55,8 @@ function NewCourse(props) {
         }
     }
     /*
-    <Paper className={classes.paper} elevation={5} square={false}>
-    </Paper>
-                                <TextField
-                                    size='small'
-                                    variant="filled"
-                                    label='Category'
-                                    type="category"
-                                    value={category}
-                                    onChange={e => setCategory(e.target.value)}
-                                    margin="normal"
-                                    required={true}
-                                    fullWidth
-                                />
+
+
     */
     return (
         <div>
@@ -75,7 +64,7 @@ function NewCourse(props) {
             <Container className={classes.container} >
                 <div className={classes.block}>
                     <form autoComplete="off" onSubmit={onSubmit}>
-
+                    <Paper className={classes.paper} elevation={3} square={false}>
                         <Box m={2} pt={2}>
                             <Typography className={classes.Title} variant="h5">Course Creator</Typography>
                         </Box>
@@ -134,8 +123,7 @@ function NewCourse(props) {
                         <Button type='submit' className={classes.button4} size="medium" variant="contained" startIcon={<ArrowForwardIcon/>} onClick={onSubmit}>
                             Submit
                         </Button>
-
-
+                        </Paper>
                     </form>
                 </div>
             </Container>
