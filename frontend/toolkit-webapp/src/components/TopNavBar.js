@@ -128,7 +128,7 @@ const useStyles = makeStyles((theme) => ({
       },
 }))
 
-export default function TopNavBar() {
+export default function TopNavBar({search}) {
 
     const classes = useStyles();
     const theme = useTheme();
@@ -173,13 +173,14 @@ export default function TopNavBar() {
                                 input: classes.inputInput,
                             }}
                             inputProps={{ 'aria-label': 'search' }}
+                            onChange={e => search(e.target.value)}
                         />
                     </div>
                     <div className={classes.horizontalCenteringLogo}>
                         <img src={logo} alt="logo" className={classes.logoStyle}/>
                     </div>
                     <div>
-                        <IconButton aria-label="show 4 new mails" color="inherit">
+                        {/*(<IconButton aria-label="show 4 new mails" color="inherit">
                             <Badge badgeContent={4} color="secondary">
                                 <MailIcon />
                             </Badge>
@@ -188,7 +189,7 @@ export default function TopNavBar() {
                             <Badge badgeContent={17} color="secondary">
                                 <NotificationsIcon />
                             </Badge>
-                        </IconButton>
+                        </IconButton>*/}
                         <IconButton
                             edge="end"
                             aria-label="account of current user"
