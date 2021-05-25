@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Button, Container, TextField, Typography, Paper, Box } from '@material-ui/core'
 import config from '../config.json'
 import useStyles from './styles'
+import TopNavBar from '../components/topNavBar'
 import '../css/Login.css';
 import videoSource from '../img/PEOSTRI.mp4'
 
@@ -53,7 +54,8 @@ function Login(props) {
     }
 
     return (
-        <>
+        <div style={{height:'100vh', width:'100vw'}}>
+            <TopNavBar hideComponents={true}/>
             <div className={classes.darkOverlay}>
                 <video className={classes.video} autoPlay loop muted playsInline>
                     <source src={videoSource} type="video/mp4" />
@@ -109,7 +111,7 @@ function Login(props) {
                     </form>
                 </div>
             </div>
-        </>
+        </div>
         
     )
 }

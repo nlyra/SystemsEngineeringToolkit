@@ -2,29 +2,8 @@ import React, { useState } from 'react'
 import { Button, Container, TextField, makeStyles, Typography, Paper, Box } from '@material-ui/core'
 import config from '../config.json'
 import useStyles from './styles'
+import TopNavBar from '../components/topNavBar'
 import videoSource from '../img/PEOSTRI.mp4'
-
-
-
-// const useStyles = makeStyles((theme) => ({
-
-//     block:
-//     {
-//         display: 'flex',
-//         flexDirection: 'column',
-//         alignItems: 'center',
-//     },
-
-//     button2:
-//     {
-//         fontSize: 10,
-//         background: 'linear-gradient(45deg, #90a4ae 10%, #e0e0e0 90%)',
-//         marginBottom: theme.spacing(2),
-//         // marginLeft: theme.spacing(2)
-//         // marginRight: theme.spacing(3) 
-//     }
-
-// }))
 
 function Registration(props) {
 
@@ -82,11 +61,11 @@ function Registration(props) {
         } else { // this is to check if there are errors not being addressed already
             console.log(data)
         }
-
     }
 
     return (
         <>
+            <TopNavBar hideComponents={true}/>
             <div className={classes.darkOverlay}>
                 <video className={classes.video} autoPlay loop muted playsInline>
                     <source src={videoSource} type="video/mp4" />

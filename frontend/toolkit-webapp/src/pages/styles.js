@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     {
         padding: '5px 40px 5px 40px',
         borderRadius: 15,
-        backgroundColor: 'rgba(255, 255, 255, 0.7)'
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
     },
     block:
     {
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
         alignItems: 'center',
         width: '22%',
-        minWidth: '250px'
+        minWidth: '250px',
     },
     button:
     {
