@@ -151,7 +151,7 @@ function Registration(props) {
                                 />
 
                             </div>
-                            <Button type='submit' className={classes.button} size="medium" onClick={onRegistration}>
+                            <Button type='submit' fullWidth className={classes.button} size="medium" variant="contained" onClick={onRegistration}>
                                 Register
                             </Button>
                             <br></br>
