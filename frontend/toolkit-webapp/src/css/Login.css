@@ -2,7 +2,7 @@
     margin: 30px auto;
     display: block;
     padding-top: 15px;
-    /* padding: 20px 20px 20px; */
+    padding: 20px 20px 20px; 
     width: 200px;
     align-content: center;
     position: center;
@@ -17,7 +17,7 @@
     width: 400px;
     transform: translate(-50%, -50%);
     border: 5px solid #832ec9;
-    background-color: rgb(52, 145, 151);
+    background-color: rgb(52, 145, 151); 
     border-radius: 15px;
 }
 .loginContent {

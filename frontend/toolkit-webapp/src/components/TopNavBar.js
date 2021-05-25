@@ -1,18 +1,16 @@
 import React, { useState } from 'react'
-import { fade, makeStyles, IconButton, useTheme, Menu, AppBar, Toolbar, InputBase, Badge, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
+import { fade, makeStyles, IconButton, AppBar, Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu'
 import SearchIcon from '@material-ui/icons/Search'
-import MailIcon from '@material-ui/icons/Mail'
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import NotificationsIcon from '@material-ui/icons/Notifications'
-import logo from '../img/peostrilogo.png';
+//import logo from '../img/peostrilogo.png';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import DescriptionIcon from '@material-ui/icons/Description';
 import clsx from 'clsx';
+const logo_url = "http://localhost:4000/misc_files/logo.jpg"
 
 const drawerWidth = 240;
 
@@ -26,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: theme.shape.borderRadius,
         backgroundColor: fade(theme.palette.common.white, 0.15),
         '&:hover': {
-          backgroundColor: fade(theme.palette.common.white, 0.25),
+            backgroundColor: fade(theme.palette.common.white, 0.25),
         },
         // backgroundColor: 'white',
         // color: 'white',
@@ -85,14 +83,12 @@ const useStyles = makeStyles((theme) => ({
         transition: theme.transitions.create('width', {
           easing: theme.transitions.easing.sharp,
           duration: theme.transitions.duration.enteringScreen,
-          background: "grey",
         }),
       },
       drawerClose: {
         transition: theme.transitions.create('width', {
           easing: theme.transitions.easing.sharp,
           duration: theme.transitions.duration.leavingScreen,
-          background: "grey",
         }),
         overflowX: 'hidden',
         width: theme.spacing(7) + 1,
@@ -133,7 +129,6 @@ const useStyles = makeStyles((theme) => ({
 export default function TopNavBar({search}) {
 
     const classes = useStyles();
-    const theme = useTheme();
     const [open, setOpen] = React.useState(false);
 
     const handleDrawerOpen = () => {
@@ -179,19 +174,19 @@ export default function TopNavBar({search}) {
                         />
                     </div>
                     <div className={classes.horizontalCenteringLogo}>
-                        <img src={logo} alt="logo" className={classes.logoStyle}/>
+                        <img src={logo_url} alt="logo" className={classes.logoStyle} />
                     </div>
                     <div>
-                        {/*(<IconButton aria-label="show 4 new mails" color="inherit">
-                            <Badge badgeContent={4} color="secondary">
-                                <MailIcon />
-                            </Badge>
-                        </IconButton>
-                        <IconButton aria-label="show 17 new notifications" color="inherit">
-                            <Badge badgeContent={17} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>*/}
+                        {/* <IconButton aria-label="show 4 new mails" color="inherit"> */}
+                        {/* <Badge badgeContent={4} color="secondary"> */}
+                        {/* <MailIcon /> */}
+                        {/* </Badge> */}
+                        {/* </IconButton> */}
+                        {/* <IconButton aria-label="show 17 new notifications" color="inherit"> */}
+                        {/* <Badge badgeContent={17} color="secondary"> */}
+                        {/* <NotificationsIcon /> */}
+                        {/* </Badge> */}
+                        {/* </IconButton> */}
                         <IconButton
                             edge="end"
                             aria-label="account of current user"
@@ -220,27 +215,38 @@ export default function TopNavBar({search}) {
             >
                 <div className={classes.toolbar}>
                     <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                        <ChevronLeftIcon />
                     </IconButton>
                 </div>
                 <Divider />
                 <List>
-                    <ListItem button>
-                        <ListItemIcon><PostAddIcon/></ListItemIcon>
-                        <ListItemText primary="Create Course" />
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemIcon><MenuBookIcon/></ListItemIcon>
-                        <ListItemText primary="My Courses" />
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemIcon><DescriptionIcon/></ListItemIcon>
-                        <ListItemText primary="My Files" />
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemIcon><CalendarTodayIcon/></ListItemIcon>
-                        <ListItemText primary="Calendar" />
-                    </ListItem>
+                <Tooltip title="Create Course" enterDelay={500}>
+                        <ListItem button>
+                            <ListItemIcon><PostAddIcon/></ListItemIcon>
+                            <ListItemText primary="Create Course" />
+                        </ListItem>
+                    </Tooltip>
+
+                    <Tooltip title="My Courses" enterDelay={500}>
+                        <ListItem button>
+                            <ListItemIcon><MenuBookIcon/></ListItemIcon>
+                            <ListItemText primary="My Courses" />
+                        </ListItem>
+                    </Tooltip>
+
+                    <Tooltip title="My Files" enterDelay={500}>
+                        <ListItem button>
+                            <ListItemIcon><DescriptionIcon/></ListItemIcon>
+                            <ListItemText primary="My Files" />
+                        </ListItem>
+                    </Tooltip>
+
+                    <Tooltip title="Calendar" enterDelay={500}>
+                        <ListItem button>
+                            <ListItemIcon><CalendarTodayIcon/></ListItemIcon>
+                            <ListItemText primary="Calendar" />
+                        </ListItem>
+                    </Tooltip>
                 </List>
             </Drawer>
         </div>
