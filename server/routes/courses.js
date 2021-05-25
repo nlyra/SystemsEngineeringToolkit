@@ -30,12 +30,14 @@ router.post('/info', VerifyToken, async (req, res) => {
 
 })
 
-router.post('/create', VerifyToken, async (req, res) => {
+router.post('/create', async (req, res) => {
 
   try {
     const course = new Course({
       name: req.body.name,
-      description: req.body.description
+      description: req.body.description,
+      url:req.body.url,
+      category:req.body.category
     })
 
     const savedCourse = await course.save();
