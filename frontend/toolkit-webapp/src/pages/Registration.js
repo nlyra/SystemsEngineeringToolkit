@@ -1,49 +1,30 @@
 import React, { useState } from 'react'
 import { Button, Container, TextField, makeStyles, Typography, Paper, Box } from '@material-ui/core'
 import config from '../config.json'
-// import '../css/Registration.css';
+import useStyles from './styles'
+import videoSource from '../img/PEOSTRI.mp4'
 
-const useStyles = makeStyles((theme) => ({
 
-    Title:
-    {
-        fontWeight: "bold"
-    },
-    container: {
-        height: "100%",
-    },
 
-    paper:
-    {
-        padding: '5px 40px 5px 40px',
-        borderRadius: 15,
-        marginTop: theme.spacing(25),
-    },
+// const useStyles = makeStyles((theme) => ({
 
-    block:
-    {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
+//     block:
+//     {
+//         display: 'flex',
+//         flexDirection: 'column',
+//         alignItems: 'center',
+//     },
 
-    button:
-    {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-        background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
-    },
+//     button2:
+//     {
+//         fontSize: 10,
+//         background: 'linear-gradient(45deg, #90a4ae 10%, #e0e0e0 90%)',
+//         marginBottom: theme.spacing(2),
+//         // marginLeft: theme.spacing(2)
+//         // marginRight: theme.spacing(3) 
+//     }
 
-    button2:
-    {
-        fontSize: 10,
-        background: 'linear-gradient(45deg, #90a4ae 10%, #e0e0e0 90%)',
-        marginBottom: theme.spacing(2),
-        // marginLeft: theme.spacing(2)
-        // marginRight: theme.spacing(3) 
-    }
-
-}))
+// }))
 
 function Registration(props) {
 
@@ -105,86 +86,99 @@ function Registration(props) {
     }
 
     return (
-        <Container className={classes.container} maxWidth="xs">
-            <div className={classes.block}>
-                <form autoComplete="off" onSubmit={onSubmit}>
-                    <Paper className={classes.paper} elevation={5} square={false}>
-                        <Box m={2} pt={2}>
-                            <Typography className={classes.Title} variant="h5">Register</Typography>
-                        </Box>
-                        <div className={classes.TextBox}>
-                            <TextField color='primary'
-                                size='small'
-                                variant="filled"
-                                label='First Name'
-                                type="name"
-                                value={firstName}
-                                onChange={e => setFirstName(e.target.value)}
-                                margin="normal"
-                                required={true}
-                                fullWidth
-                            />
-
-                            <TextField color='primary'
-                                size='small'
-                                variant="filled"
-                                label='Last Name'
-                                type="name"
-                                value={lastName}
-                                onChange={e => setLastName(e.target.value)}
-                                margin="normal"
-                                required={true}
-                                fullWidth
-                            />
-
-                            <TextField color='primary'
-                                size='small'
-                                variant="filled"
-                                label='Email'
-                                type="email"
-                                value={email}
-                                onChange={e => setEmail(e.target.value)}
-                                margin="normal"
-                                required={true}
-                                fullWidth
-                            />
-
-                            <TextField
-                                size='small'
-                                variant="filled"
-                                label='Password'
-                                type="password"
-                                value={password}
-                                onChange={e => setPassword(e.target.value)}
-                                margin="normal"
-                                required={true}
-                                fullWidth
-                            />
-
-                            <TextField
-                                size='small'
-                                variant="filled"
-                                label='Repeat Password'
-                                type="password"
-                                value={passwordCopy}
-                                onChange={e => setPasswordCopy(e.target.value)}
-                                margin="normal"
-                                required={true}
-                                fullWidth
-                            />
-
-                        </div>
-                        <Button type='submit' className={classes.button} size="medium" variant="contained" onClick={onRegistration}>
-                            Register
-                        </Button>
-                        <br></br>
-                        <Button type='submit' className={classes.button2} size="small" variant="contained" onClick={onLogin}>
-                            Already Registered?
-                        </Button>
-                    </Paper>
-                </form>
+        <>
+            <div className={classes.darkOverlay}>
+                <video className={classes.video} autoPlay loop muted playsInline>
+                    <source src={videoSource} type="video/mp4" />
+                Your browser does not support the video tag.
+                </video>
             </div>
-        </Container>
+            <div className={classes.container}>
+                <div className={classes.block} style={{minWidth: '400px'}}>
+                    <form autoComplete="off" onSubmit={onSubmit}>
+                        <Paper className={classes.paper} elevation={5} square={false}>
+                            <Box m={2} pt={2}>
+                                <Typography className={classes.Title} variant="h5">Register</Typography>
+                            </Box>
+                            <div className={classes.TextBox}>
+                                <TextField color='primary'
+                                    size='small'
+                                    variant="filled"
+                                    label='First Name'
+                                    type="name"
+                                    value={firstName}
+                                    onChange={e => setFirstName(e.target.value)}
+                                    margin="normal"
+                                    required={true}
+                                    fullWidth
+                                    style={{backgroundColor: "rgba(255,255,255,0.8)"}}
+                                />
+
+                                <TextField color='primary'
+                                    size='small'
+                                    variant="filled"
+                                    label='Last Name'
+                                    type="name"
+                                    value={lastName}
+                                    onChange={e => setLastName(e.target.value)}
+                                    margin="normal"
+                                    required={true}
+                                    fullWidth
+                                    style={{backgroundColor: "rgba(255,255,255,0.8)"}}
+                                />
+
+                                <TextField color='primary'
+                                    size='small'
+                                    variant="filled"
+                                    label='Email'
+                                    type="email"
+                                    value={email}
+                                    onChange={e => setEmail(e.target.value)}
+                                    margin="normal"
+                                    required={true}
+                                    fullWidth
+                                    style={{backgroundColor: "rgba(255,255,255,0.8)"}}
+                                />
+
+                                <TextField
+                                    size='small'
+                                    variant="filled"
+                                    label='Password'
+                                    type="password"
+                                    value={password}
+                                    onChange={e => setPassword(e.target.value)}
+                                    margin="normal"
+                                    required={true}
+                                    fullWidth
+                                    style={{backgroundColor: "rgba(255,255,255,0.8)"}}
+                                />
+
+                                <TextField
+                                    size='small'
+                                    variant="filled"
+                                    label='Repeat Password'
+                                    type="password"
+                                    value={passwordCopy}
+                                    onChange={e => setPasswordCopy(e.target.value)}
+                                    margin="normal"
+                                    required={true}
+                                    fullWidth
+                                    style={{backgroundColor: "rgba(255,255,255,0.8)"}}
+                                />
+
+                            </div>
+                            <Button type='submit' className={classes.button} size="medium" variant="contained" onClick={onRegistration}>
+                                Register
+                        </Button>
+                            <br></br>
+                            <Button type='submit' className={classes.button2} size="small" variant="contained" onClick={onLogin}>
+                                Already Registered?
+                        </Button>
+                        </Paper>
+                    </form>
+                </div>
+            </div>
+        </>
     )
 }
 
