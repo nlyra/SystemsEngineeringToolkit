@@ -7,7 +7,6 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import NotificationsIcon from '@material-ui/icons/Notifications'
 import logo from '../img/peostrilogo.png';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
@@ -26,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: theme.shape.borderRadius,
         backgroundColor: fade(theme.palette.common.white, 0.15),
         '&:hover': {
-          backgroundColor: fade(theme.palette.common.white, 0.25),
+            backgroundColor: fade(theme.palette.common.white, 0.25),
         },
         // backgroundColor: 'white',
         // color: 'white',
@@ -179,19 +178,19 @@ export default function TopNavBar({search}) {
                         />
                     </div>
                     <div className={classes.horizontalCenteringLogo}>
-                        <img src={logo} alt="logo" className={classes.logoStyle}/>
+                        <img src={logo_url} alt="logo" className={classes.logoStyle} />
                     </div>
                     <div>
-                        {/*(<IconButton aria-label="show 4 new mails" color="inherit">
-                            <Badge badgeContent={4} color="secondary">
-                                <MailIcon />
-                            </Badge>
-                        </IconButton>
-                        <IconButton aria-label="show 17 new notifications" color="inherit">
-                            <Badge badgeContent={17} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>*/}
+                        {/* <IconButton aria-label="show 4 new mails" color="inherit"> */}
+                        {/* <Badge badgeContent={4} color="secondary"> */}
+                        {/* <MailIcon /> */}
+                        {/* </Badge> */}
+                        {/* </IconButton> */}
+                        {/* <IconButton aria-label="show 17 new notifications" color="inherit"> */}
+                        {/* <Badge badgeContent={17} color="secondary"> */}
+                        {/* <NotificationsIcon /> */}
+                        {/* </Badge> */}
+                        {/* </IconButton> */}
                         <IconButton
                             edge="end"
                             aria-label="account of current user"

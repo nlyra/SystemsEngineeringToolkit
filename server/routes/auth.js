@@ -6,18 +6,31 @@ const config = require('../config.json');
 
 const router = express.Router();
 
-router.post('/hola', verifyToken, async (req, res) => {
-    try {
-        // set payload and return res
-        let payload = {
-            "status": "Welcome to SE Toolkit Server"
-        }
-        res.json(payload);
+router.post('/registration', async (req, res) => {
+	try {
+		const user = await User.findOne({ email: req.body.email });
+		if (user == undefined) {
+			const pass = bcrypt.hashSync(req.body.password, 10);
+			const user = new User({
+				first_name: req.body.first_name,
+				last_name: req.body.last_name,
+				email: req.body.email,
+				password: pass,
+			});
+			
+			const savedUser = await user.save();
 
-    } catch (e) {
-        console.log(e);
-        res.sendStatus(500);
-    }
+			console.log('added user ', savedUser._id);
+
+			res.json({ 'message': 'added user' });
+		}
+		else {
+			res.status(401).json({ 'message': 'email already connected to an account' });
+		}
+	} catch (e) {
+		console.log(e);
+		res.sendStatus(500);
+	}
 });
 
 router.post('/login', async (req, res) => {
@@ -52,7 +65,6 @@ router.post('/login', async (req, res) => {
 function verifyToken(req, res, next) {
     // get auth header value
     const token = req.body.token;
-    console.log(token)
     if (token === undefined) {
         res.sendStatus(403);
     }
@@ -64,10 +76,14 @@ function verifyToken(req, res, next) {
         }
     });
 
+    // console.log("verified")
     next();
 
 }
 
 
-
-module.exports = router;
+// module.exports= verifyToken;
+module.exports = {
+    router,
+    verifyToken
+};
