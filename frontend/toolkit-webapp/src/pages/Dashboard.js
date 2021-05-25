@@ -114,25 +114,21 @@ const Dashboard = (props) => {
                                 courses
                         </Button>
                         </Grid>
-
                         <Grid item>
                             <Button variant="contained">
                                 My Courses
                         </Button>
                         </Grid>
-
                         <Grid item>
                             <Button variant="contained">
                                 My Files
                         </Button>
                         </Grid>
-
                         <Grid item>
                             <Button variant="contained">
                                 Calendar
                         </Button>
                         </Grid>
-
                     </Grid>
                 </div> */}
 

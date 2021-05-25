@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Button, Container, TextField, Typography, Paper, Box } from '@material-ui/core'
 import config from '../config.json'
 import useStyles from './styles'
-import TopNavBar from '../components/topNavBar'
 import '../css/Login.css';
 
 function Login(props) {
@@ -10,6 +9,7 @@ function Login(props) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const classes = useStyles()
+
     const onRegister = (e) => {
         props.history.push('registration');
     }
@@ -54,7 +54,6 @@ function Login(props) {
     return (
         <Container className={classes.container} maxWidth="xs">
             <div className={classes.block}>
-            <TopNavBar></TopNavBar>
                 <form autoComplete="off" onSubmit={onSubmit}>
                     <Paper className={classes.paper} elevation={5} square={false}>
                         <Box m={2} pt={2}>
