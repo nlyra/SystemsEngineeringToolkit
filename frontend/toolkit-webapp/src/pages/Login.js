@@ -3,6 +3,8 @@ import { Button, Container, TextField, Typography, Paper, Box } from '@material-
 import config from '../config.json'
 import useStyles from './styles'
 import TopNavBar from '../components/topNavBar'
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Avatar from '@material-ui/core/Avatar';
 import '../css/Login.css';
 import videoSource from '../img/PEOSTRI.mp4'
 
@@ -66,7 +68,10 @@ function Login(props) {
                 <div className={classes.block}>
                     <form autoComplete="off" onSubmit={onSubmit}>
                         <Paper className={classes.paper} elevation={5} square={false}>
-                            <Box m={2} pt={2}>
+                        <Avatar className={classes.avatar}>
+                            <LockOutlinedIcon />
+                        </Avatar>
+                            <Box m={2} pt={2} style={{justifyContent: 'center'}}>
                                 <Typography className={classes.Title} variant="h5">Sign In</Typography>
                             </Box>
                             <div className={classes.TextBox}>
@@ -97,14 +102,14 @@ function Login(props) {
                                 />
 
                             </div>
-                            <Button type='submit' className={classes.button} size="medium" variant="contained" >
+                            <Button fullWidth type='submit' className={classes.button} size="medium" variant="contained" >
                                 Sign In
                             </Button>
                             <br></br>
-                            <Button type='submit' className={classes.button2} size="small" variant="contained" onClick={onRegister}>
+                            <Button type='submit' className={classes.button2} size="small" onClick={onRegister}>
                                 Register
                             </Button>
-                            <Button type='submit' className={classes.button2} size="small" variant="contained" onClick={onForgot}>
+                            <Button type='submit' className={classes.button2} size="small" onClick={onForgot}>
                                 Forgot Password?
                             </Button>
                         </Paper>

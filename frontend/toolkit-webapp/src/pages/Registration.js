@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Container, TextField, makeStyles, Typography, Paper, Box } from '@material-ui/core'
+import Avatar from '@material-ui/core/Avatar'
+import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import config from '../config.json'
 import useStyles from './styles'
 import TopNavBar from '../components/topNavBar'
@@ -76,6 +78,9 @@ function Registration(props) {
                 <div className={classes.block} style={{minWidth: '400px'}}>
                     <form autoComplete="off" onSubmit={onSubmit}>
                         <Paper className={classes.paper} elevation={5} square={false}>
+                            <Avatar className={classes.avatar}>
+                                <PermIdentityOutlinedIcon />
+                            </Avatar>
                             <Box m={2} pt={2}>
                                 <Typography className={classes.Title} variant="h5">Register</Typography>
                             </Box>
@@ -146,13 +151,13 @@ function Registration(props) {
                                 />
 
                             </div>
-                            <Button type='submit' className={classes.button} size="medium" variant="contained" onClick={onRegistration}>
+                            <Button type='submit' className={classes.button} size="medium" onClick={onRegistration}>
                                 Register
-                        </Button>
+                            </Button>
                             <br></br>
-                            <Button type='submit' className={classes.button2} size="small" variant="contained" onClick={onLogin}>
+                            <Button type='submit' className={classes.button2} size="small" onClick={onLogin}>
                                 Already Registered?
-                        </Button>
+                            </Button>
                         </Paper>
                     </form>
                 </div>

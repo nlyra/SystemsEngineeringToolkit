@@ -1,4 +1,4 @@
-import {makeStyles} from '@material-ui/core/styles'
+import {makeStyles, withStyles} from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme) => ({
 
@@ -14,11 +14,15 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    paper:
+    paper: 
     {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
         padding: '5px 40px 5px 40px',
-        borderRadius: 15,
         backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        justifyContent: 'center',
+        borderRadius: 15
     },
     block:
     {
@@ -32,17 +36,19 @@ const useStyles = makeStyles((theme) => ({
     {
         marginTop: theme.spacing(2),
         marginBottom: theme.spacing(2),
-        background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
+        backgroundColor: 'black',
+        color: 'white',
+        "&:hover": {
+            color: 'black'
+        }
     },
-
     button2:
     {
         fontSize: 10,
-        background: 'linear-gradient(45deg, #90a4ae 10%, #e0e0e0 90%)',
+        backgroundColor: 'light-grey',
         marginBottom: theme.spacing(2),
         marginLeft:  theme.spacing(2)
     },
-
     video: 
     {
         objectFit: 'cover',
@@ -63,7 +69,12 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         height: '100%',
         zIndex: -1
-    }
+    },
+    avatar: 
+    {
+        margin: theme.spacing(2),
+        backgroundColor: 'black'
+    },
 
 }))
 
