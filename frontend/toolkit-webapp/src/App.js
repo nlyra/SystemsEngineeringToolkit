@@ -4,19 +4,24 @@ import Dashboard from './pages/Dashboard'
 import Registration from './pages/Registration'
 import ForgotPassword from './pages/ForgotPassword'
 import CourseCreatorNewCourse from './pages/CourseCreatorNewCourse'
+import Course from './pages/Course'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import videoSource from "./img/PEOSTRI.mp4"
 
 function App() {
   return (
-        <Router>
-            <Route path='/' exact component={Login} />
-            <Route path='/login' component={Login} />
-            <Route path='/Dashboard' component={Dashboard} />
-            <Route path='/registration' component={Registration} />
-            <Route path='/forgot' component={ForgotPassword} />
-            <Route path = '/newCourse' component ={CourseCreatorNewCourse}/>
-        </Router>
+    <Router>
+      <div className="App" >
+        {/* these two lines should have 'Login' not 'Dashboard' */}
+        <Route path='/' exact component={Login} /> {/* should we make like a landing page, or the sanding page is login */}
+        <Route path='/login' component={Login} />
+        <Route path='/Dashboard' component={Dashboard} />
+        <Route path='/registration' component={Registration} />
+        <Route path='/forgot' component={ForgotPassword} />
+        <Route path='/NewCourse' component={CourseCreatorNewCourse} />
+        <Route path='/course' component={Course} />
+      </div>
+    </Router>
   );
 }
 
