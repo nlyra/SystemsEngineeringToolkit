@@ -15,6 +15,7 @@ function App() {
             <Route path='/Dashboard' component={Dashboard} />
             <Route path='/registration' component={Registration} />
             <Route path='/forgot' component={ForgotPassword} />
+            <Route path = '/newCourse' component ={CourseCreatorNewCourse}/>
         </Router>
   );
 }
