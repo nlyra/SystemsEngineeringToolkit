@@ -4,7 +4,7 @@ import Avatar from '@material-ui/core/Avatar'
 import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import config from '../config.json'
 import useStyles from './styles'
-import TopNavBar from '../components/topNavBar'
+import topNavBar from '../components/topNavBar'
 import videoSource from '../img/PEOSTRI.mp4'
 
 function Registration(props) {
@@ -67,7 +67,7 @@ function Registration(props) {
 
     return (
         <>
-            <TopNavBar hideComponents={true}/>
+            <topNavBar hideComponents={true}/>
             <div className={classes.darkOverlay}>
                 <video className={classes.video} autoPlay loop muted playsInline>
                     <source src={videoSource} type="video/mp4" />
