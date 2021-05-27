@@ -1,6 +1,6 @@
 import {makeStyles} from '@material-ui/core/styles'
 
-const useStyles = makeStyles((theme) => ({
+const courseStyles = makeStyles((theme) => ({
 
     Title:
     {
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     {
         padding: '5px 40px 5px 40px',
         borderRadius: 15,
-        marginTop: theme.spacing(25),
+        marginTop: theme.spacing(10),
     },
 
     block:
@@ -56,4 +56,4 @@ const useStyles = makeStyles((theme) => ({
 
 }))
 
-export default useStyles;
+export default courseStyles;

@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import { Button, Container, TextField, Typography, Paper, Box } from '@material-ui/core'
 import config from '../config.json'
-import useStyles from './styles'
+import loginStyles from '../styles/loginStyle'
 import '../css/Login.css';
 
 function Login(props) {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const classes = useStyles()
+    const classes = loginStyles()
 
     const onRegister = (e) => {
         props.history.push('registration');

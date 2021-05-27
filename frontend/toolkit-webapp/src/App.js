@@ -6,6 +6,7 @@ import Registration from './pages/Registration'
 import ForgotPassword from './pages/ForgotPassword'
 import CourseCreatorNewCourse from './pages/CourseCreatorNewCourse'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
+import ModuleCreator from './pages/ModuleCreator';
 // import background from "./img/image0.png";
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path='/registration' component={Registration} />
         <Route path='/forgot' component={ForgotPassword} />
         <Route path='/NewCourse' component={CourseCreatorNewCourse} />
+        <Route path='/newModule' component={ModuleCreator} />
       </div>
     </Router>
   );
