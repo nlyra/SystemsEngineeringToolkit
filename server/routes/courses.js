@@ -36,7 +36,7 @@ router.post('/create', async (req, res) => {
     const course = new Course({
       name: req.body.name,
       description: req.body.description,
-      url:req.body.url,
+      urlImage:req.body.urlImage,
       category:req.body.category
     })
 

@@ -43,7 +43,7 @@ function NewCourse(props) {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "modules": [], "name": creds.courseTitle, "category": creds.category, "description": creds.description, "url": 'http://localhost:4000/java.jpg'})
+            body: JSON.stringify({ "modules": [], "name": creds.courseTitle, "category": creds.category, "description": creds.description, "urlImage": 'http://localhost:4000/java.jpg'})
         })
 
         const data = await res.json()
