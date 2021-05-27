@@ -4,7 +4,7 @@ import Avatar from '@material-ui/core/Avatar'
 import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import config from '../config.json'
 import useStyles from './styles'
-import TopNavBar from '../components/TopNavBar'
+import TopNavBar from '../components/topNavBar'
 import videoSource from '../img/PEOSTRI.mp4'
 
 function Registration(props) {

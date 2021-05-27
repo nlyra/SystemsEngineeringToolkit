@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Button, Container, TextField, Typography, Paper, Box } from '@material-ui/core'
 import config from '../config.json'
 import useStyles from './styles'
-import TopNavBar from '../components/TopNavBar'
+import TopNavBar from '../components/topNavBar'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Avatar from '@material-ui/core/Avatar';
 import '../css/Login.css';
