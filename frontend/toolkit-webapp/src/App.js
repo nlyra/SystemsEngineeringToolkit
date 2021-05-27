@@ -1,4 +1,3 @@
-// import logo from './logo.svg';
 import './css/App.css';
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
@@ -7,7 +6,8 @@ import ForgotPassword from './pages/ForgotPassword'
 import CourseCreatorNewCourse from './pages/CourseCreatorNewCourse'
 import Course from './pages/Course'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-// import background from "./img/image0.png";
+import videoSource from "./img/PEOSTRI.mp4"
+
 function App() {
   return (
     <Router>

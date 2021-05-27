@@ -3,7 +3,7 @@ import { Button, FormControl, Container, TextField, Typography, Box, Select, Inp
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import config from '../config.json'
-import TopNavBar from '../components/topNavBar'
+import topNavBar from '../components/topNavBar'
 import useStyles from './styles'
 import '../css/Login.css';
 
@@ -57,7 +57,7 @@ function NewCourse(props) {
 
     return (
         <div>
-            <TopNavBar></TopNavBar>
+            <topNavBar></topNavBar>
             <Container className={classes.container} >
                 <div className={classes.block}>
                     <form autoComplete="off" onSubmit={onSubmit}>
