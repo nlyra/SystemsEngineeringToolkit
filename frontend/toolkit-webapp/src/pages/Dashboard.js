@@ -16,7 +16,8 @@ const dashStyles = makeStyles((theme) => ({
     {
         height: '100%',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        borderRadius: 10
     },
 
     cardMedia:
@@ -60,11 +61,7 @@ const Dashboard = (props) => {
     }, []);
 
     const handlePage = (event, value) => {
-        // console.log(value)
-        // console.log(page)
         setPage(value)
-        // console.log(page)
-        // loadCourses()
     }
 
     // function to get the courses 
@@ -78,15 +75,13 @@ const Dashboard = (props) => {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "search_query": query}) // + "skip": skip
+            body: JSON.stringify({ "token": token, "search_query": query }) // + "skip": skip
         })
         // }
 
 
         const data = await res.json()
         if (data.message === undefined) {
-            console.log(data.courses);
-            // localStorage.setItem("token", data.token);
             setCourses(data.courses);
 
 
@@ -99,6 +94,10 @@ const Dashboard = (props) => {
         }
     }
 
+    const onCourse = (course) => {
+        props.history.push(`course/${course._id}`);
+    }
+
 
     return (
         <div >
@@ -107,41 +106,15 @@ const Dashboard = (props) => {
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
-                {/* <div className='createModules'>
-                    <Grid container spacing={3} justify="center">
-                        <Grid item>
-                            <Button variant="contained" onClick={loadCourses}>
-                                courses
-                        </Button>
-                        </Grid>
-
-                        <Grid item>
-                            <Button variant="contained">
-                                My Courses
-                        </Button>
-                        </Grid>
-
-                        <Grid item>
-                            <Button variant="contained">
-                                My Files
-                        </Button>
-                        </Grid>
-
-                        <Grid item>
-                            <Button variant="contained">
-                                Calendar
-                        </Button>
-                        </Grid>
-
-                    </Grid>
-                </div> */}
-
                 <div className='modules'>
                     <Grid container spacing={3}>
                         {courses.map((course) => (
 
                             <Grid item key={course.name} xs={12} sm={4} md={3}>
-                                <Card className={classes.card}>
+                                <Card
+                                    className={classes.card}
+                                    onClick={() => onCourse(course)}
+                                >
                                     <CardMedia
                                         className={classes.cardMedia}
                                         image={course.urlImage}
@@ -155,12 +128,6 @@ const Dashboard = (props) => {
                                             {course.description}
                                         </Typography>
                                         <CardActions>
-                                            {/* <Button variant="outlined" size="small">
-                                                View Module
-                                </Button>
-                                            <Button variant="outlined" size="small">
-                                                Edit
-                                </Button> */}
                                         </CardActions>
                                     </CardContent>
                                 </Card>
