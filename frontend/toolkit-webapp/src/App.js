@@ -11,7 +11,6 @@ import videoSource from "./img/PEOSTRI.mp4"
 function App() {
   return (
     <Router>
-      <div className="App" >
         {/* these two lines should have 'Login' not 'Dashboard' */}
         <Route path='/' exact component={Login} /> {/* should we make like a landing page, or the sanding page is login */}
         <Route path='/login' component={Login} />
@@ -20,8 +19,7 @@ function App() {
         <Route path='/forgot' component={ForgotPassword} />
         <Route path='/NewCourse' component={CourseCreatorNewCourse} />
         <Route path='/course' component={Course} />
-      </div>
-    </Router>
+     </Router>
   );
 }
 
