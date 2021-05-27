@@ -5,6 +5,7 @@ import SearchIcon from '@material-ui/icons/Search'
 import MailIcon from '@material-ui/icons/Mail'
 import AccountCircle from '@material-ui/icons/AccountCircle'
 import NotificationsIcon from '@material-ui/icons/Notifications'
+//import logo from '../img/peostrilogo.jpg'
 const logo_url = "http://localhost:4000/misc_files/logo.jpg"
 
 const useStyles = makeStyles((theme) => ({
@@ -57,15 +58,15 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     logoStyle: {
-        maxWidth: '13%',
+        maxWidth: '10%',
         textAlign: 'center',
         margin: 'auto'
     },
     horizontalCenteringLogo: {
         position: 'absolute',
-        left: '65%',
+        left: '50%',
         top: '50%',
-        transform: 'translate(-50%, -50%)',
+        transform: 'translate(-50%, -50%)'
     },
     test: {
         display: 'flex',
@@ -73,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-export default function TopNavBar({ search, hideComponents }) {
+export default function TopNavBar({ search }) {
 
     const classes = useStyles()
 
@@ -81,27 +82,23 @@ export default function TopNavBar({ search, hideComponents }) {
         <div className={classes.grow}>
             <AppBar position="static" className={classes.toolBarColor}>
                 <Toolbar>
-                    {hideComponents !== true ?
-                        <>
-                            <IconButton>
-                                <MenuIcon style={{ color: "white" }}></MenuIcon>
-                            </IconButton>
-                            <div className={classes.search}>
-                                <div className={classes.searchIcon}>
-                                    <SearchIcon></SearchIcon>
-                                </div>
-                                <InputBase
-                                    placeholder="Search..."
-                                    classes={{
-                                        root: classes.inputRoot,
-                                        input: classes.inputInput,
-                                    }}
-                                    inputProps={{ 'aria-label': 'search' }}
-                                    onChange={e => search(e.target.value)}
-                                />
-                            </div>
-                        </>
-                        : null}
+                    <IconButton>
+                        <MenuIcon style={{ color: "white" }}></MenuIcon>
+                    </IconButton>
+                    <div className={classes.search}>
+                        <div className={classes.searchIcon}>
+                            <SearchIcon></SearchIcon>
+                        </div>
+                        <InputBase
+                            placeholder="Search..."
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput,
+                            }}
+                            inputProps={{ 'aria-label': 'search' }}
+                            onChange={e => search(e.target.value)}
+                        />
+                    </div>
                     <div className={classes.horizontalCenteringLogo}>
                         <img src={logo_url} alt="logo" className={classes.logoStyle} />
                     </div>
@@ -116,18 +113,16 @@ export default function TopNavBar({ search, hideComponents }) {
                         {/* <NotificationsIcon /> */}
                         {/* </Badge> */}
                         {/* </IconButton> */}
-                        {hideComponents !== true ?
-                            <IconButton
-                                edge="end"
-                                aria-label="account of current user"
-                                //aria-controls={menuId}
-                                aria-haspopup="true"
-                                //onClick={handleProfileMenuOpen}
-                                color="inherit"
-                            >
-                                <AccountCircle />
-                            </IconButton>
-                            : null}
+                        <IconButton
+                            edge="end"
+                            aria-label="account of current user"
+                            //aria-controls={menuId}
+                            aria-haspopup="true"
+                            //onClick={handleProfileMenuOpen}
+                            color="inherit"
+                        >
+                            <AccountCircle />
+                        </IconButton>
                     </div>
                 </Toolbar>
             </AppBar>
