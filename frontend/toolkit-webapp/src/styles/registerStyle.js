@@ -38,7 +38,18 @@ const registerStyles = makeStyles((theme) => ({
         marginBottom: theme.spacing(2),
         // marginLeft: theme.spacing(2)
         // marginRight: theme.spacing(3) 
-    }
+    },
+
+    video: 
+    {
+        objectFit: 'cover',
+        width: '100vw',
+        height: '100vh',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        zIndex: -2
+    },
 
 }))
 
