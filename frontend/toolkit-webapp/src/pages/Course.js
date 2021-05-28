@@ -1,49 +1,52 @@
 import React, { useState, useEffect } from 'react'
 import config from '../config.json'
 import TopNavBar from '../components/topNavBar'
-import { Divider, Box, makeStyles } from '@material-ui/core'
+import { Divider, Box, makeStyles, Grid, Paper, Container, Typography } from '@material-ui/core'
 import { borders } from '@material-ui/system';
+import { red } from '@material-ui/core/colors';
 
 const dashStyles = makeStyles((theme) => ({
 
-  div1: {
-    display: 'flex',
-    margin: '0px',
-    padding: '0px',
-    // alignContent: 'center'
+  outerContainer: {
+    maxWidth: '100%',
+    padding: '0',
+    // flex: true
+
   },
+  container: {
+    backgroundColor: 'grey',
+    maxWidth: '100%',
+    padding: '0',
+    height: 'child'
+    // position: 'relative'
+  },
+
 
   title: {
     fontSize: '50px',
     position: 'absolute',
     left: '50%',
-    top: '8%',
+    top: '7%',
     transform: 'translate(-50%, -50%)'
   },
 
   courseImageStyle: {
-    maxWidth: '250px',
-    display: 'flex',
-    marginLeft: '0px',
-    paddingLeft: '0px'
+    maxWidth: '260px',
+    marginBottom: "15px"
   },
 
   description: {
     fontSize: '25px',
-    position: 'absolute',
     textAlign: "right",
-    right: '4%',
-    top: '15%',
-    maxWidth: "70%"
-    // transform: 'translate(-50%, -50%)'
+    paddingRight: '2%',
+    float: 'right',
+    maxWidth: "90%"
   },
 
-  boxDivider: {
-    marginTop: '10%',
-    boxSizing: '3px'
-
-  }
-
+  divider: {
+    margin: theme.spacing(0, 3),
+    flexItem: true
+  },
 
 }))
 
@@ -86,20 +89,20 @@ const Course = (props) => {
   }
 
   return (
-    <div>
+    <>
       <TopNavBar>
       </TopNavBar>
-      <div className={classes.div1}>
+      {/* <Container className={classes.outerContainer}> */}
+      <Container className={classes.container}>
         <img src={course.urlImage} className={classes.courseImageStyle} />
         <h1 className={classes.title} >{course.name} </h1>
-        {/* <p className={classes.description}>{course.description}</p> */}
-        <p className={classes.description}>{course.description}</p>
-
-        {/* <Divider className={classes.divider} /> */}
-      </div>
-      <Box borderTop={1} borderColor="primary.main" className={classes.boxDivider}></Box>
-    </div>
+        <Typography className={classes.description}>{course.description}</Typography>
+      </Container>
+      {/* </Container> */}
+      <Divider />
+    </>
   )
 }
 
 export default Course
+
