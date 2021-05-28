@@ -3,8 +3,9 @@ import { Button, Container, TextField, makeStyles, Typography, Paper, Box } from
 import Avatar from '@material-ui/core/Avatar'
 import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import config from '../config.json'
-import useStyles from './styles'
-import topNavBar from '../components/topNavBar'
+import registerStyles from '../styles/loginStyle'
+// import '../css/Registration.css';
+import TopNavBar from '../components/TopNavBar'
 import videoSource from '../img/PEOSTRI.mp4'
 
 function Registration(props) {
@@ -15,7 +16,7 @@ function Registration(props) {
     const [password, setPassword] = useState('')
     const [passwordCopy, setPasswordCopy] = useState('')
 
-    const classes = useStyles()
+    const classes = registerStyles()
 
     const onLogin = (e) => {
         props.history.push('login');
@@ -67,7 +68,7 @@ function Registration(props) {
 
     return (
         <>
-            <topNavBar hideComponents={true}/>
+            <TopNavBar hideComponents={true}/>
             <div className={classes.darkOverlay}>
                 <video className={classes.video} autoPlay loop muted playsInline>
                     <source src={videoSource} type="video/mp4" />
