@@ -3,7 +3,7 @@ import { Button, FormControl, Container, TextField, Typography, Box, Select, Inp
 // import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 // import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import config from '../config.json'
-import TopNavBar from '../components/topNavBar'
+import TopNavBar from '../components/TopNavBar'
 import useStyles from '../styles/moduleStyle'
 import '../css/Login.css';
 import FileModule from '../components/FileModule'

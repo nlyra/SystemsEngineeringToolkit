@@ -3,9 +3,9 @@ import { Button, Container, TextField, makeStyles, Typography, Paper, Box } from
 import Avatar from '@material-ui/core/Avatar'
 import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import config from '../config.json'
-import registerStyles from '../styles/registerStyle'
+import registerStyles from '../styles/loginStyle'
 // import '../css/Registration.css';
-import TopNavBar from '../components/topNavBar'
+import TopNavBar from '../components/TopNavBar'
 import videoSource from '../img/PEOSTRI.mp4'
 
 function Registration(props) {
