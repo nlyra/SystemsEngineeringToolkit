@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, Card, CardActions, Container, CssBaseline, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
 import '../css/dashboard.css'
 import config from '../config.json'
-import TopNavBar from '../components/topNavBar'
+import topNavBar from '../components/topNavBar'
 import Pagination from '@material-ui/lab/Pagination'
 import dashStyles from '../styles/dashboardStyle'
 
@@ -79,10 +79,10 @@ const Dashboard = (props) => {
 
     return (
         <div >
-            <TopNavBar
+            <topNavBar
                 search={loadCourses}
                 page={page}
-            ></TopNavBar>
+            ></topNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
                 <div className='modules'>

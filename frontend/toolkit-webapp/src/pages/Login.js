@@ -2,11 +2,9 @@ import React, { useState } from 'react'
 import { Button, Container, TextField, Typography, Paper, Box } from '@material-ui/core'
 import config from '../config.json'
 import loginStyles from '../styles/loginStyle'
-import useStyles from './styles'
-import TopNavBar from '../components/topNavBar'
+import topNavBar from '../components/topNavBar'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Avatar from '@material-ui/core/Avatar';
-import '../css/Login.css';
 import videoSource from '../img/PEOSTRI.mp4'
 
 
@@ -59,7 +57,7 @@ function Login(props) {
 
     return (
         <div style={{height:'100vh', width:'100vw'}}>
-            <TopNavBar hideComponents={true}/>
+            <topNavBar hideComponents={true}/>
             <div className={classes.darkOverlay}>
                 <video className={classes.video} autoPlay loop muted playsInline>
                     <source src={videoSource} type="video/mp4" />

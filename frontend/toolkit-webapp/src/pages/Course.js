@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import config from '../config.json'
-import TopNavBar from '../components/topNavBar'
+import topNavBar from '../components/topNavBar'
 import { Divider, Box, makeStyles } from '@material-ui/core'
 import { borders } from '@material-ui/system';
 
@@ -87,8 +87,8 @@ const Course = (props) => {
 
   return (
     <div>
-      <TopNavBar>
-      </TopNavBar>
+      <topNavBar>
+      </topNavBar>
       <div className={classes.div1}>
         <img src={course.urlImage} className={classes.courseImageStyle} />
         <h1 className={classes.title} >{course.name} </h1>
