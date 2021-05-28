@@ -27,11 +27,11 @@ router.post('/info', VerifyToken, async (req, res) => {
           { "category": { "$regex": query, $options: 'i' } },
           { "name": { "$regex": query, $options: 'i' } },
         ]
-      }, '_id name description urlImage category', { limit: 15 }); // + .skip( req.body.skip )
+      }, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
       // , '_id name description url', { limit: 10 }
       // console.log(courses)
     } else {
-      courses = await Course.find({}, '_id name description urlImage', { limit: 10 }).sort({ totalStudents: -1 });
+      courses = await Course.find({}, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
     }
     // console.log(courses)
 

@@ -43,15 +43,14 @@ const changeParams = (start, finish) => {
 
 }
 
-const worked = () => {
-    console.log("works")
-}
+
 
 const Dashboard = (props) => {
     const [courses, setCourses] = useState([])
     const [page, setPage] = useState(1)
+    const [cardAmount, setCardAmount] = useState(1)
     const [coursesPerPage, setCoursesPerPage] = useState(5)
-    // const [searchQuery, setSearchQuery] = useState([])
+    // const [searchQuery, setSearchQuery] = useState(undefined)
 
     const classes = dashStyles()
 
@@ -62,26 +61,35 @@ const Dashboard = (props) => {
 
     const handlePage = (event, value) => {
         setPage(value)
+        loadCourses(undefined, value)
     }
 
     // function to get the courses 
-    const loadCourses = async (query) => {
+    const loadCourses = async (query, s = 1) => {
         const token = localStorage.getItem("token");
         let res = undefined
-        // let skip = (page-1)*5
+        let skip = (s - 1) * cardAmount
+        // if (query == ""){
+        //     setSearchQuery(undefined)
+        // }else{
+        //     setSearchQuery(query)
+        // }
 
         res = await fetch(config.server_url + config.paths.dashboardCourses, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "search_query": query }) // + "skip": skip
+            body: JSON.stringify({ "token": token, "search_query": query, "skip": skip, "cardAmount": cardAmount })
         })
         // }
 
 
         const data = await res.json()
         if (data.message === undefined) {
+
+            // console.log(data.courses);
+            // localStorage.setItem("token", data.token);
             setCourses(data.courses);
 
 
@@ -103,6 +111,7 @@ const Dashboard = (props) => {
         <div >
             <TopNavBar
                 search={loadCourses}
+                page={page}
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
@@ -138,8 +147,7 @@ const Dashboard = (props) => {
 
                     </Grid>
                 </div>
-                {/* <Typography>Page: {page}</Typography>
-                <Pagination count={6} page={page} onChange = {handlePage} variant="outlined" shape="rounded" /> */}
+                <Pagination count={6} page={page} onChange={handlePage} variant="outlined" shape="rounded" />
             </Container>
         </div>
     )
