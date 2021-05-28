@@ -3,8 +3,8 @@ import { Button, FormControl, Container, TextField, Typography, Box, Select, Inp
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import config from '../config.json'
-import TopNavBar from '../components/topNavBar'
-import useStyles from './styles'
+import TopNavBar from '../components/TopNavBar'
+import courseStyles from '../styles/courseStyle'
 import '../css/Login.css';
 
 function NewCourse(props) {
@@ -12,7 +12,8 @@ function NewCourse(props) {
     const [courseTitle, setCourseTitle] = useState('')
     const [category, setCategory] = useState('')
     const [description, setDescription] = useState('')
-    const classes = useStyles()
+
+    const classes = courseStyles()
 
     const handleChange = (event) => {
         setCategory(event.target.category);
@@ -42,7 +43,7 @@ function NewCourse(props) {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "modules": [], "name": creds.courseTitle, "category": creds.category, "description": creds.description, "url": 'http://localhost:4000/java.jpg'})
+            body: JSON.stringify({ "modules": [], "name": creds.courseTitle, "category": creds.category, "description": creds.description, "urlImage": 'http://localhost:4000/java.jpg'})
         })
 
         const data = await res.json()
@@ -57,7 +58,9 @@ function NewCourse(props) {
 
     return (
         <div>
-            <TopNavBar></TopNavBar>
+            <TopNavBar hideComponents={false}/>
+            <div className={classes.darkOverlay}>
+            </div>
             <Container className={classes.container} >
                 <div className={classes.block}>
                     <form autoComplete="off" onSubmit={onSubmit}>

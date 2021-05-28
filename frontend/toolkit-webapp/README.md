@@ -8,15 +8,16 @@
     ```npm install```
     <!-- ```npm install react-bootstrap bootstrap``` -->
 3. Create a JSON file called ```config.json``` inside src folder containing:
-    {
+{
   "server_url": "http://localhost:4000/api",
   "paths": {
       "login": "/v0/auth/login",
       "registration": "/v0/auth/registration",
-      "dashboardCourses": "/v0/courses/info"
+      "dashboardCourses": "/v0/courses/info",
+      "course": "/v0/courses/course",
+      "createCourse": "/v0/courses/create"
   }
 }
-# Run
-1. run in CMD ```npm start```.
+run in CMD ```npm start```.
 
 

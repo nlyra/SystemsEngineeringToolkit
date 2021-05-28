@@ -126,7 +126,8 @@ const useStyles = makeStyles((theme) => ({
       },
 }))
 
-export default function TopNavBar({search}) {
+
+export default function TopNavBar({ search, hideComponents }) {
 
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
@@ -148,31 +149,35 @@ export default function TopNavBar({search}) {
                 })}
             >
                 <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleDrawerOpen}
-                        edge="start"
-                        className={clsx(classes.menuButton, {
-                            [classes.hide]: open,
-                        })}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon></SearchIcon>
-                        </div>
-                        <InputBase 
-                            placeholder="Search..."
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'search' }}
-                            onChange={e => search(e.target.value)}
-                        />
-                    </div>
+                    {hideComponents !== true ?
+                        <>
+                            <IconButton
+                                color="inherit"
+                                aria-label="open drawer"
+                                onClick={handleDrawerOpen}
+                                edge="start"
+                                className={clsx(classes.menuButton, {
+                                    [classes.hide]: open,
+                                })}
+                            >
+                                <MenuIcon style={{ color: "white" }}></MenuIcon>
+                            </IconButton>
+                            <div className={classes.search}>
+                                <div className={classes.searchIcon}>
+                                    <SearchIcon></SearchIcon>
+                                </div>
+                                <InputBase
+                                    placeholder="Search..."
+                                    classes={{
+                                        root: classes.inputRoot,
+                                        input: classes.inputInput,
+                                    }}
+                                    inputProps={{ 'aria-label': 'search' }}
+                                    onChange={e => search(e.target.value)}
+                                />
+                            </div>
+                        </>
+                        : null}
                     <div className={classes.horizontalCenteringLogo}>
                         <img src={logo_url} alt="logo" className={classes.logoStyle} />
                     </div>
@@ -187,6 +192,7 @@ export default function TopNavBar({search}) {
                         {/* <NotificationsIcon /> */}
                         {/* </Badge> */}
                         {/* </IconButton> */}
+                        {hideComponents !== true ? 
                         <IconButton
                             edge="end"
                             aria-label="account of current user"
@@ -196,59 +202,63 @@ export default function TopNavBar({search}) {
                             color="inherit"
                         >
                             <AccountCircle />
-                        </IconButton>
+                        </IconButton> 
+                            : null}
                     </div>
                 </Toolbar>
             </AppBar>
-            <Drawer
-                variant="permanent"
-                className={clsx(classes.drawer, {
-                    [classes.drawerOpen]: open,
-                    [classes.drawerClose]: !open,
-                })}
-                classes={{
-                    paper: clsx({
+
+            {hideComponents !== true ?
+                <Drawer
+                    variant="permanent"
+                    className={clsx(classes.drawer, {
                         [classes.drawerOpen]: open,
                         [classes.drawerClose]: !open,
-                    }),
-                }}
-            >
-                <div className={classes.toolbar}>
-                    <IconButton onClick={handleDrawerClose}>
-                        <ChevronLeftIcon />
-                    </IconButton>
-                </div>
-                <Divider />
-                <List>
-                <Tooltip title="Create Course" enterDelay={500}>
-                        <ListItem button>
-                            <ListItemIcon><PostAddIcon/></ListItemIcon>
-                            <ListItemText primary="Create Course" />
-                        </ListItem>
-                    </Tooltip>
+                    })}
+                    classes={{
+                        paper: clsx({
+                            [classes.drawerOpen]: open,
+                            [classes.drawerClose]: !open,
+                        }),
+                    }}
+                >
+                    <div className={classes.toolbar}>
+                        <IconButton onClick={handleDrawerClose}>
+                            <ChevronLeftIcon />
+                        </IconButton>
+                    </div>
+                    <Divider />
+                    <List>
+                    <Tooltip title="Create Course" enterDelay={500}>
+                            <ListItem button>
+                                <ListItemIcon><PostAddIcon/></ListItemIcon>
+                                <ListItemText primary="Create Course" />
+                            </ListItem>
+                        </Tooltip>
 
-                    <Tooltip title="My Courses" enterDelay={500}>
-                        <ListItem button>
-                            <ListItemIcon><MenuBookIcon/></ListItemIcon>
-                            <ListItemText primary="My Courses" />
-                        </ListItem>
-                    </Tooltip>
+                        <Tooltip title="My Courses" enterDelay={500}>
+                            <ListItem button>
+                                <ListItemIcon><MenuBookIcon/></ListItemIcon>
+                                <ListItemText primary="My Courses" />
+                            </ListItem>
+                        </Tooltip>
 
-                    <Tooltip title="My Files" enterDelay={500}>
-                        <ListItem button>
-                            <ListItemIcon><DescriptionIcon/></ListItemIcon>
-                            <ListItemText primary="My Files" />
-                        </ListItem>
-                    </Tooltip>
+                        <Tooltip title="My Files" enterDelay={500}>
+                            <ListItem button>
+                                <ListItemIcon><DescriptionIcon/></ListItemIcon>
+                                <ListItemText primary="My Files" />
+                            </ListItem>
+                        </Tooltip>
 
-                    <Tooltip title="Calendar" enterDelay={500}>
-                        <ListItem button>
-                            <ListItemIcon><CalendarTodayIcon/></ListItemIcon>
-                            <ListItemText primary="Calendar" />
-                        </ListItem>
-                    </Tooltip>
-                </List>
-            </Drawer>
+                        <Tooltip title="Calendar" enterDelay={500}>
+                            <ListItem button>
+                                <ListItemIcon><CalendarTodayIcon/></ListItemIcon>
+                                <ListItemText primary="Calendar" />
+                            </ListItem>
+                        </Tooltip>
+                    </List>
+                </Drawer>
+            : null}
         </div>
     )
 
