@@ -77,7 +77,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TopNavBar({ search, hideComponents }) {
 
-
     const classes = useStyles()
 
     return (
