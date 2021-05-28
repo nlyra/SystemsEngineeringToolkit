@@ -52,7 +52,18 @@ const courseStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(2),
         marginBottom: theme.spacing(2),
         marginLeft: theme.spacing(10)
-    }
+    },
+
+    darkOverlay:
+    {
+        backgroundColor: 'rgba(0, 0, 0, 0.596)',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        zIndex: -1
+    },
 
 }))
 

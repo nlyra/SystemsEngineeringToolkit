@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import config from '../config.json'
-import TopNavBar from '../components/topNavBar'
+import TopNavBar from '../components/TopNavBar'
 import { Divider, Box, makeStyles } from '@material-ui/core'
 import { borders } from '@material-ui/system';
 

@@ -5,8 +5,7 @@ import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import config from '../config.json'
 import registerStyles from '../styles/registerStyle'
 // import '../css/Registration.css';
-import useStyles from './styles'
-import topNavBar from '../components/topNavBar'
+import TopNavBar from '../components/TopNavBar'
 import videoSource from '../img/PEOSTRI.mp4'
 
 function Registration(props) {
