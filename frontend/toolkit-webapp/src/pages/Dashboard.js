@@ -77,10 +77,10 @@ const Dashboard = (props) => {
 
     return (
         <div >
-            <topNavBar
+            <TopNavBar
                 search={loadCourses}
                 page={page}
-            ></topNavBar>
+            ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
                 <div className='modules'>
