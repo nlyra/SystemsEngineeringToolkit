@@ -2,7 +2,13 @@ import React, { useState } from 'react'
 import { Button, Container, TextField, Typography, Paper, Box } from '@material-ui/core'
 import config from '../config.json'
 import loginStyles from '../styles/loginStyle'
+import useStyles from './styles'
+import TopNavBar from '../components/topNavBar'
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Avatar from '@material-ui/core/Avatar';
 import '../css/Login.css';
+import videoSource from '../img/PEOSTRI.mp4'
+
 
 function Login(props) {
 
@@ -52,53 +58,68 @@ function Login(props) {
     }
 
     return (
-        <Container className={classes.container} maxWidth="xs">
-            <div className={classes.block}>
-                <form autoComplete="off" onSubmit={onSubmit}>
-                    <Paper className={classes.paper} elevation={5} square={false}>
-                        <Box m={2} pt={2}>
-                            <Typography className={classes.Title} variant="h5">Sign In</Typography>
-                        </Box>
-                        <div className={classes.TextBox}>
-                            <TextField color='primary'
-                                size='small'
-                                variant="filled"
-                                label='Email'
-                                type="email"
-                                value={email}
-                                onChange={e => setEmail(e.target.value)}
-                                margin="normal"
-                                required={true}
-                                fullWidth
-                            />
-
-                            <TextField
-                                size='small'
-                                variant="filled"
-                                label='Password'
-                                type="password"
-                                value={password}
-                                onChange={e => setPassword(e.target.value)}
-                                margin="normal"
-                                required={true}
-                                fullWidth
-                            />
-
-                        </div>
-                        <Button type='submit' className={classes.button} size="medium" variant="contained" >
-                            Sign In
-                        </Button>
-                        <br></br>
-                        <Button type='submit' className={classes.button2} size="small" variant="contained" onClick={onRegister}>
-                            Register
-                        </Button>
-                        <Button type='submit' className={classes.button2} size="small" variant="contained" onClick={onForgot}>
-                            Forgot Password?
-                        </Button>
-                    </Paper>
-                </form>
+        <div style={{height:'100vh', width:'100vw'}}>
+            <TopNavBar hideComponents={true}/>
+            <div className={classes.darkOverlay}>
+                <video className={classes.video} autoPlay loop muted playsInline>
+                    <source src={videoSource} type="video/mp4" />
+                Your browser does not support the video tag.
+                </video>
             </div>
-        </Container>
+            <div className={classes.container}>
+                <div className={classes.block}>
+                    <form autoComplete="off" onSubmit={onSubmit}>
+                        <Paper className={classes.paper} elevation={5} square={false}>
+                        <Avatar className={classes.avatar}>
+                            <LockOutlinedIcon />
+                        </Avatar>
+                            <Box m={2} pt={2} style={{justifyContent: 'center'}}>
+                                <Typography className={classes.Title} variant="h5">Sign In</Typography>
+                            </Box>
+                            <div className={classes.TextBox}>
+                                <TextField color='primary'
+                                    size='small'
+                                    variant="filled"
+                                    label='Email'
+                                    type="email"
+                                    value={email}
+                                    onChange={e => setEmail(e.target.value)}
+                                    margin="normal"
+                                    required={true}
+                                    fullWidth
+                                    style={{backgroundColor: "rgba(255,255,255,0.8)"}}
+                                />
+
+                                <TextField
+                                    size='small'
+                                    variant="filled"
+                                    label='Password'
+                                    type="password"
+                                    value={password}
+                                    onChange={e => setPassword(e.target.value)}
+                                    margin="normal"
+                                    required={true}
+                                    fullWidth
+                                    style={{backgroundColor: "rgba(255,255,255,0.8)"}}
+                                />
+
+                            </div>
+                            <Button fullWidth type='submit' className={classes.button} size="medium" variant="contained" >
+                                Sign In
+                            </Button>
+                            <br></br>
+                            <Button type='submit' className={classes.button2} size="small" onClick={onRegister}>
+                                Register
+                            </Button>
+                            <Button type='submit' className={classes.button2} size="small" onClick={onForgot}>
+                                Forgot Password?
+                            </Button>
+                        </Paper>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
     )
 }
 

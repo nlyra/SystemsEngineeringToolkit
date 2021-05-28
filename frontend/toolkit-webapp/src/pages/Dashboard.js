@@ -13,15 +13,14 @@ const changeParams = (start, finish) => {
 
 }
 
-const worked = () => {
-    console.log("works")
-}
+
 
 const Dashboard = (props) => {
     const [courses, setCourses] = useState([])
     const [page, setPage] = useState(1)
+    const [cardAmount, setCardAmount] = useState(1)
     const [coursesPerPage, setCoursesPerPage] = useState(5)
-    // const [searchQuery, setSearchQuery] = useState([])
+    // const [searchQuery, setSearchQuery] = useState(undefined)
 
     const classes = dashStyles()
 
@@ -31,32 +30,35 @@ const Dashboard = (props) => {
     }, []);
 
     const handlePage = (event, value) => {
-        // console.log(value)
-        // console.log(page)
         setPage(value)
-        // console.log(page)
-        // loadCourses()
+        loadCourses(undefined, value)
     }
 
     // function to get the courses 
-    const loadCourses = async (query) => {
+    const loadCourses = async (query, s = 1) => {
         const token = localStorage.getItem("token");
         let res = undefined
-        // let skip = (page-1)*5
+        let skip = (s - 1) * cardAmount
+        // if (query == ""){
+        //     setSearchQuery(undefined)
+        // }else{
+        //     setSearchQuery(query)
+        // }
 
         res = await fetch(config.server_url + config.paths.dashboardCourses, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "search_query": query}) // + "skip": skip
+            body: JSON.stringify({ "token": token, "search_query": query, "skip": skip, "cardAmount": cardAmount })
         })
         // }
 
 
         const data = await res.json()
         if (data.message === undefined) {
-            console.log(data.courses);
+
+            // console.log(data.courses);
             // localStorage.setItem("token", data.token);
             setCourses(data.courses);
 
@@ -70,49 +72,28 @@ const Dashboard = (props) => {
         }
     }
 
+    const onCourse = (course) => {
+        props.history.push(`course/${course._id}`);
+    }
+
 
     return (
         <div >
             <TopNavBar
                 search={loadCourses}
+                page={page}
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
-                {/* <div className='createModules'>
-                    <Grid container spacing={3} justify="center">
-                        <Grid item>
-                            <Button variant="contained" onClick={loadCourses}>
-                                courses
-                        </Button>
-                        </Grid>
-
-                        <Grid item>
-                            <Button variant="contained">
-                                My Courses
-                        </Button>
-                        </Grid>
-
-                        <Grid item>
-                            <Button variant="contained">
-                                My Files
-                        </Button>
-                        </Grid>
-
-                        <Grid item>
-                            <Button variant="contained">
-                                Calendar
-                        </Button>
-                        </Grid>
-
-                    </Grid>
-                </div> */}
-
                 <div className='modules'>
                     <Grid container spacing={3}>
                         {courses.map((course) => (
 
                             <Grid item key={course.name} xs={12} sm={4} md={3}>
-                                <Card className={classes.card}>
+                                <Card
+                                    className={classes.card}
+                                    onClick={() => onCourse(course)}
+                                >
                                     <CardMedia
                                         className={classes.cardMedia}
                                         image={course.urlImage}
@@ -126,12 +107,6 @@ const Dashboard = (props) => {
                                             {course.description}
                                         </Typography>
                                         <CardActions>
-                                            {/* <Button variant="outlined" size="small">
-                                                View Module
-                                </Button>
-                                            <Button variant="outlined" size="small">
-                                                Edit
-                                </Button> */}
                                         </CardActions>
                                     </CardContent>
                                 </Card>
@@ -142,8 +117,7 @@ const Dashboard = (props) => {
 
                     </Grid>
                 </div>
-                {/* <Typography>Page: {page}</Typography>
-                <Pagination count={6} page={page} onChange = {handlePage} variant="outlined" shape="rounded" /> */}
+                <Pagination count={6} page={page} onChange={handlePage} variant="outlined" shape="rounded" />
             </Container>
         </div>
     )

@@ -74,7 +74,9 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-export default function TopNavBar({ search }) {
+
+export default function TopNavBar({ search, hideComponents }) {
+
 
     const classes = useStyles()
 
@@ -82,23 +84,27 @@ export default function TopNavBar({ search }) {
         <div className={classes.grow}>
             <AppBar position="static" className={classes.toolBarColor}>
                 <Toolbar>
-                    <IconButton>
-                        <MenuIcon style={{ color: "white" }}></MenuIcon>
-                    </IconButton>
-                    <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon></SearchIcon>
-                        </div>
-                        <InputBase
-                            placeholder="Search..."
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'search' }}
-                            onChange={e => search(e.target.value)}
-                        />
-                    </div>
+                    {hideComponents !== true ?
+                        <>
+                            <IconButton>
+                                <MenuIcon style={{ color: "white" }}></MenuIcon>
+                            </IconButton>
+                            <div className={classes.search}>
+                                <div className={classes.searchIcon}>
+                                    <SearchIcon></SearchIcon>
+                                </div>
+                                <InputBase
+                                    placeholder="Search..."
+                                    classes={{
+                                        root: classes.inputRoot,
+                                        input: classes.inputInput,
+                                    }}
+                                    inputProps={{ 'aria-label': 'search' }}
+                                    onChange={e => search(e.target.value)}
+                                />
+                            </div>
+                        </>
+                        : null}
                     <div className={classes.horizontalCenteringLogo}>
                         <img src={logo_url} alt="logo" className={classes.logoStyle} />
                     </div>
@@ -113,6 +119,7 @@ export default function TopNavBar({ search }) {
                         {/* <NotificationsIcon /> */}
                         {/* </Badge> */}
                         {/* </IconButton> */}
+                        {hideComponents !== true ? 
                         <IconButton
                             edge="end"
                             aria-label="account of current user"
@@ -122,11 +129,12 @@ export default function TopNavBar({ search }) {
                             color="inherit"
                         >
                             <AccountCircle />
-                        </IconButton>
+                        </IconButton> 
+                            : null}
                     </div>
                 </Toolbar>
             </AppBar>
         </div>
     )
 
-} 
+}
