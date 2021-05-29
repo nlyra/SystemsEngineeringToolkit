@@ -7,8 +7,7 @@ const router = express.Router();
 router.post('/course', VerifyToken, async (req, res) => {
   try {
     let course = {}
-    course = await Course.findOne({ "_id": req.body.id }, '_id name description urlImage');
-    // console.log(course)
+    course = await Course.findOne({ "_id": req.body.id }, '_id name description urlImage modules');
     res.json({ "course": course });
   } catch (e) {
     console.log(e);
@@ -28,12 +27,8 @@ router.post('/info', VerifyToken, async (req, res) => {
           { "name": { "$regex": query, $options: 'i' } },
         ]
       }, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
-      // , '_id name description url', { limit: 10 }
-      // console.log(courses)
-    } else {
       courses = await Course.find({}, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
     }
-    // console.log(courses)
 
     res.json({ "courses": courses });
   } catch (e) {
@@ -50,8 +45,8 @@ router.post('/create', VerifyToken, async (req, res) => {
     const course = new Course({
       name: req.body.name,
       description: req.body.description,
-      urlImage:req.body.urlImage,
-      category:req.body.category
+      urlImage: req.body.urlImage,
+      category: req.body.category
     })
 
     const savedCourse = await course.save();
@@ -106,8 +101,6 @@ router.post('/module/create', VerifyToken, async (req, res) => {
     console.log(e);
     res.sendStatus(500);
   }
-
-
 })
 
 module.exports = router;
