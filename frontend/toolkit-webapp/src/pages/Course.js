@@ -1,33 +1,26 @@
 import React, { useState, useEffect } from 'react'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import { Divider, Box, makeStyles } from '@material-ui/core'
-import { borders } from '@material-ui/system';
-import { red } from '@material-ui/core/colors';
+import { Divider, makeStyles, Grid, Typography } from '@material-ui/core'
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const dashStyles = makeStyles((theme) => ({
 
-  outerContainer: {
-    maxWidth: '100%',
-    padding: '0',
-    // flex: true
-
+  div: {
+    display: 'flex'
   },
-  container: {
-    backgroundColor: 'grey',
-    maxWidth: '100%',
-    padding: '0',
-    height: 'child'
-    // position: 'relative'
-  },
-
 
   title: {
     fontSize: '50px',
-    position: 'absolute',
-    left: '50%',
-    top: '7%',
-    transform: 'translate(-50%, -50%)'
+    textAlign: "center",
+  },
+
+  topItem: {
+    // paddingTop: '5.36%',
+    // paddingBottom: '8%',
   },
 
   courseImageStyle: {
@@ -44,8 +37,15 @@ const dashStyles = makeStyles((theme) => ({
   },
 
   divider: {
-    margin: theme.spacing(0, 3),
-    flexItem: true
+    margin: theme.spacing(3, 3),
+  },
+
+  accordion: {
+    padding: '3%'
+  },
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightRegular,
   },
 
 }))
@@ -89,20 +89,82 @@ const Course = (props) => {
   }
 
   return (
-    <>
+    <div className={classes.div}>
       <TopNavBar>
       </TopNavBar>
-      {/* <Container className={classes.outerContainer}> */}
-      <Container className={classes.container}>
-        <img src={course.urlImage} className={classes.courseImageStyle} />
-        <h1 className={classes.title} >{course.name} </h1>
-        <Typography className={classes.description}>{course.description}</Typography>
-      </Container>
-      {/* </Container> */}
-      <Divider />
-    </>
+      <Grid container direction="column" >
+        <Grid item xs={12} >
+          <Grid container className={classes.topItem}>
+            <Grid item xs={3} sm={2} lg={1}>
+              <img src={course.urlImage} className={classes.courseImageStyle} />
+            </Grid>
+            <Grid item xs={9} sm={10} lg={11}>
+              <h1 className={classes.title} >{course.name} </h1>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12} >
+          <Typography className={classes.description}>{course.description}</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Divider className={classes.divider} />
+        </Grid>
+        <Grid item xs={12} className={classes.accordion}>
+          {/* <div className={classes.root}> */}
+          <Accordion >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography className={classes.heading}>Accordion 1</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
+                sit amet blandit leo lobortis eget.
+          </Typography>
+            </AccordionDetails>
+          </Accordion>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel2a-content"
+              id="panel2a-header"
+            >
+              <Typography className={classes.heading}>Accordion 2</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
+                sit amet blandit leo lobortis eget.
+          </Typography>
+            </AccordionDetails>
+          </Accordion>
+          <Accordion >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel3a-content"
+              id="panel3a-header"
+            >
+              <Typography className={classes.heading}>Accordion 3</Typography>
+            </AccordionSummary>
+          </Accordion>
+          {/* </div> */}
+        </Grid>
+      </Grid>
+    </div>
   )
 }
 
 export default Course
 
+
+{/* <Container className={classes.outerContainer}>
+<Container className={classes.container}>
+  <img src={course.urlImage} className={classes.courseImageStyle} />
+  <h1 className={classes.title} >{course.name} </h1>
+  <Typography className={classes.description}>{course.description}</Typography>
+</Container>
+</Container>
+<Divider /> */}
