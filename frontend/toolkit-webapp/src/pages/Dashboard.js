@@ -2,39 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { Button, Card, CardActions, Container, CssBaseline, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
 import '../css/dashboard.css'
 import config from '../config.json'
-import TopNavBar from '../components/topNavBar'
+import TopNavBar from '../components/TopNavBar'
 import Pagination from '@material-ui/lab/Pagination'
-
-const dashStyles = makeStyles((theme) => ({
-
-    container:
-    {
-        marginTop: theme.spacing(15)
-    },
-
-    card:
-    {
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        borderRadius: 10
-    },
-
-    cardMedia:
-    {
-        paddingTop: '56.25%',
-        size: '30%'
-    },
-
-    CardContent:
-    {
-        flexGrow: 1,
-    },
-    grow:
-    {
-        flexGrow: 1
-    },
-}))
+import dashStyles from '../styles/dashboardStyle'
 
 const changeParams = (start, finish) => {
     start = start + 1
@@ -42,8 +12,6 @@ const changeParams = (start, finish) => {
     console.log("start " + start)
 
 }
-
-
 
 const Dashboard = (props) => {
     const [courses, setCourses] = useState([])

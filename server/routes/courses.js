@@ -50,8 +50,8 @@ router.post('/create', async (req, res) => {
     const course = new Course({
       name: req.body.name,
       description: req.body.description,
-      url: req.body.url,
-      category: req.body.category
+      urlImage:req.body.urlImage,
+      category:req.body.category
     })
 
     const savedCourse = await course.save();
@@ -59,6 +59,30 @@ router.post('/create', async (req, res) => {
     console.log('added course ', savedCourse._id);
 
     res.json(savedCourse);
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+
+
+})
+
+// Needs to be fleshed out because it may not work right now. It is a reskin of createCourse POST
+router.post('module/create', async (req, res) => {
+
+  try {
+    const module = new module({
+      name: req.body.name,
+      type: req.body.type,
+      description: req.body.description,
+      content: req.body.content
+    })
+
+    const savedModule = await module.save();
+
+    console.log('added module ', savedModule._id);
+
+    res.json(savedModule);
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
