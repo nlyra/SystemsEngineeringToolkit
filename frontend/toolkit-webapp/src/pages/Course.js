@@ -10,7 +10,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 const dashStyles = makeStyles((theme) => ({
 
   div: {
-    display: 'flex'
+    display: 'flex',
+    position: 'relative'
   },
 
   title: {
@@ -19,8 +20,8 @@ const dashStyles = makeStyles((theme) => ({
   },
 
   topItem: {
-    // paddingTop: '5.36%',
-    // paddingBottom: '8%',
+    paddingTop: '4.9vh',
+    paddingBottom: '6%',
   },
 
   courseImageStyle: {
@@ -90,9 +91,9 @@ const Course = (props) => {
 
   return (
     <div className={classes.div}>
-      <TopNavBar>
+      <TopNavBar >
       </TopNavBar>
-      <Grid container direction="column" >
+      <Grid container direction="column" className={classes.div}>
         <Grid item xs={12} >
           <Grid container className={classes.topItem}>
             <Grid item xs={3} sm={2} lg={1}>
