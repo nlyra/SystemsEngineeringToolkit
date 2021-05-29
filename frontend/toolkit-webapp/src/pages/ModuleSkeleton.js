@@ -3,12 +3,12 @@ import { Button, FormControl, Container, Grid, NativeSelect, TextField, Typograp
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import config from '../config.json'
-import TopNavBar from '../components/topNavBar'
-import useStyles from './styles'
+import TopNavBar from '../components/TopNavBar'
+import moduleStyles from '../styles/moduleStyle'
 import '../css/Login.css';
-import NoteCard from '../components/NoteCard'
-import Draggable from 'react-draggable'
-import { Notes, SettingsOverscanOutlined } from '@material-ui/icons';
+// import NoteCard from '../components/NoteCard'
+// import Draggable from 'react-draggable'
+// import { Notes, SettingsOverscanOutlined } from '@material-ui/icons';
 import { Card, CardHeader, CardContent, IconButton} from '@material-ui/core'
 import { DeleteOutlined, ArrowUpwardOutlined, ArrowDownwardOutlined } from '@material-ui/icons'
 
@@ -19,7 +19,7 @@ function NewModule(props) {
     const [moduleName, setModuleName] = useState('')
     const [moduleType, setModuleType] = useState('')
     const [description, setDescription] = useState('')
-    const classes = useStyles()
+    const classes = moduleStyles()
     const [open, setOpen] = React.useState(false);
     var cards = JSON.parse(localStorage.getItem('myCards'))
 
