@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Module = require('module');
 
 const CourseSchema = mongoose.Schema({
   name: {
@@ -21,17 +22,13 @@ const CourseSchema = mongoose.Schema({
     type: Number,
     "default": 0
   },
-  
+
   urlImage: {
     type: String,
     required: true
   },
-  modules: [
-    {
-      name: String,
-      type: String
-    }
-  ]
+
+  modules: [],
 })
 
 
