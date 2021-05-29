@@ -1,22 +1,23 @@
 import React, { useState } from 'react'
-import { fade, makeStyles, IconButton, Menu, AppBar, Toolbar, InputBase, Badge } from "@material-ui/core";
+import { fade, makeStyles, IconButton, AppBar, Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu'
 import SearchIcon from '@material-ui/icons/Search'
-import MailIcon from '@material-ui/icons/Mail'
-import AccountCircle from '@material-ui/icons/AccountCircle'
-import NotificationsIcon from '@material-ui/icons/Notifications'
-//import logo from '../img/peostrilogo.jpg'
+import AccountCircle from '@material-ui/icons/AccountCircle';
+//import logo from '../img/peostrilogo.png';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import PostAddIcon from '@material-ui/icons/PostAdd';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
+import DescriptionIcon from '@material-ui/icons/Description';
+import clsx from 'clsx';
 const logo_url = "http://localhost:4000/misc_files/logo.jpg"
 
-const useStyles = makeStyles((theme) => ({
+const drawerWidth = 240;
 
-    toolBarColor:
+const useStyles = makeStyles((theme) => ({
+    root:
     {
-        background: "black"
-    },
-    grow:
-    {
-        flexGrow: 1
+        display: 'flex',
     },
     search: {
         position: 'relative',
@@ -72,21 +73,95 @@ const useStyles = makeStyles((theme) => ({
     test: {
         display: 'flex',
         alignItems: 'space-between'
-    }
+    },
+    drawer: {
+        width: drawerWidth,
+        flexShrink: 0,
+        whiteSpace: 'nowrap',
+    },
+    drawerOpen: {
+        width: drawerWidth,
+        transition: theme.transitions.create('width', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    },
+    drawerClose: {
+        transition: theme.transitions.create('width', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        overflowX: 'hidden',
+        width: theme.spacing(7) + 1,
+        [theme.breakpoints.up('sm')]: {
+            width: theme.spacing(9) + 1,
+        }
+    },
+    toolbar: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        padding: theme.spacing(0, 1),
+        // necessary for content to be below app bar
+        ...theme.mixins.toolbar,
+    },
+    content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
+    },
+    appBar: {
+        background: 'black',
+        zIndex: theme.zIndex.drawer + 1,
+        transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+    },
+    appBarShift: {
+        marginLeft: drawerWidth,
+        width: `calc(100% - ${drawerWidth}px)`,
+        transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    },
 }))
 
 
 export default function TopNavBar({ search, hideComponents }) {
 
-    const classes = useStyles()
+    const classes = useStyles();
+    const [open, setOpen] = React.useState(false);
+
+    const handleDrawerOpen = () => {
+        setOpen(true);
+    };
+
+    const handleDrawerClose = () => {
+        setOpen(false);
+    };
 
     return (
-        <div className={classes.grow}>
-            <AppBar position="static" className={classes.toolBarColor}>
+        <div className={classes.root}>
+            <AppBar
+                // variant="permanent"
+                position="fixed"
+                className={clsx(classes.appBar, {
+                    [classes.appBarShift]: open,
+                })}
+            >
                 <Toolbar>
                     {hideComponents !== true ?
                         <>
-                            <IconButton>
+                            <IconButton
+                                color="inherit"
+                                aria-label="open drawer"
+                                onClick={handleDrawerOpen}
+                                edge="start"
+                                className={clsx(classes.menuButton, {
+                                    [classes.hide]: open,
+                                })}
+                            >
                                 <MenuIcon style={{ color: "white" }}></MenuIcon>
                             </IconButton>
                             <div className={classes.search}>
@@ -119,21 +194,73 @@ export default function TopNavBar({ search, hideComponents }) {
                         {/* <NotificationsIcon /> */}
                         {/* </Badge> */}
                         {/* </IconButton> */}
-                        {hideComponents !== true ? 
-                        <IconButton
-                            edge="end"
-                            aria-label="account of current user"
-                            //aria-controls={menuId}
-                            aria-haspopup="true"
-                            //onClick={handleProfileMenuOpen}
-                            color="inherit"
-                        >
-                            <AccountCircle />
-                        </IconButton> 
+                        {hideComponents !== true ?
+                            <IconButton
+                                edge="end"
+                                aria-label="account of current user"
+                                //aria-controls={menuId}
+                                aria-haspopup="true"
+                                //onClick={handleProfileMenuOpen}
+                                color="inherit"
+                            >
+                                <AccountCircle />
+                            </IconButton>
                             : null}
                     </div>
                 </Toolbar>
             </AppBar>
+
+            {hideComponents !== true ?
+                <Drawer
+                    variant="permanent"
+                    className={clsx(classes.drawer, {
+                        [classes.drawerOpen]: open,
+                        [classes.drawerClose]: !open,
+                    })}
+                    classes={{
+                        paper: clsx({
+                            [classes.drawerOpen]: open,
+                            [classes.drawerClose]: !open,
+                        }),
+                    }}
+                >
+                    <div className={classes.toolbar}>
+                        <IconButton onClick={handleDrawerClose}>
+                            <ChevronLeftIcon />
+                        </IconButton>
+                    </div>
+                    <Divider />
+                    <List>
+                        <Tooltip title="Create Course" enterDelay={500}>
+                            <ListItem button>
+                                <ListItemIcon><PostAddIcon /></ListItemIcon>
+                                <ListItemText primary="Create Course" />
+                            </ListItem>
+                        </Tooltip>
+
+                        <Tooltip title="My Courses" enterDelay={500}>
+                            <ListItem button>
+                                <ListItemIcon><MenuBookIcon /></ListItemIcon>
+                                <ListItemText primary="My Courses" />
+                            </ListItem>
+                        </Tooltip>
+
+                        <Tooltip title="My Files" enterDelay={500}>
+                            <ListItem button>
+                                <ListItemIcon><DescriptionIcon /></ListItemIcon>
+                                <ListItemText primary="My Files" />
+                            </ListItem>
+                        </Tooltip>
+
+                        <Tooltip title="Calendar" enterDelay={500}>
+                            <ListItem button>
+                                <ListItemIcon><CalendarTodayIcon /></ListItemIcon>
+                                <ListItemText primary="Calendar" />
+                            </ListItem>
+                        </Tooltip>
+                    </List>
+                </Drawer>
+                : null}
         </div>
     )
 

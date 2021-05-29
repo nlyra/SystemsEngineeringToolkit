@@ -16,7 +16,7 @@ const changeParams = (start, finish) => {
 const Dashboard = (props) => {
     const [courses, setCourses] = useState([])
     const [page, setPage] = useState(1)
-    const [cardAmount, setCardAmount] = useState(1)
+    const [cardAmount, setCardAmount] = useState(3)
     const [coursesPerPage, setCoursesPerPage] = useState(5)
     // const [searchQuery, setSearchQuery] = useState(undefined)
 
@@ -76,7 +76,7 @@ const Dashboard = (props) => {
 
 
     return (
-        <div >
+        <div className={classes.div}>
             <TopNavBar
                 search={loadCourses}
                 page={page}
@@ -102,7 +102,7 @@ const Dashboard = (props) => {
                                             {course.name}
                                         </Typography>
                                         <Typography gutterBottom>
-                                            {course.description}
+                                            {course.description.length < 100 ? course.description : course.description.substr(0, 100) + ' ...'}
                                         </Typography>
                                         <CardActions>
                                         </CardActions>
