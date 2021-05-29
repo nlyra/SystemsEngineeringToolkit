@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { Button, Container, TextField, Typography, Paper, Box, StylesProvider } from '@material-ui/core'
+import { Button, Container, TextField, Typography, Paper, Box } from '@material-ui/core'
 import config from '../config.json'
 import loginStyles from '../styles/loginStyle'
 import TopNavBar from '../components/TopNavBar'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Avatar from '@material-ui/core/Avatar';
-import '../css/Login.css';
 import videoSource from '../img/PEOSTRI.mp4'
 
 function Login(props) {

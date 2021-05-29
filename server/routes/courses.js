@@ -44,7 +44,7 @@ router.post('/info', VerifyToken, async (req, res) => {
 
 })
 
-router.post('/create', async (req, res) => {
+router.post('/create', VerifyToken, async (req, res) => {
 
   try {
     const course = new Course({
@@ -68,21 +68,40 @@ router.post('/create', async (req, res) => {
 })
 
 // Needs to be fleshed out because it may not work right now. It is a reskin of createCourse POST
-router.post('module/create', async (req, res) => {
-
+router.post('/module/create', VerifyToken, async (req, res) => {
+  console.log(req.body);
   try {
-    const module = new module({
-      name: req.body.name,
-      type: req.body.type,
-      description: req.body.description,
-      content: req.body.content
-    })
+    // const module = new module({
+    //   name: req.body.name,
+    //   type: req.body.type,
+    //   description: req.body.description,
+    //   content: req.body.content
+    // })
 
-    const savedModule = await module.save();
+    // const savedModule = await module.save();
 
-    console.log('added module ', savedModule._id);
+    // console.log('added module ', savedModule._id);
 
-    res.json(savedModule);
+    // const module = {
+    //   'title':req.body.title,
+    //   'type':req.body.type,
+    //   'description':req.body.description,
+    // }
+
+    const data = Course.update(
+      {'_id':req.body.courseID}, // query parameter
+      {
+        $set: {
+          "module": 
+        {
+          'title':req.body.title,
+          'type':req.body.type,
+          'description':req.body.description,
+        }}});
+
+    console.log(data)
+
+    res.json(data);
   } catch (e) {
     console.log(e);
     res.sendStatus(500);

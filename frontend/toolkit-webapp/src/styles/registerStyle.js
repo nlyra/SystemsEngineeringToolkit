@@ -6,40 +6,64 @@ const registerStyles = makeStyles((theme) => ({
     {
         fontWeight: "bold"
     },
+
     container: {
-        height: "100%",
+        height: "100vh",
+        width: "100vw",
+        backgroundColor: "rgba(0,0,0,0.5)",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
-
-    paper:
+    paper: 
     {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
         padding: '5px 40px 5px 40px',
-        borderRadius: 15,
-        marginTop: theme.spacing(25),
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        justifyContent: 'center',
+        borderRadius: 15
     },
-
     block:
     {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        width: '22%',
+        minWidth: '250px',
     },
-
     button:
     {
         marginTop: theme.spacing(2),
         marginBottom: theme.spacing(2),
-        background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
+        backgroundColor: 'black',
+        color: 'white',
+        "&:hover": {
+            color: 'black'
+        }
     },
-
     button2:
     {
         fontSize: 10,
-        background: 'linear-gradient(45deg, #90a4ae 10%, #e0e0e0 90%)',
+        backgroundColor: 'light-grey',
         marginBottom: theme.spacing(2),
-        // marginLeft: theme.spacing(2)
-        // marginRight: theme.spacing(3) 
+        marginLeft:  theme.spacing(2)
     },
 
+    button3:
+    {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+        marginRight: theme.spacing(35)
+    },
+
+    button4:
+    {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+        marginLeft: theme.spacing(10)
+    },
     video: 
     {
         objectFit: 'cover',
@@ -51,6 +75,23 @@ const registerStyles = makeStyles((theme) => ({
         zIndex: -2
     },
 
+    darkOverlay:
+    {
+        backgroundColor: 'rgba(0, 0, 0, 0.596)',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: -1
+    },
+    avatar: 
+    {
+        margin: theme.spacing(2),
+        backgroundColor: 'black'
+    },
+
 }))
+
 
 export default registerStyles;
