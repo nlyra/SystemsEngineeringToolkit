@@ -12,7 +12,6 @@ function NewCourse(props) {
     const [courseTitle, setCourseTitle] = useState('')
     const [category, setCategory] = useState('')
     const [description, setDescription] = useState('')
-
     const classes = courseStyles()
 
     const handleChange = (event) => {

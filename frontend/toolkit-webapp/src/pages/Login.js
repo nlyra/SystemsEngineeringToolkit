@@ -14,7 +14,7 @@ function Login(props) {
     const classes = loginStyles()
 
     const onRegister = (e) => {
-        props.history.push('registration');
+        props.history.push('NewModule');
     }
     const onForgot = (e) => {
         props.history.push('forgot');
