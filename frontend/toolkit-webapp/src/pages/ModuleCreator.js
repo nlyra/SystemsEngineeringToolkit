@@ -33,17 +33,17 @@ function ModuleCreator(props) {
         // setDescriptio('')
     }
 
-    const onUpload = (e) => {
-        alert('feature undefined')
-        return
-    }
+    // const onUpload = (e) => {
+    //     alert('feature undefined')
+    //     return
+    // }
 
     // We ideally want to redirect to module manager page, but we do not have that yet
     const cancel = () => {
         props.history.push('dashboard')
     }
 
-    const onFinish = async (creds) => {
+    const onFinish = async (module) => {
 
         const token = localStorage.getItem("token");
         if(token != undefined)
@@ -54,12 +54,14 @@ function ModuleCreator(props) {
                 headers: {
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify({ "title": [], "name": creds.courseTitle, "category": creds.category, "description": creds.description, "url": 'http://localhost:4000/java.jpg'})
+                body: JSON.stringify({ 'token': token, 'courseID': '60aeaa0574ee92fee31e4b02', 'title': module.title, 'description':module.description, 'type':module.type })
             })
     
             const data = await res.json()
     
             if (data.message === undefined) {
+                // probably change back to course manager 
+                alert('worked')
                 props.history.push('dashboard')
             }
             else { // this is to check if there are errors not being addressed already
@@ -144,7 +146,7 @@ function ModuleCreator(props) {
                             Cancel
                         </Button>
                         <Button type='submit' className={classes.button2} size="small" variant="contained" onSubmit={onSubmit}>
-                            Continue
+                            Create
                         </Button>
                         </Container>
                         </Paper>
