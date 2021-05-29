@@ -5,6 +5,7 @@ import Registration from './pages/Registration'
 import ForgotPassword from './pages/ForgotPassword'
 import CourseCreatorNewCourse from './pages/CourseCreatorNewCourse'
 import ModuleSkeleton from './pages/ModuleSkeleton'
+import Course from './pages/Course'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Course from './pages/Course'
 import ModuleCreator from './pages/ModuleCreator';
