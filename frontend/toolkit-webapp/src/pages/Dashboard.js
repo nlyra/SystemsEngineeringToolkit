@@ -3,20 +3,16 @@ import { Button, Card, CardActions, Container, CssBaseline, makeStyles, Grid, Ca
 import '../css/dashboard.css'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import Pagination from '@material-ui/lab/Pagination'
+// import Pagination from '@material-ui/lab/Pagination'
 import dashStyles from '../styles/dashboardStyle'
-
-const changeParams = (start, finish) => {
-    start = start + 1
-    finish = finish + 1
-    console.log("start " + start)
-
-}
 
 const Dashboard = (props) => {
     const [courses, setCourses] = useState([])
     const [page, setPage] = useState(1)
-    const [cardAmount, setCardAmount] = useState(3)
+    const [cardAmount, setCardAmount] = useState(8)
+    const [hasMore, setHasMore] = useState(false)
+    const [loading, setLoading] = useState(true)
+
     const [coursesPerPage, setCoursesPerPage] = useState(5)
     // const [searchQuery, setSearchQuery] = useState(undefined)
 
@@ -32,16 +28,19 @@ const Dashboard = (props) => {
         loadCourses(undefined, value)
     }
 
+    const handleScroll = (e) => {
+        let element = e.target
+        if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+              loadCourses()
+        }
+    }
+
+
     // function to get the courses 
     const loadCourses = async (query, s = 1) => {
         const token = localStorage.getItem("token");
         let res = undefined
         let skip = (s - 1) * cardAmount
-        // if (query == ""){
-        //     setSearchQuery(undefined)
-        // }else{
-        //     setSearchQuery(query)
-        // }
 
         res = await fetch(config.server_url + config.paths.dashboardCourses, {
             method: 'POST',
@@ -58,7 +57,8 @@ const Dashboard = (props) => {
 
             // console.log(data.courses);
             // localStorage.setItem("token", data.token);
-            setCourses(data.courses);
+            //setCourses(data.courses)            
+            setCourses(courses.concat(data.courses));
 
 
         } else if (data.message === "wrong token") {
@@ -76,14 +76,14 @@ const Dashboard = (props) => {
 
 
     return (
-        <div className={classes.div}>
+        <div className={classes.div} onScroll={handleScroll}>
             <TopNavBar
                 search={loadCourses}
                 page={page}
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
-                <div className='modules'>
+                <div className='courses'>
                     <Grid container spacing={3}>
                         {courses.map((course) => (
 
@@ -115,7 +115,7 @@ const Dashboard = (props) => {
 
                     </Grid>
                 </div>
-                <Pagination count={6} page={page} onChange={handlePage} variant="outlined" shape="rounded" />
+                {/* <Pagination count={6} page={page} onChange={handlePage} variant="outlined" shape="rounded" /> */}
             </Container>
         </div>
     )

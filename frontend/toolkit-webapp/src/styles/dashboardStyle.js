@@ -10,7 +10,7 @@ const dashStyles = makeStyles((theme) => ({
     {
         marginTop: theme.spacing(15)
     },
-
+    
     card:
     {
         height: '100%',
