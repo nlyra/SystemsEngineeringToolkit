@@ -29,6 +29,7 @@ const CourseSchema = mongoose.Schema({
   },
 
   modules: [],
+
 })
 
 

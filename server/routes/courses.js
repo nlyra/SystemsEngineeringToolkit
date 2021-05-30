@@ -7,8 +7,7 @@ const router = express.Router();
 router.post('/course', VerifyToken, async (req, res) => {
   try {
     let course = {}
-    course = await Course.findOne({ "_id": req.body.id }, '_id name description urlImage');
-    // console.log(course)
+    course = await Course.findOne({ "_id": req.body.id }, '_id name description urlImage modules');
     res.json({ "course": course });
   } catch (e) {
     console.log(e);
@@ -18,6 +17,7 @@ router.post('/course', VerifyToken, async (req, res) => {
 
 })
 router.post('/info', VerifyToken, async (req, res) => {
+  // console.log(req.body)
   try {
     let courses = []
     if (req.body.search_query != undefined) {
@@ -28,12 +28,11 @@ router.post('/info', VerifyToken, async (req, res) => {
           { "name": { "$regex": query, $options: 'i' } },
         ]
       }, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
-      // , '_id name description url', { limit: 10 }
-      // console.log(courses)
+      // courses = await Course.find({}, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
     } else {
       courses = await Course.find({}, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
     }
-    // console.log(courses)
+    console.log(courses)
 
     res.json({ "courses": courses });
   } catch (e) {
@@ -91,8 +90,6 @@ router.post('/module/create', VerifyToken, async (req, res) => {
     console.log(e);
     res.sendStatus(500);
   }
-
-
 })
 
 module.exports = router;
