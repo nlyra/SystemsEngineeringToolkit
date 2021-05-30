@@ -80,7 +80,7 @@ const Course = (props) => {
     if (data.message === undefined) {
       setCourse(data.course);
       setModules(data.course.modules);
-      console.log(data.course.modules)
+      //console.log(data.course)
 
 
     } else if (data.message === "wrong token") {
