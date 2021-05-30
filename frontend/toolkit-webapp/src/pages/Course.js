@@ -6,6 +6,7 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import CourseInfoEditButton from '../components/CourseInfoEditButton';
 
 const dashStyles = makeStyles((theme) => ({
 
@@ -103,7 +104,10 @@ const Course = (props) => {
               <img src={course.urlImage} className={classes.courseImageStyle} />
             </Grid>
             <Grid item xs={9} sm={10} lg={11}>
-              <h1 className={classes.title} >{course.name} </h1>
+              <h1 className={classes.title}>{course.name}</h1>
+            </Grid>
+            <Grid item xs={9} sm={10} lg={11}>
+                <CourseInfoEditButton/>
             </Grid>
           </Grid>
         </Grid>
@@ -114,8 +118,8 @@ const Course = (props) => {
           <Divider className={classes.divider} />
         </Grid>
         <Grid item xs={12} className={classes.accordion}>
-          
-          
+
+
           {/* modules starts here */}
           {modules.map((module) => (
             <Accordion key={modules.indexOf(module)} >
@@ -129,9 +133,9 @@ const Course = (props) => {
               <AccordionDetails>
                 <Typography>
                   Type: {module.type}
-                <br/>
-                <br/>
-                {module.description}
+                  <br />
+                  <br />
+                  {module.description}
                 </Typography>
               </AccordionDetails>
             </Accordion>
