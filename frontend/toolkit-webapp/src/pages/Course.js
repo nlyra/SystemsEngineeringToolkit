@@ -52,7 +52,8 @@ const dashStyles = makeStyles((theme) => ({
 }))
 
 const Course = (props) => {
-  const [course, setCourse] = useState([])
+  const [course, setCourse] = useState({})
+  const [modules, setModules] = useState([])
 
   const classes = dashStyles()
 
@@ -78,6 +79,8 @@ const Course = (props) => {
     const data = await res.json()
     if (data.message === undefined) {
       setCourse(data.course);
+      setModules(data.course.modules);
+      console.log(data.course.modules)
 
 
     } else if (data.message === "wrong token") {
@@ -111,47 +114,30 @@ const Course = (props) => {
           <Divider className={classes.divider} />
         </Grid>
         <Grid item xs={12} className={classes.accordion}>
-          {/* <div className={classes.root}> */}
-          <Accordion >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography className={classes.heading}>Accordion 1</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                sit amet blandit leo lobortis eget.
-          </Typography>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel2a-content"
-              id="panel2a-header"
-            >
-              <Typography className={classes.heading}>Accordion 2</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                sit amet blandit leo lobortis eget.
-          </Typography>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel3a-content"
-              id="panel3a-header"
-            >
-              <Typography className={classes.heading}>Accordion 3</Typography>
-            </AccordionSummary>
-          </Accordion>
-          {/* </div> */}
+          
+          
+          {/* modules starts here */}
+          {modules.map((module) => (
+            <Accordion key={modules.indexOf(module)} >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>
+                  Type: {module.type}
+                <br/>
+                <br/>
+                {module.description}
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+          ))}
+
+
         </Grid>
       </Grid>
     </div>
@@ -160,12 +146,3 @@ const Course = (props) => {
 
 export default Course
 
-
-{/* <Container className={classes.outerContainer}>
-<Container className={classes.container}>
-  <img src={course.urlImage} className={classes.courseImageStyle} />
-  <h1 className={classes.title} >{course.name} </h1>
-  <Typography className={classes.description}>{course.description}</Typography>
-</Container>
-</Container>
-<Divider /> */}
