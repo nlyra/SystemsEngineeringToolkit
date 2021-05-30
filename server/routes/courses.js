@@ -17,6 +17,7 @@ router.post('/course', VerifyToken, async (req, res) => {
 
 })
 router.post('/info', VerifyToken, async (req, res) => {
+  // console.log(req.body)
   try {
     let courses = []
     if (req.body.search_query != undefined) {
@@ -27,8 +28,11 @@ router.post('/info', VerifyToken, async (req, res) => {
           { "name": { "$regex": query, $options: 'i' } },
         ]
       }, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
+      // courses = await Course.find({}, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
+    } else {
       courses = await Course.find({}, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
     }
+    console.log(courses)
 
     res.json({ "courses": courses });
   } catch (e) {
