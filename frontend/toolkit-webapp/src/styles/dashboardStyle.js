@@ -3,12 +3,14 @@ import { makeStyles } from '@material-ui/core/styles'
 const dashStyles = makeStyles((theme) => ({
 
     div: {
-        display: 'flex'
+        display: 'flex',
+        overflowY: 'scroll'
     },
 
     container:
     {
-        marginTop: theme.spacing(15)
+        marginTop: theme.spacing(15),
+
     },
     
     card:

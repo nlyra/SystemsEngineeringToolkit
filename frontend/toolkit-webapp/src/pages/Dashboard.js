@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Card, CardActions, Container, CssBaseline, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
-import '../css/dashboard.css'
+import '../css/scrollbar.css'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 // import Pagination from '@material-ui/lab/Pagination'
@@ -9,9 +9,11 @@ import dashStyles from '../styles/dashboardStyle'
 const Dashboard = (props) => {
     const [courses, setCourses] = useState([])
     const [page, setPage] = useState(1)
-    const [cardAmount, setCardAmount] = useState(8)
+    const [cardAmount, setCardAmount] = useState(5)
     const [hasMore, setHasMore] = useState(false)
     const [loading, setLoading] = useState(true)
+    
+    let skip = 1
 
     const [coursesPerPage, setCoursesPerPage] = useState(5)
     // const [searchQuery, setSearchQuery] = useState(undefined)
@@ -30,14 +32,21 @@ const Dashboard = (props) => {
 
     const handleScroll = (e) => {
         let element = e.target
-        if (element.scrollHeight - element.scrollTop === element.clientHeight) {
-              loadCourses()
+        console.log('scrollHeight: ' + element.scrollHeight)
+        console.log('scrollTop: ' + element.scrollTop)
+        console.log('clientHeight: ' + element.clientHeight)
+
+        if (element.scrollHeight - parseInt(Math.ceil(element.scrollTop)) == element.clientHeight) {
+                // skip = skip + 1
+                <h1>Hello</h1>
+              loadCourses(undefined, skip)
+
         }
     }
 
 
     // function to get the courses 
-    const loadCourses = async (query, s = 1) => {
+    const loadCourses = async (query, s) => {
         const token = localStorage.getItem("token");
         let res = undefined
         let skip = (s - 1) * cardAmount
@@ -57,7 +66,8 @@ const Dashboard = (props) => {
 
             // console.log(data.courses);
             // localStorage.setItem("token", data.token);
-            //setCourses(data.courses)            
+
+            // This line of code had setCourses(data.courses) before            
             setCourses(courses.concat(data.courses));
 
 
@@ -82,8 +92,8 @@ const Dashboard = (props) => {
                 page={page}
             ></TopNavBar>
             <CssBaseline />
-            <Container maxWidth="lg" className={classes.container}>
-                <div className='courses'>
+            <Container maxWidth="lg" className={classes.container} >
+                <div className='courses' >
                     <Grid container spacing={3}>
                         {courses.map((course) => (
 
