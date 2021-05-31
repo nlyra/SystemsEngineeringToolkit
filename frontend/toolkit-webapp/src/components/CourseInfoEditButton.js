@@ -5,26 +5,33 @@ const useStyles = makeStyles((theme) => ({
     root:
     {
         display: 'flex',
+        position: 'relative'
+
     },
     button:
     {
-        //marginTop: theme.spacing(15),
+        marginTop: theme.spacing(-5),
         marginLeft: theme.spacing(175),
-        //marginBottom: theme.spacing(10)
+        alignItems: "center",
+        justifyContent: "center",
+        //marginBottom: theme.spacing(100)
+
     }
 
 }))
 
-export default function CourseInfoEditButton({ search, hideComponents }) {
+export default function CourseInfoEditButton({ hideComponent }) {
 
     const classes = useStyles();
 
     return (
 
         <div className={classes.root}>
+            {hideComponent !== true ?
             <Button type='submit' className={classes.button} size="medium" variant="contained">
                 Edit course info
             </Button>
+            : null }
         </div>
     )
 }

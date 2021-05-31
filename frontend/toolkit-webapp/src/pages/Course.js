@@ -7,6 +7,7 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CourseInfoEditButton from '../components/CourseInfoEditButton';
+import ModuleInfoEditButton from '../components/ModuleInfoEditButton';
 
 const dashStyles = makeStyles((theme) => ({
 
@@ -82,8 +83,6 @@ const Course = (props) => {
       setCourse(data.course);
       setModules(data.course.modules);
       //console.log(data.course)
-
-
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
@@ -104,10 +103,7 @@ const Course = (props) => {
               <img src={course.urlImage} className={classes.courseImageStyle} />
             </Grid>
             <Grid item xs={9} sm={10} lg={11}>
-              <h1 className={classes.title}>{course.name}</h1>
-            </Grid>
-            <Grid item xs={9} sm={10} lg={11}>
-                <CourseInfoEditButton/>
+              <h1 className={classes.title}>{course.name}<CourseInfoEditButton hideComponent={false}/></h1>
             </Grid>
           </Grid>
         </Grid>
@@ -128,7 +124,7 @@ const Course = (props) => {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
-                <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
+                <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title} <ModuleInfoEditButton hideComponent={false}/></Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Typography>
