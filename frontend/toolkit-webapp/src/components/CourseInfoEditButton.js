@@ -20,15 +20,23 @@ const useStyles = makeStyles((theme) => ({
 
 }))
 
+
 export default function CourseInfoEditButton({ hideComponent }) {
 
     const classes = useStyles();
+    const [editCourseInfo, setEditCourseInfo] = useState(false)
+    const [test, setTest] = useState(2)
+
+    const onEditCourseTitle = (e) => {
+        alert("you have pressed the button");
+        setEditCourseInfo(true);
+    };
 
     return (
 
         <div className={classes.root}>
             {hideComponent !== true ?
-            <Button type='submit' className={classes.button} size="medium" variant="contained">
+            <Button type='submit' className={classes.button} size="medium" variant="contained" onClick={onEditCourseTitle}>
                 Edit course info
             </Button>
             : null }
