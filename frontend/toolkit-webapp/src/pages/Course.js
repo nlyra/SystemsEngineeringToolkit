@@ -114,11 +114,10 @@ const Course = ({ props, hideComponent }) => {
                 <h1 className={classes.title}>{course.name}            {hideComponent !== true ?
                   <Button type='submit' className={classes.button} size="medium" variant="contained" onClick={onEditCourseTitle}>
                     Edit course info
-            </Button>
+                  </Button>
                   : null}</h1>
               </Grid>
               :
-              // <Grid item xs={9} sm={10} lg={11}>
               <TextField
                 color='primary'
                 size='large'
@@ -130,9 +129,9 @@ const Course = ({ props, hideComponent }) => {
                 margin="normal"
                 required={true}
                 fullWidth
+                
               //style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
               />
-              // </Grid>
             }
 
           </Grid>
