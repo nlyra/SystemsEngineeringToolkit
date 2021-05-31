@@ -35,7 +35,8 @@ const dashStyles = makeStyles((theme) => ({
     textAlign: "right",
     paddingRight: '2%',
     float: 'right',
-    maxWidth: "90%"
+    maxWidth: "90%",
+
   },
 
   divider: {
@@ -127,14 +128,23 @@ const Course = (props) => {
               >
                 <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
               </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
+              <AccordionDetails >
+                <Typography >
                   Type: {module.type}
                   <br />
                   <br />
                   {module.description}
                   <br />
-                  <VideoModule />
+                  <br />
+                  {module.type === "Video" && <VideoModule />}
+                  {module.type === "presentation" && <iframe
+                    src='http://localhost:4000/create_course.pdf'
+                    width="100%"
+                    height="600px"
+                    frameBorder="0"
+                  >
+                  </iframe>}
+
                 </Typography>
               </AccordionDetails>
             </Accordion>
@@ -143,7 +153,7 @@ const Course = (props) => {
 
         </Grid>
       </Grid>
-    </div>
+    </div >
   )
 }
 
