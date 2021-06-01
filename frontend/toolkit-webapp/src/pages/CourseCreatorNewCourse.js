@@ -6,7 +6,6 @@ import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 import courseStyles from '../styles/courseStyle'
 import '../css/Login.css';
-import axios, { post } from 'axios'
 
 function NewCourse(props) {
 
@@ -28,9 +27,6 @@ function NewCourse(props) {
             return
         }
         onFinish({ courseTitle, category, description })
-        // setCourseTitle('')
-        // setCategory('')
-        // setDescription('')
     }
 
     const onUpload = (e) => {
@@ -44,7 +40,7 @@ function NewCourse(props) {
 
         // handle image
         const imageData = new FormData();
-        imageData.append('image', image)
+        imageData.append('file', image)
 
         const res = await fetch(config.server_url + config.paths.createCourse, {
             method: 'POST',
@@ -63,13 +59,16 @@ function NewCourse(props) {
         )
         const data = await res.json()
         if (data.message === undefined) {
-            const res = await fetch('http://localhost:4000/api/v0/courses/single', {
+            const res = await fetch(config.server_url + config.paths.fileUpload, {
                 method: 'POST',
                 body: imageData
             })
             const data = await res.json()
-            console.log(data)
-            props.history.push('dashboard')
+
+            if (data.status == 'Success') {
+                alert("Successfully created course!")
+                props.history.push('dashboard')// needs to be changed to course manager
+            } //else need to do something, not sure what rn
         }
         else { // this is to check if there are errors not being addressed already
             console.log(data)

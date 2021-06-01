@@ -1,7 +1,6 @@
 const Course = require('../models/course');
 const VerifyToken = require('./auth').verifyToken;
 const express = require('express');
-const fileLoader = require('../fileMulter');
 
 const router = express.Router();
 
@@ -18,7 +17,6 @@ router.post('/course', VerifyToken, async (req, res) => {
 
 })
 router.post('/info', VerifyToken, async (req, res) => {
-  // console.log(req.body)
   try {
     let courses = []
     if (req.body.search_query != undefined) {
@@ -29,11 +27,9 @@ router.post('/info', VerifyToken, async (req, res) => {
           { "name": { "$regex": query, $options: 'i' } },
         ]
       }, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
-      // courses = await Course.find({}, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
     } else {
       courses = await Course.find({}, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
     }
-    console.log(courses)
 
     res.json({ "courses": courses });
   } catch (e) {
@@ -45,7 +41,6 @@ router.post('/info', VerifyToken, async (req, res) => {
 })
 
 router.post('/create', async (req, res) => {
-  // console.log(req.body)
 
   try {
     const course = new Course({
@@ -70,7 +65,6 @@ router.post('/create', async (req, res) => {
 
 // Needs to be fleshed out because it may not work right now. It is a reskin of createCourse POST
 router.post('/module/create', VerifyToken, async (req, res) => {
-  // console.log(req.body);
   try {
 
     const data = Course.update(
@@ -86,18 +80,11 @@ router.post('/module/create', VerifyToken, async (req, res) => {
         }
       });
 
-    console.log(data)
-
     res.json(data);
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
   }
-})
-
-router.post('/single', fileLoader.single('image'), (req, res) => {
-  // console.log(req.body.id);
-  res.send("Success")
 })
 
 module.exports = router;

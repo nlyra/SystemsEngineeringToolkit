@@ -87,7 +87,7 @@ const Dashboard = (props) => {
                     <Grid container spacing={3}>
                         {courses.map((course) => (
 
-                            <Grid item key={course.name} xs={12} sm={4} md={3}>
+                            <Grid item key={course._id} xs={12} sm={4} md={3}>
                                 <Card
                                     className={classes.card}
                                     onClick={() => onCourse(course)}
