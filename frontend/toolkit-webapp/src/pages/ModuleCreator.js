@@ -54,6 +54,8 @@ function ModuleCreator(props) {
                 headers: {
                     'Content-type': 'application/json'
                 },
+                // TODO: Must remove hardcoded courseID eventually and make it dynamic 
+                
                 body: JSON.stringify({ 'token': token, 'courseID': '60aeaa0574ee92fee31e4b02', 'title': module.title, 'description':module.description, 'type':module.type })
             })
     

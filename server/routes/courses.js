@@ -68,7 +68,7 @@ router.post('/create', VerifyToken, async (req, res) => {
 
 // Needs to be fleshed out because it may not work right now. It is a reskin of createCourse POST
 router.post('/module/create', VerifyToken, async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   try {
     // const module = new module({
     //   name: req.body.name,
