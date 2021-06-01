@@ -17,6 +17,7 @@ router.post('/course', VerifyToken, async (req, res) => {
 
 })
 router.post('/info', VerifyToken, async (req, res) => {
+  // console.log(req.body)
   try {
     let courses = []
     if (req.body.search_query != undefined) {
@@ -27,6 +28,8 @@ router.post('/info', VerifyToken, async (req, res) => {
           { "name": { "$regex": query, $options: 'i' } },
         ]
       }, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
+      // courses = await Course.find({}, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
+    } else {
       courses = await Course.find({}, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
     }
 
@@ -66,23 +69,6 @@ router.post('/create', VerifyToken, async (req, res) => {
 router.post('/module/create', VerifyToken, async (req, res) => {
   console.log(req.body);
   try {
-    // const module = new module({
-    //   name: req.body.name,
-    //   type: req.body.type,
-    //   description: req.body.description,
-    //   content: req.body.content
-    // })
-
-    // const savedModule = await module.save();
-
-    // console.log('added module ', savedModule._id);
-
-    // const module = {
-    //   'title':req.body.title,
-    //   'type':req.body.type,
-    //   'description':req.body.description,
-    // }
-
     const data = Course.update(
       {'_id':req.body.courseID}, // query parameter
       {

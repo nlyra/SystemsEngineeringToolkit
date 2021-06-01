@@ -91,7 +91,6 @@ const Course = (props) => {
       setCourse(data.course);
       setModules(data.course.modules);
 
-
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
@@ -123,12 +122,10 @@ const Course = (props) => {
           <Divider className={classes.divider} />
         </Grid>
         <Grid item xs={12} className={classes.accordion}>
-
-
           {/* modules starts here */}
           {modules.map((module) => (
             <Accordion key={modules.indexOf(module)} >
-              <AccordionSummary className={classes.accordionSummary}
+              <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header"
@@ -147,7 +144,6 @@ const Course = (props) => {
                     {module.type === "Video" && <VideoModule fileUrl={module.fileUrl} />}
                     {module.type === "Pdf" && <PdfModule fileUrl={module.fileUrl} />}
                   </div>
-
                 </Typography>
               </AccordionDetails>
             </Accordion>
