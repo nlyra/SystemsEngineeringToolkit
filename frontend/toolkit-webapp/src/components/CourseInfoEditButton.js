@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     button:
     {
         marginTop: theme.spacing(-5),
-        marginLeft: theme.spacing(175),
+        marginLeft: theme.spacing(150),
         alignItems: "center",
         justifyContent: "center",
         //marginBottom: theme.spacing(100)
@@ -21,22 +21,14 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 
-export default function CourseInfoEditButton({ hideComponent }) {
+export default function CourseInfoEditButton({ edit, hideComponent }) {
 
     const classes = useStyles();
-    const [editCourseInfo, setEditCourseInfo] = useState(false)
-    const [test, setTest] = useState(2)
-
-    const onEditCourseTitle = (e) => {
-        alert("you have pressed the button");
-        setEditCourseInfo(true);
-    };
 
     return (
-
         <div className={classes.root}>
             {hideComponent !== true ?
-            <Button type='submit' className={classes.button} size="medium" variant="contained" onClick={onEditCourseTitle}>
+            <Button type='submit' className={classes.button} size="medium" variant="contained" onClick={edit}>
                 Edit course info
             </Button>
             : null }

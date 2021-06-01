@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import { Divider, makeStyles, Grid, Typography, TextField, Button } from '@material-ui/core'
+import { Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -57,13 +57,17 @@ const Course = ({ props, hideComponent }) => {
   const [course, setCourse] = useState({})
   const [modules, setModules] = useState([])
   const [courseTitle, setCourseTitle] = useState('')
+  const [courseDescription, setCourseDescription] = useState('')
   const [editCourseInfo, setEditCourseInfo] = useState(false)
 
   const classes = dashStyles()
 
   const onEditCourseTitle = (e) => {
-    alert("you have pressed the button");
     setEditCourseInfo(true);
+  };
+
+  const onSubmit = (e) => {
+    setEditCourseInfo(false)
   };
 
   // function that will run when page is loaded
@@ -104,41 +108,74 @@ const Course = ({ props, hideComponent }) => {
       <TopNavBar >
       </TopNavBar>
       <Grid container direction="column" className={classes.div}>
-        <Grid item xs={12} >
-          <Grid container className={classes.topItem}>
-            <Grid item xs={3} sm={2} lg={1}>
-              <img src={course.urlImage} className={classes.courseImageStyle} />
-            </Grid>
-            {editCourseInfo !== true ?
-              <Grid item xs={9} sm={10} lg={11}>
-                <h1 className={classes.title}>{course.name}            {hideComponent !== true ?
-                  <Button type='submit' className={classes.button} size="medium" variant="contained" onClick={onEditCourseTitle}>
-                    Edit course info
-                  </Button>
-                  : null}</h1>
+        {editCourseInfo !== true ?
+          <Container maxWidth>
+            <Grid item xs={12} >
+              <Grid container className={classes.topItem}>
+                <Grid item xs={3} sm={2} lg={1}>
+                  <img src={course.urlImage} className={classes.courseImageStyle} />
+                </Grid>
+                <Grid item xs={9} sm={10} lg={11}>
+                  <h1
+                    className={classes.title}>{course.name}
+                    <CourseInfoEditButton
+                      hideComponent={false}
+                      edit={onEditCourseTitle}
+                    />
+                  </h1>
+                </Grid>
               </Grid>
-              :
+            </Grid>
+            <Grid item xs={12} >
+              <Typography className={classes.description}>{course.description}</Typography>
+            </Grid>
+          </Container>
+          :
+          <Container maxWidth>
+            <Grid item xs={12} >
+              <Grid container className={classes.topItem}>
+                <Grid item xs={3} sm={2} lg={1}>
+                  <img src={course.urlImage} className={classes.courseImageStyle} />
+                </Grid>
+                <Grid item xs={9} sm={10} lg={11}>
+                  <TextField
+                    color='primary'
+                    size='large'
+                    variant="filled"
+                    label='Title'
+                    type="CourseTitle"
+                    value={course.name}
+                    onChange={e => setCourseTitle(e.target.value)}
+                    margin="normal"
+                    required={true}
+                    //fullWidth
+                  //style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} >
               <TextField
                 color='primary'
                 size='large'
                 variant="filled"
-                label='Title'
+                label='Description'
                 type="CourseTitle"
-                value={course.name}
-                onChange={e => setCourseTitle(e.target.value)}
+                defaultValue={course.description}
+                //value={course.description}
+                onChange={e => setCourseDescription(e.target.value)}
                 margin="normal"
                 required={true}
                 fullWidth
-                
+                multiline
+                rows={10}
+                rowsMax={15}
               //style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
               />
-            }
-
-          </Grid>
-        </Grid>
-        <Grid item xs={12} >
-          <Typography className={classes.description}>{course.description}</Typography>
-        </Grid>
+            </Grid>
+            <Button onClick={onSubmit}>Submit</Button>
+          </Container>
+        }
         <Grid item xs={12}>
           <Divider className={classes.divider} />
         </Grid>
