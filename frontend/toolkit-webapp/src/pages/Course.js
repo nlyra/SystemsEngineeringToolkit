@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 import { Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
+import VideoModule from '../components/VideoModule'
+import PdfModule from '../components/PdfModule'
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -36,7 +38,8 @@ const dashStyles = makeStyles((theme) => ({
     textAlign: "right",
     paddingRight: '2%',
     float: 'right',
-    maxWidth: "90%"
+    maxWidth: "90%",
+
   },
 
   divider: {
@@ -44,12 +47,19 @@ const dashStyles = makeStyles((theme) => ({
   },
 
   accordion: {
-    padding: '3%'
+    padding: '3%',
   },
+
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,
   },
+
+  accordionDetails: {
+    paddingLeft: '5%',
+    paddingRight: '5%'
+  },
+
 
 }))
 
@@ -93,7 +103,6 @@ const Course = ({ props, hideComponent }) => {
     if (data.message === undefined) {
       setCourse(data.course);
       setModules(data.course.modules);
-      //console.log(data.course)
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
@@ -180,8 +189,6 @@ const Course = ({ props, hideComponent }) => {
           <Divider className={classes.divider} />
         </Grid>
         <Grid item xs={12} className={classes.accordion}>
-
-
           {/* modules starts here */}
           {modules.map((module) => (
             <Accordion key={modules.indexOf(module)} >
@@ -192,12 +199,18 @@ const Course = ({ props, hideComponent }) => {
               >
                 <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title} <ModuleInfoEditButton hideComponent={false} /></Typography>
               </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
+              <AccordionDetails className={classes.accordionDetails}>
+                <Typography >
                   Type: {module.type}
                   <br />
                   <br />
                   {module.description}
+                  <br />
+                  <br />
+                  <div >
+                    {module.type === "Video" && <VideoModule fileUrl={module.fileUrl} />}
+                    {module.type === "Pdf" && <PdfModule fileUrl={module.fileUrl} />}
+                  </div>
                 </Typography>
               </AccordionDetails>
             </Accordion>
@@ -206,7 +219,7 @@ const Course = ({ props, hideComponent }) => {
 
         </Grid>
       </Grid>
-    </div>
+    </div >
   )
 }
 
