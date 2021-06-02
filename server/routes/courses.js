@@ -30,7 +30,7 @@ router.post('/info', VerifyToken, async (req, res) => {
       }, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
       // courses = await Course.find({}, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
     } else {
-      courses = await Course.find({}, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
+      courses = await Course.find({}, '_id name description urlImage category', { limit: req.body.cardAmount }).sort({ totalStudents: -1 }).skip(req.body.skip);
     }
 
     res.json({ "courses": courses });
@@ -70,15 +70,17 @@ router.post('/module/create', VerifyToken, async (req, res) => {
   console.log(req.body);
   try {
     const data = Course.update(
-      {'_id':req.body.courseID}, // query parameter
+      { '_id': req.body.courseID }, // query parameter
       {
         $set: {
-          "module": 
-        {
-          'title':req.body.title,
-          'type':req.body.type,
-          'description':req.body.description,
-        }}});
+          "module":
+          {
+            'title': req.body.title,
+            'type': req.body.type,
+            'description': req.body.description,
+          }
+        }
+      });
 
     console.log(data)
 
