@@ -10,6 +10,7 @@ import Course from './pages/Course'
 import ModuleCreator from './pages/ModuleCreator';
 // import background from "./img/image0.png";
 import videoSource from "./img/PEOSTRI.mp4"
+import VideoModule from "./components/VideoModule"
 
 function App() {
   return (
@@ -23,8 +24,9 @@ function App() {
         <Route path='/NewCourse' component={CourseCreatorNewCourse} />
         <Route path='/newModule' component={ModuleCreator} />
         <Route path='/course' component={Course} />
-        {/* <Route path='/NewModule' component={ModuleSkeleton}/> */}
-    </Router>
+        <Route path='/VideoModule' component={VideoModule} />
+     </Router>
+
   );
 }
 

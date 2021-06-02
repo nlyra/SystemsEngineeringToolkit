@@ -30,9 +30,8 @@ router.post('/info', VerifyToken, async (req, res) => {
       }, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
       // courses = await Course.find({}, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
     } else {
-      courses = await Course.find({}, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
+      courses = await Course.find({}, '_id name description urlImage category', { limit: req.body.cardAmount }).sort({ totalStudents: -1 }).skip(req.body.skip);
     }
-    console.log(courses)
 
     res.json({ "courses": courses });
   } catch (e) {
@@ -69,7 +68,6 @@ router.post('/create', VerifyToken, async (req, res) => {
 // Needs to be fleshed out because it may not work right now. It is a reskin of createCourse POST
 router.post('/module/create', VerifyToken, async (req, res) => {
   try {
-
     console.log(req.body)
 
     const update = await Course.updateOne(
@@ -86,7 +84,6 @@ router.post('/module/create', VerifyToken, async (req, res) => {
       
 
     res.json({ 'status': 'course added' });
-    
   } catch (e) {
     console.log(e);
     res.sendStatus(500);

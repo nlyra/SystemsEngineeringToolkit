@@ -115,7 +115,7 @@ const Dashboard = (props) => {
 
                     </Grid>
                 </div>
-                <Pagination count={6} page={page} onChange={handlePage} variant="outlined" shape="rounded" />
+                {/* <Pagination count={6} page={page} onChange={handlePage} variant="outlined" shape="rounded" /> */}
             </Container>
         </div>
     )
