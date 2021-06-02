@@ -10,7 +10,7 @@ const loginStyles = makeStyles((theme) => ({
     container: {
         height: "100vh",
         width: "100vw",
-        backgroundColor: "rgba(0,0,0,0.5)",
+        backgroundColor: "rgba(0,0,0,0.9)",
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'
