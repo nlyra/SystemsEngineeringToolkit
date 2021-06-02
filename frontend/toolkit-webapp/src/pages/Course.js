@@ -66,8 +66,8 @@ const dashStyles = makeStyles((theme) => ({
 const Course = ({ props, hideComponent }) => {
   const [course, setCourse] = useState({})
   const [modules, setModules] = useState([])
-  const [courseTitle, setCourseTitle] = useState('')
-  const [courseDescription, setCourseDescription] = useState('')
+  const [courseTitle, setCourseTitle] = useState(course.name)
+  const [courseDescription, setCourseDescription] = useState(course.description)
   const [editCourseInfo, setEditCourseInfo] = useState(false)
 
   const classes = dashStyles()
@@ -76,9 +76,35 @@ const Course = ({ props, hideComponent }) => {
     setEditCourseInfo(true);
   };
 
-  const onSubmit = (e) => {
-    setEditCourseInfo(false)
-  };
+  const onSubmit = async (e) => {
+
+    console.log(courseTitle)
+    console.log(courseDescription)
+    console.log(config.server_url + config.paths.updateCourseInfo)
+    const res = await fetch(config.server_url + config.paths.updateCourseInfo, {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          'courseID': '60aeaa0574ee92fee31e4b02',
+          "name": courseTitle,
+          "description": courseDescription,
+      })
+    })
+    setEditCourseInfo(false);
+    // const data = await res.json()
+
+    // if (data.message == "added user") {
+    //     alert("Success, user Created!!");
+    //     props.history.push('login')
+
+    // } else if (data.message === "email already connected to an account") {
+    //     alert("email already connected to an account, please try again.");
+    // } else { // this is to check if there are errors not being addressed already
+    //     console.log(data)
+    // }
+}
 
   // function that will run when page is loaded
   useEffect(() => {
