@@ -4,8 +4,9 @@ import Dashboard from './pages/Dashboard'
 import Registration from './pages/Registration'
 import ForgotPassword from './pages/ForgotPassword'
 import CourseCreatorNewCourse from './pages/CourseCreatorNewCourse'
-import Course from './pages/Course'
+import ModuleSkeleton from './pages/ModuleSkeleton'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
+import Course from './pages/Course'
 import ModuleCreator from './pages/ModuleCreator';
 // import background from "./img/image0.png";
 import videoSource from "./img/PEOSTRI.mp4"
@@ -22,7 +23,8 @@ function App() {
         <Route path='/NewCourse' component={CourseCreatorNewCourse} />
         <Route path='/newModule' component={ModuleCreator} />
         <Route path='/course' component={Course} />
-     </Router>
+        {/* <Route path='/NewModule' component={ModuleSkeleton}/> */}
+    </Router>
   );
 }
 

@@ -1,4 +1,4 @@
-import {makeStyles} from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 
 const courseStyles = makeStyles((theme) => ({
 
@@ -37,7 +37,7 @@ const courseStyles = makeStyles((theme) => ({
         fontSize: 10,
         background: 'linear-gradient(45deg, #90a4ae 10%, #e0e0e0 90%)',
         marginBottom: theme.spacing(2),
-        marginLeft:  theme.spacing(2)
+        marginLeft: theme.spacing(2)
     },
 
     button3:
@@ -56,7 +56,7 @@ const courseStyles = makeStyles((theme) => ({
 
     darkOverlay:
     {
-        backgroundColor: 'rgba(0, 0, 0, 0.596)',
+        // backgroundColor: 'rgba(0, 0, 0, 0.596)',
         position: 'absolute',
         top: 0,
         left: 0,

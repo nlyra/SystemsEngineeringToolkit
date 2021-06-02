@@ -57,16 +57,15 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.up('md')]: {
             width: '20ch',
         },
-    },
-    logoStyle: {
-        maxWidth: '10%',
-        textAlign: 'center',
-        margin: 'auto'
-    },
-    horizontalCenteringLogo: {
-        position: 'absolute',
-
-        left: '50%',
+      },
+      logoStyle: {
+          maxWidth: '10%',
+          textAlign: 'center',
+          margin: 'auto'
+      },
+      horizontalCenteringLogo: {
+        position: 'absolute', 
+        left: '50%', 
         top: '50%',
         transform: 'translate(-50%, -50%)'
     },
@@ -126,7 +125,6 @@ const useStyles = makeStyles((theme) => ({
         }),
     },
 }))
-
 
 export default function TopNavBar({ search, hideComponents }) {
 

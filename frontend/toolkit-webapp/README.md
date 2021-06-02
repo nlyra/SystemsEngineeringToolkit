@@ -15,7 +15,8 @@
       "registration": "/v0/auth/registration",
       "dashboardCourses": "/v0/courses/info",
       "course": "/v0/courses/course",
-      "createCourse": "/v0/courses/create"
+      "createCourse": "/v0/courses/create",
+      "newModule": "/v0/courses/module/create"
   }
 }
 run in CMD ```npm start```.
