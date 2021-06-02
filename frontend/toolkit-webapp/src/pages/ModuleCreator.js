@@ -134,7 +134,7 @@ function ModuleCreator(props) {
                                     <FormHelperText>Required</FormHelperText>
                                 </FormControl>
 
-                                {type == 'Video' && <FileModule></FileModule>}
+                                {/* {type == 'Video' && <FileModule></FileModule>} */}
 
                             </div>
                             <Container className={classes.buttonGroup}>

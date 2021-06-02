@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
     },
     horizontalCenteringLogo: {
         position: 'absolute',
-        left: '63%',
+        left: '66%',
         top: '50%',
         transform: 'translate(-50%, -50%)'
     },
