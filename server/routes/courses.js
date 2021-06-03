@@ -17,7 +17,6 @@ router.post('/course', VerifyToken, async (req, res) => {
 
 })
 router.post('/info', VerifyToken, async (req, res) => {
-  // console.log(req.body)
   try {
     let courses = []
     if (req.body.search_query != undefined) {
@@ -28,11 +27,9 @@ router.post('/info', VerifyToken, async (req, res) => {
           { "name": { "$regex": query, $options: 'i' } },
         ]
       }, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
-      // courses = await Course.find({}, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
     } else {
-      courses = await Course.find({}, '_id name description urlImage category', { limit: req.body.cardAmount }).skip(req.body.skip);
+      courses = await Course.find({}, '_id name description urlImage category', { limit: req.body.cardAmount }).sort({ totalStudents: -1 }).skip(req.body.skip);
     }
-    console.log(courses)
 
     res.json({ "courses": courses });
   } catch (e) {
@@ -43,7 +40,7 @@ router.post('/info', VerifyToken, async (req, res) => {
 
 })
 
-router.post('/create', VerifyToken, async (req, res) => {
+router.post('/create', async (req, res) => {
 
   try {
     const course = new Course({
@@ -68,39 +65,23 @@ router.post('/create', VerifyToken, async (req, res) => {
 
 // Needs to be fleshed out because it may not work right now. It is a reskin of createCourse POST
 router.post('/module/create', VerifyToken, async (req, res) => {
-  console.log(req.body);
   try {
-    // const module = new module({
-    //   name: req.body.name,
-    //   type: req.body.type,
-    //   description: req.body.description,
-    //   content: req.body.content
-    // })
+//     console.log(req.body)
 
-    // const savedModule = await module.save();
-
-    // console.log('added module ', savedModule._id);
-
-    // const module = {
-    //   'title':req.body.title,
-    //   'type':req.body.type,
-    //   'description':req.body.description,
-    // }
-
-    const data = Course.update(
-      {'_id':req.body.courseID}, // query parameter
+    const update = await Course.updateOne(
+      { _id: req.body.courseID }, // query parameter
       {
-        $set: {
-          "module": 
-        {
-          'title':req.body.title,
-          'type':req.body.type,
-          'description':req.body.description,
-        }}});
+        $push: {
+          modules: {
+            title: req.body.title,
+            type: req.body.type,
+            description: req.body.description,
+          }
+        }
+      });
+      
 
-    console.log(data)
-
-    res.json(data);
+    res.json({ 'status': 'course added' });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);

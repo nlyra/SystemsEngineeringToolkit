@@ -65,8 +65,7 @@ const useStyles = makeStyles((theme) => ({
     },
     horizontalCenteringLogo: {
         position: 'absolute',
-
-        left: '50%',
+        left: '66%',
         top: '50%',
         transform: 'translate(-50%, -50%)'
     },
@@ -126,7 +125,6 @@ const useStyles = makeStyles((theme) => ({
         }),
     },
 }))
-
 
 export default function TopNavBar({ search, hideComponents }) {
 
