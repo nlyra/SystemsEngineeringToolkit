@@ -66,8 +66,8 @@ const dashStyles = makeStyles((theme) => ({
 const Course = ({ props, hideComponent }) => {
   const [course, setCourse] = useState({})
   const [modules, setModules] = useState([])
-  const [courseTitle, setCourseTitle] = useState(course.name)
-  const [courseDescription, setCourseDescription] = useState(course.description)
+  const [courseTitle, setCourseTitle] = useState('')
+  const [courseDescription, setCourseDescription] = useState('')
   const [editCourseInfo, setEditCourseInfo] = useState(false)
 
   const classes = dashStyles()
@@ -75,36 +75,6 @@ const Course = ({ props, hideComponent }) => {
   const onEditCourseTitle = (e) => {
     setEditCourseInfo(true);
   };
-
-  const onSubmit = async (e) => {
-
-    console.log(courseTitle)
-    console.log(courseDescription)
-    console.log(config.server_url + config.paths.updateCourseInfo)
-    const res = await fetch(config.server_url + config.paths.updateCourseInfo, {
-        method: 'POST',
-        headers: {
-            'Content-type': 'application/json'
-        },
-        body: JSON.stringify({
-          'courseID': '60aeaa0574ee92fee31e4b02',
-          "name": courseTitle,
-          "description": courseDescription,
-      })
-    })
-    setEditCourseInfo(false);
-    // const data = await res.json()
-
-    // if (data.message == "added user") {
-    //     alert("Success, user Created!!");
-    //     props.history.push('login')
-
-    // } else if (data.message === "email already connected to an account") {
-    //     alert("email already connected to an account, please try again.");
-    // } else { // this is to check if there are errors not being addressed already
-    //     console.log(data)
-    // }
-}
 
   // function that will run when page is loaded
   useEffect(() => {
@@ -126,8 +96,11 @@ const Course = ({ props, hideComponent }) => {
     })
 
     const data = await res.json()
+
     if (data.message === undefined) {
       setCourse(data.course);
+      setCourseTitle(data.course.name);
+      setCourseDescription(data.course.description);
       setModules(data.course.modules);
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
@@ -136,6 +109,28 @@ const Course = ({ props, hideComponent }) => {
     } else { // this is to check if there are errors not being addressed already
       console.log(data)
     }
+  }
+
+  const onSubmit = async (e) => {
+
+    setEditCourseInfo(false);
+    console.log("this is the title:" + course.name)
+    console.log(courseDescription)
+    console.log(config.server_url + config.paths.updateCourseInfo)
+    if (courseTitle == '') { setCourseTitle(course.name) }
+    const res = await fetch(config.server_url + config.paths.updateCourseInfo, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        'courseID': '60aeaa0574ee92fee31e4b02',
+        "name": courseTitle,
+        "description": courseDescription,
+      })
+    })
+
+    window.location.reload();
   }
 
   return (
@@ -172,18 +167,17 @@ const Course = ({ props, hideComponent }) => {
                 <Grid item xs={3} sm={2} lg={1}>
                   <img src={course.urlImage} className={classes.courseImageStyle} />
                 </Grid>
-                <Grid item xs={9} sm={10} lg={11}>
+                <Grid item xs={9} sm={10} lg={11} align={"center"}>
                   <TextField
                     color='primary'
-                    size='large'
+                    size='medium'
                     variant="filled"
                     label='Title'
-                    type="CourseTitle"
-                    value={course.name}
+                    type="text"
+                    defaultValue={course.name}
                     onChange={e => setCourseTitle(e.target.value)}
                     margin="normal"
-                    required={true}
-                    //fullWidth
+                  //fullWidth
                   //style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                   />
                 </Grid>
@@ -192,10 +186,10 @@ const Course = ({ props, hideComponent }) => {
             <Grid item xs={12} >
               <TextField
                 color='primary'
-                size='large'
+                size='medium'
                 variant="filled"
                 label='Description'
-                type="CourseTitle"
+                type="text"
                 defaultValue={course.description}
                 //value={course.description}
                 onChange={e => setCourseDescription(e.target.value)}
@@ -241,8 +235,6 @@ const Course = ({ props, hideComponent }) => {
               </AccordionDetails>
             </Accordion>
           ))}
-
-
         </Grid>
       </Grid>
     </div >
