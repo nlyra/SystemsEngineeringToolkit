@@ -63,7 +63,7 @@ const dashStyles = makeStyles((theme) => ({
 
 }))
 
-const Course = ({ props, hideComponent }) => {
+const Course = (props) => {
   const [course, setCourse] = useState({})
   const [modules, setModules] = useState([])
   const [courseTitle, setCourseTitle] = useState('')
@@ -111,7 +111,7 @@ const Course = ({ props, hideComponent }) => {
     }
   }
 
-  const onSubmit = async (e) => {
+  const onEditSubmit = async (e) => {
 
     setEditCourseInfo(false);
     console.log("this is the title:" + course.name)
@@ -202,7 +202,7 @@ const Course = ({ props, hideComponent }) => {
               //style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
               />
             </Grid>
-            <Button onClick={onSubmit}>Submit</Button>
+            <Button onClick={onEditSubmit}>Submit</Button>
           </Container>
         }
         <Grid item xs={12}>
