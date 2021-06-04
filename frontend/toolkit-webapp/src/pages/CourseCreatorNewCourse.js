@@ -34,7 +34,6 @@ function NewCourse(props) {
         return
     }
 
-
     const onFinish = async (creds) => {
         const token = localStorage.getItem("token");
 
@@ -74,15 +73,7 @@ function NewCourse(props) {
             console.log(data)
         }
 
-
-
-
     }
-
-
-
-
-
 
     return (
         <div>

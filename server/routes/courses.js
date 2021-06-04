@@ -8,14 +8,35 @@ router.post('/course', VerifyToken, async (req, res) => {
   try {
     let course = {}
     course = await Course.findOne({ "_id": req.body.id }, '_id name description urlImage modules');
+    // "courseTitle" : course.name
     res.json({ "course": course });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
   }
 
+})
+
+router.post('/course/update', async (req, res) => {
+  try {
+    const update = await Course.updateOne(
+      { _id: req.body.courseID }, // query parameter
+      {
+        $set: {
+            name: req.body.name,
+            description: req.body.description,
+        }
+      })
+
+    res.json({ 'status': 'course added' });
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
 
 })
+
+
 router.post('/info', VerifyToken, async (req, res) => {
   try {
     let courses = []
@@ -60,14 +81,11 @@ router.post('/create', async (req, res) => {
     res.sendStatus(500);
   }
 
-
 })
 
 // Needs to be fleshed out because it may not work right now. It is a reskin of createCourse POST
 router.post('/module/create', VerifyToken, async (req, res) => {
   try {
-//     console.log(req.body)
-
     const update = await Course.updateOne(
       { _id: req.body.courseID }, // query parameter
       {
@@ -79,7 +97,6 @@ router.post('/module/create', VerifyToken, async (req, res) => {
           }
         }
       });
-      
 
     res.json({ 'status': 'course added' });
   } catch (e) {
