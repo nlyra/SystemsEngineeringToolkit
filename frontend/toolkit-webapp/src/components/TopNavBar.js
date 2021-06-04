@@ -9,6 +9,9 @@ import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import DescriptionIcon from '@material-ui/icons/Description';
+//import {Link } from "react-router-dom"
+import { Link } from '@material-ui/core';
+
 import clsx from 'clsx';
 const logo_url = "http://localhost:4000/misc_files/logo.jpg"
 
@@ -230,32 +233,38 @@ export default function TopNavBar({ search, hideComponents }) {
                     <Divider />
                     <List>
                         <Tooltip title="Create Course" enterDelay={500}>
-                            <ListItem button>
-                                <ListItemIcon><PostAddIcon /></ListItemIcon>
-                                <ListItemText primary="Create Course" />
-                            </ListItem>
+                            <Link href="/newCourse" underline='none' color="inherit">
+                                <ListItem button>
+                                    <ListItemIcon><PostAddIcon /></ListItemIcon>
+                                    <ListItemText primary="Create Course" />
+                                </ListItem>
+                            </Link>
                         </Tooltip>
 
                         <Tooltip title="My Courses" enterDelay={500}>
-                            <ListItem button>
-                                <ListItemIcon><MenuBookIcon /></ListItemIcon>
-                                <ListItemText primary="My Courses" />
-                            </ListItem>
+                            <Link href="/MyCourses" underline='none' color="inherit">
+                                <ListItem button>
+                                    <ListItemIcon><MenuBookIcon /></ListItemIcon>
+                                    <ListItemText primary="My Courses" />
+                                </ListItem>
+                            </Link>
                         </Tooltip>
 
                         <Tooltip title="My Files" enterDelay={500}>
-                            <ListItem button>
-                                <ListItemIcon><DescriptionIcon /></ListItemIcon>
-                                <ListItemText primary="My Files" />
-                            </ListItem>
+                            <Link href="/MyFiles" underline='none' color="inherit">
+                                <ListItem button>
+                                    <ListItemIcon><DescriptionIcon /></ListItemIcon>
+                                    <ListItemText primary="My Files" />
+                                </ListItem>
+                            </Link>
                         </Tooltip>
 
-                        <Tooltip title="Calendar" enterDelay={500}>
+                        {/* <Tooltip title="Calendar" enterDelay={500}>
                             <ListItem button>
                                 <ListItemIcon><CalendarTodayIcon /></ListItemIcon>
                                 <ListItemText primary="Calendar" />
                             </ListItem>
-                        </Tooltip>
+                        </Tooltip> */}
                     </List>
                 </Drawer>
                 : null}
