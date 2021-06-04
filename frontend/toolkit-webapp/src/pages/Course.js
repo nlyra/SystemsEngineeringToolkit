@@ -109,6 +109,7 @@ const Course = (props) => {
           <Grid container className={classes.topItem}>
             <Grid item xs={3} sm={2} lg={1}>
               <img src={course.urlImage} className={classes.courseImageStyle} />
+
             </Grid>
             <Grid item xs={9} sm={10} lg={11}>
               <h1 className={classes.title} >{course.name} </h1>
@@ -122,6 +123,7 @@ const Course = (props) => {
           <Divider className={classes.divider} />
         </Grid>
         <Grid item xs={12} className={classes.accordion}>
+
           {/* modules starts here */}
           {modules.map((module) => (
             <Accordion key={modules.indexOf(module)} >
@@ -148,8 +150,6 @@ const Course = (props) => {
               </AccordionDetails>
             </Accordion>
           ))}
-
-
         </Grid>
       </Grid>
     </div >

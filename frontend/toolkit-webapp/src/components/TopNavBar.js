@@ -126,7 +126,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-export default function TopNavBar({ search, hideComponents }) {
+
+export default function TopNavBar(props) {
+
 
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
@@ -139,6 +141,10 @@ export default function TopNavBar({ search, hideComponents }) {
         setOpen(false);
     };
 
+    const test = (val) => {
+        props.history.push(`/dashboard`);
+    };
+
     return (
         <div className={classes.root}>
             <AppBar
@@ -149,7 +155,7 @@ export default function TopNavBar({ search, hideComponents }) {
                 })}
             >
                 <Toolbar>
-                    {hideComponents !== true ?
+                    {props.hideComponents !== true ?
                         <>
                             <IconButton
                                 color="inherit"
@@ -166,15 +172,30 @@ export default function TopNavBar({ search, hideComponents }) {
                                 <div className={classes.searchIcon}>
                                     <SearchIcon></SearchIcon>
                                 </div>
-                                <InputBase
-                                    placeholder="Search..."
-                                    classes={{
-                                        root: classes.inputRoot,
-                                        input: classes.inputInput,
-                                    }}
-                                    inputProps={{ 'aria-label': 'search' }}
-                                    onChange={e => search(e.target.value)}
-                                />
+
+                                {window.location.pathname === "/dashboard" ?
+                                    < InputBase
+                                        placeholder="Search..."
+                                        classes={{
+                                            root: classes.inputRoot,
+                                            input: classes.inputInput,
+                                        }}
+                                        inputProps={{ 'aria-label': 'search' }}
+                                        onChange={e => props.search(e.target.value)}
+                                    />
+                                    :
+
+                                    <InputBase
+                                        placeholder="Search..."
+                                        classes={{
+                                            root: classes.inputRoot,
+                                            input: classes.inputInput,
+                                        }}
+                                        inputProps={{ 'aria-label': 'search' }}
+                                        onChange={e => test(e.target.value)}
+                                    />
+
+                                }
                             </div>
                         </>
                         : null}
@@ -192,7 +213,7 @@ export default function TopNavBar({ search, hideComponents }) {
                         {/* <NotificationsIcon /> */}
                         {/* </Badge> */}
                         {/* </IconButton> */}
-                        {hideComponents !== true ?
+                        {props.hideComponents !== true ?
                             <IconButton
                                 edge="end"
                                 aria-label="account of current user"
@@ -208,7 +229,7 @@ export default function TopNavBar({ search, hideComponents }) {
                 </Toolbar>
             </AppBar>
 
-            {hideComponents !== true ?
+            {props.hideComponents !== true ?
                 <Drawer
                     variant="permanent"
                     className={clsx(classes.drawer, {
