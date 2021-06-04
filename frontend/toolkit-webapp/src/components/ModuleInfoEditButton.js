@@ -11,12 +11,13 @@ const useStyles = makeStyles((theme) => ({
     },
     button:
     {
-        marginTop: theme.spacing(-3),
-        marginLeft: theme.spacing(205),
-        alignItems: "center",
-        justifyContent: "center",
+        // marginTop: theme.spacing(-3),
+        // marginLeft: theme.spacing(205),
+        // alignItems: "center",
+        // justifyContent: "center",
         //marginBottom: theme.spacing(100)
 
+        //marginLeft: "100px"
     }
 
 }))

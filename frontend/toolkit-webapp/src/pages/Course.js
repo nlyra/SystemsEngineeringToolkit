@@ -25,7 +25,7 @@ const dashStyles = makeStyles((theme) => ({
 
   topItem: {
     paddingTop: '4.9vh',
-    paddingBottom: '6%',
+    paddingBottom: '5%',
   },
 
   courseImageStyle: {
@@ -140,19 +140,21 @@ const Course = (props) => {
       <Grid container direction="column" className={classes.div}>
         {editCourseInfo !== true ?
           <Container maxWidth>
-            <Grid item xs={12} >
+            <Grid item alignItems="center" xs={12}>
               <Grid container className={classes.topItem}>
                 <Grid item xs={3} sm={2} lg={1}>
                   <img src={course.urlImage} className={classes.courseImageStyle} />
                 </Grid>
-                <Grid item xs={9} sm={10} lg={11}>
+                <Grid item xs={8} sm={9} lg={10}>
                   <h1
                     className={classes.title}>{course.name}
-                    <CourseInfoEditButton
-                      hideComponent={false}
-                      edit={onEditCourseTitle}
-                    />
                   </h1>
+                </Grid>
+                <Grid item xs={1} sm={1} lg={1}>
+                  <CourseInfoEditButton
+                    hideComponent={false}
+                    edit={onEditCourseTitle}
+                  />
                 </Grid>
               </Grid>
             </Grid>
