@@ -48,6 +48,16 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
     },
+
+    searchIcon2: {
+        padding: theme.spacing(0, 5),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     inputRoot: {
         color: 'inherit',
     },
@@ -127,6 +137,10 @@ const useStyles = makeStyles((theme) => ({
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
+    // iconbutton:{
+    //     position:'relative',
+    //     paddingLeft:theme.spacing(0,2)
+    // }
 }))
 
 
@@ -171,12 +185,12 @@ export default function TopNavBar(props) {
                             >
                                 <MenuIcon style={{ color: "white" }}></MenuIcon>
                             </IconButton>
-                            <div className={classes.search}>
-                                <div className={classes.searchIcon}>
-                                    <SearchIcon></SearchIcon>
-                                </div>
+                            {window.location.pathname === "/dashboard" ?
+                                <div className={classes.search}>
+                                    <div className={classes.searchIcon}>
+                                        <SearchIcon></SearchIcon>
+                                    </div>
 
-                                {window.location.pathname === "/dashboard" ?
                                     < InputBase
                                         placeholder="Search..."
                                         classes={{
@@ -186,20 +200,14 @@ export default function TopNavBar(props) {
                                         inputProps={{ 'aria-label': 'search' }}
                                         onChange={e => props.search(e.target.value)}
                                     />
-                                    :
-
-                                    <InputBase
-                                        placeholder="Search..."
-                                        classes={{
-                                            root: classes.inputRoot,
-                                            input: classes.inputInput,
-                                        }}
-                                        inputProps={{ 'aria-label': 'search' }}
-                                        onChange={e => test(e.target.value)}
-                                    />
-
-                                }
-                            </div>
+                                </div>
+                                :
+                                <Link href="/dashboard" underline='none' color="inherit">
+                                    {/* <div className={classes.searchIcon2}> */}
+                                        <SearchIcon></SearchIcon>
+                                    {/* </div> */}
+                                </Link>
+                            }
                         </>
                         : null}
                     <div className={classes.horizontalCenteringLogo}>
@@ -224,6 +232,7 @@ export default function TopNavBar(props) {
                                 aria-haspopup="true"
                                 //onClick={handleProfileMenuOpen}
                                 color="inherit"
+                                className={classes.iconbutton}
                             >
                                 <AccountCircle />
                             </IconButton>

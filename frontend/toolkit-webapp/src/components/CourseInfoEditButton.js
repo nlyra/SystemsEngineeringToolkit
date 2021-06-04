@@ -10,10 +10,10 @@ const useStyles = makeStyles((theme) => ({
     },
     button:
     {
-        marginTop: theme.spacing(-5),
-        marginLeft: theme.spacing(150),
-        alignItems: "center",
-        justifyContent: "center",
+        // marginTop: theme.spacing(-5),
+        // marginLeft: theme.spacing(150),
+        // alignItems: "center",
+        // justifyContent: "center",
         //marginBottom: theme.spacing(100)
 
     }
