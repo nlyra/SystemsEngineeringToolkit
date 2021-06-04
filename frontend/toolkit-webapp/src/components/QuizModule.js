@@ -1,17 +1,19 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Table, TableBody, TableCell, TableContainer, TableHead,TablePagination, TableRow, TableSortLabel, Checkbox} from '@material-ui/core'
+import { IconButton, Toolbar, Button, Dialog, DialogActions, DialogContent, TextField, Table, TableBody, TableCell, TableContainer, TableHead,TablePagination, TableRow, TableSortLabel, Checkbox, Typography} from '@material-ui/core'
 import useStyles from '../styles/moduleStyle'
+import {Delete} from '@material-ui/icons'
 
 
-function newQuestion(question, answer, fake1, fake2, fake3) {
-    return {question, answer, fake1, fake2, fake3}
+const quiz = {
+    questions : [],
+    answers: [],
+    fakes1: [],
+    fakes2: [],
+    fakes3: []
 }
 
-
 const QuizModule = (props) => {
-
-    const questions = []
 
     //const [quizTitle, setQuizTitle] = useState('')
     //const [type, setType] = useState('')
@@ -22,7 +24,6 @@ const QuizModule = (props) => {
     const [fake2, setFake2] = useState('')
     const [fake3, setFake3] = useState('')
     const [selected, setSelected] = React.useState([]);
-    const {numSelected, rowCount } = props;
 
     const classes = useStyles()
 
@@ -30,11 +31,30 @@ const QuizModule = (props) => {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-          const newSelecteds = questions.map((n) => n.question);
+          const newSelecteds = quiz.questions.map((n) => n.question);
           setSelected(newSelecteds);
           return;
         }
         setSelected([]);
+    }
+
+    function addQuestion() {
+
+        if(question === '' || answer === ''){
+            alert("Requires a question and an answer.")
+        }else{
+            quiz.questions.push(question)
+            quiz.answers.push(answer)
+            quiz.fakes1.push(fake1)
+            quiz.fakes2.push(fake2)
+            quiz.fakes3.push(fake3)
+
+            setQuestion('')
+            setAnswer('')
+            setFake1('')
+            setFake2('')
+            setFake3('')
+        }
     }
 
     const handleClick = (event, question) => {
@@ -57,6 +77,19 @@ const QuizModule = (props) => {
         setSelected(newSelected)
     }
 
+    const handleDelete = () => {
+        for(var i = 0; i < quiz.questions.length; i++){
+            if(isSelected(quiz.questions[i])){
+                selected.splice(selected.indexOf(quiz.questions[i]), 1);
+
+                quiz.questions.splice(i, 1);
+                quiz.answers.splice(i, 1);
+                quiz.fakes1.splice(i, 1);
+                quiz.fakes2.splice(i, 1);
+                quiz.fakes3.splice(i, 1);
+            }
+        }
+    }
 
     const handleClickOpen = () => {
         setOpen(true)
@@ -197,13 +230,13 @@ const QuizModule = (props) => {
                 />
 
                 <Button variant="contained" color="grey" size="small" 
-                    onClick={questions.push(newQuestion(question, answer, fake1, fake2, fake3))}
+                    onClick={addQuestion}
                 >
                         
                     Add Question
                 </Button>
 
-                <Button variant="contained" color="grey" size="small" m={2}
+                <Button variant="contained" color="grey" size="small"
                     onClick={handleClickOpen}
                 >
                     View Questions
@@ -213,17 +246,31 @@ const QuizModule = (props) => {
                     open={open}
                     onClose={handleClose}
                 >
-                    <DialogTitle>
-                        Your Quiz
-                    </DialogTitle>
+                    <Toolbar>
+                        {selected.length > 0 ? (
+                            <Typography className={classes.title} color='inherit' variant='subtitle1' component='div'>
+                                {selected.length} selected
+                            </Typography>
+                        ) : (
+                            <Typography className={classes.title} variant='h6' id="tableTitle" component="div">
+                                Quiz Questions
+                            </Typography>
+                        )}
+
+                            
+                        <IconButton aria-label='delete' onClick={handleDelete}>
+                            <Delete />
+                        </IconButton>
+                        
+                    </Toolbar>
                     <DialogContent>
                     <TableContainer>
                         <TableHead>
                             <TableRow>
                                 <TableCell padding="checkbox">
                                     <Checkbox
-                                        indeterminate={numSelected > 0 && numSelected < rowCount}
-                                        checked={rowCount > 0 && numSelected === rowCount}
+                                        indeterminate={selected.length > 0 && selected.length < quiz.questions.length}
+                                        checked={quiz.questions.length > 0 && selected.length === quiz.questions.length}
                                         onChange={handleSelectAllClick}
                                         inputProps={{ 'aria-label': 'select all questions' }}
                                     />
@@ -241,18 +288,18 @@ const QuizModule = (props) => {
                         </TableHead>
 
                         <TableBody>
-                            {questions.map((question, index) => {
-                                const isItemSelected = isSelected(question.question);
+                            {quiz.questions.map((next, index) => {
+                                const isItemSelected = isSelected(next);
                                 const labelId = `enhanced-table-checkbox-${index}`;
 
                                 return (
                                     <TableRow
                                         hover
-                                        onClick={(event) => handleClick(event, question.question)}
+                                        onClick={(event) => handleClick(event, next)}
                                         role="checkbox"
                                         aria-checked={isItemSelected}
                                         tabIndex={-1}
-                                        key={question.question}
+                                        key={next.question}
                                         selected={isItemSelected}
                                     >
                                         <TableCell padding="checkbox">
@@ -262,12 +309,12 @@ const QuizModule = (props) => {
                                             />
                                         </TableCell>
                                         <TableCell component="th" id={labelId} scope="row" padding="none">
-                                            {question.question}
+                                            {next}
                                         </TableCell>
-                                        <TableCell align="right">{question.answer}</TableCell>
-                                        <TableCell align="right">{question.fake1}</TableCell>
-                                        <TableCell align="right">{question.fake2}</TableCell>
-                                        <TableCell align="right">{question.fake3}</TableCell>
+                                        <TableCell align="right">{quiz.answers[index]}</TableCell>
+                                        <TableCell align="right">{quiz.fakes1[index]}</TableCell>
+                                        <TableCell align="right">{quiz.fakes2[index]}</TableCell>
+                                        <TableCell align="right">{quiz.fakes3[index]}</TableCell>
                                     </TableRow>
                                 );
                             })}
@@ -330,11 +377,6 @@ const QuizModule = (props) => {
     </div>
   )
 }
-
-QuizModule.propTypes = {
-    numSelected: PropTypes.number.isRequired,
-    rowCount: PropTypes.number.isRequired,
-  };
 
 export default QuizModule
 
