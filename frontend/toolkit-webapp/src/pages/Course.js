@@ -64,6 +64,7 @@ const dashStyles = makeStyles((theme) => ({
 }))
 
 const Course = (props) => {
+  const [counter, setCounter] = useState(0)
   const [course, setCourse] = useState({})
   const [modules, setModules] = useState([])
   const [courseTitle, setCourseTitle] = useState('')
@@ -131,6 +132,24 @@ const Course = (props) => {
     })
 
     window.location.reload();
+  }
+
+  const dealWithClick = async (e) => {
+    // console.log(value)
+
+    if(counter !== 0)
+      return
+  
+    setCounter(counter + 1)
+    const res = await fetch(config.server_url + config.paths.enrollment, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        "courseID": course._id
+      })
+    })
   }
 
   return (
@@ -211,7 +230,7 @@ const Course = (props) => {
         <Grid item xs={12} className={classes.accordion}>
           {/* modules starts here */}
           {modules.map((module) => (
-            <Accordion key={modules.indexOf(module)} >
+            <Accordion key={modules.indexOf(module)} onClick={dealWithClick} >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"

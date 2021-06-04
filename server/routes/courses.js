@@ -36,6 +36,34 @@ router.post('/course/update', async (req, res) => {
 
 })
 
+router.post('/course/enrollment', async (req, res) => {
+  // console.log(req.body)
+  try {
+
+    exists = await Course.findOne( {"studentsEnrolled": req.body.courseID} )
+
+    // console.log(exists)
+    if(exists === undefined)
+    {
+      const update = await Course.updateOne(
+        { _id: req.body.courseID }, 
+        {
+          $push: {
+            studentsEnrolled:
+              req.body.courseID
+          }
+        });
+
+        res.json({ 'status': 'course enrolled' });
+    }
+    
+    
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+
+})
 
 router.post('/info', VerifyToken, async (req, res) => {
   try {

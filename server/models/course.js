@@ -23,6 +23,8 @@ const CourseSchema = mongoose.Schema({
     "default": 0
   },
 
+  studentsEnrolled: [],
+
   urlImage: {
     type: String,
     required: true
