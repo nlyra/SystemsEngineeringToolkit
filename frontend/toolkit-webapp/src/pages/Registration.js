@@ -50,7 +50,13 @@ function Registration(props) {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "first_name": creds.firstName, "last_name": creds.lastName, "email": creds.email, "password": creds.password, "password_copy": creds.passwordCopy })
+            body: JSON.stringify({ 
+            "first_name": creds.firstName, 
+            "last_name": creds.lastName, 
+            "email": creds.email, 
+            "password": creds.password, 
+            "password_copy": creds.passwordCopy,
+            "classesEnrolled": [] })
         })
 
         const data = await res.json()

@@ -10,6 +10,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CourseInfoEditButton from '../components/CourseInfoEditButton';
 import ModuleInfoEditButton from '../components/ModuleInfoEditButton';
+import jwt_decode from "jwt-decode";
 
 const dashStyles = makeStyles((theme) => ({
 
@@ -88,7 +89,7 @@ const Course = (props) => {
     const token = localStorage.getItem("token");
     let res = undefined
 
-    res = await fetch(config.server_url + config.paths.course, {
+    res = await fetch(config.server_url + config.paths.myCourses, {
       method: 'POST',
       headers: {
         'Content-type': 'application/json'
@@ -134,20 +135,26 @@ const Course = (props) => {
     window.location.reload();
   }
 
-  const dealWithClick = async (e) => {
+  const enroll = async (e) => {
     // console.log(value)
 
     if(counter !== 0)
       return
-  
-    setCounter(counter + 1)
+    
+      setCounter(counter + 1)
+    
+    const token = localStorage.getItem("token");
+    const decoded = jwt_decode(token)
+
+    // console.log(decoded.id)
     const res = await fetch(config.server_url + config.paths.enrollment, {
       method: 'POST',
       headers: {
         'Content-type': 'application/json'
       },
       body: JSON.stringify({
-        "courseID": course._id
+        "courseID": course._id,
+        "userID": decoded.id
       })
     })
   }
@@ -230,7 +237,7 @@ const Course = (props) => {
         <Grid item xs={12} className={classes.accordion}>
           {/* modules starts here */}
           {modules.map((module) => (
-            <Accordion key={modules.indexOf(module)} onClick={dealWithClick} >
+            <Accordion key={modules.indexOf(module)} onClick={enroll} >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"

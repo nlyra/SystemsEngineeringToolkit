@@ -16,7 +16,7 @@ const changeParams = (start, finish) => {
 const Dashboard = (props) => {
     const [courses, setCourses] = useState([])
     const [page, setPage] = useState(1)
-    const [cardAmount, setCardAmount] = useState(3)
+    const [cardAmount, setCardAmount] = useState()
     const [coursesPerPage, setCoursesPerPage] = useState(5)
     // const [searchQuery, setSearchQuery] = useState(undefined)
 

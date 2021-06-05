@@ -37,13 +37,15 @@ router.post('/login', async (req, res) => {
     try {
         // get user from DB
         const user = await User.findOne({ email: req.body.email });
+        // console.log(user._id)
+
         if (user != undefined) {
             // check if passwords match
             if (req.body.password != undefined && bcrypt.compareSync(req.body.password, user.password)) {
                 // everything is correct
 
                 // token handling  (we might discuss what will be the secret key)
-                const token = jwt.sign({ email: req.body.email }, config.key, { expiresIn: '2h' });
+                const token = jwt.sign({ id: user._id, email: req.body.email }, config.key, { expiresIn: '2h' });
 
                 // set payload and return response
                 res.json({ token: token });

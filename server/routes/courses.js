@@ -1,7 +1,8 @@
 const Course = require('../models/course');
+const User = require('../models/user');
 const VerifyToken = require('./auth').verifyToken;
 const express = require('express');
-
+const jwt_decode = require('jwt-decode');
 const router = express.Router();
 
 router.post('/course', VerifyToken, async (req, res) => {
@@ -40,21 +41,42 @@ router.post('/course/enrollment', async (req, res) => {
   // console.log(req.body)
   try {
 
-    exists = await Course.findOne( {"studentsEnrolled": req.body.courseID} )
+    let studentExists = {}
+    studentExists = await Course.findOne( {"studentsEnrolled": req.body.userID} )
 
-    // console.log(exists)
-    if(exists === undefined)
+    console.log(studentExists)
+    
+    if(studentExists === null)
     {
+      console.log(req.body.userID)
+
       const update = await Course.updateOne(
         { _id: req.body.courseID }, 
         {
           $push: {
             studentsEnrolled:
+              req.body.userID
+          }
+        });
+
+        // res.json({ 'status': 'student enrolled' });
+    }
+
+    let courseExists = {}
+    courseExists = await User.findOne( {"enrolledClasses": req.body.courseID} )
+
+    if(courseExists === null)
+    {
+      const update = await User.updateOne(
+        { _id: req.body.userID }, 
+        {
+          $push: {
+            enrolledClasses:
               req.body.courseID
           }
         });
 
-        res.json({ 'status': 'course enrolled' });
+        res.json({ 'status': 'enrolled in course' });
     }
     
     
@@ -86,6 +108,36 @@ router.post('/info', VerifyToken, async (req, res) => {
     res.sendStatus(500);
   }
 
+})
+
+router.post('/myCoursesInfo', VerifyToken, async (req, res) => {
+  try {
+    
+    let courses = []
+    const user = await User.findOne({_id: req.body.userID})
+
+    // if (req.body.search_query != undefined) {
+    //   const query = req.body.search_query;
+    //   courses = await Course.find({_id: user.enrolledClasses}, {
+    //     $or: [
+    //       { "category": { "$regex": query, $options: 'i' } },
+    //       { "name": { "$regex": query, $options: 'i' } },
+    //     ]
+    //   }, '_id name description urlImage category');
+    // } else {
+    //   courses = await Course.find({_id: user.enrolledClasses}, '_id name description urlImage category');
+    // }
+    
+    // const user = await User.findOne({_id: req.body.userID})
+    courses = await Course.find({_id: user.enrolledClasses})
+
+    // console.log(user)
+    res.json({ "courses": courses });
+
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
 
 })
 
