@@ -36,7 +36,6 @@ router.post('/update', async (req, res) => {
 
 })
 
-
 router.post('/info', VerifyToken, async (req, res) => {
   try {
     let courses = []
@@ -107,5 +106,7 @@ router.post('/module/create', VerifyToken, async (req, res) => {
     res.sendStatus(500);
   }
 })
+
+router.post('/module/update', VerifyToken, async (req, res) => {})
 
 module.exports = router;
