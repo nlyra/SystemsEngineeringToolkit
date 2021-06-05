@@ -1,7 +1,7 @@
 const Course = require('../models/course');
 const VerifyToken = require('./auth').verifyToken;
 const express = require('express');
-
+const crypto = require('crypto');
 const router = express.Router();
 
 router.post('/course', VerifyToken, async (req, res) => {
@@ -17,14 +17,14 @@ router.post('/course', VerifyToken, async (req, res) => {
 
 })
 
-router.post('/course/update', async (req, res) => {
+router.post('/update', async (req, res) => {
   try {
     const update = await Course.updateOne(
       { _id: req.body.courseID }, // query parameter
       {
         $set: {
-            name: req.body.name,
-            description: req.body.description,
+          name: req.body.name,
+          description: req.body.description,
         }
       })
 
@@ -85,12 +85,15 @@ router.post('/create', async (req, res) => {
 
 // Needs to be fleshed out because it may not work right now. It is a reskin of createCourse POST
 router.post('/module/create', VerifyToken, async (req, res) => {
+
   try {
+    const moduleID = crypto.randomBytes(10).toString('hex')
     const update = await Course.updateOne(
       { _id: req.body.courseID }, // query parameter
       {
         $push: {
           modules: {
+            id: moduleID,
             title: req.body.title,
             type: req.body.type,
             description: req.body.description,
