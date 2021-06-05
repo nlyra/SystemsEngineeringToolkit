@@ -21,11 +21,12 @@ const dashStyles = makeStyles((theme) => ({
   title: {
     fontSize: '50px',
     textAlign: "center",
+    justify: "center",
   },
 
   topItem: {
     paddingTop: '4.9vh',
-    paddingBottom: '6%',
+    paddingBottom: '5%',
   },
 
   courseImageStyle: {
@@ -60,6 +61,10 @@ const dashStyles = makeStyles((theme) => ({
     paddingRight: '5%'
   },
 
+  // container:
+  // {
+  //     marginTop: theme.spacing(15)
+  // },
 
 }))
 
@@ -69,11 +74,17 @@ const Course = (props) => {
   const [courseTitle, setCourseTitle] = useState('')
   const [courseDescription, setCourseDescription] = useState('')
   const [editCourseInfo, setEditCourseInfo] = useState(false)
+  const [courseID, setCourseID] = useState('')
 
   const classes = dashStyles()
 
   const onEditCourseTitle = (e) => {
     setEditCourseInfo(true);
+  };
+
+  const onEditModule = (e) => {
+    //alert("you have pressed the edit button the course ID is = " + courseID)
+    props.history.push(`/ModuleManager/${courseID}`);
   };
 
   // function that will run when page is loaded
@@ -99,6 +110,7 @@ const Course = (props) => {
 
     if (data.message === undefined) {
       setCourse(data.course);
+      setCourseID(id);
       setCourseTitle(data.course.name);
       setCourseDescription(data.course.description);
       setModules(data.course.modules);
@@ -124,7 +136,7 @@ const Course = (props) => {
         'Content-type': 'application/json'
       },
       body: JSON.stringify({
-        'courseID': '60aeaa0574ee92fee31e4b02',
+        'courseID': courseID,
         "name": courseTitle,
         "description": courseDescription,
       })
@@ -140,19 +152,21 @@ const Course = (props) => {
       <Grid container direction="column" className={classes.div}>
         {editCourseInfo !== true ?
           <Container maxWidth>
-            <Grid item xs={12} >
+            <Grid item alignItems="center" xs={12}>
               <Grid container className={classes.topItem}>
                 <Grid item xs={3} sm={2} lg={1}>
                   <img src={course.urlImage} className={classes.courseImageStyle} />
                 </Grid>
-                <Grid item xs={9} sm={10} lg={11}>
+                <Grid item xs={8} sm={9} lg={9}>
                   <h1
                     className={classes.title}>{course.name}
-                    <CourseInfoEditButton
-                      hideComponent={false}
-                      edit={onEditCourseTitle}
-                    />
                   </h1>
+                </Grid>
+                <Grid item xs={1} sm={1} lg={2}>
+                  <CourseInfoEditButton
+                    hideComponent={false}
+                    edit={onEditCourseTitle}
+                  />
                 </Grid>
               </Grid>
             </Grid>
@@ -208,6 +222,7 @@ const Course = (props) => {
         <Grid item xs={12}>
           <Divider className={classes.divider} />
         </Grid>
+        <ModuleInfoEditButton edit={onEditModule} id={courseID} hideComponent={false} />
         <Grid item xs={12} className={classes.accordion}>
           {/* modules starts here */}
           {modules.map((module) => (
@@ -217,7 +232,7 @@ const Course = (props) => {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
-                <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title} <ModuleInfoEditButton hideComponent={false} /></Typography>
+                <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
               </AccordionSummary>
               <AccordionDetails className={classes.accordionDetails}>
                 <Typography >

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { fade, makeStyles, IconButton, AppBar, Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon, Button } from "@material-ui/core";
+import { Link, fade, makeStyles, IconButton, AppBar, Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon, Button } from "@material-ui/core";
 import CreateIcon from '@material-ui/icons/Create';
 
 const useStyles = makeStyles((theme) => ({
@@ -11,28 +11,28 @@ const useStyles = makeStyles((theme) => ({
     },
     button:
     {
-        marginTop: theme.spacing(-3),
-        marginLeft: theme.spacing(205),
-        alignItems: "center",
-        justifyContent: "center",
+        // marginTop: theme.spacing(-3),
+        // marginLeft: theme.spacing(205),
+        // alignItems: "center",
+        // justifyContent: "center",
         //marginBottom: theme.spacing(100)
 
+        //marginLeft: "100px"
     }
 
 }))
 
-export default function ModuleInfoEditButton({ hideComponent }) {
+export default function ModuleInfoEditButton({ edit, id, hideComponent }) {
 
     const classes = useStyles();
-
+    // href={`/ModuleManager/${id}`}
     return (
-
         <div className={classes.root}>
             {hideComponent !== true ?
-            <IconButton type='submit' className={classes.button} size="small" component="span">
-                <CreateIcon/>
-            </IconButton>
-            : null }
+                <Button type='submit' className={classes.button} size="large" variant="contained" color="primary" onClick={edit}>
+                    Edit Modules
+                </Button>
+                : null}
         </div>
     )
 }
