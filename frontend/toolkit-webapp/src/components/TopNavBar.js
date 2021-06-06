@@ -11,7 +11,7 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import DescriptionIcon from '@material-ui/icons/Description';
 //import {Link } from "react-router-dom"
 import { Link } from '@material-ui/core';
-
+import HomeIcon from '@material-ui/icons/Home';
 import clsx from 'clsx';
 const logo_url = "http://localhost:4000/misc_files/logo.jpg"
 
@@ -206,6 +206,21 @@ export default function TopNavBar({ search, hideComponents }) {
                             >
                                 <AccountCircle />
                             </IconButton>
+                            
+                            : null}
+                            {hideComponents !== true ?
+                            <Link href="/dashboard" underline='none' color="inherit">
+                            <IconButton
+                                edge="end"
+                                aria-label="homescreen"
+                                aria-haspopup="true"
+                                // onClick={props.history.push('dashboard')}
+                                color="inherit"
+                            >
+                                <HomeIcon />
+                            </IconButton>
+                            </Link>
+                            
                             : null}
                     </div>
                 </Toolbar>

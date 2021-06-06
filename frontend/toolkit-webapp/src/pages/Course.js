@@ -89,7 +89,7 @@ const Course = (props) => {
     const token = localStorage.getItem("token");
     let res = undefined
 
-    res = await fetch(config.server_url + config.paths.myCourses, {
+    res = await fetch(config.server_url + config.paths.course, {
       method: 'POST',
       headers: {
         'Content-type': 'application/json'
