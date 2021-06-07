@@ -39,8 +39,8 @@ function ModuleCreator(props) {
                 fakes2: JSON.parse(sessionStorage.getItem('fakes2')),
                 fakes3: JSON.parse(sessionStorage.getItem('fakes3'))
             }
-            onFinish({ title, type, description, quiz })
             sessionStorage.clear()
+            onFinish({ title, type, description, quiz })
         } else {
             console.log('works')
             onFinish({ title, type, description })
