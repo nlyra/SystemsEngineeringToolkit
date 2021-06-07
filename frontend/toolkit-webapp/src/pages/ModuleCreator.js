@@ -29,9 +29,9 @@ function ModuleCreator(props) {
             return
         }
 
-        if(type === 'Quiz'){
+        if (type === 'Quiz') {
             console.log('works for Quiz')
-            var quiz={
+            var quiz = {
                 questions: JSON.parse(sessionStorage.getItem('questions')),
                 types: JSON.parse(sessionStorage.getItem('types')),
                 answers: JSON.parse(sessionStorage.getItem('answers')),
@@ -41,7 +41,7 @@ function ModuleCreator(props) {
             }
             sessionStorage.clear()
             onFinish({ title, type, description, quiz })
-        }else{
+        } else {
             console.log('works')
             onFinish({ title, type, description })
         }
@@ -58,30 +58,30 @@ function ModuleCreator(props) {
     }
 
     const onFinish = async (module) => {
-        //console.log(module)
-        console.log(module.quiz)
+        // console.log(module.quiz)
         const token = localStorage.getItem("token");
         if (token != undefined) {
             let res = undefined
-            if (module.type === 'Quiz'){
-                 res = await fetch(config.server_url + config.paths.newModule, {
-
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify({ 'token': token, 'courseID': '60aeaa0574ee92fee31e4b02', 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz  })
-                })
-            }else{
-                 res = await fetch(config.server_url + config.paths.newModule, {
-
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify({ 'token': token, 'courseID': '60aeaa0574ee92fee31e4b02', 'title': module.title, 'description': module.description, 'type': module.type})
-                })
+            if (module.type === "Quiz") {
                 console.log(module)
+                res = await fetch(config.server_url + config.paths.newModule, {
+
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({ 'token': token, 'courseID': '60b7dac736539526486f1503', 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
+                })
+            } else {
+                res = await fetch(config.server_url + config.paths.newModule, {
+
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({ 'token': token, 'courseID': '60b7dac736539526486f1503', 'title': module.title, 'description': module.description, 'type': module.type })
+                })
+                // console.log(module)
             }
 
             const data = await res.json()
@@ -164,7 +164,7 @@ function ModuleCreator(props) {
                                     <FormHelperText>Required</FormHelperText>
                                 </FormControl>
 
-                                {type == 'Video' && <FileModule></FileModule> }
+                                {type == 'Video' && <FileModule></FileModule>}
                                 {type == 'Quiz' && <QuizModule></QuizModule>}
 
                             </div>
