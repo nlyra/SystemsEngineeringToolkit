@@ -34,7 +34,6 @@ function NewCourse(props) {
         return
     }
 
-
     const onFinish = async (creds) => {
         const token = localStorage.getItem("token");
 
@@ -74,15 +73,7 @@ function NewCourse(props) {
             console.log(data)
         }
 
-
-
-
     }
-
-
-
-
-
 
     return (
         <div>
@@ -94,7 +85,7 @@ function NewCourse(props) {
                     <form autoComplete="off" onSubmit={onSubmit}>
                         <Paper className={classes.paper} elevation={3} square={false}>
                             <Box m={2} pt={2}>
-                                <Typography className={classes.Title} variant="h5">Course Creator</Typography>
+                                <Typography className={classes.Title} variant="h5">{courseTitle == "" ? 'New Course' : courseTitle}</Typography>
                             </Box>
                             <div className={classes.TextBox}>
                                 <TextField color='primary'

@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import { Divider, makeStyles, Grid, Typography } from '@material-ui/core'
+import { Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
+import VideoModule from '../components/VideoModule'
+import PdfModule from '../components/PdfModule'
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import CourseInfoEditButton from '../components/CourseInfoEditButton';
+import ModuleInfoEditButton from '../components/ModuleInfoEditButton';
 
 const dashStyles = makeStyles((theme) => ({
 
@@ -34,7 +38,8 @@ const dashStyles = makeStyles((theme) => ({
     textAlign: "right",
     paddingRight: '2%',
     float: 'right',
-    maxWidth: "90%"
+    maxWidth: "90%",
+
   },
 
   divider: {
@@ -42,20 +47,34 @@ const dashStyles = makeStyles((theme) => ({
   },
 
   accordion: {
-    padding: '3%'
+    padding: '3%',
   },
+
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,
   },
+
+  accordionDetails: {
+    paddingLeft: '5%',
+    paddingRight: '5%'
+  },
+
 
 }))
 
 const Course = (props) => {
   const [course, setCourse] = useState({})
   const [modules, setModules] = useState([])
+  const [courseTitle, setCourseTitle] = useState('')
+  const [courseDescription, setCourseDescription] = useState('')
+  const [editCourseInfo, setEditCourseInfo] = useState(false)
 
   const classes = dashStyles()
+
+  const onEditCourseTitle = (e) => {
+    setEditCourseInfo(true);
+  };
 
   // function that will run when page is loaded
   useEffect(() => {
@@ -77,12 +96,12 @@ const Course = (props) => {
     })
 
     const data = await res.json()
+
     if (data.message === undefined) {
       setCourse(data.course);
+      setCourseTitle(data.course.name);
+      setCourseDescription(data.course.description);
       setModules(data.course.modules);
-      // console.log(data.course.modules)
-
-
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
@@ -92,30 +111,104 @@ const Course = (props) => {
     }
   }
 
+  const onEditSubmit = async (e) => {
+
+    setEditCourseInfo(false);
+    console.log("this is the title:" + course.name)
+    console.log(courseDescription)
+    console.log(config.server_url + config.paths.updateCourseInfo)
+    if (courseTitle == '') { setCourseTitle(course.name) }
+    const res = await fetch(config.server_url + config.paths.updateCourseInfo, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        'courseID': '60aeaa0574ee92fee31e4b02',
+        "name": courseTitle,
+        "description": courseDescription,
+      })
+    })
+
+    window.location.reload();
+  }
+
   return (
     <div className={classes.div}>
       <TopNavBar >
       </TopNavBar>
       <Grid container direction="column" className={classes.div}>
-        <Grid item xs={12} >
-          <Grid container className={classes.topItem}>
-            <Grid item xs={3} sm={2} lg={1}>
-              <img src={course.urlImage} className={classes.courseImageStyle} />
+        {editCourseInfo !== true ?
+          <Container maxWidth>
+            <Grid item xs={12} >
+              <Grid container className={classes.topItem}>
+                <Grid item xs={3} sm={2} lg={1}>
+                  <img src={course.urlImage} className={classes.courseImageStyle} />
+                </Grid>
+                <Grid item xs={9} sm={10} lg={11}>
+                  <h1
+                    className={classes.title}>{course.name}
+                    <CourseInfoEditButton
+                      hideComponent={false}
+                      edit={onEditCourseTitle}
+                    />
+                  </h1>
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item xs={9} sm={10} lg={11}>
-              <h1 className={classes.title} >{course.name} </h1>
+            <Grid item xs={12} >
+              <Typography className={classes.description}>{course.description}</Typography>
             </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} >
-          <Typography className={classes.description}>{course.description}</Typography>
-        </Grid>
+          </Container>
+          :
+          <Container maxWidth>
+            <Grid item xs={12} >
+              <Grid container className={classes.topItem}>
+                <Grid item xs={3} sm={2} lg={1}>
+                  <img src={course.urlImage} className={classes.courseImageStyle} />
+                </Grid>
+                <Grid item xs={9} sm={10} lg={11} align={"center"}>
+                  <TextField
+                    color='primary'
+                    size='medium'
+                    variant="filled"
+                    label='Title'
+                    type="text"
+                    defaultValue={course.name}
+                    onChange={e => setCourseTitle(e.target.value)}
+                    margin="normal"
+                  //fullWidth
+                  //style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} >
+              <TextField
+                color='primary'
+                size='medium'
+                variant="filled"
+                label='Description'
+                type="text"
+                defaultValue={course.description}
+                //value={course.description}
+                onChange={e => setCourseDescription(e.target.value)}
+                margin="normal"
+                required={true}
+                fullWidth
+                multiline
+                rows={10}
+                rowsMax={15}
+              //style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+              />
+            </Grid>
+            <Button onClick={onEditSubmit}>Submit</Button>
+          </Container>
+        }
         <Grid item xs={12}>
           <Divider className={classes.divider} />
         </Grid>
         <Grid item xs={12} className={classes.accordion}>
-          
-          
           {/* modules starts here */}
           {modules.map((module) => (
             <Accordion key={modules.indexOf(module)} >
@@ -124,23 +217,27 @@ const Course = (props) => {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
-                <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
+                <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title} <ModuleInfoEditButton hideComponent={false} /></Typography>
               </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
+              <AccordionDetails className={classes.accordionDetails}>
+                <Typography >
                   Type: {module.type}
-                <br/>
-                <br/>
-                {module.description}
+                  <br />
+                  <br />
+                  {module.description}
+                  <br />
+                  <br />
+                  <div >
+                    {module.type === "Video" && <VideoModule fileUrl={module.fileUrl} />}
+                    {module.type === "Pdf" && <PdfModule fileUrl={module.fileUrl} />}
+                  </div>
                 </Typography>
               </AccordionDetails>
             </Accordion>
           ))}
-
-
         </Grid>
       </Grid>
-    </div>
+    </div >
   )
 }
 
