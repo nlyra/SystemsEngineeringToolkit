@@ -23,8 +23,8 @@ router.post('/course/update', async (req, res) => {
       { _id: req.body.courseID }, // query parameter
       {
         $set: {
-            name: req.body.name,
-            description: req.body.description,
+          name: req.body.name,
+          description: req.body.description,
         }
       })
 
@@ -87,19 +87,7 @@ router.post('/create', async (req, res) => {
 router.post('/module/create', VerifyToken, async (req, res) => {
   console.log(req.body)
   try {
-    if(req.body.quiz === undefined){
-      const update = await Course.updateOne(
-        { _id: req.body.courseID }, // query parameter
-        {
-          $push: {
-            modules: {
-              title: req.body.title,
-              type: req.body.type,
-              description: req.body.description,
-            }
-          }
-      });
-    }else{
+    if (req.body.type === "Quiz") {
       const update = await Course.updateOne(
         { _id: req.body.courseID }, // query parameter
         {
@@ -111,7 +99,19 @@ router.post('/module/create', VerifyToken, async (req, res) => {
               quiz: req.body.quiz,
             }
           }
-      });
+        });
+    } else {
+      const update = await Course.updateOne(
+        { _id: req.body.courseID }, // query parameter
+        {
+          $push: {
+            modules: {
+              title: req.body.title,
+              type: req.body.type,
+              description: req.body.description,
+            }
+          }
+        });
     }
 
     res.json({ 'status': 'course added' });
