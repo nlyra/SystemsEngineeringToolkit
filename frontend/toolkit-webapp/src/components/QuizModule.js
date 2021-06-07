@@ -231,6 +231,7 @@ const QuizModule = () => {
                 <option aria-label="None" value="" />
                 <option value={"Multiple Choice"}>Multiple Choice</option>
                 <option value={"True or False"}>True or False</option>
+                <option value={"Submit"}>Submit</option>
             </Select>
             <FormHelperText>Required</FormHelperText>
         </FormControl>

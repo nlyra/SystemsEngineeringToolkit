@@ -31,7 +31,7 @@ function ModuleCreator(props) {
 
         if(type === 'Quiz'){
             console.log('works for Quiz')
-            const quiz={
+            var quiz={
                 questions: JSON.parse(sessionStorage.getItem('questions')),
                 types: JSON.parse(sessionStorage.getItem('types')),
                 answers: JSON.parse(sessionStorage.getItem('answers')),
@@ -40,9 +40,11 @@ function ModuleCreator(props) {
                 fakes3: JSON.parse(sessionStorage.getItem('fakes3'))
             }
             onFinish({ title, type, description, quiz })
+            sessionStorage.clear()
+        }else{
+            console.log('works')
+            onFinish({ title, type, description })
         }
-        console.log('works')
-        onFinish({ title, type, description })
     }
 
     // const onUpload = (e) => {
@@ -56,17 +58,30 @@ function ModuleCreator(props) {
     }
 
     const onFinish = async (module) => {
-
+        //console.log(module)
         const token = localStorage.getItem("token");
         if (token != undefined) {
-            const res = await fetch(config.server_url + config.paths.newModule, {
+            let res = undefined
+            if (module.quiz === undefined){
+                 res = await fetch(config.server_url + config.paths.newModule, {
 
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify({ 'token': token, 'courseID': '60aeaa0574ee92fee31e4b02', 'title': module.title, 'description': module.description, 'type': module.type })
-            })
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({ 'token': token, 'courseID': '60aeaa0574ee92fee31e4b02', 'title': module.title, 'description': module.description, 'type': module.type })
+                })
+            }else{
+                 res = await fetch(config.server_url + config.paths.newModule, {
+
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({ 'token': token, 'courseID': '60aeaa0574ee92fee31e4b02', 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
+                })
+                console.log(module)
+            }
 
             const data = await res.json()
 
