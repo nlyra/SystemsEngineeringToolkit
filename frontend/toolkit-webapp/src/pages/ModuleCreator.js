@@ -31,7 +31,7 @@ function ModuleCreator(props) {
 
         if (type === 'Quiz') {
             console.log('works for Quiz')
-            var quiz = {
+            var quizArray = {
                 questions: JSON.parse(sessionStorage.getItem('questions')),
                 types: JSON.parse(sessionStorage.getItem('types')),
                 answers: JSON.parse(sessionStorage.getItem('answers')),
@@ -39,8 +39,25 @@ function ModuleCreator(props) {
                 fakes2: JSON.parse(sessionStorage.getItem('fakes2')),
                 fakes3: JSON.parse(sessionStorage.getItem('fakes3'))
             }
+            var quiz =[]
+
+            for(var i = 0; i < quizArray.questions.length; i++){
+                quiz.push({
+                    question: quizArray.questions[i],
+                    type: quizArray.types[i],
+                    answers: [
+                        {answerText: quizArray.answers[i], isCorrect: true},
+                        {answerText: quizArray.fakes1[i], isCorrect: false},
+                        {answerText: quizArray.fakes2[i], isCorrect: false},
+                        {answerText: quizArray.fakes3[i], isCorrect: false},
+                    ]
+
+                })
+            }
+            
             sessionStorage.clear()
-            onFinish({ title, type, description, quiz })
+            console.log(quiz)
+            //onFinish({ title, type, description, quiz })
         } else {
             console.log('works')
             onFinish({ title, type, description })
@@ -58,7 +75,7 @@ function ModuleCreator(props) {
     }
 
     const onFinish = async (module) => {
-        // console.log(module.quiz)
+        //console.log(module.quiz)
         const token = localStorage.getItem("token");
         if (token != undefined) {
             let res = undefined
