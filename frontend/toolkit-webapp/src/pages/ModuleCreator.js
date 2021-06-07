@@ -39,8 +39,8 @@ function ModuleCreator(props) {
                 fakes2: JSON.parse(sessionStorage.getItem('fakes2')),
                 fakes3: JSON.parse(sessionStorage.getItem('fakes3'))
             }
-            onFinish({ title, type, description, quiz })
             sessionStorage.clear()
+            onFinish({ title, type, description, quiz })
         }else{
             console.log('works')
             onFinish({ title, type, description })
@@ -59,17 +59,18 @@ function ModuleCreator(props) {
 
     const onFinish = async (module) => {
         //console.log(module)
+        console.log(module.quiz)
         const token = localStorage.getItem("token");
         if (token != undefined) {
             let res = undefined
-            if (module.quiz === undefined){
+            if (module.type === 'Quiz'){
                  res = await fetch(config.server_url + config.paths.newModule, {
 
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': '60aeaa0574ee92fee31e4b02', 'title': module.title, 'description': module.description, 'type': module.type })
+                    body: JSON.stringify({ 'token': token, 'courseID': '60aeaa0574ee92fee31e4b02', 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz  })
                 })
             }else{
                  res = await fetch(config.server_url + config.paths.newModule, {
@@ -78,7 +79,7 @@ function ModuleCreator(props) {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': '60aeaa0574ee92fee31e4b02', 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
+                    body: JSON.stringify({ 'token': token, 'courseID': '60aeaa0574ee92fee31e4b02', 'title': module.title, 'description': module.description, 'type': module.type})
                 })
                 console.log(module)
             }

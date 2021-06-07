@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { IconButton, Toolbar, Button, Dialog, DialogActions, DialogContent, TextField, Table, TableBody, TableCell, TableContainer, TableHead,TablePagination, TableRow, TableSortLabel, Checkbox, Typography, FormControl, Select, InputLabel, FormHelperText} from '@material-ui/core'
+import { IconButton, Toolbar, Button, Dialog, DialogActions, DialogContent, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox, Typography, FormControl, Select, InputLabel, FormHelperText} from '@material-ui/core'
 import useStyles from '../styles/moduleStyle'
-import { Delete, Edit, ArrowUpward, ArrowDownward, AllInclusiveTwoTone } from '@material-ui/icons'
+import { Delete, Edit, ArrowUpward, ArrowDownward } from '@material-ui/icons'
 import MultipleChoice from '../components/MultipleChoiceCreator'
 import TorF from '../components/TrueOrFalseCreator'
 
@@ -245,14 +245,14 @@ const QuizModule = () => {
             <TorF></TorF>
         }
 
-            <Button variant="contained" color="grey" size="small" 
+            <Button variant="contained" color="default" size="small" 
                 onClick={addQuestion}
             >
                         
                 Add Question
             </Button>
 
-            <Button variant="contained" color="grey" size="small"
+            <Button variant="contained" color="default" size="small"
                 onClick={handleClickOpen}
             >
                 View Questions
@@ -342,7 +342,7 @@ const QuizModule = () => {
 
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="contained" color="grey" size="small" onClick={handleClose}>
+                    <Button variant="contained" color="default" size="small" onClick={handleClose}>
                         Close
                     </Button>
                 </DialogActions>
@@ -380,10 +380,10 @@ const QuizModule = () => {
                 }
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" color="grey" size="small" onClick={handleEditClose}>
+                <Button variant="contained" color="default" size="small" onClick={handleEditClose}>
                     Close
                 </Button>
-                <Button variant="contained" color="grey" size="small" onClick={submitEdit}>
+                <Button variant="contained" color="default" size="small" onClick={submitEdit}>
                     Submit
                 </Button>
             </DialogActions>

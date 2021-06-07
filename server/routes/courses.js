@@ -87,7 +87,7 @@ router.post('/create', async (req, res) => {
 router.post('/module/create', VerifyToken, async (req, res) => {
   console.log(req.body)
   try {
-    if(req.body.quiz === undefined){
+    if(req.body.type === 'Quiz'){
       const update = await Course.updateOne(
         { _id: req.body.courseID }, // query parameter
         {
@@ -96,6 +96,7 @@ router.post('/module/create', VerifyToken, async (req, res) => {
               title: req.body.title,
               type: req.body.type,
               description: req.body.description,
+              quiz: req.body.quiz,
             }
           }
       });
@@ -108,7 +109,6 @@ router.post('/module/create', VerifyToken, async (req, res) => {
               title: req.body.title,
               type: req.body.type,
               description: req.body.description,
-              quiz: req.body.quiz,
             }
           }
       });
