@@ -56,8 +56,8 @@ function ModuleCreator(props) {
             }
             
             sessionStorage.clear()
-            console.log(quiz)
-            //onFinish({ title, type, description, quiz })
+            //console.log(quiz)
+            onFinish({ title, type, description, quiz })
         } else {
             console.log('works')
             onFinish({ title, type, description })
@@ -75,12 +75,10 @@ function ModuleCreator(props) {
     }
 
     const onFinish = async (module) => {
-        //console.log(module.quiz)
         const token = localStorage.getItem("token");
         if (token != undefined) {
             let res = undefined
             if (module.type === "Quiz") {
-                console.log(module)
                 res = await fetch(config.server_url + config.paths.newModule, {
 
                     method: 'POST',
@@ -98,7 +96,6 @@ function ModuleCreator(props) {
                     },
                     body: JSON.stringify({ 'token': token, 'courseID': '60b7dac736539526486f1503', 'title': module.title, 'description': module.description, 'type': module.type })
                 })
-                // console.log(module)
             }
 
             const data = await res.json()
