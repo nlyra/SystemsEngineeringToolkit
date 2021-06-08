@@ -48,6 +48,16 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
     },
+
+    searchIcon2: {
+        padding: theme.spacing(0, 5),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     inputRoot: {
         color: 'inherit',
     },
@@ -127,9 +137,15 @@ const useStyles = makeStyles((theme) => ({
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
+    // iconbutton:{
+    //     position:'relative',
+    //     paddingLeft:theme.spacing(0,2)
+    // }
 }))
 
-export default function TopNavBar({ search, hideComponents }) {
+
+export default function TopNavBar(props) {
+
 
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
@@ -142,6 +158,10 @@ export default function TopNavBar({ search, hideComponents }) {
         setOpen(false);
     };
 
+    const test = (val) => {
+        props.history.push(`/dashboard`);
+    };
+
     return (
         <div className={classes.root}>
             <AppBar
@@ -152,7 +172,7 @@ export default function TopNavBar({ search, hideComponents }) {
                 })}
             >
                 <Toolbar>
-                    {hideComponents !== true ?
+                    {props.hideComponents !== true ?
                         <>
                             <IconButton
                                 color="inherit"
@@ -165,20 +185,29 @@ export default function TopNavBar({ search, hideComponents }) {
                             >
                                 <MenuIcon style={{ color: "white" }}></MenuIcon>
                             </IconButton>
-                            <div className={classes.search}>
-                                <div className={classes.searchIcon}>
-                                    <SearchIcon></SearchIcon>
+                            {window.location.pathname === "/dashboard" ?
+                                <div className={classes.search}>
+                                    <div className={classes.searchIcon}>
+                                        <SearchIcon></SearchIcon>
+                                    </div>
+
+                                    < InputBase
+                                        placeholder="Search..."
+                                        classes={{
+                                            root: classes.inputRoot,
+                                            input: classes.inputInput,
+                                        }}
+                                        inputProps={{ 'aria-label': 'search' }}
+                                        onChange={e => props.search(e.target.value)}
+                                    />
                                 </div>
-                                <InputBase
-                                    placeholder="Search..."
-                                    classes={{
-                                        root: classes.inputRoot,
-                                        input: classes.inputInput,
-                                    }}
-                                    inputProps={{ 'aria-label': 'search' }}
-                                    onChange={e => search(e.target.value)}
-                                />
-                            </div>
+                                :
+                                <Link href="/dashboard" underline='none' color="inherit">
+                                    {/* <div className={classes.searchIcon2}> */}
+                                        <SearchIcon></SearchIcon>
+                                    {/* </div> */}
+                                </Link>
+                            }
                         </>
                         : null}
                     <div className={classes.horizontalCenteringLogo}>
@@ -195,7 +224,7 @@ export default function TopNavBar({ search, hideComponents }) {
                         {/* <NotificationsIcon /> */}
                         {/* </Badge> */}
                         {/* </IconButton> */}
-                        {hideComponents !== true ?
+                        {props.hideComponents !== true ?
                             <IconButton
                                 edge="end"
                                 aria-label="account of current user"
@@ -203,6 +232,7 @@ export default function TopNavBar({ search, hideComponents }) {
                                 aria-haspopup="true"
                                 //onClick={handleProfileMenuOpen}
                                 color="inherit"
+                                className={classes.iconbutton}
                             >
                                 <AccountCircle />
                             </IconButton>
@@ -211,7 +241,7 @@ export default function TopNavBar({ search, hideComponents }) {
                 </Toolbar>
             </AppBar>
 
-            {hideComponents !== true ?
+            {props.hideComponents !== true ?
                 <Drawer
                     variant="permanent"
                     className={clsx(classes.drawer, {
