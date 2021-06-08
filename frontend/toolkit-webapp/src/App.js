@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Course from './pages/Course'
 import ModuleCreator from './pages/ModuleCreator'
 import ModuleManager from './pages/ModuleManager'
+import ModuleEditor from './pages/ModuleEditor'
 // import background from "./img/image0.png";
 import videoSource from "./img/PEOSTRI.mp4"
 import VideoModule from "./components/VideoModule"
@@ -26,6 +27,7 @@ function App() {
         <Route path='/forgot' component={ForgotPassword} />
         <Route path='/NewCourse' component={CourseCreatorNewCourse} />
         <Route path='/newModule' component={ModuleCreator} />
+        <Route path='/editModule' component={ModuleEditor} />
         <Route path='/ModuleManager' component={ModuleManager} />
         <Route path='/course' component={Course} />
         <Route path= '/ManageCourses' component={ManageCourses} />

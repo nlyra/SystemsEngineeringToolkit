@@ -1,7 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, FormControl, Container, TextField, Typography, Box, Select, InputLabel, FormHelperText, Paper } from '@material-ui/core'
-// import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-// import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 import useStyles from '../styles/moduleStyle'
@@ -14,6 +12,9 @@ function ModuleCreator(props) {
     const [title, setTitle] = useState('')
     const [type, setType] = useState('')
     const [description, setDescription] = useState('')
+    const [module, setModule] = useState({})
+    const [moduleID, setModuleID] = useState('')
+    const [courseID, setCourseID] = useState('')
 
     const classes = useStyles()
 
@@ -22,6 +23,37 @@ function ModuleCreator(props) {
         // handleDisplayedContent(type)
     }
 
+    // function that will run when page is loaded
+    useEffect(() => {
+        const pathname = window.location.pathname.split('/') //returns the current path
+        const id = pathname[pathname.length - 1]
+        getCourse(id)
+    }, []);
+
+    const getCourse = async (id) => {
+        const token = localStorage.getItem("token");
+        let res = undefined
+
+        res = await fetch(config.server_url + config.paths.editModule, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({ "token": token, "id": id })
+        })
+
+        const data = await res.json()
+
+        if (data.message === undefined) {
+            setCourseID(id);
+        } else if (data.message === "wrong token") {
+            localStorage.removeItem('token');
+            props.history.push('login');
+            // probably alert the user
+        } else { // this is to check if there are errors not being addressed already
+            console.log(data)
+        }
+    }
     const onSubmit = (e) => {
         e.preventDefault()
         if (!title || !type || !description) {
@@ -39,22 +71,22 @@ function ModuleCreator(props) {
                 fakes2: JSON.parse(sessionStorage.getItem('fakes2')),
                 fakes3: JSON.parse(sessionStorage.getItem('fakes3'))
             }
-            var quiz =[]
+            var quiz = []
 
-            for(var i = 0; i < quizArray.questions.length; i++){
+            for (var i = 0; i < quizArray.questions.length; i++) {
                 quiz.push({
                     question: quizArray.questions[i],
                     type: quizArray.types[i],
                     answers: [
-                        {answerText: quizArray.answers[i], isCorrect: true},
-                        {answerText: quizArray.fakes1[i], isCorrect: false},
-                        {answerText: quizArray.fakes2[i], isCorrect: false},
-                        {answerText: quizArray.fakes3[i], isCorrect: false},
+                        { answerText: quizArray.answers[i], isCorrect: true },
+                        { answerText: quizArray.fakes1[i], isCorrect: false },
+                        { answerText: quizArray.fakes2[i], isCorrect: false },
+                        { answerText: quizArray.fakes3[i], isCorrect: false },
                     ]
 
                 })
             }
-            
+
             sessionStorage.clear()
             //console.log(quiz)
             onFinish({ title, type, description, quiz })

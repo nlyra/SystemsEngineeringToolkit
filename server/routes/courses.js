@@ -8,7 +8,6 @@ router.post('/course', VerifyToken, async (req, res) => {
   try {
     let course = {}
     course = await Course.findOne({ "_id": req.body.id }, '_id name description urlImage modules');
-    // "courseTitle" : course.name
     res.json({ "course": course });
   } catch (e) {
     console.log(e);
@@ -122,6 +121,15 @@ router.post('/module/create', VerifyToken, async (req, res) => {
   }
 })
 
-router.post('/module/update', VerifyToken, async (req, res) => { })
+router.post('/module/update', VerifyToken, async (req, res) => { 
+  try {
+    let course = {}
+    course = await Course.findOne({ "_id": req.body.id }, '_id name description urlImage modules');
+    res.json({ "course": course });
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+})
 
 module.exports = router;
