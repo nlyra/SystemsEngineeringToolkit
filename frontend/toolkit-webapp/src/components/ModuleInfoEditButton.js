@@ -12,14 +12,14 @@ const useStyles = makeStyles((theme) => ({
 
 }))
 
-export default function ModuleInfoEditButton({ edit, id, hideComponent }) {
+export default function ModuleInfoEditButton({ edit, moduleID, hideComponent }) {
 
     const classes = useStyles();
     // href={`/ModuleManager/${id}`}
     return (
         <div>
             {hideComponent !== true ?
-                <IconButton type='submit' className={classes.button}  variant="contained" color="primary" onClick={edit}>
+                <IconButton type='submit' className={classes.button}  variant="contained" color="primary" onClick={(e) => edit(moduleID)}>
                     <CreateIcon />
                 </IconButton>
                 : null}

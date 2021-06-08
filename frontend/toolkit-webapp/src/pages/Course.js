@@ -82,9 +82,10 @@ const Course = (props) => {
     setEditCourseInfo(true);
   };
 
-  const onEditModule = (e) => {
+  const onEditModule = (moduleID) => {
     //alert("you have pressed the edit button the course ID is = " + courseID)
-    props.history.push(`/ModuleManager/${courseID}`);
+    // console.log(moduleID)
+    props.history.push(`/newModule/${courseID}/${moduleID}`);
   };
 
   // function that will run when page is loaded
@@ -235,7 +236,7 @@ const Course = (props) => {
                   aria-label="Acknowledge"
                   onClick={(event) => event.stopPropagation()}
                   onFocus={(event) => event.stopPropagation()}
-                  control={<ModuleInfoEditButton edit={onEditModule} hideComponent={false} />}
+                  control={<ModuleInfoEditButton moduleID={module.id} edit={onEditModule} hideComponent={false} />}
                 />
                 <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
               </AccordionSummary>

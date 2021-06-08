@@ -57,7 +57,6 @@ router.post('/info', VerifyToken, async (req, res) => {
     res.sendStatus(500);
   }
 
-
 })
 
 router.post('/create', async (req, res) => {

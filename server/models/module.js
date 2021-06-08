@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const ModuleSchema = mongoose.Schema({  
-  id:{
+  id: {
     type: String,
   },
 
