@@ -90,6 +90,7 @@ router.post('/course/enrollment', async (req, res) => {
 router.post('/info', VerifyToken, async (req, res) => {
   try {
     let courses = []
+    //console.log(req.body.search_query)
     if (req.body.search_query != undefined) {
       const query = req.body.search_query;
       courses = await Course.find({
@@ -116,21 +117,35 @@ router.post('/myCoursesInfo', VerifyToken, async (req, res) => {
     let courses = []
     const user = await User.findOne({_id: req.body.userID})
 
-    // if (req.body.search_query != undefined) {
-    //   const query = req.body.search_query;
-    //   courses = await Course.find({_id: user.enrolledClasses}, {
-    //     $or: [
-    //       { "category": { "$regex": query, $options: 'i' } },
-    //       { "name": { "$regex": query, $options: 'i' } },
-    //     ]
-    //   }, '_id name description urlImage category');
-    // } else {
-    //   courses = await Course.find({_id: user.enrolledClasses}, '_id name description urlImage category');
-    // }
-    
-    // const user = await User.findOne({_id: req.body.userID})
-    courses = await Course.find({_id: user.enrolledClasses})
+    if (req.body.search_query != undefined) {
+      const query = req.body.search_query;
 
+      courses = await Course.find({
+        $and: [
+          {_id: user.enrolledClasses},
+          {$or: [{ "category": { "$regex": query, $options: 'i' } }, { "name": { "$regex": query, $options: 'i' } }]},
+      ]}), '_id name description urlImage category'}
+      else {
+      courses = await Course.find({_id: user.enrolledClasses}, '_id name description urlImage category')
+    }
+
+// 
+    // // const temp = await Course.find({_id: user.enrolledClasses})
+
+    // // if (req.body.search_query != undefined) {
+    // //   const query = req.body.search_query;
+    // //   courses = await temp.find({
+    // //     $or: [
+    // //       { "category": { "$regex": query, $options: 'i' } },
+    // //       { "name": { "$regex": query, $options: 'i' } },
+    // //     ]
+    // //   });
+    // // } else {
+    // //   // courses = await Course.find({_id: user.enrolledClasses}, 'id');
+    // // }
+    
+    // // const user = await User.findOne({_id: req.body.userID})
+    // courses = await Course.find({_id: user.enrolledClasses})
     // console.log(user)
     res.json({ "courses": courses });
 

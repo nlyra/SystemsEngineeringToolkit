@@ -12,7 +12,7 @@ const MyCourses = (props) => {
     // const [page, setPage] = useState(1)
     // const [cardAmount, setCardAmount] = useState(3)
     // const [coursesPerPage, setCoursesPerPage] = useState(5)
-    const [searchQuery, setSearchQuery] = useState(undefined)
+    const [searchQuery, setSearchQuery] = useState('')
 
     const classes = myCourseStyles()
 
@@ -36,11 +36,11 @@ const MyCourses = (props) => {
         let res = undefined
         
         // let skip = (s - 1) * cardAmount
-        if (query == ""){
-            setSearchQuery(undefined)
-        }else{
-            setSearchQuery(query)
-        }
+        // if (query == ""){
+        //     setSearchQuery(undefined)
+        // }else{
+        //     setSearchQuery(query)
+        // }
 
         res = await fetch(config.server_url + config.paths.myCourses, {
             method: 'POST',

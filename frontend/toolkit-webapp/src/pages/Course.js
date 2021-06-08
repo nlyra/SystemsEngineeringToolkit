@@ -147,28 +147,31 @@ const Course = (props) => {
     window.location.reload();
   }
 
-  const enroll = async (e) => {
+  const enroll = async (module) => {
     // console.log(value)
 
+    // console.log(modules.indexOf(module))
     if(counter !== 0)
       return
-    
-      setCounter(counter + 1)
-    
-    const token = localStorage.getItem("token");
-    const decoded = jwt_decode(token)
 
-    // console.log(decoded.id)
-    const res = await fetch(config.server_url + config.paths.enrollment, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        "courseID": course._id,
-        "userID": decoded.id
+
+    if(modules.indexOf(module) === 0)
+    {
+      const token = localStorage.getItem("token");
+      const decoded = jwt_decode(token)
+
+      const res = await fetch(config.server_url + config.paths.enrollment, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          "courseID": course._id,
+          "userID": decoded.id
+        })
       })
-    })
+    }
+    
   }
 
   return (
@@ -253,7 +256,7 @@ const Course = (props) => {
 
           {/* modules starts here */}
           {modules.map((module) => (
-            <Accordion key={modules.indexOf(module)} onClick={enroll} >
+            <Accordion key={modules.indexOf(module)} onClick={e=> enroll(module)} >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"

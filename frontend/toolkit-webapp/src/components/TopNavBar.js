@@ -185,7 +185,7 @@ export default function TopNavBar(props) {
                             >
                                 <MenuIcon style={{ color: "white" }}></MenuIcon>
                             </IconButton>
-                            {window.location.pathname === "/dashboard" ?
+                            {window.location.pathname === "/dashboard" || window.location.pathname === "/MyCourses" ?
                                 <div className={classes.search}>
                                     <div className={classes.searchIcon}>
                                         <SearchIcon></SearchIcon>
@@ -238,7 +238,7 @@ export default function TopNavBar(props) {
                             </IconButton>
                             
                             : null}
-                            {hideComponents !== true ?
+                            {props.hideComponents !== true ?
                             <Link href="/dashboard" underline='none' color="inherit">
                             <IconButton
                                 edge="end"
