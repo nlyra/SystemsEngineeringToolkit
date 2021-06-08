@@ -26,11 +26,12 @@ function ModuleCreator(props) {
     // function that will run when page is loaded
     useEffect(() => {
         const pathname = window.location.pathname.split('/') //returns the current path
-        const id = pathname[pathname.length - 1]
-        getCourse(id)
+        const courseId = pathname[pathname.length - 2]
+        const moduleId = pathname[pathname.length - 1]
+        getCourse(courseId, moduleId)
     }, []);
 
-    const getCourse = async (id) => {
+    const getCourse = async (courseId, moduleId) => {
         const token = localStorage.getItem("token");
         let res = undefined
 
@@ -39,13 +40,14 @@ function ModuleCreator(props) {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "id": id })
+            body: JSON.stringify({ "token": token, "id": courseId })
         })
 
         const data = await res.json()
 
         if (data.message === undefined) {
-            setCourseID(id);
+            setCourseID(courseId);
+            setModuleID(moduleId);
         } else if (data.message === "wrong token") {
             localStorage.removeItem('token');
             props.history.push('login');
