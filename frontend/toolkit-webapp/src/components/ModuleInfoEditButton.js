@@ -1,23 +1,13 @@
 import React, { useState } from 'react'
-import { Link, fade, makeStyles, IconButton, AppBar, Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon, Button } from "@material-ui/core";
+import { Box, IconButton, makeStyles, Button } from "@material-ui/core";
 import CreateIcon from '@material-ui/icons/Create';
 
 const useStyles = makeStyles((theme) => ({
-    root:
-    {
-        display: 'flex',
-        position: 'relative'
 
-    },
     button:
     {
-        // marginTop: theme.spacing(-3),
-        // marginLeft: theme.spacing(205),
-        // alignItems: "center",
-        // justifyContent: "center",
-        //marginBottom: theme.spacing(100)
-
-        //marginLeft: "100px"
+        height: 0.5,
+        // paddingLeft: 60
     }
 
 }))
@@ -27,11 +17,11 @@ export default function ModuleInfoEditButton({ edit, id, hideComponent }) {
     const classes = useStyles();
     // href={`/ModuleManager/${id}`}
     return (
-        <div className={classes.root}>
+        <div>
             {hideComponent !== true ?
-                <Button type='submit' className={classes.button} size="large" variant="contained" color="primary" onClick={edit}>
-                    Edit Modules
-                </Button>
+                <IconButton type='submit' className={classes.button}  variant="contained" color="primary" onClick={edit}>
+                    <CreateIcon />
+                </IconButton>
                 : null}
         </div>
     )

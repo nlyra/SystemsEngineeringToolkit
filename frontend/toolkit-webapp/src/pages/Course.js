@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import { Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
+import { FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
 import VideoModule from '../components/VideoModule'
 import PdfModule from '../components/PdfModule'
 import Accordion from '@material-ui/core/Accordion';
@@ -222,7 +222,6 @@ const Course = (props) => {
         <Grid item xs={12}>
           <Divider className={classes.divider} />
         </Grid>
-        <ModuleInfoEditButton edit={onEditModule} id={courseID} hideComponent={false} />
         <Grid item xs={12} className={classes.accordion}>
           {/* modules starts here */}
           {modules.map((module) => (
@@ -232,6 +231,12 @@ const Course = (props) => {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
+                <FormControlLabel
+                  aria-label="Acknowledge"
+                  onClick={(event) => event.stopPropagation()}
+                  onFocus={(event) => event.stopPropagation()}
+                  control={<ModuleInfoEditButton edit={onEditModule} hideComponent={false} />}
+                />
                 <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
               </AccordionSummary>
               <AccordionDetails className={classes.accordionDetails}>
