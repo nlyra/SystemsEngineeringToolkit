@@ -250,6 +250,7 @@ const Course = (props) => {
         </Grid>
         <ModuleInfoEditButton edit={onEditModule} id={courseID} hideComponent={false} />
         <Grid item xs={12} className={classes.accordion}>
+
           {/* modules starts here */}
           {modules.map((module) => (
             <Accordion key={modules.indexOf(module)} onClick={enroll} >
