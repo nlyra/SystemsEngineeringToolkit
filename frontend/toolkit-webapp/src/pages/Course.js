@@ -70,7 +70,6 @@ const dashStyles = makeStyles((theme) => ({
 }))
 
 const Course = (props) => {
-  const [counter, setCounter] = useState(0)
   const [course, setCourse] = useState({})
   const [modules, setModules] = useState([])
   const [courseTitle, setCourseTitle] = useState('')
@@ -148,15 +147,10 @@ const Course = (props) => {
   }
 
   const enroll = async (module) => {
-    // console.log(value)
-
-    // console.log(modules.indexOf(module))
-    if(counter !== 0)
-      return
-
 
     if(modules.indexOf(module) === 0)
     {
+
       const token = localStorage.getItem("token");
       const decoded = jwt_decode(token)
 

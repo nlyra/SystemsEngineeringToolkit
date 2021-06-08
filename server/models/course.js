@@ -18,7 +18,7 @@ const CourseSchema = mongoose.Schema({
     type: String,
     // required: true
   },
-  totalStudent: {
+  totalStudents: {
     type: Number,
     "default": 0
   },

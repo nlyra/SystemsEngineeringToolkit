@@ -41,43 +41,55 @@ router.post('/course/enrollment', async (req, res) => {
   // console.log(req.body)
   try {
 
+    // studentExists is a variable that will tell me if the course contains the user as an enrolled student
     let studentExists = {}
-    studentExists = await Course.findOne( {"studentsEnrolled": req.body.userID} )
+    studentExists = await Course.findOne({"_id": req.body.courseID, "studentsEnrolled": req.body.userID}, '_id studentsEnrolled')
 
-    console.log(studentExists)
-    
     if(studentExists === null)
     {
-      console.log(req.body.userID)
-
-      const update = await Course.updateOne(
+  
+      const updateCourse = await Course.updateOne(
         { _id: req.body.courseID }, 
         {
           $push: {
             studentsEnrolled:
               req.body.userID
-          }
+          },
+          $inc: {totalStudents : 1}
         });
-
-        // res.json({ 'status': 'student enrolled' });
-    }
-
-    let courseExists = {}
-    courseExists = await User.findOne( {"enrolledClasses": req.body.courseID} )
-
-    if(courseExists === null)
-    {
-      const update = await User.updateOne(
+        
+      const updateUser = await User.updateOne(
         { _id: req.body.userID }, 
         {
           $push: {
             enrolledClasses:
               req.body.courseID
           }
+
         });
 
-        res.json({ 'status': 'enrolled in course' });
+        res.json({ 'status': 'student enrolled in course' });
     }
+
+    // courseExists is a variable that will tell me if the student 
+    // let courseExists = {}
+    // courseExists = await User.findOne({"_id": req.body.userID, "enrolledClasses": req.body.courseID}, "_id enrolledClasses")
+
+    // if(courseExists === null)
+    // {
+    //   console.log('here')
+    //   const update = await User.updateOne(
+    //     { _id: req.body.userID }, 
+    //     {
+    //       $push: {
+    //         enrolledClasses:
+    //           req.body.courseID
+    //       }
+
+    //     });
+
+    //     res.json({ 'status': 'enrolled in course' });
+    // }
     
     
   } catch (e) {

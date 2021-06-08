@@ -238,13 +238,13 @@ export default function TopNavBar(props) {
                             </IconButton>
                             
                             : null}
-                            {props.hideComponents !== true ?
+                            
+                            {window.location.pathname !== "/dashboard" ?
                             <Link href="/dashboard" underline='none' color="inherit">
                             <IconButton
                                 edge="end"
                                 aria-label="homescreen"
                                 aria-haspopup="true"
-                                // onClick={props.history.push('dashboard')}
                                 color="inherit"
                             >
                                 <HomeIcon />
