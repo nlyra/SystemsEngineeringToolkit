@@ -85,21 +85,37 @@ router.post('/create', async (req, res) => {
 // Needs to be fleshed out because it may not work right now. It is a reskin of createCourse POST
 router.post('/module/create', VerifyToken, async (req, res) => {
 
+  console.log(req.body)
+  const moduleID = crypto.randomBytes(10).toString('hex')
   try {
-    const moduleID = crypto.randomBytes(10).toString('hex')
-    const update = await Course.updateOne(
-      { _id: req.body.courseID }, // query parameter
-      {
-        $push: {
-          modules: {
-            id: moduleID,
-            title: req.body.title,
-            type: req.body.type,
-            description: req.body.description,
+    if (req.body.type === "Quiz") {
+      const update = await Course.updateOne(
+        { _id: req.body.courseID }, // query parameter
+        {
+          $push: {
+            modules: {
+              id: moduleID,
+              title: req.body.title,
+              type: req.body.type,
+              description: req.body.description,
+              quiz: req.body.quiz,
+            }
           }
-        }
-      });
-
+        });
+    } else {
+      const update = await Course.updateOne(
+        { _id: req.body.courseID }, // query parameter
+        {
+          $push: {
+            modules: {
+              id: moduleID,
+              title: req.body.title,
+              type: req.body.type,
+              description: req.body.description,
+            }
+          }
+        });
+    }
     res.json({ 'status': 'course added' });
   } catch (e) {
     console.log(e);
@@ -107,6 +123,6 @@ router.post('/module/create', VerifyToken, async (req, res) => {
   }
 })
 
-router.post('/module/update', VerifyToken, async (req, res) => {})
+router.post('/module/update', VerifyToken, async (req, res) => { })
 
 module.exports = router;
