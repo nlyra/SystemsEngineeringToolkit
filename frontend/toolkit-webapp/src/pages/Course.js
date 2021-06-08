@@ -224,6 +224,7 @@ const Course = (props) => {
           <Divider className={classes.divider} />
         </Grid>
         <Grid item xs={12} className={classes.accordion}>
+
           {/* modules starts here */}
           {modules.map((module) => (
             <Accordion key={modules.indexOf(module)} >
