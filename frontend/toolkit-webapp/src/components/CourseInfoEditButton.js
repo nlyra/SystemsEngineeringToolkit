@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
         // alignItems: "center",
         //justifyContent: "center",
         //alignSelf: "auto",
+
         //marginBottom: theme.spacing(100)
 
         //marginLeft: "10%"
