@@ -56,6 +56,10 @@ const QuizModule = (props) => {
     setShowScore(false)
   }
 
+  const shuffeAnswers = () => {
+    console.log('hola')
+  }
+
   const saveScore = async (temp) => {
     const token = localStorage.getItem("token");
     const res = await fetch(config.server_url + config.paths.sendScore, {
@@ -94,8 +98,8 @@ const QuizModule = (props) => {
         </>
       ) : (
         <>
-          <div className={classes.app2}>
-            <div className={classes.questionSection}>
+          <div className={classes.app2} >
+            <div className={classes.questionSection} >
               <div className={classes.questionCount}>
 
                 <span className={classes.questionCountSpan}>Question {currentQuestion + 1}</span>/{questions.length}

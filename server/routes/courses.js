@@ -9,7 +9,18 @@ router.post('/course', VerifyToken, async (req, res) => {
   try {
     let course = {}
     course = await Course.findOne({ "_id": req.body.id }, '_id name description urlImage modules');
-    // "courseTitle" : course.name
+
+    for (let i = 0; i < course.modules.length; i++) {
+      if (course.modules[i].type == "Quiz") {
+        for (let j = 0; j < course.modules[i].quiz.length; j++) {
+          if (course.modules[i].quiz[j].type == "Multiple Choice") {
+            course.modules[i].quiz[j].answers = course.modules[i].quiz[j].answers.sort(() => Math.random() - 0.5)
+          }
+        }
+
+      }
+    }
+
     res.json({ "course": course });
   } catch (e) {
     console.log(e);
