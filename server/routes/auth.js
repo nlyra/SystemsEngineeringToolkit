@@ -76,8 +76,11 @@ function verifyToken(req, res, next) {
             console.log(err.message)
             res.sendStatus(403)
         }
+
+        req.body.userID = decoded.id;
     });
 
+    
     // console.log("verified")
     next();
 

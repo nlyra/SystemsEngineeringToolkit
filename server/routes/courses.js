@@ -37,8 +37,8 @@ router.post('/course/update', async (req, res) => {
 
 })
 
-router.post('/course/enrollment', async (req, res) => {
-  // console.log(req.body)
+router.post('/course/enrollment', VerifyToken, async (req, res) => {
+
   try {
 
     // studentExists is a variable that will tell me if the course contains the user as an enrolled student
@@ -70,27 +70,6 @@ router.post('/course/enrollment', async (req, res) => {
 
         res.json({ 'status': 'student enrolled in course' });
     }
-
-    // courseExists is a variable that will tell me if the student 
-    // let courseExists = {}
-    // courseExists = await User.findOne({"_id": req.body.userID, "enrolledClasses": req.body.courseID}, "_id enrolledClasses")
-
-    // if(courseExists === null)
-    // {
-    //   console.log('here')
-    //   const update = await User.updateOne(
-    //     { _id: req.body.userID }, 
-    //     {
-    //       $push: {
-    //         enrolledClasses:
-    //           req.body.courseID
-    //       }
-
-    //     });
-
-    //     res.json({ 'status': 'enrolled in course' });
-    // }
-    
     
   } catch (e) {
     console.log(e);
@@ -102,7 +81,7 @@ router.post('/course/enrollment', async (req, res) => {
 router.post('/info', VerifyToken, async (req, res) => {
   try {
     let courses = []
-    //console.log(req.body.search_query)
+
     if (req.body.search_query != undefined) {
       const query = req.body.search_query;
       courses = await Course.find({
@@ -141,24 +120,6 @@ router.post('/myCoursesInfo', VerifyToken, async (req, res) => {
       courses = await Course.find({_id: user.enrolledClasses}, '_id name description urlImage category')
     }
 
-// 
-    // // const temp = await Course.find({_id: user.enrolledClasses})
-
-    // // if (req.body.search_query != undefined) {
-    // //   const query = req.body.search_query;
-    // //   courses = await temp.find({
-    // //     $or: [
-    // //       { "category": { "$regex": query, $options: 'i' } },
-    // //       { "name": { "$regex": query, $options: 'i' } },
-    // //     ]
-    // //   });
-    // // } else {
-    // //   // courses = await Course.find({_id: user.enrolledClasses}, 'id');
-    // // }
-    
-    // // const user = await User.findOne({_id: req.body.userID})
-    // courses = await Course.find({_id: user.enrolledClasses})
-    // console.log(user)
     res.json({ "courses": courses });
 
   } catch (e) {
@@ -190,7 +151,7 @@ router.post('/create', async (req, res) => {
 
 })
 
-router.post('/removeCourse', async (req, res) => {
+router.post('/removeCourse', VerifyToken, async (req, res) => {
  
   try {
     const update = await User.updateOne(

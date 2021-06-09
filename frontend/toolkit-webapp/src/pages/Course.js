@@ -152,7 +152,6 @@ const Course = (props) => {
     {
 
       const token = localStorage.getItem("token");
-      const decoded = jwt_decode(token)
 
       const res = await fetch(config.server_url + config.paths.enrollment, {
         method: 'POST',
@@ -161,7 +160,8 @@ const Course = (props) => {
         },
         body: JSON.stringify({
           "courseID": course._id,
-          "userID": decoded.id
+          "token": token
+          // "userID": decoded.id
         })
       })
     }

@@ -10,9 +10,6 @@ import { Link } from '@material-ui/core';
 
 const MyCourses = (props) => {
     const [courses, setCourses] = useState([])
-    // const [page, setPage] = useState(1)
-    // const [cardAmount, setCardAmount] = useState(3)
-    // const [coursesPerPage, setCoursesPerPage] = useState(5)
     const [searchQuery, setSearchQuery] = useState('')
 
     const classes = myCoursesStyles()
@@ -21,11 +18,6 @@ const MyCourses = (props) => {
     useEffect(() => {
         loadCourses();
     }, []);
-
-    // const handlePage = (event, value) => {
-    //     // setPage(value)
-    //     loadCourses(undefined, value)
-    // }
 
     // function to get the courses 
     const loadCourses = async (query, s = 1) => {
@@ -63,49 +55,23 @@ const MyCourses = (props) => {
 
     const removeCourse = async (id) => 
     {
-        // console.log(index)
         let res = undefined
         const token = localStorage.getItem("token");
-        const decoded = jwt_decode(token)
 
         res = await fetch(config.server_url + config.paths.removeCourse, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "userID": decoded.id, "courseID": id})
+            body: JSON.stringify({ "token": token, "courseID": id})
         })
-        // console.log(index)
-        // let temp = courses.splice(0,index)
-        // // console.log(courses.length)
-        // let temp2 = courses.splice(index+1, courses.length)
-        // let temp3 = temp.concat(temp2)
-        // console.log("temp is " + temp.length)
-        // console.log("temp is " + temp2.length)
-    //    const data = await res.json()
 
-        // This splits the array correctly 
+        // This splits the array correctly and updates courses array with courses the user is still enrolled in
         const newVal = courses.filter((courses) => courses._id !== id);
-        console.log(newVal)
         setCourses(newVal)
         
-        // This should print stuff but I don't see it in the log 
-        console.log(courses)
+        // window.location.reload()
         
-        
-        // The page is also not updating itself when I setCourses to newVal, not sure why
-        
-        
-        
-        // temp = []
-        // setCourses(...temp, ...temp2)
-        // let temp = courses
-        // /setCourses(courses.filter(item => item.title !== courses.title))
-        // console.log(temp3)
-
-        // temp
-
-
     }
 
 
