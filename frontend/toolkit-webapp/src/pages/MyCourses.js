@@ -6,6 +6,7 @@ import TopNavBar from '../components/TopNavBar'
 // import Pagination from '@material-ui/lab/Pagination'
 import myCoursesStyles from '../styles/myCoursesStyle'
 import jwt_decode from "jwt-decode";
+import { Link } from '@material-ui/core';
 
 const MyCourses = (props) => {
     const [courses, setCourses] = useState([])
@@ -75,13 +76,6 @@ const MyCourses = (props) => {
         const token = localStorage.getItem("token");
         const decoded = jwt_decode(token)
 
-        // let skip = (s - 1) * cardAmount
-        // if (query == ""){
-        //     setSearchQuery(undefined)
-        // }else{
-        //     setSearchQuery(query)
-        // }
-
         res = await fetch(config.server_url + config.paths.removeCourse, {
             method: 'POST',
             headers: {
@@ -90,9 +84,10 @@ const MyCourses = (props) => {
             body: JSON.stringify({ "token": token, "userID": decoded.id, "courseID": course._id})
         })
 
-        // location.reload();
+       
 
     }
+
 
     const onCourse = (course) => {
         props.history.push(`course/${course._id}`);
@@ -114,7 +109,7 @@ const MyCourses = (props) => {
                             <Grid item key={course._id} xs={12} sm={4} md={3}>
                                 <Card
                                     className={classes.card}
-                                    // / / onClick={() => onCourse(course)}
+                                    onClick={() => onCourse(course)}
                                 >
                                     <CardMedia
                                         className={classes.cardMedia}
@@ -128,18 +123,22 @@ const MyCourses = (props) => {
                                         <Typography gutterBottom>
                                             {course.description.length < 100 ? course.description : course.description.substr(0, 100) + ' ...'}
                                         </Typography>
-                                        <CardActions>
-                                        </CardActions>
+                                        {/* <CardActions>
+                                        </CardActions> */}
                                     </CardContent>
                                     <Grid container spacing={3}>
-                                    <Button type='submit' className={classes.removeButton} size="small" color="primary" variant="contained" onClick={() => onCourse(course)}>
-                                    View Course
-                                    </Button>
-                                    <Button type='submit' className={classes.removeButton} size="small" color="secondary" variant="contained" onClick={e => removeCourse(course)}>
-                                    Remove Course
-                                    </Button>
                                     </Grid>
                                 </Card>
+
+                             {/* TODO: Figure out a way to reload the page without simply linking back to the same page.  */}
+
+                                <Link href="/MyCourses" underline='none' color="inherit">
+                                <div className={classes.buttonDiv}>
+                                    <Button type='submit' className={classes.removeButton} size= "small" color="inherit" variant="contained" onClick={e => removeCourse(course)}>
+                                    Remove Course
+                                    </Button>
+                                    </div>
+                                </Link>
                             </Grid>
 
                         ))}

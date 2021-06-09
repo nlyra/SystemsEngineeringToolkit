@@ -11,6 +11,7 @@
         "enrollment": "/v0/courses/course/enrollment",
         "myCourses" : "/v0/courses/myCoursesInfo",
         "fileUpload": "/v0/upload/single",
-        "updateCourseInfo": "/v0/courses/course/update"
+        "updateCourseInfo": "/v0/courses/course/update",
+        "removeCourse": "/v0/courses/removeCourse"
     }
   }
