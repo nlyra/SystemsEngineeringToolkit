@@ -190,7 +190,28 @@ router.post('/create', async (req, res) => {
 
 })
 
-// Needs to be fleshed out because it may not work right now. It is a reskin of createCourse POST
+router.post('/removeCourse', async (req, res) => {
+ 
+  try {
+    const update = await User.updateOne(
+      {_id: req.body.userID},
+      { $pull: {enrolledClasses: req.body.courseID}}
+     )
+
+  const updateCourse = await Course.updateOne(
+    {_id: req.body.courseID},
+    { 
+      $pull: {studentsEnrolled: req.body.userID},
+      $inc: {totalStudents : -1}
+    })
+
+  } catch(e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+
+})
+
 router.post('/module/create', VerifyToken, async (req, res) => {
   try {
     const update = await Course.updateOne(

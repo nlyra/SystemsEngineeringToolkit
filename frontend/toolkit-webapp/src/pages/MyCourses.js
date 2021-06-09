@@ -4,7 +4,7 @@ import '../css/dashboard.css'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 // import Pagination from '@material-ui/lab/Pagination'
-import myCourseStyles from '../styles/dashboardStyle'
+import myCoursesStyles from '../styles/myCoursesStyle'
 import jwt_decode from "jwt-decode";
 
 const MyCourses = (props) => {
@@ -14,7 +14,7 @@ const MyCourses = (props) => {
     // const [coursesPerPage, setCoursesPerPage] = useState(5)
     const [searchQuery, setSearchQuery] = useState('')
 
-    const classes = myCourseStyles()
+    const classes = myCoursesStyles()
 
     // function that will run when page is loaded
     useEffect(() => {
@@ -69,6 +69,31 @@ const MyCourses = (props) => {
         }
     }
 
+    const removeCourse = async (course) => 
+    {
+        let res = undefined
+        const token = localStorage.getItem("token");
+        const decoded = jwt_decode(token)
+
+        // let skip = (s - 1) * cardAmount
+        // if (query == ""){
+        //     setSearchQuery(undefined)
+        // }else{
+        //     setSearchQuery(query)
+        // }
+
+        res = await fetch(config.server_url + config.paths.removeCourse, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({ "token": token, "userID": decoded.id, "courseID": course._id})
+        })
+
+        // location.reload();
+
+    }
+
     const onCourse = (course) => {
         props.history.push(`course/${course._id}`);
     }
@@ -89,7 +114,7 @@ const MyCourses = (props) => {
                             <Grid item key={course._id} xs={12} sm={4} md={3}>
                                 <Card
                                     className={classes.card}
-                                    onClick={() => onCourse(course)}
+                                    // / / onClick={() => onCourse(course)}
                                 >
                                     <CardMedia
                                         className={classes.cardMedia}
@@ -106,6 +131,14 @@ const MyCourses = (props) => {
                                         <CardActions>
                                         </CardActions>
                                     </CardContent>
+                                    <Grid container spacing={3}>
+                                    <Button type='submit' className={classes.removeButton} size="small" color="primary" variant="contained" onClick={() => onCourse(course)}>
+                                    View Course
+                                    </Button>
+                                    <Button type='submit' className={classes.removeButton} size="small" color="secondary" variant="contained" onClick={e => removeCourse(course)}>
+                                    Remove Course
+                                    </Button>
+                                    </Grid>
                                 </Card>
                             </Grid>
 
