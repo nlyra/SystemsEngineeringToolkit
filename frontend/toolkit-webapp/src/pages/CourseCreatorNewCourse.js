@@ -1,20 +1,23 @@
-import React, { useState } from 'react'
-import { Button, FormControl, Container, TextField, Typography, Box, Select, InputLabel, FormHelperText, Paper } from '@material-ui/core'
+import React, { useState, useEffect } from 'react'
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Container, TextField, Typography, Box, Select, InputLabel, FormHelperText, Paper } from '@material-ui/core'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import Chip from '@material-ui/core/Chip';
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 import courseStyles from '../styles/courseStyle'
+import FreeSoloDialog from '../components/FreeSoloDialog'
 import '../css/Login.css';
 
 function NewCourse(props) {
+
+    const classes = courseStyles()
 
     const [courseTitle, setCourseTitle] = useState('')
     const [category, setCategory] = useState('')
     const [description, setDescription] = useState('')
     const [image, setImage] = useState()
-
-    const classes = courseStyles()
 
     const handleChange = (event) => {
         setCategory(event.target.category);
@@ -75,6 +78,61 @@ function NewCourse(props) {
 
     }
 
+    const [chipData, setChipData] = React.useState([]);
+    const [dialogData, setDialogData] = React.useState([]);
+    const filter = createFilterOptions();
+
+    // This will make it so it only gets rendered once once the page loads,
+    // as opposed to after every time the form is rendered.
+    useEffect(() => {
+
+        const categoriesCollection = async () => {
+            const token = localStorage.getItem("token");
+            const res = await fetch(config.server_url + config.paths.categories, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "token": token
+                })
+            })
+
+            const fetchedCategories = await res.json()
+            setDialogData(fetchedCategories.categories)
+        }
+        categoriesCollection()
+
+    }, []);
+
+    const handleChipDelete = (chipToDelete) => () => {
+        setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key))
+    };
+
+    const [value, setValue] = React.useState(null);
+    const [open, toggleOpen] = React.useState(false);
+
+    const handleClose = () => {
+        setDialogValue({
+            label: '',
+        });
+
+        toggleOpen(false);
+    };
+
+    const [dialogValue, setDialogValue] = React.useState({
+        label: '',
+    });
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        setValue({
+            label: dialogValue.label,
+        });
+
+        handleClose();
+    };
+
     return (
         <div>
             <TopNavBar hideComponents={false} />
@@ -100,7 +158,7 @@ function NewCourse(props) {
                                     fullWidth
                                 />
 
-                                <FormControl required className={classes.formControl} fullWidth={true}>
+                                {/* <FormControl required className={classes.formControl} fullWidth={true}>
                                     <InputLabel htmlFor="category-native-required">Category</InputLabel>
                                     <Select
                                         native
@@ -118,8 +176,101 @@ function NewCourse(props) {
                                         <option value={"Other"}>Other</option>
                                     </Select>
                                     <FormHelperText>Required</FormHelperText>
-                                </FormControl>
+                                </FormControl> */}
+                                {/* <React.Fragment>
+                                    <Autocomplete>
 
+                                    </Autocomplete>
+                                </React.Fragment> */}
+                                {/* <FreeSoloDialog 
+                                    dialogData={dialogData}
+                                /> */}
+                                {/* // <Paper component="ul" className={classes.chipContainer}>
+                                //     {chipData.map((data) => {
+                                //         return (
+                                //             <li key={data.key}>
+                                //                 <Chip 
+                                //                     label={data.label}
+                                //                     className={classes.chip}
+                                //                     onDelete={handleChipDelete(data)}
+                                //                 />
+                                //             </li>
+                                //         )
+                                //     })}
+                                // </Paper> */}
+                                <Autocomplete
+                                    multiple
+                                    limitTags={3}
+                                    className={classes.categoryContainer}
+                                    id="multiple-limit-tags"
+                                    options={dialogData}
+                                    freeSolo
+                                    renderTags={(value, getTagProps) =>
+                                        value.map((option, index) => (
+                                            <Chip variant="outlined" label={option.label} {...getTagProps({ index })} />
+                                        ))
+                                    }
+                                    renderInput={(params) => (
+                                        <TextField {...params} variant="filled" placeholder="Categories" />
+                                    )}
+                                    filterOptions={(options, params) => {
+                                        const filtered = filter(options, params);
+                              
+                                        if (params.inputValue !== '') {
+                                          filtered.push({
+                                            label: params.inputValue,
+                                            inputValue: `Add "${params.inputValue}"`,
+                                          });
+                                        }
+                              
+                                        return filtered;
+                                      }}
+                                      getOptionLabel={(option) => {
+                                        // e.g value selected with enter, right from the input
+                                        if (typeof option === 'string') {
+                                          return option;
+                                        }
+                                        if (option.inputValue) {
+                                          return option.inputValue;
+                                        }
+                                        return option.label;
+                                    }}
+                                />
+                                <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+                                    <form onSubmit={handleSubmit}>
+                                        <DialogTitle id="form-dialog-title">Add a new film</DialogTitle>
+                                        <DialogContent>
+                                            <DialogContentText>
+                                                Did you miss any film in our list? Please, add it!
+                                            </DialogContentText>
+                                            <TextField
+                                                autoFocus
+                                                margin="dense"
+                                                id="name"
+                                                value={dialogValue.title}
+                                                onChange={(event) => setDialogValue({ ...dialogValue, title: event.target.value })}
+                                                label="title"
+                                                type="text"
+                                            />
+                                            <TextField
+                                                margin="dense"
+                                                id="name"
+                                                value={dialogValue.year}
+                                                onChange={(event) => setDialogValue({ ...dialogValue, year: event.target.value })}
+                                                label="year"
+                                                type="number"
+                                            />
+                                        </DialogContent>
+                                        <DialogActions>
+                                            <Button onClick={handleClose} color="primary">
+                                                Cancel
+                                            </Button>
+                                            <Button type="submit" color="primary">
+                                                Add
+                                            </Button>
+                                        </DialogActions>
+                                    </form>
+                                </Dialog>
                                 <TextField
                                     size='small'
                                     variant="filled"
