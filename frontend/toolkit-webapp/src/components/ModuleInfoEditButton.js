@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, IconButton, makeStyles, Button } from "@material-ui/core";
+import { Box, IconButton, makeStyles, Button, Link } from "@material-ui/core";
 import CreateIcon from '@material-ui/icons/Create';
 
 const useStyles = makeStyles((theme) => ({
@@ -12,16 +12,24 @@ const useStyles = makeStyles((theme) => ({
 
 }))
 
-export default function ModuleInfoEditButton({ edit, moduleID, hideComponent }) {
+export default function ModuleInfoEditButton({ module, hideComponent }) {
 
     const classes = useStyles();
     // href={`/ModuleManager/${id}`}
+    //${courseID}/
+    //onClick={(e) => edit(moduleID)}
+    const sendModule = () => {
+        localStorage.setItem("module", JSON.stringify(module))
+    }
+
     return (
         <div>
-            {hideComponent !== true ?
-                <IconButton type='submit' className={classes.button}  variant="contained" color="primary" onClick={(e) => edit(moduleID)}>
-                    <CreateIcon />
-                </IconButton>
+            { hideComponent !== true ?
+                <Link href={`/editModule/${module.id}`} onClick={sendModule}>
+                    <IconButton type='submit' className={classes.button} variant="contained" color="primary" >
+                        <CreateIcon />
+                    </IconButton>
+                </Link>
                 : null}
         </div>
     )

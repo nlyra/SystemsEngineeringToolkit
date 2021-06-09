@@ -85,7 +85,7 @@ const Course = (props) => {
   const onEditModule = (moduleID) => {
     //alert("you have pressed the edit button the course ID is = " + courseID)
     // console.log(moduleID)
-    props.history.push(`/newModule/${courseID}/${moduleID}`);
+    props.history.push(`/editModule/${courseID}/${moduleID}`);
   };
 
   // function that will run when page is loaded
@@ -127,10 +127,7 @@ const Course = (props) => {
   const onEditSubmit = async (e) => {
 
     setEditCourseInfo(false);
-    console.log("this is the title:" + course.name)
-    console.log(courseDescription)
-    console.log(config.server_url + config.paths.updateCourseInfo)
-    if (courseTitle == '') { setCourseTitle(course.name) }
+
     const res = await fetch(config.server_url + config.paths.updateCourseInfo, {
       method: 'POST',
       headers: {
@@ -237,7 +234,8 @@ const Course = (props) => {
                   aria-label="Acknowledge"
                   onClick={(event) => event.stopPropagation()}
                   onFocus={(event) => event.stopPropagation()}
-                  control={<ModuleInfoEditButton moduleID={module.id} edit={onEditModule} hideComponent={false} />}
+                  //edit={onEditModule}
+                  control={<ModuleInfoEditButton module={module} hideComponent={false} />}
                 />
                 <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
               </AccordionSummary>

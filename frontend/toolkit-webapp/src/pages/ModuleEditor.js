@@ -9,10 +9,11 @@ import QuizModule from '../components/QuizModule'
 
 function ModuleCreator(props) {
 
-    const [title, setTitle] = useState('')
-    const [type, setType] = useState('')
-    const [description, setDescription] = useState('')
-    const [module, setModule] = useState({})
+    const [module, setModule] = useState(JSON.parse(localStorage.getItem("module")))
+    const [title, setTitle] = useState(module.title)
+    const [type, setType] = useState(module.type)
+    const [description, setDescription] = useState(module.description)
+    //const [quiz, setQuiz] = useState(module.quiz)
     const [moduleID, setModuleID] = useState('')
     const [courseID, setCourseID] = useState('')
 
@@ -23,39 +24,12 @@ function ModuleCreator(props) {
         // handleDisplayedContent(type)
     }
 
-    // function that will run when page is loaded
     useEffect(() => {
-        const pathname = window.location.pathname.split('/') //returns the current path
-        const courseId = pathname[pathname.length - 2]
-        const moduleId = pathname[pathname.length - 1]
-        getCourse(courseId, moduleId)
+        localStorage.setItem("module", JSON.stringify(module))
+        //setModule(JSON.parse(localStorage.getItem("module")),
     }, []);
 
-    const getCourse = async (courseId, moduleId) => {
-        const token = localStorage.getItem("token");
-        let res = undefined
 
-        res = await fetch(config.server_url + config.paths.editModule, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({ "token": token, "id": courseId })
-        })
-
-        const data = await res.json()
-
-        if (data.message === undefined) {
-            setCourseID(courseId);
-            setModuleID(moduleId);
-        } else if (data.message === "wrong token") {
-            localStorage.removeItem('token');
-            props.history.push('login');
-            // probably alert the user
-        } else { // this is to check if there are errors not being addressed already
-            console.log(data)
-        }
-    }
     const onSubmit = (e) => {
         e.preventDefault()
         if (!title || !type || !description) {
@@ -119,7 +93,7 @@ function ModuleCreator(props) {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': '60b7dac736539526486f1503', 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
+                    body: JSON.stringify({ 'token': token, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
                 })
             } else {
                 res = await fetch(config.server_url + config.paths.newModule, {
@@ -128,7 +102,7 @@ function ModuleCreator(props) {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': '60b7dac736539526486f1503', 'title': module.title, 'description': module.description, 'type': module.type })
+                    body: JSON.stringify({ 'token': token, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type })
                 })
             }
 
@@ -162,7 +136,7 @@ function ModuleCreator(props) {
                     <form autoComplete="off" onSubmit={onSubmit}>
                         <Paper className={classes.paper} elevation={3} square={false}>
                             <Box m={2} pt={2}>
-                                <Typography className={classes.Title} variant="h5">{title == "" ? 'New Module' : title}</Typography>
+                                <Typography className={classes.Title} variant="h5">{title == "" ? "No Title" : title}</Typography>
                             </Box>
                             <div className={classes.TextBox}>
                                 <TextField color='primary'
@@ -170,7 +144,6 @@ function ModuleCreator(props) {
                                     variant="filled"
                                     label='Title'
                                     type="title"
-                                    defaultValue="New Module"
                                     value={title}
                                     onChange={e => setTitle(e.target.value)}
                                     margin="normal"

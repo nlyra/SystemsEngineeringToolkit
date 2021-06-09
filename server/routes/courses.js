@@ -80,6 +80,17 @@ router.post('/create', async (req, res) => {
 
 })
 
+router.post('/module', VerifyToken, async (req, res) => { 
+  try {
+    let course = {}
+    course = await Course.findOne({ "_id": req.body.id }, '_id name description urlImage modules');
+    res.json({ "course": course });
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+})
+
 // Needs to be fleshed out because it may not work right now. It is a reskin of createCourse POST
 router.post('/module/create', VerifyToken, async (req, res) => {
 
