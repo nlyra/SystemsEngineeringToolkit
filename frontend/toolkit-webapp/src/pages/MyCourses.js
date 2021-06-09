@@ -35,13 +35,6 @@ const MyCourses = (props) => {
         const decoded = jwt_decode(token)
 
         let res = undefined
-        
-        // let skip = (s - 1) * cardAmount
-        // if (query == ""){
-        //     setSearchQuery(undefined)
-        // }else{
-        //     setSearchQuery(query)
-        // }
 
         res = await fetch(config.server_url + config.paths.myCourses, {
             method: 'POST',
@@ -56,8 +49,6 @@ const MyCourses = (props) => {
         const data = await res.json()
         if (data.message === undefined) {
 
-            // console.log(data.courses);
-            // localStorage.setItem("token", data.token);
             setCourses(data.courses);
 
 
@@ -70,8 +61,9 @@ const MyCourses = (props) => {
         }
     }
 
-    const removeCourse = async (course) => 
+    const removeCourse = async (id) => 
     {
+        // console.log(index)
         let res = undefined
         const token = localStorage.getItem("token");
         const decoded = jwt_decode(token)
@@ -81,10 +73,38 @@ const MyCourses = (props) => {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "userID": decoded.id, "courseID": course._id})
+            body: JSON.stringify({ "token": token, "userID": decoded.id, "courseID": id})
         })
+        // console.log(index)
+        // let temp = courses.splice(0,index)
+        // // console.log(courses.length)
+        // let temp2 = courses.splice(index+1, courses.length)
+        // let temp3 = temp.concat(temp2)
+        // console.log("temp is " + temp.length)
+        // console.log("temp is " + temp2.length)
+    //    const data = await res.json()
 
-       
+        // This splits the array correctly 
+        const newVal = courses.filter((courses) => courses._id !== id);
+        console.log(newVal)
+        setCourses(newVal)
+        
+        // This should print stuff but I don't see it in the log 
+        console.log(courses)
+        
+        
+        // The page is also not updating itself when I setCourses to newVal, not sure why
+        
+        
+        
+        // temp = []
+        // setCourses(...temp, ...temp2)
+        // let temp = courses
+        // /setCourses(courses.filter(item => item.title !== courses.title))
+        // console.log(temp3)
+
+        // temp
+
 
     }
 
@@ -132,13 +152,14 @@ const MyCourses = (props) => {
 
                              {/* TODO: Figure out a way to reload the page without simply linking back to the same page.  */}
 
-                                <Link href="/MyCourses" underline='none' color="inherit">
+                                <Link href="/MyCourses" underline='none' color="inherit"> 
                                 <div className={classes.buttonDiv}>
-                                    <Button type='submit' className={classes.removeButton} size= "small" color="inherit" variant="contained" onClick={e => removeCourse(course)}>
+                                    <Button type='submit' className={classes.removeButton} size= "small" color="inherit" variant="contained" onClick={() => removeCourse(course._id)}>
                                     Remove Course
                                     </Button>
                                     </div>
-                                </Link>
+                                </Link> 
+                                
                             </Grid>
 
                         ))}
