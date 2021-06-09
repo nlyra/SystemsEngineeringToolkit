@@ -1,4 +1,5 @@
 const Course = require('../models/course');
+const User = require('../models/user');
 const VerifyToken = require('./auth').verifyToken;
 const express = require('express');
 
@@ -23,8 +24,8 @@ router.post('/course/update', async (req, res) => {
       { _id: req.body.courseID }, // query parameter
       {
         $set: {
-            name: req.body.name,
-            description: req.body.description,
+          name: req.body.name,
+          description: req.body.description,
         }
       })
 
@@ -95,6 +96,42 @@ router.post('/module/create', VerifyToken, async (req, res) => {
             type: req.body.type,
             description: req.body.description,
           }
+        }
+      });
+
+    res.json({ 'status': 'course added' });
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+})
+
+router.post('/module/score', VerifyToken, async (req, res) => {
+  // console.log(req.body)
+  try {
+    let courses = await User.findOne({ _id: req.body.userID }, 'coursesQuizes');
+    courses = courses.coursesQuizes[0];
+    if (courses === undefined)
+      courses = {}
+
+    if (courses[req.body.courseID] !== undefined) { // exist course
+      courses[req.body.courseID][req.body.moduleID] = req.body.score
+    } else { // not course 
+      courses[req.body.courseID] = {}
+      courses[req.body.courseID][req.body.moduleID] = req.body.score
+    }
+
+    // let courses = {}
+    // courses[req.body.courseID] = {}
+    // courses[req.body.courseID][req.body.moduleID] = req.body.score
+    // console.log(req.body.UserID)
+
+
+    const update = await User.updateOne(
+      { _id: req.body.userID }, // query parameter
+      {
+        $set: {
+          coursesQuizes: courses
         }
       });
 
