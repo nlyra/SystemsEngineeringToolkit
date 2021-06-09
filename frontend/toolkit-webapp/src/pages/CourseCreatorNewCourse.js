@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Container, TextField, Typography, Box, Select, InputLabel, FormHelperText, Paper } from '@material-ui/core'
+import { Button, Container, TextField, Typography, Box, Select, InputLabel, FormHelperText, Paper } from '@material-ui/core'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
@@ -7,7 +7,6 @@ import Chip from '@material-ui/core/Chip';
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 import courseStyles from '../styles/courseStyle'
-import FreeSoloDialog from '../components/FreeSoloDialog'
 import '../css/Login.css';
 
 function NewCourse(props) {
@@ -15,21 +14,20 @@ function NewCourse(props) {
     const classes = courseStyles()
 
     const [courseTitle, setCourseTitle] = useState('')
-    const [category, setCategory] = useState('')
+    const [categories, setCategories] = useState([])
     const [description, setDescription] = useState('')
     const [image, setImage] = useState()
-
-    const handleChange = (event) => {
-        setCategory(event.target.category);
-    }
+    const [dialogData, setDialogData] = React.useState([]);
+    const filter = createFilterOptions();
 
     const onSubmit = (e) => {
         e.preventDefault()
-        if (!courseTitle || !category || !description) {
+        if (!courseTitle || !categories || !description) {
             alert('Please enter all required fields')
             return
         }
-        onFinish({ courseTitle, category, description })
+        console.log("categories on submit: " + categories)
+        onFinish({ courseTitle, categories, description })
     }
 
     const onUpload = (e) => {
@@ -53,12 +51,28 @@ function NewCourse(props) {
                 "token": token,
                 "modules": [],
                 "name": creds.courseTitle,
-                "category": creds.category,
+                "category": creds.categories,
                 "description": creds.description,
                 "urlImage": `http://localhost:4000/${image.name}`
             })
+        })
+
+        // Check if there are any new categories that need to be added to the DB categories collection.
+        for (const newTag of categories) {
+            if (dialogData.find(c => c.label === newTag.label)) continue;
+
+            const res = await fetch(config.server_url + config.paths.addCategories, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "token": token,
+                    "label": newTag.label
+                }),
+            })
         }
-        )
+
         const data = await res.json()
         if (data.message === undefined) {
             const res = await fetch(config.server_url + config.paths.fileUpload, {
@@ -75,15 +89,15 @@ function NewCourse(props) {
         else { // this is to check if there are errors not being addressed already
             console.log(data)
         }
-
     }
 
-    const [chipData, setChipData] = React.useState([]);
-    const [dialogData, setDialogData] = React.useState([]);
-    const filter = createFilterOptions();
+    const onTagsChange = (event, values) => {
+        // console.log(values)
+        setCategories(values)
+      }
 
-    // This will make it so it only gets rendered once once the page loads,
-    // as opposed to after every time the form is rendered.
+    // useEffect() hook will make it so it only gets rendered once, once the page loads,
+    // as opposed to after every time the form is rendered (as long as the array at the end remains empty).
     useEffect(() => {
 
         const categoriesCollection = async () => {
@@ -104,34 +118,6 @@ function NewCourse(props) {
         categoriesCollection()
 
     }, []);
-
-    const handleChipDelete = (chipToDelete) => () => {
-        setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key))
-    };
-
-    const [value, setValue] = React.useState(null);
-    const [open, toggleOpen] = React.useState(false);
-
-    const handleClose = () => {
-        setDialogValue({
-            label: '',
-        });
-
-        toggleOpen(false);
-    };
-
-    const [dialogValue, setDialogValue] = React.useState({
-        label: '',
-    });
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        setValue({
-            label: dialogValue.label,
-        });
-
-        handleClose();
-    };
 
     return (
         <div>
@@ -157,47 +143,6 @@ function NewCourse(props) {
                                     required={true}
                                     fullWidth
                                 />
-
-                                {/* <FormControl required className={classes.formControl} fullWidth={true}>
-                                    <InputLabel htmlFor="category-native-required">Category</InputLabel>
-                                    <Select
-                                        native
-                                        value={category}
-                                        onChange={handleChange}
-                                        name="category"
-                                        inputProps={{
-                                            id: 'category-native-required',
-                                        }}
-                                        onChange={e => setCategory(e.target.value)}
-                                    >
-                                        <option aria-label="None" value="" />
-                                        <option value={"Code"}>Code</option>
-                                        <option value={"Programming"}>Programming</option>
-                                        <option value={"Other"}>Other</option>
-                                    </Select>
-                                    <FormHelperText>Required</FormHelperText>
-                                </FormControl> */}
-                                {/* <React.Fragment>
-                                    <Autocomplete>
-
-                                    </Autocomplete>
-                                </React.Fragment> */}
-                                {/* <FreeSoloDialog 
-                                    dialogData={dialogData}
-                                /> */}
-                                {/* // <Paper component="ul" className={classes.chipContainer}>
-                                //     {chipData.map((data) => {
-                                //         return (
-                                //             <li key={data.key}>
-                                //                 <Chip 
-                                //                     label={data.label}
-                                //                     className={classes.chip}
-                                //                     onDelete={handleChipDelete(data)}
-                                //                 />
-                                //             </li>
-                                //         )
-                                //     })}
-                                // </Paper> */}
                                 <Autocomplete
                                     multiple
                                     limitTags={3}
@@ -205,7 +150,8 @@ function NewCourse(props) {
                                     id="multiple-limit-tags"
                                     options={dialogData}
                                     freeSolo
-                                    renderTags={(value, getTagProps) =>
+                                    onChange={onTagsChange}
+                                    renderTags={(value, getTagProps) => 
                                         value.map((option, index) => (
                                             <Chip variant="outlined" label={option.label} {...getTagProps({ index })} />
                                         ))
@@ -236,41 +182,6 @@ function NewCourse(props) {
                                         return option.label;
                                     }}
                                 />
-                                <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                                    <form onSubmit={handleSubmit}>
-                                        <DialogTitle id="form-dialog-title">Add a new film</DialogTitle>
-                                        <DialogContent>
-                                            <DialogContentText>
-                                                Did you miss any film in our list? Please, add it!
-                                            </DialogContentText>
-                                            <TextField
-                                                autoFocus
-                                                margin="dense"
-                                                id="name"
-                                                value={dialogValue.title}
-                                                onChange={(event) => setDialogValue({ ...dialogValue, title: event.target.value })}
-                                                label="title"
-                                                type="text"
-                                            />
-                                            <TextField
-                                                margin="dense"
-                                                id="name"
-                                                value={dialogValue.year}
-                                                onChange={(event) => setDialogValue({ ...dialogValue, year: event.target.value })}
-                                                label="year"
-                                                type="number"
-                                            />
-                                        </DialogContent>
-                                        <DialogActions>
-                                            <Button onClick={handleClose} color="primary">
-                                                Cancel
-                                            </Button>
-                                            <Button type="submit" color="primary">
-                                                Add
-                                            </Button>
-                                        </DialogActions>
-                                    </form>
-                                </Dialog>
                                 <TextField
                                     size='small'
                                     variant="filled"
@@ -285,7 +196,6 @@ function NewCourse(props) {
                                     required={true}
                                     fullWidth
                                 />
-
                             </div>
                             <input type="file" name="picture" onChange={e => setImage(e.target.files[0])} />
                             <Button type='submit' className={classes.button4} size="medium" variant="contained" startIcon={<ArrowForwardIcon />} onClick={onSubmit}>
