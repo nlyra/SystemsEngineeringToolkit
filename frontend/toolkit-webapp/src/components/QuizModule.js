@@ -1,11 +1,11 @@
 import { Grid } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
-import dashStyles from '../styles/quizModuleStyle'
+import quizStyles from '../styles/quizModuleStyle'
 import config from '../config.json'
 
 
 const QuizModule = (props) => {
-  const classes = dashStyles()
+  const classes = quizStyles()
 
   const [questions, setQuestions] = useState(props.quiz)
   const [currentQuestion, setCurrentQuestion] = useState(0);
