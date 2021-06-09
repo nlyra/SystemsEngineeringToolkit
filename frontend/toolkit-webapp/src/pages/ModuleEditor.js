@@ -25,7 +25,8 @@ function ModuleCreator(props) {
     }
 
     useEffect(() => {
-        localStorage.setItem("module", JSON.stringify(module))
+        //foreach(question)
+        //sessionStorage.setItem("questions", JSON.stringify(module))
         //setModule(JSON.parse(localStorage.getItem("module")),
     }, []);
 

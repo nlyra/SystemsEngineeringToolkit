@@ -85,7 +85,7 @@ function ModuleCreator(props) {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': '60b7dac736539526486f1503', 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
+                    body: JSON.stringify({ 'token': token, 'courseID': '60c032f28318a62bcc8f0b23', 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
                 })
             } else {
                 res = await fetch(config.server_url + config.paths.newModule, {
@@ -94,7 +94,7 @@ function ModuleCreator(props) {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': '60b7dac736539526486f1503', 'title': module.title, 'description': module.description, 'type': module.type })
+                    body: JSON.stringify({ 'token': token, 'courseID': '60c032f28318a62bcc8f0b23', 'title': module.title, 'description': module.description, 'type': module.type })
                 })
             }
 
