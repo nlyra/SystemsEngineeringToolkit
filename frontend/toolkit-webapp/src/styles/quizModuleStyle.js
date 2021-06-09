@@ -16,7 +16,6 @@ const dashStyles = makeStyles((theme) => ({
   app2: {
     display: 'flex',
     marginBottom: '15px',
-    // height: '80%',
   },
 
   scoreSection: {

@@ -123,7 +123,6 @@ router.post('/module/create', VerifyToken, async (req, res) => {
 })
 
 router.post('/module/score', VerifyToken, async (req, res) => {
-  // console.log(req.body)
   try {
     let courses = await User.findOne({ _id: req.body.userID }, 'coursesQuizes');
     courses = courses.coursesQuizes[0];
@@ -136,11 +135,6 @@ router.post('/module/score', VerifyToken, async (req, res) => {
       courses[req.body.courseID] = {}
       courses[req.body.courseID][req.body.moduleID] = req.body.score
     }
-
-    // let courses = {}
-    // courses[req.body.courseID] = {}
-    // courses[req.body.courseID][req.body.moduleID] = req.body.score
-    // console.log(req.body.UserID)
 
 
     const update = await User.updateOne(
