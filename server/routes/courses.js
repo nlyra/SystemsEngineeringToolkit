@@ -7,6 +7,8 @@ const router = express.Router();
 
 router.post('/course', VerifyToken, async (req, res) => {
   try {
+
+    // get course info
     let course = {}
     course = await Course.findOne({ "_id": req.body.id }, '_id name description urlImage modules');
 
@@ -20,6 +22,15 @@ router.post('/course', VerifyToken, async (req, res) => {
 
       }
     }
+
+    // get user grades if any
+    let grades = await User.findOne({"_id": req.body.userID}, 'coursesQuizes')
+    grades = grades.coursesQuizes[0][req.body.id]
+    let keys = Object.keys(grades)
+    for (let i = 0; i < keys.length; i++) {
+      course.modules[keys[i]]["grade"] = grades[keys[i]]
+    }
+
 
     res.json({ "course": course });
   } catch (e) {

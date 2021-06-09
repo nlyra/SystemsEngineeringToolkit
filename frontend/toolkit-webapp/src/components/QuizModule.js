@@ -42,9 +42,7 @@ const QuizModule = (props) => {
       }
     }
     setScore(temp);
-
     setShowScore(true);
-
     saveScore(temp);
   }
 

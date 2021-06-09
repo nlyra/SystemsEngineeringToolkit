@@ -182,8 +182,8 @@ const Course = (props) => {
               </AccordionSummary>
               <AccordionDetails className={classes.accordionDetails}>
                 <Typography >
-                  Type: {module.type}
-                  <br />
+                  {/* Type: {module.type} */}
+                  {module.type == "Quiz" && <Typography >Grade: {module.grade}/{module.quiz.length}</Typography>}
                   <br />
                   {module.description}
                   <br />

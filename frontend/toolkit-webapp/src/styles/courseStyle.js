@@ -44,6 +44,13 @@ const dashStyles = makeStyles((theme) => ({
     fontWeight: theme.typography.fontWeightRegular,
   },
 
+  heading2: {
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightRegular,
+    align: 'right',
+    // position: 'right'
+  },
+
   accordionDetails: {
     paddingLeft: '5%',
     paddingRight: '5%'
