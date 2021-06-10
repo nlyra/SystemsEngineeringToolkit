@@ -9,7 +9,7 @@
     "newModule": "/v0/courses/module/create",
     "fileUpload": "/v0/upload/single",
     "updateCourseInfo": "/v0/courses/course/update",
-    "sendScore": "/v0/courses/module/score"
+    "sendScore": "/v0/courses/module/score",
     "removeCourse": "/v0/courses/removeCourse"
     }
   }
