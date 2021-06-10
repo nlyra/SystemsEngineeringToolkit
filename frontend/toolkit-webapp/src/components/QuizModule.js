@@ -6,14 +6,18 @@ import MultipleChoice from '../components/MultipleChoiceCreator'
 import TorF from '../components/TrueOrFalseCreator'
 
 
-const quiz = {
-    questions : [],
-    types : [],
-    answers: [],
-    fakes1: [],
-    fakes2: [],
-    fakes3: []
+var questions={
+    question: String,
+    type: String,
+    answers: [
+        {answerText: String, isCorrect: true},
+        {answerText: String, isCorrect: false},
+        {answerText: String, isCorrect: false},
+        {answerText: String, isCorrect: false},
+    ]
 }
+
+var quiz = []
 
 const QuizModule = () => {
     const [type, setType] = useState('')
@@ -23,23 +27,8 @@ const QuizModule = () => {
 
     sessionStorage.setItem('editing', '')
 
-    if(sessionStorage.getItem('questions')!== null){
-        quiz.questions=JSON.parse(sessionStorage.getItem('questions'));
-        if(sessionStorage.getItem('types')!== null){
-            quiz.types=JSON.parse(sessionStorage.getItem('types'));
-        }
-        if(sessionStorage.getItem('answers')!== null){
-            quiz.answers=JSON.parse(sessionStorage.getItem('answers'));
-        }
-        if(sessionStorage.getItem('fakes1')!== null){
-            quiz.fakes1=JSON.parse(sessionStorage.getItem('fakes1'));
-        }
-        if(sessionStorage.getItem('fakes2')!== null){
-            quiz.fakes2=JSON.parse(sessionStorage.getItem('fakes2'));
-        }
-        if(sessionStorage.getItem('fakes3')!== null){
-            quiz.fakes3=JSON.parse(sessionStorage.getItem('fakes3'));
-        }
+    if(sessionStorage.getItem('quiz')!== null){
+        quiz=JSON.parse(sessionStorage.getItem('quiz'))
     }
     
     const classes = useStyles()
@@ -47,31 +36,28 @@ const QuizModule = () => {
     const isSelected = (question) => selected.indexOf(question) !== -1
 
     function addQuestion() {
-        if(sessionStorage.getItem('question') === '' || sessionStorage.getItem('answer') === ''){
+        questions=JSON.parse(sessionStorage.getItem('question'))
+        var dup = 0
+        for(var i = 0; i < quiz.length; i++){
+            if(questions.question === quiz[i].question){
+                dup=1
+                i=quiz.length
+            }
+        }
+
+        if(type === ''){
+            alert("Select a question type")
+        }else if(questions.question === '' || questions.answers[0].answerText === ''){
             alert("Requires a question and an answer.")
-        }else if(quiz.questions.indexOf(sessionStorage.getItem('question')) !== -1){
+        }else if(dup === 1){
             alert("No Duplicate questions")
         }else{
-            quiz.questions.push(sessionStorage.getItem('question'))
-            quiz.types.push(type)
-            quiz.answers.push(sessionStorage.getItem('answer'))
-            quiz.fakes1.push(sessionStorage.getItem('fake1'))
-            quiz.fakes2.push(sessionStorage.getItem('fake2'))
-            quiz.fakes3.push(sessionStorage.getItem('fake3'))
+            quiz.push(questions)
 
-            sessionStorage.setItem('questions', JSON.stringify(quiz.questions))
-            sessionStorage.setItem('types', JSON.stringify(quiz.types))
-            sessionStorage.setItem('answers', JSON.stringify(quiz.answers))
-            sessionStorage.setItem('fakes1', JSON.stringify(quiz.fakes1))
-            sessionStorage.setItem('fakes2', JSON.stringify(quiz.fakes2))
-            sessionStorage.setItem('fakes3', JSON.stringify(quiz.fakes3))
+            sessionStorage.setItem('quiz', JSON.stringify(quiz))
             
             setType('')
             sessionStorage.removeItem('question')
-            sessionStorage.removeItem('answer')
-            sessionStorage.removeItem('fake1')
-            sessionStorage.removeItem('fake2')
-            sessionStorage.removeItem('fake3')
         }
     }
 
@@ -96,24 +82,54 @@ const QuizModule = () => {
     }
 
     const handleDelete = () => {
-        for(var i = 0; i < quiz.questions.length; i++){
-            if(isSelected(quiz.questions[i])){
-                selected.splice(selected.indexOf(quiz.questions[i]), 1);
+        for(var i = 0; i < quiz.length; i++){
+            if(isSelected(quiz[i].question)){
+                selected.splice(selected.indexOf(quiz[i].question), 1);
 
-                quiz.questions.splice(i, 1);
-                quiz.types.splice(i, 1);
-                quiz.answers.splice(i, 1)
-                quiz.fakes1.splice(i, 1);
-                quiz.fakes2.splice(i, 1);
-                quiz.fakes3.splice(i, 1);
+                quiz.splice(i, 1);
 
-                sessionStorage.setItem('questions', JSON.stringify(quiz.questions))
-                sessionStorage.setItem('types', JSON.stringify(quiz.types))
-                sessionStorage.setItem('answers', JSON.stringify(quiz.answers))
-                sessionStorage.setItem('fakes1', JSON.stringify(quiz.fakes1))
-                sessionStorage.setItem('fakes2', JSON.stringify(quiz.fakes2))
-                sessionStorage.setItem('fakes3', JSON.stringify(quiz.fakes3))
+                sessionStorage.setItem('quiz', JSON.stringify(quiz))
                 i=i-1
+            }
+        }
+    }
+
+    const handleUp = () => {
+        if(selected.length > 1){
+            alert("Select only one question.")
+        }else if(selected.length < 1){
+            alert("Please select a question.")
+        }else{
+            for(var i = 0; i < quiz.length; i++){
+                if(isSelected(quiz[i].question)){
+                    var questions=quiz[i]
+                   
+                    quiz.splice(i, 1);
+
+                    quiz.splice(i-1, 0, questions);
+
+                    sessionStorage.setItem('quiz', JSON.stringify(quiz))
+                }
+            }
+        }
+    }
+
+    const handleDown = () => {
+        if(selected.length > 1){
+            alert("Select only one question.")
+        }else if(selected.length < 1){
+            alert("Please select a question.")
+        }else{
+            for(var i = 0; i < quiz.length; i++){
+                if(isSelected(quiz[i].question)){
+                    var questions=quiz[i]
+                   
+                    quiz.splice(i, 1);
+
+                    quiz.splice(i+1, 0, questions);
+
+                    sessionStorage.setItem('quiz', JSON.stringify(quiz))
+                }
             }
         }
     }
@@ -125,17 +141,13 @@ const QuizModule = () => {
         }else if(selected.length < 1){
             alert("Please select a question.")
         }else{
-            for(var i = 0; i < quiz.questions.length; i++){
-                if(isSelected(quiz.questions[i])){
-                    sessionStorage.setItem('question', quiz.questions[i])
-                    setType(quiz.types[i])
-                    sessionStorage.setItem('answer', quiz.answers[i])
-                    sessionStorage.setItem('fake1', quiz.fakes1[i])
-                    sessionStorage.setItem('fake2', quiz.fakes2[i])
-                    sessionStorage.setItem('fake3', quiz.fakes3[i])
-                    sessionStorage.setItem('index', i)
+            for(var i = 0; i < quiz.length; i++){
+                if(isSelected(quiz[i].question)){
+                    sessionStorage.setItem('question', JSON.stringify(quiz[i]))
+                    sessionStorage.setItem('index', JSON.stringify(i))
+                    setType(quiz[i].type)
 
-                    i=quiz.questions.length
+                    i=quiz.length
                     setEdit(true)
                 }
             }
@@ -143,39 +155,36 @@ const QuizModule = () => {
     }
 
     const submitEdit = () => {
-        if(quiz.questions.indexOf(sessionStorage.getItem('question')) !== -1 && quiz.questions.indexOf(sessionStorage.getItem('question')) !== parseInt(sessionStorage.getItem('index'))){
+        questions = JSON.parse(sessionStorage.getItem('question'))
+        var dup = 0
+        for(var i = 0; i < quiz.length; i++){
+            if(questions.question === quiz[i].question){
+                dup=1
+                var check = i
+                i=quiz.length
+            }
+        }
+
+        if(questions.question === '' || questions.answers[0].answerText === ''){
+            alert('Ensure there is a question and an Answer.')
+        }else if(dup === 1 && check !== parseInt(sessionStorage.getItem('index'))){
             alert('No Duplicate Questions')
         }else{
-            for(var i = 0; i < quiz.questions.length; i++){
-                if(isSelected(quiz.questions[i])){
-                    quiz.questions.splice(i, 1, sessionStorage.getItem('question'));
-                    quiz.types.splice(i, 1, type);
-                    quiz.answers.splice(i, 1, sessionStorage.getItem('answer'));
-                    quiz.fakes1.splice(i, 1, sessionStorage.getItem('fake1'));
-                    quiz.fakes2.splice(i, 1, sessionStorage.getItem('fake2'));
-                    quiz.fakes3.splice(i, 1, sessionStorage.getItem('fake3'));
+            for(i = 0; i < quiz.length; i++){
+                if(isSelected(quiz[i].question)){
+                    quiz.splice(i, 1, questions)
 
-                    i=quiz.questions.length
+                    i=quiz.length
 
-                    sessionStorage.setItem('questions', JSON.stringify(quiz.questions))
-                    sessionStorage.setItem('types', JSON.stringify(quiz.types))
-                    sessionStorage.setItem('answers', JSON.stringify(quiz.answers))
-                    sessionStorage.setItem('fakes1', JSON.stringify(quiz.fakes1))
-                    sessionStorage.setItem('fakes2', JSON.stringify(quiz.fakes2))
-                    sessionStorage.setItem('fakes3', JSON.stringify(quiz.fakes3))
+                    sessionStorage.setItem('quiz', JSON.stringify(quiz))
                     
-
                     sessionStorage.removeItem('question')
-                    setType('')
-                    sessionStorage.removeItem('answer')
-                    sessionStorage.removeItem('fake1')
-                    sessionStorage.removeItem('fake2')
-                    sessionStorage.removeItem('fake3')
-
+                    setType('')    
                     setSelected([])
                     setEdit(false)
                 }
             }
+            sessionStorage.removeItem('index')
         }
     }
 
@@ -190,25 +199,16 @@ const QuizModule = () => {
     const handleEditClose = () => {
         sessionStorage.removeItem('question')
         setType('')
-        sessionStorage.removeItem('answer')
-        sessionStorage.removeItem('fake1')
-        sessionStorage.removeItem('fake2')
-        sessionStorage.removeItem('fake3')
-
         setEdit(false)
     }
 
     const headCells = [
         { id: 'question', numeric: false, disablePadding: false, label: 'Question' },
-        //{ id: 'type', numeric: false, disablePadding: false, label: 'Type'},
         { id: 'answer', numeric: false, disablePadding: false, label: 'Answer' },
         { id: 'fake1', numeric: false, disablePadding: false, label: 'Incorrect' },
         { id: 'fake2', numeric: false, disablePadding: false, label: 'Incorrect' },
         { id: 'fake3', numeric: false, disablePadding: false, label: 'Incorrect' },
     ]
-
-
-    
 
     const handleChange = (event) => {
         setType(event.target.type);
@@ -280,10 +280,10 @@ const QuizModule = () => {
                     <IconButton aria-label='delete' onClick={handleEdit}>
                         <Edit />
                     </IconButton>
-                    <IconButton aria-label='delete' onClick={handleDelete}>
+                    <IconButton aria-label='delete' onClick={handleUp}>
                         <ArrowUpward />
                     </IconButton>
-                    <IconButton aria-label='delete' onClick={handleDelete}>
+                    <IconButton aria-label='delete' onClick={handleDown}>
                         <ArrowDownward />
                     </IconButton>
                         
@@ -307,14 +307,14 @@ const QuizModule = () => {
                     </TableHead>
 
                     <TableBody>
-                        {quiz.questions.map((next, index) => {
-                            const isItemSelected = isSelected(next);
+                        {quiz.map((question, index) => {
+                            const isItemSelected = isSelected(question.question);
                             const labelId = `enhanced-table-checkbox-${index}`;
 
                             return (
                                 <TableRow
                                     hover
-                                    onClick={(event) => handleClick(event, next)}
+                                    onClick={(event) => handleClick(event, question.question)}
                                     role="checkbox"
                                     aria-checked={isItemSelected}
                                     tabIndex={-1}
@@ -327,13 +327,13 @@ const QuizModule = () => {
                                         />
                                     </TableCell>
                                     <TableCell component="th" id={labelId} scope="row" padding="none">
-                                        {next}
+                                        {question.question}
                                     </TableCell>
                                     
-                                    <TableCell align="right">{quiz.answers[index]}</TableCell>
-                                    <TableCell align="right">{quiz.fakes1[index]}</TableCell>
-                                    <TableCell align="right">{quiz.fakes2[index]}</TableCell>
-                                    <TableCell align="right">{quiz.fakes3[index]}</TableCell>
+                                    <TableCell align="right">{question.answers[0].answerText}</TableCell>
+                                    <TableCell align="right">{question.answers[1].answerText}</TableCell>
+                                    <TableCell align="right">{question.answers[2].answerText}</TableCell>
+                                    <TableCell align="right">{question.answers[3].answerText}</TableCell>
                                 </TableRow>
                             );
                         })}
@@ -393,4 +393,3 @@ const QuizModule = () => {
 }
 
 export default QuizModule
-
