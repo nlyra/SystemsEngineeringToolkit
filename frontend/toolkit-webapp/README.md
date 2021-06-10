@@ -18,7 +18,9 @@
     "createCourse": "/v0/courses/create",
     "newModule": "/v0/courses/module/create",
     "fileUpload": "/v0/upload/single",
-    "updateCourseInfo": "/v0/courses/course/update"
+    "updateCourseInfo": "/v0/courses/course/update",
+    "sendScore": "/v0/courses/module/score",
+    "removeCourse": "/v0/courses/removeCourse"
   }
 }
 run in CMD ```npm start```.

@@ -2,7 +2,7 @@ import React from 'react'
 import CardMedia from '@material-ui/core/CardMedia';
 import { makeStyles } from '@material-ui/core'
 
-const dashStyles = makeStyles((theme) => ({
+const videoStyles = makeStyles((theme) => ({
   div: {
     maxWidth: '1280px',
   }
@@ -10,7 +10,7 @@ const dashStyles = makeStyles((theme) => ({
 
 
 const VideoModule = ({ fileUrl }) => {
-  const classes = dashStyles()
+  const classes = videoStyles()
 
   return (
     <div className={classes.div}>
