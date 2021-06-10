@@ -1,17 +1,15 @@
 {
-    "server_url": "http://localhost:4000/api",
-    "paths": {
-        "login": "/v0/auth/login",
-        "registration": "/v0/auth/registration",
-        "forgotPassword": "/v0/auth/forgotPassword",
-        "dashboardCourses": "/v0/courses/info",
-        "course": "/v0/courses/course",
-        "createCourse": "/v0/courses/create",
-        "newModule": "/v0/courses/module/create",
-        "enrollment": "/v0/courses/course/enrollment",
-        "myCourses" : "/v0/courses/myCoursesInfo",
-        "fileUpload": "/v0/upload/single",
-        "updateCourseInfo": "/v0/courses/course/update",
-        "removeCourse": "/v0/courses/removeCourse"
+  "server_url": "http://localhost:4000/api",
+  "paths": {
+    "login": "/v0/auth/login",
+    "registration": "/v0/auth/registration",
+    "dashboardCourses": "/v0/courses/info",
+    "course": "/v0/courses/course",
+    "createCourse": "/v0/courses/create",
+    "newModule": "/v0/courses/module/create",
+    "fileUpload": "/v0/upload/single",
+    "updateCourseInfo": "/v0/courses/course/update",
+    "sendScore": "/v0/courses/module/score",
+    "removeCourse": "/v0/courses/removeCourse"
     }
   }

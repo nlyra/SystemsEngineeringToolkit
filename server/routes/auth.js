@@ -84,8 +84,6 @@ function verifyToken(req, res, next) {
 
         req.body.userID = decoded.id;
     });
-
-
     next();
 
 }

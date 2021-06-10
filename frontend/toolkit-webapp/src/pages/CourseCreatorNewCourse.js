@@ -4,7 +4,7 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import courseStyles from '../styles/courseStyle'
+import courseStyles from '../styles/courseCreatorStyle'
 import '../css/Login.css';
 
 function NewCourse(props) {
