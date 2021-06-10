@@ -150,7 +150,7 @@ function ModuleCreator(props) {
                                     <FormHelperText>Required</FormHelperText>
                                 </FormControl>
 
-                                {type == 'Video' && <FileModule></FileModule>}
+                                {type == 'Files' && <FileModule></FileModule>}
                                 {type == 'Quiz' && <QuizModule></QuizModule>}
 
                             </div>
