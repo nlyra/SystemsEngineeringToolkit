@@ -122,7 +122,10 @@ function ModuleCreator(props) {
 
     return (
         <div>
-            <TopNavBar></TopNavBar>
+            <TopNavBar 
+                darkMode={props.darkMode}
+                setDarkMode={props.setDarkMode}
+                ></TopNavBar>
             <Container className={classes.container} >
                 <div className={classes.block}>
                     <form autoComplete="off" onSubmit={onSubmit}>

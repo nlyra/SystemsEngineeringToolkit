@@ -93,8 +93,7 @@ const Course = (props) => {
 
   const enroll = async (module) => {
 
-    if(modules.indexOf(module) === 0)
-    {
+    if (modules.indexOf(module) === 0) {
 
       const token = localStorage.getItem("token");
 
@@ -110,12 +109,15 @@ const Course = (props) => {
         })
       })
     }
-    
+
   }
 
   return (
     <div className={classes.div}>
-      <TopNavBar >
+      <TopNavBar
+        darkMode={props.darkMode}
+        setDarkMode={props.setDarkMode}
+      >
       </TopNavBar>
       <Grid container direction="column" className={classes.div}>
         {editCourseInfo !== true ?
@@ -195,7 +197,7 @@ const Course = (props) => {
 
           {/* modules starts here */}
           {modules.map((module) => (
-            <Accordion key={modules.indexOf(module)} onClick={e=> enroll(module)} >
+            <Accordion key={modules.indexOf(module)} onClick={e => enroll(module)} >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"

@@ -106,7 +106,10 @@ function NewCourse(props) {
 
     return (
         <div>
-            <TopNavBar hideComponents={false} />
+            <TopNavBar hideComponents={false}
+                darkMode={props.darkMode}
+                setDarkMode={props.setDarkMode}
+            />
             <div className={classes.darkOverlay}>
             </div>
             <Container className={classes.container} >

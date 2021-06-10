@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { fade, makeStyles, IconButton, AppBar, Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
+import { Switch, fade, makeStyles, IconButton, AppBar, Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu'
 import SearchIcon from '@material-ui/icons/Search'
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -251,6 +251,7 @@ export default function TopNavBar(props) {
                                 color="inherit"
                             >
                                 <HomeIcon />
+                                <Switch checked={props.darkMode} onChange={() => props.setDarkMode(!props.darkMode)}/>
                             </IconButton>
                             </Link>
                             

@@ -9,13 +9,13 @@ import '../css/Login.css';
 // import NoteCard from '../components/NoteCard'
 // import Draggable from 'react-draggable'
 // import { Notes, SettingsOverscanOutlined } from '@material-ui/icons';
-import { Card, CardHeader, CardContent, IconButton} from '@material-ui/core'
+import { Card, CardHeader, CardContent, IconButton } from '@material-ui/core'
 import { DeleteOutlined, ArrowUpwardOutlined, ArrowDownwardOutlined } from '@material-ui/icons'
 
 
 function NewModule(props) {
 
-    
+
     const [moduleName, setModuleName] = useState('')
     const [moduleType, setModuleType] = useState('')
     const [description, setDescription] = useState('')
@@ -41,11 +41,11 @@ function NewModule(props) {
         setOpen(false);
 
         var previousCards = JSON.parse(localStorage.getItem('myCards'));
-        if(previousCards == null) previousCards = [];
+        if (previousCards == null) previousCards = [];
 
         localStorage.setItem("newCard", description);
 
-        previousCards.push(description)        
+        previousCards.push(description)
         setDescription('')
         localStorage.setItem('myCards', JSON.stringify(previousCards))
     }
@@ -60,7 +60,7 @@ function NewModule(props) {
             alert('Please enter all required fields')
             return
         }
-        onFinish({ moduleName, moduleType,})
+        onFinish({ moduleName, moduleType, })
         setModuleName('')
         setModuleType('')
     }
@@ -76,7 +76,7 @@ function NewModule(props) {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "modules": [], "Module Name": creds.moduleName, "category": creds.category, "description": creds.description, "url": 'http://localhost:4000/java.jpg'})
+            body: JSON.stringify({ "modules": [], "Module Name": creds.moduleName, "category": creds.category, "description": creds.description, "url": 'http://localhost:4000/java.jpg' })
         })
 
         const data = await res.json()
@@ -91,107 +91,110 @@ function NewModule(props) {
 
     return (
         <div>
-            <TopNavBar></TopNavBar>
+            <TopNavBar 
+                darkMode={props.darkMode}
+                setDarkMode={props.setDarkMode}
+                ></TopNavBar>
             <Container className={classes.container} >
                 <div className={classes.block}>
                     <form autoComplete="off" onSubmit={onSubmit}>
-                    <Paper className={classes.paper} elevation={3} square={false}>
-                        <Box m={2} pt={2}>
-                            <Typography className={classes.Title} variant="h5">Module Creator</Typography>
-                        </Box>
-                        <div className={classes.TextBox}>
-                            <TextField color='primary'
-                                size='small'
-                                variant="filled"
-                                label='Module Name'
-                                type="Module Name"
-                                value={moduleName}
-                                onChange={e => setModuleName(e.target.value)}
-                                margin="normal"
-                                required={true}
-                                fullWidth
-                            />
+                        <Paper className={classes.paper} elevation={3} square={false}>
+                            <Box m={2} pt={2}>
+                                <Typography className={classes.Title} variant="h5">Module Creator</Typography>
+                            </Box>
+                            <div className={classes.TextBox}>
+                                <TextField color='primary'
+                                    size='small'
+                                    variant="filled"
+                                    label='Module Name'
+                                    type="Module Name"
+                                    value={moduleName}
+                                    onChange={e => setModuleName(e.target.value)}
+                                    margin="normal"
+                                    required={true}
+                                    fullWidth
+                                />
 
-                            <FormControl required className={classes.formControl} fullWidth={true}>
-                                <InputLabel htmlFor="category-native-required">Category</InputLabel>
-                                <Select
-                                    native
-                                    value={moduleType}
-                                    onChange={handleChange}
-                                    name="Module Tipe"
-                                    inputProps={{
-                                        id: 'moduleType-native-required',
-                                    }}
-                                    onChange={e => setModuleType(e.target.value)}
-                                >
-                                    <option aria-label="None" value="" />
-                                    <option value={"Test"}>test</option>
-                                    <option value={"Data"}>Data</option>
-                                    <option value={"Other"}>Other</option>
-                                </Select>
-                                <FormHelperText>Required</FormHelperText>
-                            </FormControl>
-                            <Grid container spacing={2}>
-                                {cards?.map(function(card, index){
-                                    return <Grid item xs={12}>
-                                        <Card>
-                                            <CardHeader
-                                                action={
-                                                    <IconButton onClick={() => console.log(index)}>
-                                                        <DeleteOutlined/>
-                                                    </IconButton>
-                                                }
-                                            title= {cards[index]}
-                                            />
-                                        </Card>
-                                    </Grid>
-                                })}
-                            </Grid>
+                                <FormControl required className={classes.formControl} fullWidth={true}>
+                                    <InputLabel htmlFor="category-native-required">Category</InputLabel>
+                                    <Select
+                                        native
+                                        value={moduleType}
+                                        onChange={handleChange}
+                                        name="Module Tipe"
+                                        inputProps={{
+                                            id: 'moduleType-native-required',
+                                        }}
+                                        onChange={e => setModuleType(e.target.value)}
+                                    >
+                                        <option aria-label="None" value="" />
+                                        <option value={"Test"}>test</option>
+                                        <option value={"Data"}>Data</option>
+                                        <option value={"Other"}>Other</option>
+                                    </Select>
+                                    <FormHelperText>Required</FormHelperText>
+                                </FormControl>
+                                <Grid container spacing={2}>
+                                    {cards?.map(function (card, index) {
+                                        return <Grid item xs={12}>
+                                            <Card>
+                                                <CardHeader
+                                                    action={
+                                                        <IconButton onClick={() => console.log(index)}>
+                                                            <DeleteOutlined />
+                                                        </IconButton>
+                                                    }
+                                                    title={cards[index]}
+                                                />
+                                            </Card>
+                                        </Grid>
+                                    })}
+                                </Grid>
 
-                        </div>
-                        <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-                            Add additional cards
+                            </div>
+                            <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+                                Add additional cards
                         </Button>
-                        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                            <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
-                            <DialogContent>
-                            <DialogContentText>
-                                Enter information
+                            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+                                <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+                                <DialogContent>
+                                    <DialogContentText>
+                                        Enter information
                             </DialogContentText>
-                            <TextField
-                                size='small'
-                                variant="filled"
-                                multiline
-                                rows={10}
-                                rowsMax={15}
-                                label='Description'
-                                type="description"
-                                value={description}
-                                onChange={e => setDescription(e.target.value)}
-                                margin="normal"
-                                required={true}
-                                fullWidth
-                            />
-                            </DialogContent>
-                            <DialogActions>
-                            <Button onClick={handleClose} color="primary">
-                                Cancel
+                                    <TextField
+                                        size='small'
+                                        variant="filled"
+                                        multiline
+                                        rows={10}
+                                        rowsMax={15}
+                                        label='Description'
+                                        type="description"
+                                        value={description}
+                                        onChange={e => setDescription(e.target.value)}
+                                        margin="normal"
+                                        required={true}
+                                        fullWidth
+                                    />
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={handleClose} color="primary">
+                                        Cancel
                             </Button>
-                            <Button type='submit' className={classes.button3} size="medium" variant="contained" startIcon={<CloudUploadIcon/>} onClick={onUpload}>
-                                Add File
+                                    <Button type='submit' className={classes.button3} size="medium" variant="contained" startIcon={<CloudUploadIcon />} onClick={onUpload}>
+                                        Add File
                             </Button>
-                            <Button onClick={handleSubmit} color="primary">
+                                    <Button onClick={handleSubmit} color="primary">
+                                        Submit
+                            </Button>
+                                </DialogActions>
+                            </Dialog>
+
+
+                            <Button type='submit' className={classes.button4} size="medium" variant="contained" startIcon={<ArrowForwardIcon />} onClick={onSubmit}>
                                 Submit
-                            </Button>
-                            </DialogActions>
-                        </Dialog>
-
-
-                        <Button type='submit' className={classes.button4} size="medium" variant="contained" startIcon={<ArrowForwardIcon/>} onClick={onSubmit}>
-                            Submit
                         </Button>
-                        <Button onClick={handleCancel} color="primary">
-                            Cancel
+                            <Button onClick={handleCancel} color="primary">
+                                Cancel
                         </Button>
                         </Paper>
                     </form>

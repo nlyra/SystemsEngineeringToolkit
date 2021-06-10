@@ -80,6 +80,8 @@ const Dashboard = (props) => {
             <TopNavBar
                 search={loadCourses}
                 page={page}
+                darkMode={props.darkMode}
+                setDarkMode={props.setDarkMode}
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>

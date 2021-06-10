@@ -33,7 +33,7 @@ const MyCourses = (props) => {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "userID": decoded.id, "search_query": query})
+            body: JSON.stringify({ "token": token, "userID": decoded.id, "search_query": query })
         })
         // }
 
@@ -53,8 +53,7 @@ const MyCourses = (props) => {
         }
     }
 
-    const removeCourse = async (id) => 
-    {
+    const removeCourse = async (id) => {
         let res = undefined
         const token = localStorage.getItem("token");
 
@@ -63,15 +62,15 @@ const MyCourses = (props) => {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "courseID": id})
+            body: JSON.stringify({ "token": token, "courseID": id })
         })
 
         // This splits the array correctly and updates courses array with courses the user is still enrolled in
         const newVal = courses.filter((courses) => courses._id !== id);
         setCourses(newVal)
-        
+
         // window.location.reload()
-        
+
     }
 
 
@@ -84,7 +83,9 @@ const MyCourses = (props) => {
         <div className={classes.div}>
             <TopNavBar
                 search={loadCourses}
-                // page={page}
+                darkMode={props.darkMode}
+                setDarkMode={props.setDarkMode}
+            // page={page}
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
@@ -116,16 +117,16 @@ const MyCourses = (props) => {
                                     </Grid>
                                 </Card>
 
-                             {/* TODO: Figure out a way to reload the page without simply linking back to the same page.  */}
+                                {/* TODO: Figure out a way to reload the page without simply linking back to the same page.  */}
 
-                                <Link href="/MyCourses" underline='none' color="inherit"> 
-                                <div className={classes.buttonDiv}>
-                                    <Button type='submit' className={classes.removeButton} size= "small" color="inherit" variant="contained" onClick={() => removeCourse(course._id)}>
-                                    Remove Course
+                                <Link href="/MyCourses" underline='none' color="inherit">
+                                    <div className={classes.buttonDiv}>
+                                        <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick={() => removeCourse(course._id)}>
+                                            Remove Course
                                     </Button>
                                     </div>
-                                </Link> 
-                                
+                                </Link>
+
                             </Grid>
 
                         ))}
