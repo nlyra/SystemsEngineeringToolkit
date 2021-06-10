@@ -66,7 +66,12 @@ router.post('/login', async (req, res) => {
 
 function verifyToken(req, res, next) {
     // get auth header value
-    const token = req.body.token;
+    let token = '';
+    if (req.query.token != undefined)
+        token = req.query.token
+    else
+        token = req.body.token;
+
     if (token === undefined) {
         res.sendStatus(403);
     }
@@ -83,8 +88,6 @@ function verifyToken(req, res, next) {
 
 }
 
-
-// module.exports= verifyToken;
 module.exports = {
     router,
     verifyToken

@@ -35,44 +35,71 @@ function NewCourse(props) {
     }
 
     const onFinish = async (creds) => {
-        // console.log(creds)
+
         const token = localStorage.getItem("token");
 
-        // handle image
-        const imageData = new FormData();
-        imageData.append('file', image)
+        if (image !== undefined) { //if there is an image
 
-        const res = await fetch(config.server_url + config.paths.createCourse, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                "token": token,
-                "modules": [],
-                "name": creds.courseTitle,
-                "category": creds.category,
-                "description": creds.description,
-                "urlImage": `http://localhost:4000/${image.name}`
-            })
-        }
-        )
-        const data = await res.json()
-        if (data.message === undefined) {
-            const res = await fetch(config.server_url + config.paths.fileUpload, {
+            // handle image
+            const imageData = new FormData();
+            imageData.append('file', image)
+            const res = await fetch(config.server_url + config.paths.createCourse, {
                 method: 'POST',
-                body: imageData
-            })
-            const data = await res.json()
-            console.log(data)
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "token": token,
+                    "modules": [],
+                    "name": creds.courseTitle,
+                    "category": creds.category,
+                    "description": creds.description,
+                    "urlImage": `http://localhost:4000/${image.name}`
+                })
+            }
+            )
+            const data1 = await res.json()
+            if (data1.message === undefined) {
+                const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + data1._id + "&imageName=" + image.name, {
+                    method: 'POST',
+                    body: imageData
+                })
+                const data2 = await res.json()
+                console.log(data2)
 
-            if (data.status == 'Success') {
+                if (data2.status == 'Success') {
+                    alert("Successfully created course!")
+                    props.history.push('/dashboard')// needs to be changed to course manager
+                } //else need to do something, not sure what rn
+            }
+            else { // this is to check if there are errors not being addressed already
+                console.log(data1)
+            }
+
+        } else {// if there is not an image
+
+            const res = await fetch(config.server_url + config.paths.createCourse, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "token": token,
+                    "modules": [],
+                    "name": creds.courseTitle,
+                    "category": creds.category,
+                    "description": creds.description,
+                    "urlImage": `http://localhost:4000/misc_files/logo.jpg`
+                })
+            }
+            )
+            const data = await res.json()
+            if (data.message === undefined) {
                 alert("Successfully created course!")
                 props.history.push('/dashboard')// needs to be changed to course manager
-            } //else need to do something, not sure what rn
-        }
-        else { // this is to check if there are errors not being addressed already
-            console.log(data)
+            } else { // this is to check if there are errors not being addressed already
+                console.log(data)
+            }
         }
 
     }
@@ -138,7 +165,7 @@ function NewCourse(props) {
                                 />
 
                             </div>
-                            <input type="file" name="picture" onChange={e => setImage(e.target.files[0])} />
+                            <input type="file" name="picture" accept="image/*" onChange={e => setImage(e.target.files[0])} />
                             <Button type='submit' className={classes.button4} size="medium" variant="contained" startIcon={<ArrowForwardIcon />} onClick={onSubmit}>
                                 Submit
                         </Button>
