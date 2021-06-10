@@ -46,7 +46,7 @@ const MyCourses = (props) => {
 
         } else if (data.message === "wrong token") {
             localStorage.removeItem('token');
-            props.history.push('dashboard');
+            props.history.push('login');
             // probably alert the user
         } else { // this is to check if there are errors not being addressed already
             console.log(data)
