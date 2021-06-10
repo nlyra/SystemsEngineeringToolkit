@@ -32,6 +32,10 @@ const CourseSchema = mongoose.Schema({
 
   modules: [],
 
+  creator: {
+    type: String
+  }
+
 })
 
 

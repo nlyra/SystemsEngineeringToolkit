@@ -12,6 +12,8 @@
         "myCourses" : "/v0/courses/myCoursesInfo",
         "fileUpload": "/v0/upload/single",
         "updateCourseInfo": "/v0/courses/course/update",
-        "removeCourse": "/v0/courses/removeCourse"
+        "removeCourse": "/v0/courses/removeCourse",
+        "myCreatedCourses": "/v0/courses/myCreatedCoursesInfo", 
+        "deleteCreatedCourse": "/v0/courses/deleteCreatedCourse"
     }
   }

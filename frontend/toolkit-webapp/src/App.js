@@ -13,7 +13,7 @@ import ModuleManager from './pages/ModuleManager'
 import videoSource from "./img/PEOSTRI.mp4"
 import VideoModule from "./components/VideoModule"
 import MyFiles from './pages/MyFiles'
-import ManageCourses from './pages/ManageCourses'
+import ManageMyCourses from './pages/ManageMyCourses'
 import MyCourses from './pages/MyCourses'
 
 function App() {
@@ -29,10 +29,10 @@ function App() {
         <Route path='/newModule' component={ModuleCreator} />
         <Route path='/ModuleManager' component={ModuleManager} />
         <Route path='/course' component={Course} />
-        <Route path= '/ManageCourses' component={ManageCourses} />
+        <Route path= '/ManageMyCourses' component={ManageMyCourses} />
         <Route path= '/MyFiles' component={MyFiles} />
         <Route path= '/MyCourses' component={MyCourses} />
-        <Route path='/VideoModule' component={VideoModule} />
+        <Route path='/VideoModule' component={VideoModule} />         
      </Router>
 
   );
