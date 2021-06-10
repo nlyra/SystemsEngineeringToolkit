@@ -14,6 +14,6 @@
     "myCourses" : "/v0/courses/myCoursesInfo",
     "enrollment": "/v0/courses/course/enrollment",
     "editModule": "/v0/courses/module/update",
-    "forgotPassword": "/v0/auth/forgotPassword",
+    "forgotPassword": "/v0/auth/forgotPassword"
     }
   }

@@ -13,18 +13,34 @@ const TorF = () => {
         setAnswer(event.target.type);
     }
 
+    var questions={
+        question: String,
+        type: String,
+        answers: [
+            {answerText: String, isCorrect: true},
+            {answerText: String, isCorrect: false},
+            {answerText: String, isCorrect: false},
+            {answerText: String, isCorrect: false},
+        ]
+    }
+
     if(edit === ''){
         if(sessionStorage.getItem('question')){
-            setQuestion(sessionStorage.getItem('question'))
-        }
-        if(sessionStorage.getItem('answer') === 'True' || sessionStorage.getItem('answer') === 'False'){
-            setAnswer(sessionStorage.getItem('answer'))
+            questions=JSON.parse((sessionStorage.getItem('question')))
+            setQuestion(questions.question)
+            setAnswer(questions.answers[0].answerText)
         }
         setEdit("no")
     }
 
-    sessionStorage.setItem('question', question)
-    sessionStorage.setItem('answer', answer)
+    questions.question=question
+    questions.type='True or False'
+    questions.answers[0]={answerText: answer, isCorrect: true}
+    questions.answers[1]={answerText: null, isCorrect: false}
+    questions.answers[2]={answerText: null, isCorrect: false}
+    questions.answers[3]={answerText: null, isCorrect: false}
+
+    sessionStorage.setItem('question', JSON.stringify(questions))
     return(
         <div>
             <TextField
