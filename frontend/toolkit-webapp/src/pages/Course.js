@@ -10,6 +10,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CourseInfoEditButton from '../components/CourseInfoEditButton';
 import ModuleInfoEditButton from '../components/ModuleInfoEditButton';
+import jwt_decode from "jwt-decode";
 
 const dashStyles = makeStyles((theme) => ({
 
@@ -145,6 +146,28 @@ const Course = (props) => {
     window.location.reload();
   }
 
+  const enroll = async (module) => {
+
+    if(modules.indexOf(module) === 0)
+    {
+
+      const token = localStorage.getItem("token");
+
+      const res = await fetch(config.server_url + config.paths.enrollment, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          "courseID": course._id,
+          "token": token
+          // "userID": decoded.id
+        })
+      })
+    }
+    
+  }
+
   return (
     <div className={classes.div}>
       <TopNavBar >
@@ -227,7 +250,7 @@ const Course = (props) => {
 
           {/* modules starts here */}
           {modules.map((module) => (
-            <Accordion key={modules.indexOf(module)} >
+            <Accordion key={modules.indexOf(module)} onClick={e=> enroll(module)} >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
