@@ -15,7 +15,7 @@ const moduleStyles = makeStyles((theme) => ({
     {
         padding: '5px 40px 5px 40px',
         borderRadius: 15,
-        marginTop: theme.spacing(10),
+        marginTop: theme.spacing(15),
     },
 
     block:

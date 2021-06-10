@@ -9,6 +9,9 @@ import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import DescriptionIcon from '@material-ui/icons/Description';
+//import {Link } from "react-router-dom"
+import { Link } from '@material-ui/core';
+import HomeIcon from '@material-ui/icons/Home';
 import clsx from 'clsx';
 const logo_url = "http://localhost:4000/misc_files/logo.jpg"
 
@@ -45,6 +48,16 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
     },
+
+    searchIcon2: {
+        padding: theme.spacing(0, 5),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     inputRoot: {
         color: 'inherit',
     },
@@ -65,8 +78,7 @@ const useStyles = makeStyles((theme) => ({
     },
     horizontalCenteringLogo: {
         position: 'absolute',
-
-        left: '50%',
+        left: '66%',
         top: '50%',
         transform: 'translate(-50%, -50%)'
     },
@@ -125,10 +137,15 @@ const useStyles = makeStyles((theme) => ({
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
+    // iconbutton:{
+    //     position:'relative',
+    //     paddingLeft:theme.spacing(0,2)
+    // }
 }))
 
 
-export default function TopNavBar({ search, hideComponents }) {
+export default function TopNavBar(props) {
+
 
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
@@ -141,6 +158,10 @@ export default function TopNavBar({ search, hideComponents }) {
         setOpen(false);
     };
 
+    const test = (val) => {
+        props.history.push(`/dashboard`);
+    };
+
     return (
         <div className={classes.root}>
             <AppBar
@@ -151,7 +172,7 @@ export default function TopNavBar({ search, hideComponents }) {
                 })}
             >
                 <Toolbar>
-                    {hideComponents !== true ?
+                    {props.hideComponents !== true ?
                         <>
                             <IconButton
                                 color="inherit"
@@ -164,20 +185,29 @@ export default function TopNavBar({ search, hideComponents }) {
                             >
                                 <MenuIcon style={{ color: "white" }}></MenuIcon>
                             </IconButton>
-                            <div className={classes.search}>
-                                <div className={classes.searchIcon}>
-                                    <SearchIcon></SearchIcon>
+                            {window.location.pathname === "/dashboard" || window.location.pathname === "/MyCourses" ?
+                                <div className={classes.search}>
+                                    <div className={classes.searchIcon}>
+                                        <SearchIcon></SearchIcon>
+                                    </div>
+
+                                    < InputBase
+                                        placeholder="Search..."
+                                        classes={{
+                                            root: classes.inputRoot,
+                                            input: classes.inputInput,
+                                        }}
+                                        inputProps={{ 'aria-label': 'search' }}
+                                        onChange={e => props.search(e.target.value)}
+                                    />
                                 </div>
-                                <InputBase
-                                    placeholder="Search..."
-                                    classes={{
-                                        root: classes.inputRoot,
-                                        input: classes.inputInput,
-                                    }}
-                                    inputProps={{ 'aria-label': 'search' }}
-                                    onChange={e => search(e.target.value)}
-                                />
-                            </div>
+                                :
+                                <Link href="/dashboard" underline='none' color="inherit">
+                                    {/* <div className={classes.searchIcon2}> */}
+                                        <SearchIcon></SearchIcon>
+                                    {/* </div> */}
+                                </Link>
+                            }
                         </>
                         : null}
                     <div className={classes.horizontalCenteringLogo}>
@@ -194,7 +224,7 @@ export default function TopNavBar({ search, hideComponents }) {
                         {/* <NotificationsIcon /> */}
                         {/* </Badge> */}
                         {/* </IconButton> */}
-                        {hideComponents !== true ?
+                        {props.hideComponents !== true ?
                             <IconButton
                                 edge="end"
                                 aria-label="account of current user"
@@ -202,15 +232,34 @@ export default function TopNavBar({ search, hideComponents }) {
                                 aria-haspopup="true"
                                 //onClick={handleProfileMenuOpen}
                                 color="inherit"
+                                className={classes.iconbutton}
                             >
                                 <AccountCircle />
                             </IconButton>
+                            
+                            : null}
+                            
+                            {window.location.pathname !== "/dashboard" && 
+                            window.location.pathname !== "/" && 
+                            window.location.pathname !== "/registration" && 
+                            window.location.pathname !== "/login" ?
+                            <Link href="/dashboard" underline='none' color="inherit">
+                            <IconButton
+                                edge="end"
+                                aria-label="homescreen"
+                                aria-haspopup="true"
+                                color="inherit"
+                            >
+                                <HomeIcon />
+                            </IconButton>
+                            </Link>
+                            
                             : null}
                     </div>
                 </Toolbar>
             </AppBar>
 
-            {hideComponents !== true ?
+            {props.hideComponents !== true ?
                 <Drawer
                     variant="permanent"
                     className={clsx(classes.drawer, {
@@ -232,32 +281,38 @@ export default function TopNavBar({ search, hideComponents }) {
                     <Divider />
                     <List>
                         <Tooltip title="Create Course" enterDelay={500}>
-                            <ListItem button>
-                                <ListItemIcon><PostAddIcon /></ListItemIcon>
-                                <ListItemText primary="Create Course" />
-                            </ListItem>
+                            <Link href="/newCourse" underline='none' color="inherit">
+                                <ListItem button>
+                                    <ListItemIcon><PostAddIcon /></ListItemIcon>
+                                    <ListItemText primary="Create Course" />
+                                </ListItem>
+                            </Link>
                         </Tooltip>
 
                         <Tooltip title="My Courses" enterDelay={500}>
-                            <ListItem button>
-                                <ListItemIcon><MenuBookIcon /></ListItemIcon>
-                                <ListItemText primary="My Courses" />
-                            </ListItem>
+                            <Link href="/MyCourses" underline='none' color="inherit">
+                                <ListItem button>
+                                    <ListItemIcon><MenuBookIcon /></ListItemIcon>
+                                    <ListItemText primary="My Courses" />
+                                </ListItem>
+                            </Link>
                         </Tooltip>
 
                         <Tooltip title="My Files" enterDelay={500}>
-                            <ListItem button>
-                                <ListItemIcon><DescriptionIcon /></ListItemIcon>
-                                <ListItemText primary="My Files" />
-                            </ListItem>
+                            <Link href="/MyFiles" underline='none' color="inherit">
+                                <ListItem button>
+                                    <ListItemIcon><DescriptionIcon /></ListItemIcon>
+                                    <ListItemText primary="My Files" />
+                                </ListItem>
+                            </Link>
                         </Tooltip>
 
-                        <Tooltip title="Calendar" enterDelay={500}>
+                        {/* <Tooltip title="Calendar" enterDelay={500}>
                             <ListItem button>
                                 <ListItemIcon><CalendarTodayIcon /></ListItemIcon>
                                 <ListItemText primary="Calendar" />
                             </ListItem>
-                        </Tooltip>
+                        </Tooltip> */}
                     </List>
                 </Drawer>
                 : null}

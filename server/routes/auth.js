@@ -8,30 +8,30 @@ const nodemailer = require('nodemailer');
 const router = express.Router();
 
 router.post('/registration', async (req, res) => {
-	try {
-		const user = await User.findOne({ email: req.body.email });
-		if (user == undefined) {
-			const pass = bcrypt.hashSync(req.body.password, 10);
-			const user = new User({
-				first_name: req.body.first_name,
-				last_name: req.body.last_name,
-				email: req.body.email,
-				password: pass,
-			});
-			
-			const savedUser = await user.save();
+    try {
+        const user = await User.findOne({ email: req.body.email });
+        if (user == undefined) {
+            const pass = bcrypt.hashSync(req.body.password, 10);
+            const user = new User({
+                first_name: req.body.first_name,
+                last_name: req.body.last_name,
+                email: req.body.email,
+                password: pass,
+            });
 
-			console.log('added user ', savedUser._id);
+            const savedUser = await user.save();
 
-			res.json({ 'message': 'added user' });
-		}
-		else {
-			res.status(401).json({ 'message': 'email already connected to an account' });
-		}
-	} catch (e) {
-		console.log(e);
-		res.sendStatus(500);
-	}
+            console.log('added user ', savedUser._id);
+
+            res.json({ 'message': 'added user' });
+        }
+        else {
+            res.status(401).json({ 'message': 'email already connected to an account' });
+        }
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
 });
 
 router.post('/forgotPassword', async (req, res) => {
@@ -102,13 +102,15 @@ router.post('/login', async (req, res) => {
     try {
         // get user from DB
         const user = await User.findOne({ email: req.body.email });
+        // console.log(user._id)
+
         if (user != undefined) {
             // check if passwords match
             if (req.body.password != undefined && bcrypt.compareSync(req.body.password, user.password)) {
                 // everything is correct
 
                 // token handling  (we might discuss what will be the secret key)
-                const token = jwt.sign({ email: req.body.email }, config.key, { expiresIn: '2h' });
+                const token = jwt.sign({ id: user._id, email: req.body.email }, config.key, { expiresIn: '2h' });
 
                 // set payload and return response
                 res.json({ token: token });
@@ -129,7 +131,12 @@ router.post('/login', async (req, res) => {
 
 function verifyToken(req, res, next) {
     // get auth header value
-    const token = req.body.token;
+    let token = '';
+    if (req.query.token != undefined)
+        token = req.query.token
+    else
+        token = req.body.token;
+
     if (token === undefined) {
         res.sendStatus(403);
     }
@@ -139,15 +146,13 @@ function verifyToken(req, res, next) {
             console.log(err.message)
             res.sendStatus(403)
         }
-    });
 
-    // console.log("verified")
+        req.body.userID = decoded.id;
+    });
     next();
 
 }
 
-
-// module.exports= verifyToken;
 module.exports = {
     router,
     verifyToken

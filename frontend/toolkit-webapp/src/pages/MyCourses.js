@@ -3,52 +3,37 @@ import { Button, Card, CardActions, Container, CssBaseline, makeStyles, Grid, Ca
 import '../css/dashboard.css'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import Pagination from '@material-ui/lab/Pagination'
-import dashStyles from '../styles/dashboardStyle'
+// import Pagination from '@material-ui/lab/Pagination'
+import myCoursesStyles from '../styles/myCoursesStyle'
+import jwt_decode from "jwt-decode";
+import { Link } from '@material-ui/core';
 
-const changeParams = (start, finish) => {
-    start = start + 1
-    finish = finish + 1
-    console.log("start " + start)
-
-}
-
-const Dashboard = (props) => {
+const MyCourses = (props) => {
     const [courses, setCourses] = useState([])
-    const [page, setPage] = useState(1)
-    const [cardAmount, setCardAmount] = useState()
-    const [coursesPerPage, setCoursesPerPage] = useState(5)
-    // const [searchQuery, setSearchQuery] = useState(undefined)
+    const [searchQuery, setSearchQuery] = useState('')
 
-    const classes = dashStyles()
+    const classes = myCoursesStyles()
 
     // function that will run when page is loaded
     useEffect(() => {
         loadCourses();
     }, []);
 
-    const handlePage = (event, value) => {
-        setPage(value)
-        loadCourses(undefined, value)
-    }
-
     // function to get the courses 
     const loadCourses = async (query, s = 1) => {
-        const token = localStorage.getItem("token");
-        let res = undefined
-        let skip = (s - 1) * cardAmount
-        // if (query == ""){
-        //     setSearchQuery(undefined)
-        // }else{
-        //     setSearchQuery(query)
-        // }
 
-        res = await fetch(config.server_url + config.paths.dashboardCourses, {
+        // grabbing user id
+        const token = localStorage.getItem("token");
+        const decoded = jwt_decode(token)
+
+        let res = undefined
+
+        res = await fetch(config.server_url + config.paths.myCourses, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "search_query": query, "skip": skip, "cardAmount": cardAmount })
+            body: JSON.stringify({ "token": token, "userID": decoded.id, "search_query": query})
         })
         // }
 
@@ -56,8 +41,6 @@ const Dashboard = (props) => {
         const data = await res.json()
         if (data.message === undefined) {
 
-            // console.log(data.courses);
-            // localStorage.setItem("token", data.token);
             setCourses(data.courses);
 
 
@@ -70,6 +53,28 @@ const Dashboard = (props) => {
         }
     }
 
+    const removeCourse = async (id) => 
+    {
+        let res = undefined
+        const token = localStorage.getItem("token");
+
+        res = await fetch(config.server_url + config.paths.removeCourse, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({ "token": token, "courseID": id})
+        })
+
+        // This splits the array correctly and updates courses array with courses the user is still enrolled in
+        const newVal = courses.filter((courses) => courses._id !== id);
+        setCourses(newVal)
+        
+        // window.location.reload()
+        
+    }
+
+
     const onCourse = (course) => {
         props.history.push(`course/${course._id}`);
     }
@@ -79,7 +84,7 @@ const Dashboard = (props) => {
         <div className={classes.div}>
             <TopNavBar
                 search={loadCourses}
-                page={page}
+                // page={page}
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
@@ -104,10 +109,23 @@ const Dashboard = (props) => {
                                         <Typography gutterBottom>
                                             {course.description.length < 100 ? course.description : course.description.substr(0, 100) + ' ...'}
                                         </Typography>
-                                        <CardActions>
-                                        </CardActions>
+                                        {/* <CardActions>
+                                        </CardActions> */}
                                     </CardContent>
+                                    <Grid container spacing={3}>
+                                    </Grid>
                                 </Card>
+
+                             {/* TODO: Figure out a way to reload the page without simply linking back to the same page.  */}
+
+                                <Link href="/MyCourses" underline='none' color="inherit"> 
+                                <div className={classes.buttonDiv}>
+                                    <Button type='submit' className={classes.removeButton} size= "small" color="inherit" variant="contained" onClick={() => removeCourse(course._id)}>
+                                    Remove Course
+                                    </Button>
+                                    </div>
+                                </Link> 
+                                
                             </Grid>
 
                         ))}
@@ -121,4 +139,4 @@ const Dashboard = (props) => {
     )
 }
 
-export default Dashboard
+export default MyCourses
