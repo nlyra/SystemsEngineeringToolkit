@@ -1,7 +1,6 @@
 const multer = require('multer');
 const express = require('express');
 const VerifyToken = require('./auth').verifyToken;
-const jwt = require('jsonwebtoken');
 const config = require('../config.json');
 const Course = require('../models/course');
 const fs = require("fs");
