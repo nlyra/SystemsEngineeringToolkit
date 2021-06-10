@@ -18,10 +18,12 @@ const CourseSchema = mongoose.Schema({
     type: String,
     // required: true
   },
-  totalStudent: {
+  totalStudents: {
     type: Number,
     "default": 0
   },
+
+  studentsEnrolled: [],
 
   urlImage: {
     type: String,

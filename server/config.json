@@ -1,0 +1,9 @@
+{
+    "db_url": "mongodb+srv://Daniel:se_toolkit3@cluster0.g65gk.mongodb.net/se_toolkit",
+    "key": "veryhardkey",
+    "emailInfo": {
+        "service": "gmail",
+        "emailUsername": "toolkitse8@gmail.com",
+        "emailPassword": "seToolkit12!"
+    }
+}
