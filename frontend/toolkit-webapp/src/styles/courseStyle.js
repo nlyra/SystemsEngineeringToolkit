@@ -1,70 +1,61 @@
 import { makeStyles } from '@material-ui/core/styles'
 
-const courseStyles = makeStyles((theme) => ({
+const dashStyles = makeStyles((theme) => ({
+  div: {
+    display: 'flex',
+    position: 'relative'
+  },
 
-    Title:
-    {
-        fontWeight: "bold"
-    },
+  title: {
+    fontSize: '50px',
+    textAlign: "center",
+    justify: "center",
+  },
 
-    container: {
-        height: "100%",
-    },
+  topItem: {
+    paddingTop: '4.9vh',
+    paddingBottom: '5%',
+  },
 
-    paper:
-    {
-        padding: '5px 40px 5px 40px',
-        borderRadius: 15,
-        marginTop: theme.spacing(15),
-    },
+  courseImageStyle: {
+    maxWidth: '260px',
+    marginBottom: "15px"
+  },
 
-    block:
-    {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
+  description: {
+    fontSize: '25px',
+    textAlign: "right",
+    paddingRight: '2%',
+    float: 'right',
+    maxWidth: "90%",
 
-    button:
-    {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-        background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
-    },
+  },
 
-    button2:
-    {
-        fontSize: 10,
-        background: 'linear-gradient(45deg, #90a4ae 10%, #e0e0e0 90%)',
-        marginBottom: theme.spacing(2),
-        marginLeft: theme.spacing(2)
-    },
+  divider: {
+    margin: theme.spacing(3, 3),
+  },
 
-    button3:
-    {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-        marginRight: theme.spacing(35)
-    },
+  accordion: {
+    padding: '3%',
+  },
 
-    button4:
-    {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-        marginLeft: theme.spacing(10)
-    },
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightRegular,
+  },
 
-    darkOverlay:
-    {
-        // backgroundColor: 'rgba(0, 0, 0, 0.596)',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        zIndex: -1
-    },
+  heading2: {
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightRegular,
+    align: 'right',
+    // position: 'right'
+  },
+
+  accordionDetails: {
+    paddingLeft: '5%',
+    paddingRight: '5%'
+  },
 
 }))
 
-export default courseStyles;
+export default dashStyles;

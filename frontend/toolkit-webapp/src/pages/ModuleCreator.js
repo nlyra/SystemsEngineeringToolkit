@@ -7,7 +7,7 @@ import TopNavBar from '../components/TopNavBar'
 import useStyles from '../styles/moduleStyle'
 import '../css/Login.css';
 import FileModule from '../components/FileModule'
-import QuizModule from '../components/QuizModule'
+import QuizModule from '../components/QuizCreatorModule'
 
 function ModuleCreator(props) {
 

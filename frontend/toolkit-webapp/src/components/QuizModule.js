@@ -1,396 +1,133 @@
-import React, { useState } from 'react'
-import { IconButton, Toolbar, Button, Dialog, DialogActions, DialogContent, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox, Typography, FormControl, Select, InputLabel, FormHelperText} from '@material-ui/core'
-import useStyles from '../styles/moduleStyle'
-import { Delete, Edit, ArrowUpward, ArrowDownward } from '@material-ui/icons'
-import MultipleChoice from '../components/MultipleChoiceCreator'
-import TorF from '../components/TrueOrFalseCreator'
+import { Grid } from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
+import quizStyles from '../styles/quizModuleStyle'
+import config from '../config.json'
 
 
-const quiz = {
-    questions : [],
-    types : [],
-    answers: [],
-    fakes1: [],
-    fakes2: [],
-    fakes3: []
-}
+const QuizModule = (props) => {
+  const classes = quizStyles()
 
-const QuizModule = () => {
-    const [type, setType] = useState('')
-    const [open, setOpen] = React.useState(false)
-    const [editOpen, setEdit] = React.useState(false)
-    const [selected, setSelected] = React.useState([]);
+  const [questions, setQuestions] = useState(props.quiz)
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [showScore, setShowScore] = useState(false);
+  const [score, setScore] = useState(0);
+  const [answers, setAnswers] = useState({});
 
-    sessionStorage.setItem('editing', '')
-
-    if(sessionStorage.getItem('questions')!== null){
-        quiz.questions=JSON.parse(sessionStorage.getItem('questions'));
-        if(sessionStorage.getItem('types')!== null){
-            quiz.types=JSON.parse(sessionStorage.getItem('types'));
-        }
-        if(sessionStorage.getItem('answers')!== null){
-            quiz.answers=JSON.parse(sessionStorage.getItem('answers'));
-        }
-        if(sessionStorage.getItem('fakes1')!== null){
-            quiz.fakes1=JSON.parse(sessionStorage.getItem('fakes1'));
-        }
-        if(sessionStorage.getItem('fakes2')!== null){
-            quiz.fakes2=JSON.parse(sessionStorage.getItem('fakes2'));
-        }
-        if(sessionStorage.getItem('fakes3')!== null){
-            quiz.fakes3=JSON.parse(sessionStorage.getItem('fakes3'));
-        }
+  const handleAnswerOptionClick = (isCorrect) => {
+    let temp = answers
+    if (isCorrect) {
+      temp[currentQuestion.toString()] = 1
+    } else {
+      temp[currentQuestion.toString()] = 0
     }
-    
-    const classes = useStyles()
+    setAnswers(temp)
+  };
 
-    const isSelected = (question) => selected.indexOf(question) !== -1
+  const handlePrevious = () => {
+    if (currentQuestion > 0)
+      setCurrentQuestion(currentQuestion - 1)
+  }
 
-    function addQuestion() {
-        if(sessionStorage.getItem('question') === '' || sessionStorage.getItem('answer') === ''){
-            alert("Requires a question and an answer.")
-        }else if(quiz.questions.indexOf(sessionStorage.getItem('question')) !== -1){
-            alert("No Duplicate questions")
-        }else{
-            quiz.questions.push(sessionStorage.getItem('question'))
-            quiz.types.push(type)
-            quiz.answers.push(sessionStorage.getItem('answer'))
-            quiz.fakes1.push(sessionStorage.getItem('fake1'))
-            quiz.fakes2.push(sessionStorage.getItem('fake2'))
-            quiz.fakes3.push(sessionStorage.getItem('fake3'))
+  const handleNext = () => {
+    if (currentQuestion < questions.length - 1)
+      setCurrentQuestion(currentQuestion + 1)
 
-            sessionStorage.setItem('questions', JSON.stringify(quiz.questions))
-            sessionStorage.setItem('types', JSON.stringify(quiz.types))
-            sessionStorage.setItem('answers', JSON.stringify(quiz.answers))
-            sessionStorage.setItem('fakes1', JSON.stringify(quiz.fakes1))
-            sessionStorage.setItem('fakes2', JSON.stringify(quiz.fakes2))
-            sessionStorage.setItem('fakes3', JSON.stringify(quiz.fakes3))
-            
-            setType('')
-            sessionStorage.removeItem('question')
-            sessionStorage.removeItem('answer')
-            sessionStorage.removeItem('fake1')
-            sessionStorage.removeItem('fake2')
-            sessionStorage.removeItem('fake3')
-        }
+  }
+
+  const handleSubmit = () => {
+    let temp = 0;
+    for (let i = 0; i < questions.length; i++) {
+      if (answers[i] === 1) {
+        temp += 1
+      }
     }
+    setScore(temp);
+    setShowScore(true);
+    saveScore(temp);
+  }
 
-    const handleClick = (event, question) => {
-        const selectedIndex = selected.indexOf(question);
-        let newSelected = [];
-    
-        if (selectedIndex === -1) {
-          newSelected = newSelected.concat(selected, question);
-        } else if (selectedIndex === 0) {
-          newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-          newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-          newSelected = newSelected.concat(
-            selected.slice(0, selectedIndex),
-            selected.slice(selectedIndex + 1),
-          );
-        }
-    
-        setSelected(newSelected)
+
+  const handleAgain = () => {
+    setCurrentQuestion(0)
+    setScore(0)
+    setAnswers({})
+    setShowScore(false)
+  }
+
+  const shuffeAnswers = () => {
+    console.log('hola')
+  }
+
+  const saveScore = async (temp) => {
+    const token = localStorage.getItem("token");
+    const res = await fetch(config.server_url + config.paths.sendScore, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        "token": token,
+        "courseID": props.courseID,
+        "moduleID": props.moduleIndex,
+        "score": temp
+      })
+    })
+
+    const data = await res.json()
+    if (data.message === undefined) {
+      //maybe do something in the future
+    } else if (data.message === "wrong token") {
+      localStorage.removeItem('token');
+      props.history.push('login');
+      // probably alert the user
+    } else { // this is to check if there are errors not being addressed already
+      console.log(data)
     }
-
-    const handleDelete = () => {
-        for(var i = 0; i < quiz.questions.length; i++){
-            if(isSelected(quiz.questions[i])){
-                selected.splice(selected.indexOf(quiz.questions[i]), 1);
-
-                quiz.questions.splice(i, 1);
-                quiz.types.splice(i, 1);
-                quiz.answers.splice(i, 1)
-                quiz.fakes1.splice(i, 1);
-                quiz.fakes2.splice(i, 1);
-                quiz.fakes3.splice(i, 1);
-
-                sessionStorage.setItem('questions', JSON.stringify(quiz.questions))
-                sessionStorage.setItem('types', JSON.stringify(quiz.types))
-                sessionStorage.setItem('answers', JSON.stringify(quiz.answers))
-                sessionStorage.setItem('fakes1', JSON.stringify(quiz.fakes1))
-                sessionStorage.setItem('fakes2', JSON.stringify(quiz.fakes2))
-                sessionStorage.setItem('fakes3', JSON.stringify(quiz.fakes3))
-                i=i-1
-            }
-        }
-    }
-
-    const handleEdit = () => {
-        sessionStorage.setItem('editing', 'yes')
-        if(selected.length > 1){
-            alert("Select only one question.")
-        }else if(selected.length < 1){
-            alert("Please select a question.")
-        }else{
-            for(var i = 0; i < quiz.questions.length; i++){
-                if(isSelected(quiz.questions[i])){
-                    sessionStorage.setItem('question', quiz.questions[i])
-                    setType(quiz.types[i])
-                    sessionStorage.setItem('answer', quiz.answers[i])
-                    sessionStorage.setItem('fake1', quiz.fakes1[i])
-                    sessionStorage.setItem('fake2', quiz.fakes2[i])
-                    sessionStorage.setItem('fake3', quiz.fakes3[i])
-                    sessionStorage.setItem('index', i)
-
-                    i=quiz.questions.length
-                    setEdit(true)
-                }
-            }
-        }
-    }
-
-    const submitEdit = () => {
-        if(quiz.questions.indexOf(sessionStorage.getItem('question')) !== -1 && quiz.questions.indexOf(sessionStorage.getItem('question')) !== parseInt(sessionStorage.getItem('index'))){
-            alert('No Duplicate Questions')
-        }else{
-            for(var i = 0; i < quiz.questions.length; i++){
-                if(isSelected(quiz.questions[i])){
-                    quiz.questions.splice(i, 1, sessionStorage.getItem('question'));
-                    quiz.types.splice(i, 1, type);
-                    quiz.answers.splice(i, 1, sessionStorage.getItem('answer'));
-                    quiz.fakes1.splice(i, 1, sessionStorage.getItem('fake1'));
-                    quiz.fakes2.splice(i, 1, sessionStorage.getItem('fake2'));
-                    quiz.fakes3.splice(i, 1, sessionStorage.getItem('fake3'));
-
-                    i=quiz.questions.length
-
-                    sessionStorage.setItem('questions', JSON.stringify(quiz.questions))
-                    sessionStorage.setItem('types', JSON.stringify(quiz.types))
-                    sessionStorage.setItem('answers', JSON.stringify(quiz.answers))
-                    sessionStorage.setItem('fakes1', JSON.stringify(quiz.fakes1))
-                    sessionStorage.setItem('fakes2', JSON.stringify(quiz.fakes2))
-                    sessionStorage.setItem('fakes3', JSON.stringify(quiz.fakes3))
-                    
-
-                    sessionStorage.removeItem('question')
-                    setType('')
-                    sessionStorage.removeItem('answer')
-                    sessionStorage.removeItem('fake1')
-                    sessionStorage.removeItem('fake2')
-                    sessionStorage.removeItem('fake3')
-
-                    setSelected([])
-                    setEdit(false)
-                }
-            }
-        }
-    }
-
-    const handleClickOpen = () => {
-        setOpen(true)
-    }
-
-    const handleClose = () => {
-        setOpen(false)
-    }
-
-    const handleEditClose = () => {
-        sessionStorage.removeItem('question')
-        setType('')
-        sessionStorage.removeItem('answer')
-        sessionStorage.removeItem('fake1')
-        sessionStorage.removeItem('fake2')
-        sessionStorage.removeItem('fake3')
-
-        setEdit(false)
-    }
-
-    const headCells = [
-        { id: 'question', numeric: false, disablePadding: false, label: 'Question' },
-        //{ id: 'type', numeric: false, disablePadding: false, label: 'Type'},
-        { id: 'answer', numeric: false, disablePadding: false, label: 'Answer' },
-        { id: 'fake1', numeric: false, disablePadding: false, label: 'Incorrect' },
-        { id: 'fake2', numeric: false, disablePadding: false, label: 'Incorrect' },
-        { id: 'fake3', numeric: false, disablePadding: false, label: 'Incorrect' },
-    ]
-
-
-    
-
-    const handleChange = (event) => {
-        setType(event.target.type);
-    }
+  }
 
   return (
-    <div>
-        <FormControl required className={classes.formControl} fullWidth={true}>
-            <InputLabel htmlFor="category-native-required">Question Type</InputLabel>
-            <Select
-                native
-                value={type}
-                onChange={handleChange}
-                name="Question Type"
-                inputProps={{
-                    id: 'category-native-required',
-                }}
-                onChange={e => setType(e.target.value)}
-            >
-                <option aria-label="None" value="" />
-                <option value={"Multiple Choice"}>Multiple Choice</option>
-                <option value={"True or False"}>True or False</option>
-                <option value={"Submit"}>Submit</option>
-            </Select>
-            <FormHelperText>Required</FormHelperText>
-        </FormControl>
-        
+    <div className={classes.app}>
+      {showScore ? (
+        <>
+          <div className={classes.scoreSection}>
+            You scored {score} out of {questions.length}
+          </div>
+          <button className={classes.buttonBack} onClick={() => handleAgain()}>Again?</button>
+        </>
+      ) : (
+        <>
+          <div className={classes.app2} >
+            <div className={classes.questionSection} >
+              <div className={classes.questionCount}>
 
-        {type === 'Multiple Choice' &&
-            <MultipleChoice></MultipleChoice>    
-        }
-        
-        {type === 'True or False'  &&
-            <TorF></TorF>
-        }
+                <span className={classes.questionCountSpan}>Question {currentQuestion + 1}</span>/{questions.length}
+              </div>
+              <div className={classes.questionText}>{questions[currentQuestion].question}</div>
+            </div>
+            {questions[currentQuestion].type === "Multiple Choice" &&
+              <div className={classes.answerSection}>
+                {questions[currentQuestion].answers.map((answers) => (
+                  <button className={classes.button} onClick={() => handleAnswerOptionClick(answers.isCorrect)}>{answers.answerText}</button>
+                ))}
+              </div>
+            }
+            {questions[currentQuestion].type === "True or False" &&
+              <div className={classes.answerSection}>
+                <button className={classes.button} onClick={() => handleAnswerOptionClick(questions[currentQuestion].answers[0].isCorrect)}>{questions[currentQuestion].answers[0].answerText}</button>
+                <button className={classes.button} onClick={() => handleAnswerOptionClick(!questions[currentQuestion].answers[0].isCorrect)}>{questions[currentQuestion].answers[0].answerText === "True" ? "False" : "True"}</button>
+              </div>
+            }
+          </div>
+          <div className={classes.buttons}>
+            <button className={classes.buttonBack} onClick={() => handlePrevious()}>Previous</button>
+            <button className={classes.buttonBack} onClick={() => handleNext()}>Next</button>
+            <button className={classes.buttonBack} onClick={() => handleSubmit()}>Submit</button>
+          </div>
+        </>
+      )}
 
-            <Button variant="contained" color="default" size="small" 
-                onClick={addQuestion}
-            >
-                        
-                Add Question
-            </Button>
-
-            <Button variant="contained" color="default" size="small"
-                onClick={handleClickOpen}
-            >
-                View Questions
-            </Button>
-
-            <Dialog
-                open={open}
-                onClose={handleClose}
-            >
-                <Toolbar>
-                    {selected.length > 0 ? (
-                        <Typography className={classes.title} color='inherit' variant='subtitle1' component='div'>
-                            {selected.length} selected
-                        </Typography>
-                    ) : (
-                        <Typography className={classes.title} variant='h6' id="tableTitle" component="div">
-                             Quiz Questions
-                        </Typography>
-                    )}
-
-                            
-                    <IconButton aria-label='delete' onClick={handleDelete}>
-                        <Delete />
-                    </IconButton>
-                    <IconButton aria-label='delete' onClick={handleEdit}>
-                        <Edit />
-                    </IconButton>
-                    <IconButton aria-label='delete' onClick={handleDelete}>
-                        <ArrowUpward />
-                    </IconButton>
-                    <IconButton aria-label='delete' onClick={handleDelete}>
-                        <ArrowDownward />
-                    </IconButton>
-                        
-                </Toolbar>
-                <DialogContent>
-                <TableContainer>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell padding="checkbox">
-                            </TableCell>
-                            {headCells.map((headCell) => (
-                                <TableCell
-                                    key={headCell.id}
-                                    align={headCell.numeric ? 'right' : 'left'}
-                                    padding={headCell.disablePadding ? 'none' : 'default'}
-                                >
-                                    {headCell.label}
-                                </TableCell>
-                            ))}
-                        </TableRow>
-                    </TableHead>
-
-                    <TableBody>
-                        {quiz.questions.map((next, index) => {
-                            const isItemSelected = isSelected(next);
-                            const labelId = `enhanced-table-checkbox-${index}`;
-
-                            return (
-                                <TableRow
-                                    hover
-                                    onClick={(event) => handleClick(event, next)}
-                                    role="checkbox"
-                                    aria-checked={isItemSelected}
-                                    tabIndex={-1}
-                                    selected={isItemSelected}
-                                >
-                                    <TableCell padding="checkbox">
-                                        <Checkbox
-                                            checked={isItemSelected}
-                                            inputProps={{ 'aria-labelledby': labelId }}
-                                        />
-                                    </TableCell>
-                                    <TableCell component="th" id={labelId} scope="row" padding="none">
-                                        {next}
-                                    </TableCell>
-                                    
-                                    <TableCell align="right">{quiz.answers[index]}</TableCell>
-                                    <TableCell align="right">{quiz.fakes1[index]}</TableCell>
-                                    <TableCell align="right">{quiz.fakes2[index]}</TableCell>
-                                    <TableCell align="right">{quiz.fakes3[index]}</TableCell>
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </TableContainer>
-
-                </DialogContent>
-                <DialogActions>
-                    <Button variant="contained" color="default" size="small" onClick={handleClose}>
-                        Close
-                    </Button>
-                </DialogActions>
-            </Dialog>
-
-            <Dialog
-                open={editOpen}
-                onClose={handleEditClose}
-            >
-                <DialogContent>
-                <FormControl required className={classes.formControl} fullWidth={true}>
-                    <InputLabel htmlFor="category-native-required">Question Type</InputLabel>
-                    <Select
-                        native
-                        value={type}
-                        onChange={handleChange}
-                        name="Question Type"
-                        inputProps={{
-                            id: 'category-native-required',
-                        }}
-                        onChange={e => setType(e.target.value)}
-                    >
-                        <option aria-label="None" value="" />
-                        <option value={"Multiple Choice"}>Multiple Choice</option>
-                        <option value={"True or False"}>True or False</option>
-                    </Select>
-                    <FormHelperText>Required</FormHelperText>
-                </FormControl>
-
-                {type === 'Multiple Choice' &&
-                    <MultipleChoice></MultipleChoice>
-                }
-                {type === 'True or False' &&
-                    <TorF></TorF>
-                }
-            </DialogContent>
-            <DialogActions>
-                <Button variant="contained" color="default" size="small" onClick={handleEditClose}>
-                    Close
-                </Button>
-                <Button variant="contained" color="default" size="small" onClick={submitEdit}>
-                    Submit
-                </Button>
-            </DialogActions>
-        </Dialog>
     </div>
-  )
+  );
 }
 
 export default QuizModule
-

@@ -1,11 +1,11 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core'
 
-const dashStyles = makeStyles((theme) => ({
+const pdfStyles = makeStyles((theme) => ({
 }))
 
 const PdfModule = ({ fileUrl }) => {
-  const classes = dashStyles()
+  const classes = pdfStyles()
 
 
   return (
