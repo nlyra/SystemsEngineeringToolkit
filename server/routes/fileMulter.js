@@ -1,5 +1,11 @@
 const multer = require('multer');
 const express = require('express');
+const VerifyToken = require('./auth').verifyToken;
+const jwt = require('jsonwebtoken');
+const config = require('../config.json');
+const Course = require('../models/course');
+const fs = require("fs");
+const mkdirp = require('mkdirp')
 
 const router = express.Router();
 
@@ -14,8 +20,27 @@ const fileStorageEngine = multer.diskStorage({
 });
 const upload = multer({ storage: fileStorageEngine })
 
-router.post('/single', upload.single('file'), (req, res) => {
-  res.send({ "status": "Success"})
+router.post('/single', VerifyToken, upload.single('file'), async (req, res) => {
+
+  const currPath = __dirname + "/../public/" + req.query.imageName
+  const newPath = __dirname + "/../public/" + req.query.courseID + "/" + req.query.imageName
+
+  const made = mkdirp.sync(__dirname + "/../public/" + req.query.courseID)
+
+  fs.rename(currPath, newPath, function (err) {
+    if (err) {
+      throw err
+    } else {
+      console.log(`Successfully moved the file ${req.query.imageName}!`);
+    }
+  });
+
+  const update = await Course.updateOne(
+    { _id: req.query.courseID },
+    { $set: { "urlImage": config.server_url + "/" + req.query.courseID + "/" + req.query.imageName } }
+  )
+
+  res.send({ "status": "Success" })
 })
 
 module.exports = router;

@@ -7,30 +7,30 @@ const config = require('../config.json');
 const router = express.Router();
 
 router.post('/registration', async (req, res) => {
-	try {
-		const user = await User.findOne({ email: req.body.email });
-		if (user == undefined) {
-			const pass = bcrypt.hashSync(req.body.password, 10);
-			const user = new User({
-				first_name: req.body.first_name,
-				last_name: req.body.last_name,
-				email: req.body.email,
-				password: pass,
-			});
-			
-			const savedUser = await user.save();
+    try {
+        const user = await User.findOne({ email: req.body.email });
+        if (user == undefined) {
+            const pass = bcrypt.hashSync(req.body.password, 10);
+            const user = new User({
+                first_name: req.body.first_name,
+                last_name: req.body.last_name,
+                email: req.body.email,
+                password: pass,
+            });
 
-			console.log('added user ', savedUser._id);
+            const savedUser = await user.save();
 
-			res.json({ 'message': 'added user' });
-		}
-		else {
-			res.status(401).json({ 'message': 'email already connected to an account' });
-		}
-	} catch (e) {
-		console.log(e);
-		res.sendStatus(500);
-	}
+            console.log('added user ', savedUser._id);
+
+            res.json({ 'message': 'added user' });
+        }
+        else {
+            res.status(401).json({ 'message': 'email already connected to an account' });
+        }
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
 });
 
 router.post('/login', async (req, res) => {
@@ -66,7 +66,12 @@ router.post('/login', async (req, res) => {
 
 function verifyToken(req, res, next) {
     // get auth header value
-    const token = req.body.token;
+    let token = '';
+    if (req.query.token != undefined)
+        token = req.query.token
+    else
+        token = req.body.token;
+
     if (token === undefined) {
         res.sendStatus(403);
     }
@@ -80,14 +85,11 @@ function verifyToken(req, res, next) {
         req.body.userID = decoded.id;
     });
 
-    
-    // console.log("verified")
+
     next();
 
 }
 
-
-// module.exports= verifyToken;
 module.exports = {
     router,
     verifyToken

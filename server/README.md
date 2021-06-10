@@ -8,8 +8,14 @@
 3. Create a JSON file called ```config.json``` inside server folder containing:
     {
     "db_url": "(( Insert db URL ))",
-    "key": "veryhardkey"
+    "server_url": "http://localhost:4000",
+    "key": "veryhardkey",
+    "emailInfo": {
+        "service": "gmail",
+        "emailUsername": "toolkitse8@gmail.com",
+        "emailPassword": "seToolkit12!"
     }
+}
 
 # Run
 1. run in CMD ```npm run dev```.
