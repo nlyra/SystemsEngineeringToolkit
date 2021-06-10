@@ -37,6 +37,8 @@ router.post('/login', async (req, res) => {
     try {
         // get user from DB
         const user = await User.findOne({ email: req.body.email });
+        // console.log(user._id)
+
         if (user != undefined) {
             // check if passwords match
             if (req.body.password != undefined && bcrypt.compareSync(req.body.password, user.password)) {
@@ -74,10 +76,9 @@ function verifyToken(req, res, next) {
             console.log(err.message)
             res.sendStatus(403)
         }
-        req.body.userID = decoded.id;
-        // console.log(decoded)
-    });
 
+        req.body.userID = decoded.id;
+    });
     next();
 
 }

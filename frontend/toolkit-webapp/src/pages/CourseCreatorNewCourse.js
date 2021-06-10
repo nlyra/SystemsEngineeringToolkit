@@ -35,6 +35,7 @@ function NewCourse(props) {
     }
 
     const onFinish = async (creds) => {
+        // console.log(creds)
         const token = localStorage.getItem("token");
 
         // handle image
@@ -63,10 +64,11 @@ function NewCourse(props) {
                 body: imageData
             })
             const data = await res.json()
+            console.log(data)
 
             if (data.status == 'Success') {
                 alert("Successfully created course!")
-                props.history.push('dashboard')// needs to be changed to course manager
+                props.history.push('/dashboard')// needs to be changed to course manager
             } //else need to do something, not sure what rn
         }
         else { // this is to check if there are errors not being addressed already

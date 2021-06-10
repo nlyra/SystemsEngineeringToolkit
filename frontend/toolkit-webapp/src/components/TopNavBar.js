@@ -11,7 +11,7 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import DescriptionIcon from '@material-ui/icons/Description';
 //import {Link } from "react-router-dom"
 import { Link } from '@material-ui/core';
-
+import HomeIcon from '@material-ui/icons/Home';
 import clsx from 'clsx';
 const logo_url = "http://localhost:4000/misc_files/logo.jpg"
 
@@ -185,7 +185,7 @@ export default function TopNavBar(props) {
                             >
                                 <MenuIcon style={{ color: "white" }}></MenuIcon>
                             </IconButton>
-                            {window.location.pathname === "/dashboard" ?
+                            {window.location.pathname === "/dashboard" || window.location.pathname === "/MyCourses" ?
                                 <div className={classes.search}>
                                     <div className={classes.searchIcon}>
                                         <SearchIcon></SearchIcon>
@@ -236,6 +236,24 @@ export default function TopNavBar(props) {
                             >
                                 <AccountCircle />
                             </IconButton>
+                            
+                            : null}
+                            
+                            {window.location.pathname !== "/dashboard" && 
+                            window.location.pathname !== "/" && 
+                            window.location.pathname !== "/registration" && 
+                            window.location.pathname !== "/login" ?
+                            <Link href="/dashboard" underline='none' color="inherit">
+                            <IconButton
+                                edge="end"
+                                aria-label="homescreen"
+                                aria-haspopup="true"
+                                color="inherit"
+                            >
+                                <HomeIcon />
+                            </IconButton>
+                            </Link>
+                            
                             : null}
                     </div>
                 </Toolbar>
