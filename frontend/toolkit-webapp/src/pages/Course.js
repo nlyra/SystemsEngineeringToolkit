@@ -4,7 +4,7 @@ import TopNavBar from '../components/TopNavBar'
 import { FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
 import VideoModule from '../components/VideoModule'
 import PdfModule from '../components/PdfModule'
-import QuizModule from '../components/QuizModule'
+import QuizModule from '../components/QuizCreatorModule'
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
