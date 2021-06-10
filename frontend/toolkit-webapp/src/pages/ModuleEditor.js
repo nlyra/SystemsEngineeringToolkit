@@ -5,7 +5,7 @@ import TopNavBar from '../components/TopNavBar'
 import useStyles from '../styles/moduleStyle'
 import '../css/Login.css';
 import FileModule from '../components/FileModule'
-import QuizModule from '../components/QuizModule'
+import QuizModule from '../components/QuizCreatorModule'
 
 function ModuleCreator(props) {
 
@@ -27,6 +27,8 @@ function ModuleCreator(props) {
     useEffect(() => {
         //foreach(question)
         //sessionStorage.setItem("questions", JSON.stringify(module))
+        sessionStorage.setItem("quiz", JSON.stringify(module.quiz))
+        console.log(JSON.parse(sessionStorage.getItem("quiz")))
         //setModule(JSON.parse(localStorage.getItem("module")),
     }, []);
 

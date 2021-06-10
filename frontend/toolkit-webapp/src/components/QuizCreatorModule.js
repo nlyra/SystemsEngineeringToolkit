@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { IconButton, Toolbar, Button, Dialog, DialogActions, DialogContent, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox, Typography, FormControl, Select, InputLabel, FormHelperText } from '@material-ui/core'
 import useStyles from '../styles/moduleStyle'
 import { Delete, Edit, ArrowUpward, ArrowDownward } from '@material-ui/icons'
-import MultipleChoice from '../components/MultipleChoiceCreator'
-import TorF from '../components/TrueOrFalseCreator'
+import MultipleChoice from './MultipleChoiceCreator'
+import TorF from './TrueOrFalseCreator'
 
 const quiz = {
     questions: [],
@@ -19,6 +19,7 @@ const QuizModule = () => {
     const [open, setOpen] = useState(false)
     const [editOpen, setEdit] = useState(false)
     const [selected, setSelected] = useState([]);
+
     //const [defaultQuiz, setDefaultQuiz] = useState(JSON.parse(sessionStorage.getItem("quiz")))
 
     // useEffect(() => {
