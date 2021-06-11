@@ -7,8 +7,13 @@ const CourseSchema = mongoose.Schema({
     required: true
   },
   category: {
+<<<<<<< HEAD
+    type: [],
+    // required: true
+=======
     type: String,
     required: true
+>>>>>>> dev
   },
   description: {
     type: String,
