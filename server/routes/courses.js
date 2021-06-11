@@ -270,4 +270,6 @@ router.post('/module/score', VerifyToken, async (req, res) => {
   }
 })
 
+router.post('/module/update', VerifyToken, async (req, res) => {})
+
 module.exports = router;

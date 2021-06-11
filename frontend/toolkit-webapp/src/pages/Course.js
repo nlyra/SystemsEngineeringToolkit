@@ -4,7 +4,7 @@ import TopNavBar from '../components/TopNavBar'
 import { Link, FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
 import VideoModule from '../components/VideoModule'
 import PdfModule from '../components/PdfModule'
-import QuizModule from '../components/QuizCreatorModule'
+import QuizModule from '../components/QuizModule'
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -30,11 +30,11 @@ const Course = (props) => {
     setEditCourseInfo(true);
   };
 
-  const onEditModule = (moduleID) => {
-    //alert("you have pressed the edit button the course ID is = " + courseID)
-    // console.log(moduleID)
-    props.history.push(`/editModule/${courseID}/${moduleID}`);
-  };
+  // const onEditModule = (moduleID) => {
+  //   //alert("you have pressed the edit button the course ID is = " + courseID)
+  //   // console.log(moduleID)
+  //   props.history.push(`/editModule/${courseID}/${moduleID}`);
+  // };
 
   // function that will run when page is loaded
   useEffect(() => {
@@ -214,7 +214,7 @@ const Course = (props) => {
                   onClick={(event) => event.stopPropagation()}
                   onFocus={(event) => event.stopPropagation()}
                   //edit={onEditModule}
-                  control={<ModuleInfoEditButton module={module} hideComponent={false} />}
+                  control={<ModuleInfoEditButton courseID={courseID} module={module} hideComponent={false} />}
                 />
                 <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
               </AccordionSummary>

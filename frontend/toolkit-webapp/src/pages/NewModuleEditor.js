@@ -9,24 +9,30 @@ import '../css/Login.css';
 import FileModule from '../components/FileModule'
 import QuizModule from '../components/QuizCreatorModule'
 
-function ModuleCreator(props) {
+function NewModuleEditor(props) {
 
-    const [title, setTitle] = useState('')
-    const [type, setType] = useState('')
-    const [description, setDescription] = useState('')
+    const [module, setModule] = useState(JSON.parse(localStorage.getItem("module")))
+    const [title, setTitle] = useState(module.title)
+    const [type, setType] = useState(module.type)
+    const [description, setDescription] = useState(module.description)
     const [courseID, setCourseID] = useState('')
 
     const classes = useStyles()
-
-    useEffect(() => {
-        const pathname = window.location.pathname.split('/') //returns the current path
-        setCourseID(pathname[pathname.length - 1])
-    }, []);
 
     const handleChange = (event) => {
         setType(event.target.type);
         // handleDisplayedContent(type)
     }
+
+    useEffect(() => {
+        //foreach(question)
+        //sessionStorage.setItem("questions", JSON.stringify(module))
+        const pathname = window.location.pathname.split('/') //returns the current path
+        setCourseID(pathname[pathname.length - 1])
+        sessionStorage.setItem("quiz", JSON.stringify(module.quiz))
+        console.log(JSON.parse(sessionStorage.getItem("quiz")))
+        //setModule(JSON.parse(localStorage.getItem("module")),
+    }, []);
 
     const onSubmit = (e) => {
         e.preventDefault()
@@ -114,7 +120,7 @@ function ModuleCreator(props) {
                                     variant="filled"
                                     label='Title'
                                     type="title"
-                                    defaultValue="New Module"
+                                    //defaultValue="New Module"
                                     value={title}
                                     onChange={e => setTitle(e.target.value)}
                                     margin="normal"
@@ -176,4 +182,4 @@ function ModuleCreator(props) {
     )
 }
 
-export default ModuleCreator;
+export default NewModuleEditor;
