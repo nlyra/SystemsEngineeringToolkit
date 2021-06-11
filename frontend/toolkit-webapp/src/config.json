@@ -10,6 +10,8 @@
     "fileUpload": "/v0/upload/single",
     "updateCourseInfo": "/v0/courses/course/update",
     "sendScore": "/v0/courses/module/score",
-    "removeCourse": "/v0/courses/removeCourse"
+    "removeCourse": "/v0/courses/removeCourse",
+    "enrollment": "/v0/courses/course/enrollment",
+    "myCourses": "/v0/courses/myCoursesInfo"
     }
   }
