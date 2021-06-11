@@ -39,7 +39,6 @@ function NewCourse(props) {
 
         const token = localStorage.getItem("token");
 
-<<<<<<< HEAD
         // handle image
         const imageData = new FormData();
         imageData.append('file', image)
@@ -78,14 +77,6 @@ function NewCourse(props) {
         const data = await res.json()
         if (data.message === undefined) {
             const res = await fetch(config.server_url + config.paths.fileUpload, {
-=======
-        if (image !== undefined) { //if there is an image
-
-            // handle image
-            const imageData = new FormData();
-            imageData.append('file', image)
-            const res = await fetch(config.server_url + config.paths.createCourse, {
->>>>>>> dev
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json'
