@@ -130,4 +130,4 @@ const QuizModule = (props) => {
   );
 }
 
-export default QuizModule
+export default QuizModule;

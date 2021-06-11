@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { Button, FormControl, Container, TextField, Typography, Box, Select, InputLabel, FormHelperText, Paper } from '@material-ui/core'
+// import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+// import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 import useStyles from '../styles/moduleStyle'
 import '../css/Login.css';
 import FileModule from '../components/FileModule'
-import QuizModule from '../components/QuizCreatorModule'
+import QuizCreatorModule from '../components/QuizCreatorModule'
 
-function ModuleCreator(props) {
+function ModuleEditor(props) {
 
     const [module, setModule] = useState(JSON.parse(localStorage.getItem("module")))
     const [title, setTitle] = useState(module.title)
     const [type, setType] = useState(module.type)
     const [description, setDescription] = useState(module.description)
-    //const [quiz, setQuiz] = useState(module.quiz)
-    const [moduleID, setModuleID] = useState('')
     const [courseID, setCourseID] = useState('')
 
     const classes = useStyles()
@@ -25,13 +25,10 @@ function ModuleCreator(props) {
     }
 
     useEffect(() => {
-        //foreach(question)
-        //sessionStorage.setItem("questions", JSON.stringify(module))
-        sessionStorage.setItem("quiz", JSON.stringify(module.quiz))
-        console.log(JSON.parse(sessionStorage.getItem("quiz")))
-        //setModule(JSON.parse(localStorage.getItem("module")),
+        const pathname = window.location.pathname.split('/') //returns the current path
+        setCourseID(pathname[pathname.length - 1])
+        sessionStorage.setItem('quiz', JSON.stringify(module.quiz))
     }, []);
-
 
     const onSubmit = (e) => {
         e.preventDefault()
@@ -40,34 +37,12 @@ function ModuleCreator(props) {
             return
         }
 
-        if (type === 'Quiz') {
+        if (type === 'Quiz' && JSON.parse(sessionStorage.getItem('quiz')) !== null) {
             console.log('works for Quiz')
-            var quizArray = {
-                questions: JSON.parse(sessionStorage.getItem('questions')),
-                types: JSON.parse(sessionStorage.getItem('types')),
-                answers: JSON.parse(sessionStorage.getItem('answers')),
-                fakes1: JSON.parse(sessionStorage.getItem('fakes1')),
-                fakes2: JSON.parse(sessionStorage.getItem('fakes2')),
-                fakes3: JSON.parse(sessionStorage.getItem('fakes3'))
-            }
             var quiz = []
 
-            for (var i = 0; i < quizArray.questions.length; i++) {
-                quiz.push({
-                    question: quizArray.questions[i],
-                    type: quizArray.types[i],
-                    answers: [
-                        { answerText: quizArray.answers[i], isCorrect: true },
-                        { answerText: quizArray.fakes1[i], isCorrect: false },
-                        { answerText: quizArray.fakes2[i], isCorrect: false },
-                        { answerText: quizArray.fakes3[i], isCorrect: false },
-                    ]
-
-                })
-            }
-
+            quiz = JSON.parse(sessionStorage.getItem("quiz"))
             sessionStorage.clear()
-            //console.log(quiz)
             onFinish({ title, type, description, quiz })
         } else {
             console.log('works')
@@ -82,7 +57,7 @@ function ModuleCreator(props) {
 
     // We ideally want to redirect to module manager page, but we do not have that yet
     const cancel = () => {
-        props.history.push('dashboard')
+        props.history.push(`/course/${courseID}`)
     }
 
     const onFinish = async (module) => {
@@ -91,7 +66,6 @@ function ModuleCreator(props) {
             let res = undefined
             if (module.type === "Quiz") {
                 res = await fetch(config.server_url + config.paths.newModule, {
-
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json'
@@ -114,7 +88,7 @@ function ModuleCreator(props) {
             if (data.message === undefined) {
                 // probably change back to course manager 
                 alert('worked')
-                props.history.push('dashboard')
+                props.history.push(`/course/${courseID}`)
             }
             else { // this is to check if there are errors not being addressed already
                 console.log(data)
@@ -126,11 +100,6 @@ function ModuleCreator(props) {
 
     }
 
-    const getFileModule = () => {
-        return <FileModule></FileModule>
-
-    }
-
     return (
         <div>
             <TopNavBar></TopNavBar>
@@ -139,7 +108,7 @@ function ModuleCreator(props) {
                     <form autoComplete="off" onSubmit={onSubmit}>
                         <Paper className={classes.paper} elevation={3} square={false}>
                             <Box m={2} pt={2}>
-                                <Typography className={classes.Title} variant="h5">{title == "" ? "No Title" : title}</Typography>
+                                <Typography className={classes.Title} variant="h5">{title == "" ? 'New Module' : title}</Typography>
                             </Box>
                             <div className={classes.TextBox}>
                                 <TextField color='primary'
@@ -147,6 +116,7 @@ function ModuleCreator(props) {
                                     variant="filled"
                                     label='Title'
                                     type="title"
+                                    //defaultValue="New Module"
                                     value={title}
                                     onChange={e => setTitle(e.target.value)}
                                     margin="normal"
@@ -188,17 +158,17 @@ function ModuleCreator(props) {
                                     <FormHelperText>Required</FormHelperText>
                                 </FormControl>
 
-                                {type == 'Video' && <FileModule></FileModule>}
-                                {type == 'Quiz' && <QuizModule></QuizModule>}
+                                {type == 'Files' && <FileModule></FileModule>}
+                                {type == 'Quiz' && <QuizCreatorModule></QuizCreatorModule>}
 
                             </div>
                             <Container className={classes.buttonGroup}>
                                 <Button type='submit' className={classes.button1} size="small" variant="contained" onClick={cancel}>
                                     Cancel
-                        </Button>
+                                </Button>
                                 <Button type='submit' className={classes.button2} size="small" variant="contained" onSubmit={onSubmit}>
                                     Create
-                        </Button>
+                                </Button>
                             </Container>
                         </Paper>
                     </form>
@@ -208,4 +178,4 @@ function ModuleCreator(props) {
     )
 }
 
-export default ModuleCreator;
+export default ModuleEditor;

@@ -24,7 +24,6 @@ export default function ModuleInfoEditButton({ courseID, module, hideComponent }
 
     const sendModule = () => {
         localStorage.setItem("module", JSON.stringify(module))
-        alert("hello i am broken " + courseID)
     }
 
     return (
