@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, FormControl, Container, TextField, Typography, Box, Select, InputLabel, FormHelperText, Paper } from '@material-ui/core'
 // import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 // import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
@@ -14,8 +14,14 @@ function ModuleCreator(props) {
     const [title, setTitle] = useState('')
     const [type, setType] = useState('')
     const [description, setDescription] = useState('')
+    const [courseID, setCourseID] = useState('')
 
     const classes = useStyles()
+
+    useEffect(() => {
+        const pathname = window.location.pathname.split('/') //returns the current path
+        setCourseID(pathname[pathname.length - 1])
+    }, []);
 
     const handleChange = (event) => {
         setType(event.target.type);
@@ -31,7 +37,7 @@ function ModuleCreator(props) {
 
         if (type === 'Quiz' && JSON.parse(sessionStorage.getItem('quiz')) !== null) {
             console.log('works for Quiz')
-            var quiz =[]
+            var quiz = []
 
             quiz = JSON.parse(sessionStorage.getItem("quiz"))
             sessionStorage.clear()
@@ -62,7 +68,7 @@ function ModuleCreator(props) {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': '60c032f28318a62bcc8f0b23', 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
+                    body: JSON.stringify({ 'token': token, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
                 })
             } else {
                 res = await fetch(config.server_url + config.paths.newModule, {
@@ -71,7 +77,7 @@ function ModuleCreator(props) {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': '60c032f28318a62bcc8f0b23', 'title': module.title, 'description': module.description, 'type': module.type })
+                    body: JSON.stringify({ 'token': token, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type })
                 })
             }
 

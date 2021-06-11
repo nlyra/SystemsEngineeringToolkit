@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import { FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
+import { Link, FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
 import VideoModule from '../components/VideoModule'
 import PdfModule from '../components/PdfModule'
 import QuizModule from '../components/QuizCreatorModule'
@@ -11,7 +11,8 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CourseInfoEditButton from '../components/CourseInfoEditButton';
 import ModuleInfoEditButton from '../components/ModuleInfoEditButton';
-import courseStyles from '../styles/courseStyle'
+import AddIcon from '@material-ui/icons/Add';
+import courseStyles from '../styles/courseStyle';
 import jwt_decode from "jwt-decode";
 
 
@@ -91,8 +92,7 @@ const Course = (props) => {
 
   const enroll = async (module) => {
 
-    if(modules.indexOf(module) === 0)
-    {
+    if (modules.indexOf(module) === 0) {
 
       const token = localStorage.getItem("token");
 
@@ -108,7 +108,7 @@ const Course = (props) => {
         })
       })
     }
-    
+
   }
 
   return (
@@ -188,11 +188,22 @@ const Course = (props) => {
         <Grid item xs={12}>
           <Divider className={classes.divider} />
         </Grid>
+        <Grid item xs={12} lg={3}>
+          <Link href={`/newModule/${courseID}`} underline={'none'}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              startIcon={<AddIcon />}
+            >
+              Add Module
+            </Button>
+          </Link>
+        </Grid>
         <Grid item xs={12} className={classes.accordion}>
-
           {/* modules starts here */}
           {modules.map((module) => (
-            <Accordion key={modules.indexOf(module)} onClick={e=> enroll(module)} >
+            <Accordion key={modules.indexOf(module)} onClick={e => enroll(module)} >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"

@@ -25,11 +25,15 @@ router.post('/course', VerifyToken, async (req, res) => {
 
     // get user grades if any
     let grades = await User.findOne({ "_id": req.body.userID }, 'coursesQuizes')
+    console.log(grades.coursesQuizes[0])
+    console.log(req.body.id)
     if (grades.coursesQuizes[0] != undefined) {
-      grades = grades.coursesQuizes[0][req.body.id]
-      let keys = Object.keys(grades)
-      for (let i = 0; i < keys.length; i++) {
-        course.modules[keys[i]]["grade"] = grades[keys[i]]
+      if (grades.coursesQuizes[0][req.body.id] != undefined) {
+        grades = grades.coursesQuizes[0][req.body.id]
+        let keys = Object.keys(grades)
+        for (let i = 0; i < keys.length; i++) {
+          course.modules[keys[i]]["grade"] = grades[keys[i]]
+        }
       }
     }
 
