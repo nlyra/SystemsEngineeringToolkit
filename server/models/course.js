@@ -7,8 +7,13 @@ const CourseSchema = mongoose.Schema({
     required: true
   },
   category: {
+<<<<<<< HEAD
     type: [],
     // required: true
+=======
+    type: String,
+    required: true
+>>>>>>> dev
   },
   description: {
     type: String,
@@ -16,12 +21,14 @@ const CourseSchema = mongoose.Schema({
   },
   author: {
     type: String,
-    // required: true
+    required: true
   },
-  totalStudent: {
+  totalStudents: {
     type: Number,
     "default": 0
   },
+
+  studentsEnrolled: [],
 
   urlImage: {
     type: String,

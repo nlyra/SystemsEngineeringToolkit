@@ -7,6 +7,7 @@ import TopNavBar from '../components/TopNavBar'
 import useStyles from '../styles/moduleStyle'
 import '../css/Login.css';
 import FileModule from '../components/FileModule'
+import QuizModule from '../components/QuizCreatorModule'
 
 function ModuleCreator(props) {
 
@@ -27,8 +28,40 @@ function ModuleCreator(props) {
             alert('Please enter all required fields')
             return
         }
-        console.log('works')
-        onFinish({ title, type, description })
+
+        if (type === 'Quiz') {
+            console.log('works for Quiz')
+            var quizArray = {
+                questions: JSON.parse(sessionStorage.getItem('questions')),
+                types: JSON.parse(sessionStorage.getItem('types')),
+                answers: JSON.parse(sessionStorage.getItem('answers')),
+                fakes1: JSON.parse(sessionStorage.getItem('fakes1')),
+                fakes2: JSON.parse(sessionStorage.getItem('fakes2')),
+                fakes3: JSON.parse(sessionStorage.getItem('fakes3'))
+            }
+            var quiz =[]
+
+            for(var i = 0; i < quizArray.questions.length; i++){
+                quiz.push({
+                    question: quizArray.questions[i],
+                    type: quizArray.types[i],
+                    answers: [
+                        {answerText: quizArray.answers[i], isCorrect: true},
+                        {answerText: quizArray.fakes1[i], isCorrect: false},
+                        {answerText: quizArray.fakes2[i], isCorrect: false},
+                        {answerText: quizArray.fakes3[i], isCorrect: false},
+                    ]
+
+                })
+            }
+            
+            sessionStorage.clear()
+            //console.log(quiz)
+            onFinish({ title, type, description, quiz })
+        } else {
+            console.log('works')
+            onFinish({ title, type, description })
+        }
     }
 
     // const onUpload = (e) => {
@@ -42,17 +75,28 @@ function ModuleCreator(props) {
     }
 
     const onFinish = async (module) => {
-
         const token = localStorage.getItem("token");
         if (token != undefined) {
-            const res = await fetch(config.server_url + config.paths.newModule, {
+            let res = undefined
+            if (module.type === "Quiz") {
+                res = await fetch(config.server_url + config.paths.newModule, {
 
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify({ 'token': token, 'courseID': '60aeaa0574ee92fee31e4b02', 'title': module.title, 'description': module.description, 'type': module.type })
-            })
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({ 'token': token, 'courseID': '60b7dac736539526486f1503', 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
+                })
+            } else {
+                res = await fetch(config.server_url + config.paths.newModule, {
+
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({ 'token': token, 'courseID': '60b7dac736539526486f1503', 'title': module.title, 'description': module.description, 'type': module.type })
+                })
+            }
 
             const data = await res.json()
 
@@ -134,7 +178,8 @@ function ModuleCreator(props) {
                                     <FormHelperText>Required</FormHelperText>
                                 </FormControl>
 
-                                {/* {type == 'Video' && <FileModule></FileModule>} */}
+                                {type == 'Video' && <FileModule></FileModule>}
+                                {type == 'Quiz' && <QuizModule></QuizModule>}
 
                             </div>
                             <Container className={classes.buttonGroup}>

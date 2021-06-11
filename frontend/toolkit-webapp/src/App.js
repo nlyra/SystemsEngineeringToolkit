@@ -19,22 +19,21 @@ import MyCourses from './pages/MyCourses'
 function App() {
   return (
     <Router>
-        {/* these two lines should have 'Login' not 'Dashboard' */}
-        <Route path='/' exact component={Login} /> {/* should we make like a landing page, or the sanding page is login */}
-        <Route path='/login' component={Login} />
-        <Route path='/Dashboard' component={Dashboard} />
-        <Route path='/registration' component={Registration} />
-        <Route path='/forgot' component={ForgotPassword} />
-        <Route path='/NewCourse' component={CourseCreatorNewCourse} />
-        <Route path='/newModule' component={ModuleCreator} />
-        <Route path='/ModuleManager' component={ModuleManager} />
-        <Route path='/course' component={Course} />
-        <Route path= '/ManageCourses' component={ManageCourses} />
-        <Route path= '/MyFiles' component={MyFiles} />
-        <Route path= '/MyCourses' component={MyCourses} />
-        <Route path='/VideoModule' component={VideoModule} />
-     </Router>
-
+      {/* these two lines should have 'Login' not 'Dashboard' */}
+      <Route path='/' exact component={Login} /> {/* should we make like a landing page, or the sanding page is login */}
+      <Route path='/login' component={Login} />
+      <Route path='/Dashboard' component={Dashboard} />
+      <Route path='/registration' component={Registration} />
+      <Route path='/forgot' component={ForgotPassword} />
+      <Route path='/NewCourse' component={CourseCreatorNewCourse} />
+      <Route path='/newModule' component={ModuleCreator} />
+      <Route path='/ModuleManager' component={ModuleManager} />
+      <Route path='/course' component={Course} />
+      <Route path='/ManageCourses' component={ManageCourses} />
+      <Route path='/MyFiles' component={MyFiles} />
+      <Route path='/MyCourses' component={MyCourses} />
+      <Route path='/VideoModule' component={VideoModule} />
+    </Router>
   );
 }
 
