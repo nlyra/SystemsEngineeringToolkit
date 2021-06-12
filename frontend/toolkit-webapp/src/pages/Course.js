@@ -93,8 +93,7 @@ const Course = (props) => {
 
   const enroll = async (module) => {
 
-    if(modules.indexOf(module) === 0)
-    {
+    if (modules.indexOf(module) === 0) {
 
       const token = localStorage.getItem("token");
 
@@ -110,7 +109,7 @@ const Course = (props) => {
         })
       })
     }
-    
+
   }
 
   return (
@@ -119,7 +118,7 @@ const Course = (props) => {
       </TopNavBar>
       <Grid container direction="column" className={classes.div}>
         {editCourseInfo !== true ?
-          <Container maxWidth>
+          <div maxWidth>
             <Grid item alignItems="center" xs={12}>
               <Grid container className={classes.topItem}>
                 <Grid item xs={3} sm={2} lg={1}>
@@ -141,9 +140,9 @@ const Course = (props) => {
             <Grid item xs={12} >
               <Typography className={classes.description}>{course.description}</Typography>
             </Grid>
-          </Container>
+          </div>
           :
-          <Container maxWidth>
+          <div maxWidth>
             <Grid item xs={12} >
               <Grid container className={classes.topItem}>
                 <Grid item xs={3} sm={2} lg={1}>
@@ -185,7 +184,7 @@ const Course = (props) => {
               />
             </Grid>
             <Button onClick={onEditSubmit}>Submit</Button>
-          </Container>
+          </div>
         }
         <Grid item xs={12}>
           <Divider className={classes.divider} />
@@ -195,7 +194,7 @@ const Course = (props) => {
 
           {/* modules starts here */}
           {modules.map((module) => (
-            <Accordion key={modules.indexOf(module)} onClick={e=> enroll(module)} >
+            <Accordion key={modules.indexOf(module)} onClick={e => enroll(module)} >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"

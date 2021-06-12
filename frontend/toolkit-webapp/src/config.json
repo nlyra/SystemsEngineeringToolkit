@@ -11,8 +11,11 @@
     "fileUpload": "/v0/upload/single",
     "updateCourseInfo": "/v0/courses/course/update",
     "sendScore": "/v0/courses/module/score",
+    "myCourses": "/v0/courses/myCoursesInfo",
     "removeCourse": "/v0/courses/removeCourse",
     "checkResetCreds": "/v0/auth/checkResetCreds",
-    "resetPassApproved": "/v0/auth/resetPassApproved"
+    "resetPassApproved": "/v0/auth/resetPassApproved",
+    "categories": "/v0/categories/info",
+    "addCategories": "/v0/categories/add"
     }
   }
