@@ -12,7 +12,6 @@ function ResetPassword(props) {
 
     const [password, setPassword] = useState('')
     const [passwordCopy, setPasswordCopy] = useState('')
-    // const [resetToken, setResetToken] = useState('')
 
     const classes = loginStyles()
 
@@ -79,18 +78,12 @@ function ResetPassword(props) {
             body: JSON.stringify({ "resetToken": resetToken, "password": creds.password })
         })
         
-        // alert('help')
         const data = await res.json()
 
         if (data.message === "Success!") {
             alert('Password has been changed!')
             props.history.push('../../login')
         }
-        // else if(data.message === "Old Password")
-        // {
-        //     alert("Please choose a password you haven't used before!")
-        //     return
-        // }
         else
         {
             alert('Something went wrong! Try inputting your new password again')
@@ -155,7 +148,7 @@ function ResetPassword(props) {
                             </Button>
                             <br></br>
                             <Button type='submit' className={classes.button2} size="small" onClick={returnToLogin}>
-                               Remembered it? Click here 
+                               Return to Login 
                             </Button>
                         </Paper>
                     </form>

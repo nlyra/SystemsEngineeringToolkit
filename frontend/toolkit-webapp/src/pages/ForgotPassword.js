@@ -17,8 +17,9 @@ const ForgotPassword = (props) => {
         props.history.push('login');
     }
 
-    const resetLink = async (creds) => {
-        console.log(creds);
+    const resetLink = async (e) => {
+        e.preventDefault()
+
         const res = await fetch(config.server_url + config.paths.forgotPassword, {
             method: 'POST',
             headers: {
@@ -27,24 +28,10 @@ const ForgotPassword = (props) => {
             body: JSON.stringify({ "email": email })
         })
 
-        const data = await res.json()
-        
-        alert(data.message)
-
-        if (data.message === undefined) {
-            alert("Sent email confirmation!");
-
-        } 
-        else if (data.message === 'Account not found in db!')
-        { 
-            alert("Account not in system. Please register an account or attempt a different email below");
-        }
-        else
-        {
-            console.log(data)
-        }
+        alert('An email has been sent to the email listed, if registered.')
 
     }
+
     return (
         <>
             <TopNavBar hideComponents={true}/>
@@ -55,7 +42,7 @@ const ForgotPassword = (props) => {
                 </video>
             </div>
             <div className={classes.container}>
-                <div className={classes.block} style={{minWidth: '400px'}}>
+                <div className={classes.block} style={{ minWidth: '400px' }}>
                     <form autoComplete="off" >
                         <Paper className={classes.paper} elevation={5} square={false}>
                             <Avatar className={classes.avatar}>
@@ -64,26 +51,24 @@ const ForgotPassword = (props) => {
                             <Box m={2} pt={2}>
                                 <Typography className={classes.Title} variant="h5">Forgot Password</Typography>
                             </Box>
-                            
-                                <TextField color='primary'
-                                    size='small'
-                                    variant="filled"
-                                    label='Email'
-                                    type="email"
-                                    value={email}
-                                    onChange={e => setEmail(e.target.value)}
-                                    margin="normal"
-                                    required={true}
-                                    fullWidth
-                                    style={{backgroundColor: "rgba(255,255,255,0.8)"}}
-                                />
+                            <TextField color='primary'
+                                size='small'
+                                variant="filled"
+                                label='Email'
+                                type="email"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                                margin="normal"
+                                required={true}
+                                fullWidth
+                                style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                            />
 
                             <Button type='submit' fullWidth className={classes.button} size="medium" variant="contained" onClick={resetLink}>
                                 Send Confirmation Email
                             </Button>
-                            {/* <br></br> */}
                             <Button type='submit' className={classes.button2} size="small" onClick={onLogin}>
-                                Misclicked? Return to Login here
+                                Return to Login here
                             </Button>
                         </Paper>
                     </form>

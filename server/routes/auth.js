@@ -36,21 +36,18 @@ router.post('/registration', async (req, res) => {
 });
 
 router.post('/forgotPassword', async (req, res) => {
-	try {
-        console.log(req.body.email)
-		const user = await User.findOne({ email: req.body.email });
+    try {
 
-        console.log(user)
-        if(user !== null)
-        {
-            // console.log('wtf')
+        const user = await User.findOne({ email: req.body.email });
+
+        if (user !== null) {
             const userID = user._id.toString()
 
             resetPasswordToken = crypto.randomBytes(20).toString('hex')
 
             const update = await User.updateOne(
                 { _id: userID },
-                {$set: {resetPassToken: resetPasswordToken, resetPassExpires: (new Date()).setHours(( new Date()).getHours() + 1) }}
+                { $set: { resetPassToken: resetPasswordToken, resetPassExpires: (new Date()).setHours((new Date()).getHours() + 1) } }
             )
 
 
@@ -68,10 +65,10 @@ router.post('/forgotPassword', async (req, res) => {
                 to: user.email,
                 subject: 'Link to reset password',
                 text:
-                'Click the following link to reset your account password ' +
-                `http://localhost:3000/reset/${resetPasswordToken}\n\n`
+                    'Click the following link to reset your PEO STRI account password ' +
+                    `http://localhost:3000/reset/${resetPasswordToken}\n\n`
             }
-        
+
 
             transporter.sendMail(mailOptions, (err, response) => {
                 if (err) {
@@ -83,19 +80,14 @@ router.post('/forgotPassword', async (req, res) => {
                 }
             })
 
-            // res.json({ 'message': 'Account found in db!' })
+            res.json({ 'message': 'Success!' })
 
         }
-        else
-        {
-            res.json({ 'message': 'Account not found in db!' })
-        }
-        // return
-    
-	} catch (e) {
-		console.log(e);
-		res.sendStatus(500);
-	}
+
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
 });
 
 router.post('/login', async (req, res) => {
@@ -171,13 +163,7 @@ router.post('/checkResetCreds', async (req, res) => {
 router.post('/resetPassApproved', async (req, res) => {
 
     try {
-        
-        // const tempPass = bcrypt.hashSync(req.body.password, 10);
-        // const checkIf_OldPassword = await User.findOne({ resetPassToken: req.body.resetToken, password: tempPass }, '_id');
 
-        // if(checkIf_OldPassword === undefined)
-        // {
-            
             const user = await User.findOne({ resetPassToken: req.body.resetToken }, '_id');
             
             if(user !== undefined)
@@ -192,7 +178,7 @@ router.post('/resetPassApproved', async (req, res) => {
             
             }
             res.json({message: "Success!"})
-    
+
     } catch (e) {
         console.log(e);
         res.sendStatus(500);
