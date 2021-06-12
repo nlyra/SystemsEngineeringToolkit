@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Card, CardActions, Container, CssBaseline, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
+import { Button, Card, CardActions, Container, CssBaseline, Divider, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
 import '../css/dashboard.css'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
@@ -24,7 +24,6 @@ const MyCourses = (props) => {
 
         // grabbing user id
         const token = localStorage.getItem("token");
-        const decoded = jwt_decode(token)
 
         let res = undefined
 
@@ -33,7 +32,7 @@ const MyCourses = (props) => {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "userID": decoded.id, "search_query": query})
+            body: JSON.stringify({ "token": token, "search_query": query})
         })
         // }
 
@@ -88,6 +87,14 @@ const MyCourses = (props) => {
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
+            <Grid container spacing={3}>
+                <div className={classes.header}>
+                <h1>
+                    Enrolled Courses
+                </h1>
+                </div>
+                </Grid>
+                <Divider className={classes.divider} />
                 <div className='modules'>
                     <Grid container spacing={3}>
                         {courses.map((course) => (

@@ -32,7 +32,7 @@ const CourseSchema = mongoose.Schema({
 
   modules: [],
 
-  creator: {
+  author: {
     type: String
   }
 
