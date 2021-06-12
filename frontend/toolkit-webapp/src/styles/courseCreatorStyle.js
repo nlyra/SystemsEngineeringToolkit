@@ -65,6 +65,18 @@ const courseStyles = makeStyles((theme) => ({
         zIndex: -1
     },
 
+    categoryContainer: 
+    {
+        display: 'flex',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        listStyle: 'none',
+        padding: theme.spacing(0.5),
+        margin: 0,
+        maxWidth: '550px',
+        minHeight: "40px"
+    },
+
 }))
 
 export default courseStyles;
