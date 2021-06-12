@@ -14,6 +14,7 @@ function ModuleCreator(props) {
     const [title, setTitle] = useState('')
     const [type, setType] = useState('')
     const [description, setDescription] = useState('')
+    const [gradeToPass, setGradeToPass] = useState('')
 
     const classes = useStyles()
 
@@ -39,22 +40,22 @@ function ModuleCreator(props) {
                 fakes2: JSON.parse(sessionStorage.getItem('fakes2')),
                 fakes3: JSON.parse(sessionStorage.getItem('fakes3'))
             }
-            var quiz =[]
+            var quiz = []
 
-            for(var i = 0; i < quizArray.questions.length; i++){
+            for (var i = 0; i < quizArray.questions.length; i++) {
                 quiz.push({
                     question: quizArray.questions[i],
                     type: quizArray.types[i],
                     answers: [
-                        {answerText: quizArray.answers[i], isCorrect: true},
-                        {answerText: quizArray.fakes1[i], isCorrect: false},
-                        {answerText: quizArray.fakes2[i], isCorrect: false},
-                        {answerText: quizArray.fakes3[i], isCorrect: false},
+                        { answerText: quizArray.answers[i], isCorrect: true },
+                        { answerText: quizArray.fakes1[i], isCorrect: false },
+                        { answerText: quizArray.fakes2[i], isCorrect: false },
+                        { answerText: quizArray.fakes3[i], isCorrect: false },
                     ]
 
                 })
             }
-            
+
             sessionStorage.clear()
             //console.log(quiz)
             onFinish({ title, type, description, quiz })
@@ -85,7 +86,15 @@ function ModuleCreator(props) {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': '60b7dac736539526486f1503', 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
+                    body: JSON.stringify({ 
+                        'token': token, 
+                        'courseID': '60b7dac736539526486f1503', 
+                        'title': module.title, 
+                        'description': module.description, 
+                        'type': module.type, 
+                        'quiz': module.quiz,
+                        'gradeToPass': gradeToPass 
+                    })
                 })
             } else {
                 res = await fetch(config.server_url + config.paths.newModule, {
@@ -179,7 +188,23 @@ function ModuleCreator(props) {
                                 </FormControl>
 
                                 {type == 'Video' && <FileModule></FileModule>}
-                                {type == 'Quiz' && <QuizModule></QuizModule>}
+                                {type == 'Quiz' &&
+                                    <div>
+                                        <TextField color='primary'
+                                            size='small'
+                                            variant="filled"
+                                            type="number"
+                                            label='Grade to pass'
+                                            defaultValue=""
+                                            value={gradeToPass}
+                                            onChange={e => setGradeToPass(e.target.value)}
+                                            margin="normal"
+                                            required={true}
+                                            fullWidth
+                                        />
+                                        <QuizModule></QuizModule>
+                                    </div>
+                                }
 
                             </div>
                             <Container className={classes.buttonGroup}>
