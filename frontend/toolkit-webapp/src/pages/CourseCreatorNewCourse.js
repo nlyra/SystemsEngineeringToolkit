@@ -39,44 +39,13 @@ function NewCourse(props) {
 
         const token = localStorage.getItem("token");
 
-        // handle image
-        const imageData = new FormData();
-        imageData.append('file', image)
+        if (image !== undefined) { //if there is an image
 
-        const res = await fetch(config.server_url + config.paths.createCourse, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                "token": token,
-                "modules": [],
-                "name": creds.courseTitle,
-                "category": creds.categories,
-                "description": creds.description,
-                "urlImage": `http://localhost:4000/${image.name}`
-            })
-        })
+            // handle image
+            const imageData = new FormData();
+            imageData.append('file', image)
 
-        // Check if there are any new categories that need to be added to the DB categories collection.
-        for (const newTag of categories) {
-            if (dialogData.find(c => c.label === newTag.label)) continue;
-
-            const res = await fetch(config.server_url + config.paths.addCategories, {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "token": token,
-                    "label": newTag.label
-                }),
-            })
-        }
-
-        const data = await res.json()
-        if (data.message === undefined) {
-            const res = await fetch(config.server_url + config.paths.fileUpload, {
+            const res = await fetch(config.server_url + config.paths.createCourse, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json'
@@ -85,15 +54,31 @@ function NewCourse(props) {
                     "token": token,
                     "modules": [],
                     "name": creds.courseTitle,
-                    "category": creds.category,
+                    "category": creds.categories,
                     "description": creds.description,
                     "urlImage": `http://localhost:4000/${image.name}`
                 })
+            })
+
+            // Check if there are any new categories that need to be added to the DB categories collection.
+            for (const newTag of categories) {
+                if (dialogData.find(c => c.label === newTag.label)) continue;
+
+                const res = await fetch(config.server_url + config.paths.addCategories, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "token": token,
+                        "label": newTag.label
+                    }),
+                })
             }
-            )
-            const data1 = await res.json()
-            if (data1.message === undefined) {
-                const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + data1._id + "&imageName=" + image.name, {
+
+            const data = await res.json()
+            if (data.message === undefined) {
+                const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + data._id + "&imageName=" + image.name, {
                     method: 'POST',
                     body: imageData
                 })
@@ -106,7 +91,7 @@ function NewCourse(props) {
                 } //else need to do something, not sure what rn
             }
             else { // this is to check if there are errors not being addressed already
-                console.log(data1)
+                console.log(data)
             }
 
         } else {// if there is not an image
@@ -139,7 +124,7 @@ function NewCourse(props) {
     const onTagsChange = (event, values) => {
         // console.log(values)
         setCategories(values)
-      }
+    }
 
     // useEffect() hook will make it so it only gets rendered once, once the page loads,
     // as opposed to after every time the form is rendered (as long as the array at the end remains empty).
@@ -196,7 +181,7 @@ function NewCourse(props) {
                                     options={dialogData}
                                     freeSolo
                                     onChange={onTagsChange}
-                                    renderTags={(value, getTagProps) => 
+                                    renderTags={(value, getTagProps) =>
                                         value.map((option, index) => (
                                             <Chip variant="outlined" label={option.label} {...getTagProps({ index })} />
                                         ))
@@ -206,23 +191,23 @@ function NewCourse(props) {
                                     )}
                                     filterOptions={(options, params) => {
                                         const filtered = filter(options, params);
-                              
+
                                         if (params.inputValue !== '') {
-                                          filtered.push({
-                                            label: params.inputValue,
-                                            inputValue: `Add "${params.inputValue}"`,
-                                          });
+                                            filtered.push({
+                                                label: params.inputValue,
+                                                inputValue: `Add "${params.inputValue}"`,
+                                            });
                                         }
-                              
+
                                         return filtered;
-                                      }}
-                                      getOptionLabel={(option) => {
+                                    }}
+                                    getOptionLabel={(option) => {
                                         // e.g value selected with enter, right from the input
                                         if (typeof option === 'string') {
-                                          return option;
+                                            return option;
                                         }
                                         if (option.inputValue) {
-                                          return option.inputValue;
+                                            return option.inputValue;
                                         }
                                         return option.label;
                                     }}
