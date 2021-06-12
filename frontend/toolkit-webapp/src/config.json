@@ -14,6 +14,8 @@
         "updateCourseInfo": "/v0/courses/course/update",
         "removeCourse": "/v0/courses/removeCourse",
         "myCreatedCourses": "/v0/courses/myCreatedCoursesInfo", 
-        "deleteCreatedCourse": "/v0/courses/deleteCreatedCourse"
+        "deleteCreatedCourse": "/v0/courses/deleteCreatedCourse",
+        "categories": "/v0/categories/info",
+        "addCategories": "/v0/categories/add"
     }
   }

@@ -20,8 +20,9 @@ const UserSchema = mongoose.Schema({
 
     enrolledClasses: [],
 
-    createdCourses: []
+    createdCourses: [],
     
+    coursesQuizes: []
 })
 
 

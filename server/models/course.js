@@ -7,7 +7,7 @@ const CourseSchema = mongoose.Schema({
     required: true
   },
   category: {
-    type: String,
+    type: [],
     // required: true
   },
   description: {
@@ -16,7 +16,7 @@ const CourseSchema = mongoose.Schema({
   },
   author: {
     type: String,
-    // required: true
+    required: true
   },
   totalStudents: {
     type: Number,
