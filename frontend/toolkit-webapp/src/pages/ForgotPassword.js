@@ -28,15 +28,22 @@ const ForgotPassword = (props) => {
         })
 
         const data = await res.json()
+        
+        alert(data.message)
 
-        if (data.message === "Account not found in db") {
-            alert("Account not in system");
+        if (data.message === undefined) {
+            alert("Sent email confirmation!");
 
-        } else if (data.message === "Account found in db") {
-            alert("Sent email confirmation");
-        } else { // this is to check if there are errors not being addressed already
+        } 
+        else if (data.message === 'Account not found in db!')
+        { 
+            alert("Account not in system. Please register an account or attempt a different email below");
+        }
+        else
+        {
             console.log(data)
         }
+
     }
     return (
         <>

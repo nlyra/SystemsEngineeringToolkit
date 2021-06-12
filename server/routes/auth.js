@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../config.json');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const e = require('express');
 const router = express.Router();
 
 router.post('/registration', async (req, res) => {
@@ -36,62 +37,61 @@ router.post('/registration', async (req, res) => {
 
 router.post('/forgotPassword', async (req, res) => {
 	try {
+        console.log(req.body.email)
 		const user = await User.findOne({ email: req.body.email });
 
-        console.log(user._id)
+        console.log(user)
+        if(user !== null)
+        {
+            // console.log('wtf')
+            const userID = user._id.toString()
 
-		if (user === null) {
+            resetPasswordToken = crypto.randomBytes(20).toString('hex')
 
-            res.json({ 'message': 'Account not found in db' });
-		}
-		else {
-            console.log(user._id)
-                res.json({ 'message': 'Account found in db' });
+            const update = await User.updateOne(
+                { _id: userID },
+                {$set: {resetPassToken: resetPasswordToken, resetPassExpires: (new Date()).setHours(( new Date()).getHours() + 1) }}
+            )
 
-                token = crypto.randomBytes(20).toString('hex')
 
-                // User.update(
-                //     {'_id':req.body.userID}, // query parameter
-                //     {
-                //     $set: {
-                //      'last_name': 'molar'
-                //  }});
-                // const updatedUser = User.update({'_id': user._id}, // query parameter
-                //     { $set: {"resetPassToken": token}
-                    
-                //     //   "resetPassExpires": {Date.now() * 3600000}
-                //     });
-                //     // console.log(updatedUser)
-                      
-                const transporter = nodemailer.createTransport({
-                    service: config.emailInfo.service,
-                    auth: {
-                        user: config.emailInfo.emailUsername,
-                        pass: config.emailInfo.emailPassword
-                    },
+            const transporter = nodemailer.createTransport({
+                service: config.emailInfo.service,
+                auth: {
+                    user: config.emailInfo.emailUsername,
+                    pass: config.emailInfo.emailPassword
+                },
 
-                })
-                // console.log(user.email)
-                const mailOptions = {
-                    from: config.emailInfo.emailUsername,
-                    to: user.email,
-                    subject: 'Link to reset password',
-                    text:
-                    'Click the following link to reset your account password ' +
-                    `http://localhost:3000/reset/${token}\n\n`
+            })
+
+            const mailOptions = {
+                from: config.emailInfo.emailUsername,
+                to: user.email,
+                subject: 'Link to reset password',
+                text:
+                'Click the following link to reset your account password ' +
+                `http://localhost:3000/reset/${resetPasswordToken}\n\n`
+            }
+        
+
+            transporter.sendMail(mailOptions, (err, response) => {
+                if (err) {
+                    console.error('there was an error: ', err);
                 }
+                else {
+                    console.log('here is the res: ', response);
+                    res.status(200).json('recovery email sent');
+                }
+            })
 
-                transporter.sendMail(mailOptions, (err, response) => {
-                    if (err) {
-                        console.error('there was an error: ', err);
-                    }
-                    else {
-                        console.log('here is the res: ', response);
-                        res.status(200).json('recovery email sent');
-                    }
-                })
-			// res.status(401).json({ 'message': 'email already connected to an account' });
-		}
+            // res.json({ 'message': 'Account found in db!' })
+
+        }
+        else
+        {
+            res.json({ 'message': 'Account not found in db!' })
+        }
+        // return
+    
 	} catch (e) {
 		console.log(e);
 		res.sendStatus(500);
@@ -152,6 +152,53 @@ function verifyToken(req, res, next) {
     next();
 
 }
+
+router.post('/checkResetCreds', async (req, res) => {
+
+    const user = await User.findOne({ resetPassToken: req.body.resetToken, resetPassExpires: {$gt: Date.now()} }, '_id')
+    
+    if(user !== null)
+    {
+        res.json({ 'message': 'credentials approved' });
+    }
+    else
+    {
+        res.json({ 'message': 'credentials disapproved' });
+    }
+
+})
+
+router.post('/resetPassApproved', async (req, res) => {
+
+    try {
+        
+        // const tempPass = bcrypt.hashSync(req.body.password, 10);
+        // const checkIf_OldPassword = await User.findOne({ resetPassToken: req.body.resetToken, password: tempPass }, '_id');
+
+        // if(checkIf_OldPassword === undefined)
+        // {
+            
+            const user = await User.findOne({ resetPassToken: req.body.resetToken }, '_id');
+            
+            if(user !== undefined)
+            {
+
+                const pass = bcrypt.hashSync(req.body.password, 10);
+
+                const update = await User.updateOne(
+                    { resetPassToken: req.body.resetToken},
+                    {$set: {password: pass}}
+                )
+            
+            }
+            res.json({message: "Success!"})
+    
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+   
+})
 
 module.exports = {
     router,

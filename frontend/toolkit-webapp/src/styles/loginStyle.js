@@ -43,6 +43,19 @@ const loginStyles = makeStyles((theme) => ({
             color: 'black'
         }
     },
+
+    resetPassButton:
+    {
+        // paddingBottom: '2px',
+        marginTop: theme.spacing(2),
+        // marginBottom: theme.spacing(2),
+        backgroundColor: 'black',
+        color: 'white',
+        "&:hover": {
+            color: 'black'
+        }
+    },
+
     button2:
     {
         fontSize: 10,

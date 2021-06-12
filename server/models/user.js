@@ -18,15 +18,15 @@ const UserSchema = mongoose.Schema({
         required: true
     },
 
-    // resetPassToken: {
-    //     type: String,
-    //     required: false
-    // },
+    resetPassToken: {
+        type: String,
+        required: true
+    },
 
-    // resetPassExpires: {
-    //     type: String,
-    //     required: false
-    // }
+    resetPassExpires: {
+        type: Number,
+        required: true
+    },
     
     coursesQuizes: [],
     enrolledClasses: []
