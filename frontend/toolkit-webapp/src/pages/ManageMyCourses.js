@@ -128,7 +128,7 @@ const ManageMyCourses = (props) => {
 
                                 <Link href="/ManageMyCourses" underline='none' color="inherit"> 
                                 <div className={classes.buttonDiv}>
-                                    <Button type='submit' className={classes.removeButton} size= "small" color="inherit" variant="contained" onClick={() => deleteCourse(course._id)}>
+                                    <Button type='submit' className={classes.removeButton} size= "small" color="inherit" variant="contained" onClick={() => {if (window.confirm('Are you sure you wish to delete this course permanently?'))  deleteCourse(course._id) }}>
                                     Remove Course
                                     </Button>
                                     </div>

@@ -99,7 +99,22 @@ function NewCourse(props) {
 
         } else {// if there is not an image
 
-            const res = await fetch(config.server_url + config.paths.createCourse, {
+            for (const newTag of categories) {
+                if (dialogData.find(c => c.label === newTag.label)) continue;
+    
+                const res = await fetch(config.server_url + config.paths.addCategories, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "token": token,
+                        "label": newTag.label
+                    }),
+                })
+            }
+
+            const res2 = await fetch(config.server_url + config.paths.createCourse, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json'
@@ -114,7 +129,7 @@ function NewCourse(props) {
                 })
             }
             )
-            const data = await res.json()
+            const data = await res2.json()
             if (data.message === undefined) {
                 alert("Successfully created course!")
                 props.history.push('/dashboard')// needs to be changed to course manager
