@@ -28,6 +28,7 @@ const ForgotPassword = (props) => {
             body: JSON.stringify({ "email": email })
         })
 
+        const data = await res.json()
         alert('An email has been sent to the email listed, if registered.')
 
     }

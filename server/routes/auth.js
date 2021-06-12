@@ -80,9 +80,9 @@ router.post('/forgotPassword', async (req, res) => {
                 }
             })
 
-            res.json({ 'message': 'Success!' })
-
+            
         }
+        res.json({ 'message': 'Success!' })
 
     } catch (e) {
         console.log(e);
