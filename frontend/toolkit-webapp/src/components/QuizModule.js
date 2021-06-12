@@ -1,133 +1,395 @@
-import { Grid } from '@material-ui/core';
-import React, { useState, useEffect } from 'react';
-import quizStyles from '../styles/quizModuleStyle'
-import config from '../config.json'
+import React, { useState } from 'react'
+import { IconButton, Toolbar, Button, Dialog, DialogActions, DialogContent, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox, Typography, FormControl, Select, InputLabel, FormHelperText} from '@material-ui/core'
+import useStyles from '../styles/moduleStyle'
+import { Delete, Edit, ArrowUpward, ArrowDownward } from '@material-ui/icons'
+import MultipleChoice from '../components/MultipleChoiceCreator'
+import TorF from '../components/TrueOrFalseCreator'
 
 
-const QuizModule = (props) => {
-  const classes = quizStyles()
+var questions={
+    question: String,
+    type: String,
+    answers: [
+        {answerText: String, isCorrect: true},
+        {answerText: String, isCorrect: false},
+        {answerText: String, isCorrect: false},
+        {answerText: String, isCorrect: false},
+    ]
+}
 
-  const [questions, setQuestions] = useState(props.quiz)
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [showScore, setShowScore] = useState(false);
-  const [score, setScore] = useState(0);
-  const [answers, setAnswers] = useState({});
+var quiz = []
 
-  const handleAnswerOptionClick = (isCorrect) => {
-    let temp = answers
-    if (isCorrect) {
-      temp[currentQuestion.toString()] = 1
-    } else {
-      temp[currentQuestion.toString()] = 0
+const QuizModule = () => {
+    const [type, setType] = useState('')
+    const [open, setOpen] = React.useState(false)
+    const [editOpen, setEdit] = React.useState(false)
+    const [selected, setSelected] = React.useState([]);
+
+    sessionStorage.setItem('editing', '')
+
+    if(sessionStorage.getItem('quiz')!== null){
+        quiz=JSON.parse(sessionStorage.getItem('quiz'))
     }
-    setAnswers(temp)
-  };
+    
+    const classes = useStyles()
 
-  const handlePrevious = () => {
-    if (currentQuestion > 0)
-      setCurrentQuestion(currentQuestion - 1)
-  }
+    const isSelected = (question) => selected.indexOf(question) !== -1
 
-  const handleNext = () => {
-    if (currentQuestion < questions.length - 1)
-      setCurrentQuestion(currentQuestion + 1)
+    function addQuestion() {
+        questions=JSON.parse(sessionStorage.getItem('question'))
+        var dup = 0
+        for(var i = 0; i < quiz.length; i++){
+            if(questions.question === quiz[i].question){
+                dup=1
+                i=quiz.length
+            }
+        }
 
-  }
+        if(type === ''){
+            alert("Select a question type")
+        }else if(questions.question === '' || questions.answers[0].answerText === ''){
+            alert("Requires a question and an answer.")
+        }else if(dup === 1){
+            alert("No Duplicate questions")
+        }else{
+            quiz.push(questions)
 
-  const handleSubmit = () => {
-    let temp = 0;
-    for (let i = 0; i < questions.length; i++) {
-      if (answers[i] === 1) {
-        temp += 1
-      }
+            sessionStorage.setItem('quiz', JSON.stringify(quiz))
+            
+            setType('')
+            sessionStorage.removeItem('question')
+        }
     }
-    setScore(temp);
-    setShowScore(true);
-    saveScore(temp);
-  }
 
-
-  const handleAgain = () => {
-    setCurrentQuestion(0)
-    setScore(0)
-    setAnswers({})
-    setShowScore(false)
-  }
-
-  const shuffeAnswers = () => {
-    console.log('hola')
-  }
-
-  const saveScore = async (temp) => {
-    const token = localStorage.getItem("token");
-    const res = await fetch(config.server_url + config.paths.sendScore, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        "token": token,
-        "courseID": props.courseID,
-        "moduleID": props.moduleIndex,
-        "score": temp
-      })
-    })
-
-    const data = await res.json()
-    if (data.message === undefined) {
-      //maybe do something in the future
-    } else if (data.message === "wrong token") {
-      localStorage.removeItem('token');
-      props.history.push('login');
-      // probably alert the user
-    } else { // this is to check if there are errors not being addressed already
-      console.log(data)
+    const handleClick = (event, question) => {
+        const selectedIndex = selected.indexOf(question);
+        let newSelected = [];
+    
+        if (selectedIndex === -1) {
+          newSelected = newSelected.concat(selected, question);
+        } else if (selectedIndex === 0) {
+          newSelected = newSelected.concat(selected.slice(1));
+        } else if (selectedIndex === selected.length - 1) {
+          newSelected = newSelected.concat(selected.slice(0, -1));
+        } else if (selectedIndex > 0) {
+          newSelected = newSelected.concat(
+            selected.slice(0, selectedIndex),
+            selected.slice(selectedIndex + 1),
+          );
+        }
+    
+        setSelected(newSelected)
     }
-  }
+
+    const handleDelete = () => {
+        for(var i = 0; i < quiz.length; i++){
+            if(isSelected(quiz[i].question)){
+                selected.splice(selected.indexOf(quiz[i].question), 1);
+
+                quiz.splice(i, 1);
+
+                sessionStorage.setItem('quiz', JSON.stringify(quiz))
+                i=i-1
+            }
+        }
+    }
+
+    const handleUp = () => {
+        if(selected.length > 1){
+            alert("Select only one question.")
+        }else if(selected.length < 1){
+            alert("Please select a question.")
+        }else{
+            for(var i = 0; i < quiz.length; i++){
+                if(isSelected(quiz[i].question)){
+                    var questions=quiz[i]
+                   
+                    quiz.splice(i, 1);
+
+                    quiz.splice(i-1, 0, questions);
+
+                    sessionStorage.setItem('quiz', JSON.stringify(quiz))
+                }
+            }
+        }
+    }
+
+    const handleDown = () => {
+        if(selected.length > 1){
+            alert("Select only one question.")
+        }else if(selected.length < 1){
+            alert("Please select a question.")
+        }else{
+            for(var i = 0; i < quiz.length; i++){
+                if(isSelected(quiz[i].question)){
+                    var questions=quiz[i]
+                   
+                    quiz.splice(i, 1);
+
+                    quiz.splice(i+1, 0, questions);
+
+                    sessionStorage.setItem('quiz', JSON.stringify(quiz))
+                }
+            }
+        }
+    }
+
+    const handleEdit = () => {
+        sessionStorage.setItem('editing', 'yes')
+        if(selected.length > 1){
+            alert("Select only one question.")
+        }else if(selected.length < 1){
+            alert("Please select a question.")
+        }else{
+            for(var i = 0; i < quiz.length; i++){
+                if(isSelected(quiz[i].question)){
+                    sessionStorage.setItem('question', JSON.stringify(quiz[i]))
+                    sessionStorage.setItem('index', JSON.stringify(i))
+                    setType(quiz[i].type)
+
+                    i=quiz.length
+                    setEdit(true)
+                }
+            }
+        }
+    }
+
+    const submitEdit = () => {
+        questions = JSON.parse(sessionStorage.getItem('question'))
+        var dup = 0
+        for(var i = 0; i < quiz.length; i++){
+            if(questions.question === quiz[i].question){
+                dup=1
+                var check = i
+                i=quiz.length
+            }
+        }
+
+        if(questions.question === '' || questions.answers[0].answerText === ''){
+            alert('Ensure there is a question and an Answer.')
+        }else if(dup === 1 && check !== parseInt(sessionStorage.getItem('index'))){
+            alert('No Duplicate Questions')
+        }else{
+            for(i = 0; i < quiz.length; i++){
+                if(isSelected(quiz[i].question)){
+                    quiz.splice(i, 1, questions)
+
+                    i=quiz.length
+
+                    sessionStorage.setItem('quiz', JSON.stringify(quiz))
+                    
+                    sessionStorage.removeItem('question')
+                    setType('')    
+                    setSelected([])
+                    setEdit(false)
+                }
+            }
+            sessionStorage.removeItem('index')
+        }
+    }
+
+    const handleClickOpen = () => {
+        setOpen(true)
+    }
+
+    const handleClose = () => {
+        setOpen(false)
+    }
+
+    const handleEditClose = () => {
+        sessionStorage.removeItem('question')
+        setType('')
+        setEdit(false)
+    }
+
+    const headCells = [
+        { id: 'question', numeric: false, disablePadding: false, label: 'Question' },
+        { id: 'answer', numeric: false, disablePadding: false, label: 'Answer' },
+        { id: 'fake1', numeric: false, disablePadding: false, label: 'Incorrect' },
+        { id: 'fake2', numeric: false, disablePadding: false, label: 'Incorrect' },
+        { id: 'fake3', numeric: false, disablePadding: false, label: 'Incorrect' },
+    ]
+
+    const handleChange = (event) => {
+        setType(event.target.type);
+    }
 
   return (
-    <div className={classes.app}>
-      {showScore ? (
-        <>
-          <div className={classes.scoreSection}>
-            You scored {score} out of {questions.length}
-          </div>
-          <button className={classes.buttonBack} onClick={() => handleAgain()}>Again?</button>
-        </>
-      ) : (
-        <>
-          <div className={classes.app2} >
-            <div className={classes.questionSection} >
-              <div className={classes.questionCount}>
+    <div>
+        <FormControl required className={classes.formControl} fullWidth={true}>
+            <InputLabel htmlFor="category-native-required">Question Type</InputLabel>
+            <Select
+                native
+                value={type}
+                onChange={handleChange}
+                name="Question Type"
+                inputProps={{
+                    id: 'category-native-required',
+                }}
+                onChange={e => setType(e.target.value)}
+            >
+                <option aria-label="None" value="" />
+                <option value={"Multiple Choice"}>Multiple Choice</option>
+                <option value={"True or False"}>True or False</option>
+                <option value={"Submit"}>Submit</option>
+            </Select>
+            <FormHelperText>Required</FormHelperText>
+        </FormControl>
+        
 
-                <span className={classes.questionCountSpan}>Question {currentQuestion + 1}</span>/{questions.length}
-              </div>
-              <div className={classes.questionText}>{questions[currentQuestion].question}</div>
-            </div>
-            {questions[currentQuestion].type === "Multiple Choice" &&
-              <div className={classes.answerSection}>
-                {questions[currentQuestion].answers.map((answers) => (
-                  <button className={classes.button} onClick={() => handleAnswerOptionClick(answers.isCorrect)}>{answers.answerText}</button>
-                ))}
-              </div>
-            }
-            {questions[currentQuestion].type === "True or False" &&
-              <div className={classes.answerSection}>
-                <button className={classes.button} onClick={() => handleAnswerOptionClick(questions[currentQuestion].answers[0].isCorrect)}>{questions[currentQuestion].answers[0].answerText}</button>
-                <button className={classes.button} onClick={() => handleAnswerOptionClick(!questions[currentQuestion].answers[0].isCorrect)}>{questions[currentQuestion].answers[0].answerText === "True" ? "False" : "True"}</button>
-              </div>
-            }
-          </div>
-          <div className={classes.buttons}>
-            <button className={classes.buttonBack} onClick={() => handlePrevious()}>Previous</button>
-            <button className={classes.buttonBack} onClick={() => handleNext()}>Next</button>
-            <button className={classes.buttonBack} onClick={() => handleSubmit()}>Submit</button>
-          </div>
-        </>
-      )}
+        {type === 'Multiple Choice' &&
+            <MultipleChoice></MultipleChoice>    
+        }
+        
+        {type === 'True or False'  &&
+            <TorF></TorF>
+        }
 
+            <Button variant="contained" color="default" size="small" 
+                onClick={addQuestion}
+            >
+                        
+                Add Question
+            </Button>
+
+            <Button variant="contained" color="default" size="small"
+                onClick={handleClickOpen}
+            >
+                View Questions
+            </Button>
+
+            <Dialog
+                open={open}
+                onClose={handleClose}
+            >
+                <Toolbar>
+                    {selected.length > 0 ? (
+                        <Typography className={classes.title} color='inherit' variant='subtitle1' component='div'>
+                            {selected.length} selected
+                        </Typography>
+                    ) : (
+                        <Typography className={classes.title} variant='h6' id="tableTitle" component="div">
+                             Quiz Questions
+                        </Typography>
+                    )}
+
+                            
+                    <IconButton aria-label='delete' onClick={handleDelete}>
+                        <Delete />
+                    </IconButton>
+                    <IconButton aria-label='delete' onClick={handleEdit}>
+                        <Edit />
+                    </IconButton>
+                    <IconButton aria-label='delete' onClick={handleUp}>
+                        <ArrowUpward />
+                    </IconButton>
+                    <IconButton aria-label='delete' onClick={handleDown}>
+                        <ArrowDownward />
+                    </IconButton>
+                        
+                </Toolbar>
+                <DialogContent>
+                <TableContainer>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell padding="checkbox">
+                            </TableCell>
+                            {headCells.map((headCell) => (
+                                <TableCell
+                                    key={headCell.id}
+                                    align={headCell.numeric ? 'right' : 'left'}
+                                    padding={headCell.disablePadding ? 'none' : 'default'}
+                                >
+                                    {headCell.label}
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    </TableHead>
+
+                    <TableBody>
+                        {quiz.map((question, index) => {
+                            const isItemSelected = isSelected(question.question);
+                            const labelId = `enhanced-table-checkbox-${index}`;
+
+                            return (
+                                <TableRow
+                                    hover
+                                    onClick={(event) => handleClick(event, question.question)}
+                                    role="checkbox"
+                                    aria-checked={isItemSelected}
+                                    tabIndex={-1}
+                                    selected={isItemSelected}
+                                >
+                                    <TableCell padding="checkbox">
+                                        <Checkbox
+                                            checked={isItemSelected}
+                                            inputProps={{ 'aria-labelledby': labelId }}
+                                        />
+                                    </TableCell>
+                                    <TableCell component="th" id={labelId} scope="row" padding="none">
+                                        {question.question}
+                                    </TableCell>
+                                    
+                                    <TableCell align="right">{question.answers[0].answerText}</TableCell>
+                                    <TableCell align="right">{question.answers[1].answerText}</TableCell>
+                                    <TableCell align="right">{question.answers[2].answerText}</TableCell>
+                                    <TableCell align="right">{question.answers[3].answerText}</TableCell>
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </TableContainer>
+
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="contained" color="default" size="small" onClick={handleClose}>
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={editOpen}
+                onClose={handleEditClose}
+            >
+                <DialogContent>
+                <FormControl required className={classes.formControl} fullWidth={true}>
+                    <InputLabel htmlFor="category-native-required">Question Type</InputLabel>
+                    <Select
+                        native
+                        value={type}
+                        onChange={handleChange}
+                        name="Question Type"
+                        inputProps={{
+                            id: 'category-native-required',
+                        }}
+                        onChange={e => setType(e.target.value)}
+                    >
+                        <option aria-label="None" value="" />
+                        <option value={"Multiple Choice"}>Multiple Choice</option>
+                        <option value={"True or False"}>True or False</option>
+                    </Select>
+                    <FormHelperText>Required</FormHelperText>
+                </FormControl>
+
+                {type === 'Multiple Choice' &&
+                    <MultipleChoice></MultipleChoice>
+                }
+                {type === 'True or False' &&
+                    <TorF></TorF>
+                }
+            </DialogContent>
+            <DialogActions>
+                <Button variant="contained" color="default" size="small" onClick={handleEditClose}>
+                    Close
+                </Button>
+                <Button variant="contained" color="default" size="small" onClick={submitEdit}>
+                    Submit
+                </Button>
+            </DialogActions>
+        </Dialog>
     </div>
-  );
+  )
 }
 
 export default QuizModule
