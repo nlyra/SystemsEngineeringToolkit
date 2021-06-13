@@ -12,6 +12,7 @@ function ResetPassword(props) {
 
     const [password, setPassword] = useState('')
     const [passwordCopy, setPasswordCopy] = useState('')
+    const [tokenProp, setTokenProp] = useState('')
 
     const classes = loginStyles()
 
@@ -21,6 +22,7 @@ function ResetPassword(props) {
         
         let res = undefined
         checkCreds(resetToken)
+        setTokenProp(resetToken)
 
     }, []);
 
@@ -98,7 +100,7 @@ function ResetPassword(props) {
 
     return (
         <div style={{height:'100vh', width:'100vw'}}>
-            <TopNavBar hideComponents={true}/>
+            <TopNavBar tokenProp={tokenProp} hideComponents={true}/>
             <div className={classes.darkOverlay}>
                 <video className={classes.video} autoPlay loop muted playsInline>
                     <source src={videoSource} type="video/mp4" />

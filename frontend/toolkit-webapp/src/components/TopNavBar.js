@@ -239,11 +239,12 @@ export default function TopNavBar(props) {
                             
                             : null}
                             
-                            {window.location.pathname !== "/dashboard" && 
-                            window.location.pathname !== "/" && 
+                            
+                            {window.location.pathname !== "/" && 
                             window.location.pathname !== "/registration" && 
                             window.location.pathname !== "/forgot" &&
-                            window.location.pathname !== "/reset" &&
+                            window.location.pathname !== "/reset/" + props.tokenProp &&
+                            window.location.pathname !== "/reset/" &&
                             window.location.pathname !== "/login" ?
                             <Link href="/dashboard" underline='none' color="inherit">
                             <IconButton
