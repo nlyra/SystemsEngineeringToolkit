@@ -36,6 +36,7 @@ const ForgotPassword = (props) => {
 
         const data = await res.json()
         alert('An email has been sent to the email listed, if registered.')
+        setEmail('')
 
     }
 

@@ -4,7 +4,8 @@ const loginStyles = makeStyles((theme) => ({
 
     Title:
     {
-        fontWeight: "bold"
+        fontWeight: "bold",
+        textAlign: "center"
     },
 
     container: {
