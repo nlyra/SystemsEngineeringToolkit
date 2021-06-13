@@ -20,6 +20,12 @@ const ForgotPassword = (props) => {
     const resetLink = async (e) => {
         e.preventDefault()
 
+        if(email == '')
+        {
+            alert('Please enter an email in the text box.')
+            return
+        }
+
         const res = await fetch(config.server_url + config.paths.forgotPassword, {
             method: 'POST',
             headers: {

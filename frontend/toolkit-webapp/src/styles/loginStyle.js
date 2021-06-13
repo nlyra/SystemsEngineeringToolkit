@@ -48,6 +48,7 @@ const loginStyles = makeStyles((theme) => ({
     {
         // paddingBottom: '2px',
         marginTop: theme.spacing(2),
+        textAlign: "center",
         // marginBottom: theme.spacing(2),
         backgroundColor: 'black',
         color: 'white',
