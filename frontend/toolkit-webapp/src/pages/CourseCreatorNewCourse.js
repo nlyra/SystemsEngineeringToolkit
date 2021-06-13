@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
-import { Button, FormControl, Container, TextField, Typography, Box, Select, InputLabel, FormHelperText, Paper } from '@material-ui/core'
+import React, { useState, useEffect } from 'react'
+import { Button, Container, TextField, Typography, Box, Select, InputLabel, FormHelperText, Paper } from '@material-ui/core'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import Chip from '@material-ui/core/Chip';
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 import courseStyles from '../styles/courseCreatorStyle'
@@ -9,24 +11,23 @@ import '../css/Login.css';
 
 function NewCourse(props) {
 
-    const [courseTitle, setCourseTitle] = useState('')
-    const [category, setCategory] = useState('')
-    const [description, setDescription] = useState('')
-    const [image, setImage] = useState()
-
     const classes = courseStyles()
 
-    const handleChange = (event) => {
-        setCategory(event.target.category);
-    }
+    const [courseTitle, setCourseTitle] = useState('')
+    const [categories, setCategories] = useState([])
+    const [description, setDescription] = useState('')
+    const [image, setImage] = useState()
+    const [dialogData, setDialogData] = React.useState([]);
+    const filter = createFilterOptions();
 
     const onSubmit = (e) => {
         e.preventDefault()
-        if (!courseTitle || !category || !description) {
+        if (!courseTitle || !categories || !description) {
             alert('Please enter all required fields')
             return
         }
-        onFinish({ courseTitle, category, description })
+        console.log("categories on submit: " + categories)
+        onFinish({ courseTitle, categories, description })
     }
 
     const onUpload = (e) => {
@@ -43,6 +44,7 @@ function NewCourse(props) {
             // handle image
             const imageData = new FormData();
             imageData.append('file', image)
+
             const res = await fetch(config.server_url + config.paths.createCourse, {
                 method: 'POST',
                 headers: {
@@ -52,15 +54,31 @@ function NewCourse(props) {
                     "token": token,
                     "modules": [],
                     "name": creds.courseTitle,
-                    "category": creds.category,
+                    "category": creds.categories,
                     "description": creds.description,
                     "urlImage": `http://localhost:4000/${image.name}`
                 })
+            })
+
+            // Check if there are any new categories that need to be added to the DB categories collection.
+            for (const newTag of categories) {
+                if (dialogData.find(c => c.label === newTag.label)) continue;
+
+                const res = await fetch(config.server_url + config.paths.addCategories, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "token": token,
+                        "label": newTag.label
+                    }),
+                })
             }
-            )
-            const data1 = await res.json()
-            if (data1.message === undefined) {
-                const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + data1._id + "&imageName=" + image.name, {
+
+            const data = await res.json()
+            if (data.message === undefined) {
+                const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + data._id + "&imageName=" + image.name, {
                     method: 'POST',
                     body: imageData
                 })
@@ -73,7 +91,7 @@ function NewCourse(props) {
                 } //else need to do something, not sure what rn
             }
             else { // this is to check if there are errors not being addressed already
-                console.log(data1)
+                console.log(data)
             }
 
         } else {// if there is not an image
@@ -101,8 +119,35 @@ function NewCourse(props) {
                 console.log(data)
             }
         }
-
     }
+
+    const onTagsChange = (event, values) => {
+        // console.log(values)
+        setCategories(values)
+    }
+
+    // useEffect() hook will make it so it only gets rendered once, once the page loads,
+    // as opposed to after every time the form is rendered (as long as the array at the end remains empty).
+    useEffect(() => {
+
+        const categoriesCollection = async () => {
+            const token = localStorage.getItem("token");
+            const res = await fetch(config.server_url + config.paths.categories, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "token": token
+                })
+            })
+
+            const fetchedCategories = await res.json()
+            setDialogData(fetchedCategories.categories)
+        }
+        categoriesCollection()
+
+    }, []);
 
     return (
         <div>
@@ -128,27 +173,45 @@ function NewCourse(props) {
                                     required={true}
                                     fullWidth
                                 />
+                                <Autocomplete
+                                    multiple
+                                    limitTags={3}
+                                    className={classes.categoryContainer}
+                                    id="multiple-limit-tags"
+                                    options={dialogData}
+                                    freeSolo
+                                    onChange={onTagsChange}
+                                    renderTags={(value, getTagProps) =>
+                                        value.map((option, index) => (
+                                            <Chip variant="outlined" label={option.label} {...getTagProps({ index })} />
+                                        ))
+                                    }
+                                    renderInput={(params) => (
+                                        <TextField {...params} variant="filled" placeholder="Categories" />
+                                    )}
+                                    filterOptions={(options, params) => {
+                                        const filtered = filter(options, params);
 
-                                <FormControl required className={classes.formControl} fullWidth={true}>
-                                    <InputLabel htmlFor="category-native-required">Category</InputLabel>
-                                    <Select
-                                        native
-                                        value={category}
-                                        onChange={handleChange}
-                                        name="category"
-                                        inputProps={{
-                                            id: 'category-native-required',
-                                        }}
-                                        onChange={e => setCategory(e.target.value)}
-                                    >
-                                        <option aria-label="None" value="" />
-                                        <option value={"Code"}>Code</option>
-                                        <option value={"Programming"}>Programming</option>
-                                        <option value={"Other"}>Other</option>
-                                    </Select>
-                                    <FormHelperText>Required</FormHelperText>
-                                </FormControl>
+                                        if (params.inputValue !== '') {
+                                            filtered.push({
+                                                label: params.inputValue,
+                                                inputValue: `Add "${params.inputValue}"`,
+                                            });
+                                        }
 
+                                        return filtered;
+                                    }}
+                                    getOptionLabel={(option) => {
+                                        // e.g value selected with enter, right from the input
+                                        if (typeof option === 'string') {
+                                            return option;
+                                        }
+                                        if (option.inputValue) {
+                                            return option.inputValue;
+                                        }
+                                        return option.label;
+                                    }}
+                                />
                                 <TextField
                                     size='small'
                                     variant="filled"
@@ -163,7 +226,6 @@ function NewCourse(props) {
                                     required={true}
                                     fullWidth
                                 />
-
                             </div>
                             <input type="file" name="picture" accept="image/*" onChange={e => setImage(e.target.files[0])} />
                             <Button type='submit' className={classes.button4} size="medium" variant="contained" startIcon={<ArrowForwardIcon />} onClick={onSubmit}>

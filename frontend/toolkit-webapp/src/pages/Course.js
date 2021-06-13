@@ -117,7 +117,7 @@ const Course = (props) => {
       </TopNavBar>
       <Grid container direction="column" className={classes.div}>
         {editCourseInfo !== true ?
-          <Container maxWidth>
+          <div maxWidth>
             <Grid item alignItems="center" xs={12}>
               <Grid container className={classes.topItem}>
                 <Grid item xs={3} sm={2} lg={1}>
@@ -139,9 +139,9 @@ const Course = (props) => {
             <Grid item xs={12} >
               <Typography className={classes.description}>{course.description}</Typography>
             </Grid>
-          </Container>
+          </div>
           :
-          <Container maxWidth>
+          <div maxWidth>
             <Grid item xs={12} >
               <Grid container className={classes.topItem}>
                 <Grid item xs={3} sm={2} lg={1}>
@@ -183,7 +183,7 @@ const Course = (props) => {
               />
             </Grid>
             <Button onClick={onEditSubmit}>Submit</Button>
-          </Container>
+          </div>
         }
         <Grid item xs={12}>
           <Divider className={classes.divider} />

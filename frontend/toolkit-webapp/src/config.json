@@ -11,8 +11,9 @@
     "updateCourseInfo": "/v0/courses/course/update",
     "sendScore": "/v0/courses/module/score",
     "removeCourse": "/v0/courses/removeCourse",
-    "myCourses" : "/v0/courses/myCoursesInfo",
-    "enrollment": "/v0/courses/course/enrollment",
+    "myCourses": "/v0/courses/myCoursesInfo",
+    "categories": "/v0/categories/info",
+    "addCategories": "/v0/categories/add",
     "editModule": "/v0/courses/module/update",
     "forgotPassword": "/v0/auth/forgotPassword"
     }

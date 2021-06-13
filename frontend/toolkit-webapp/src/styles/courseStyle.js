@@ -55,7 +55,6 @@ const dashStyles = makeStyles((theme) => ({
     paddingLeft: '5%',
     paddingRight: '5%'
   },
-
 }))
 
 export default dashStyles;
