@@ -127,6 +127,28 @@ router.post('/info', VerifyToken, async (req, res) => {
 
 })
 
+router.post('/myCreatedCoursesInfo', VerifyToken, async (req, res) => {
+  try {
+    
+    let courses = []
+    const user = await User.findOne({_id: req.body.userID})
+    if (req.body.search_query != undefined) {
+      const query = req.body.search_query;
+      courses = await Course.find({
+        $and: [
+          {_id: user.createdCourses},
+          {$or: [{ "category": { "$regex": query, $options: 'i' } }, { "name": { "$regex": query, $options: 'i' } }]},
+      ]}), '_id name description urlImage category'}
+      else {
+      courses = await Course.find({_id: user.createdCourses}, '_id name description urlImage category')
+    }
+    res.json({ "courses": courses });
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+})
+
 router.post('/myCoursesInfo', VerifyToken, async (req, res) => {
   try {
 
@@ -156,56 +178,7 @@ router.post('/myCoursesInfo', VerifyToken, async (req, res) => {
 
 })
 
-router.post('/myCreatedCoursesInfo', VerifyToken, async (req, res) => {
-  try {
-    
-    let courses = []
-    const user = await User.findOne({_id: req.body.userID})
-
-    if (req.body.search_query != undefined) {
-      const query = req.body.search_query;
-
-      courses = await Course.find({
-        $and: [
-          {_id: user.createdCourses},
-          {$or: [{ "category": { "$regex": query, $options: 'i' } }, { "name": { "$regex": query, $options: 'i' } }]},
-      ]}), '_id name description urlImage category'}
-      else {
-      courses = await Course.find({_id: user.createdCourses}, '_id name description urlImage category')
-    }
-
-    res.json({ "courses": courses });
-
-  } catch (e) {
-    console.log(e);
-    res.sendStatus(500);
-  }
-
-})
-
-router.post('/deleteCreatedCourse', VerifyToken, async (req, res) => {
-
-  try {
-
-    console.log(req.body.courseID)
-    const update = await User.updateOne(
-      {_id: req.body.userID},
-      { $pull: {createdCourses: req.body.courseID}}
-     )
-    
-    const updateCourse = await Course.deleteOne({_id: req.body.courseID})
-  
-    fs.rmdirSync('public/' + req.body.courseID, { recursive: true });
-
-  } catch(e) {
-    console.log(e);
-    res.sendStatus(500);
-  }
-
-})
-
 router.post('/create', VerifyToken, async (req, res) => {
-
   try {
     const course = new Course({
       name: req.body.name,
@@ -214,9 +187,10 @@ router.post('/create', VerifyToken, async (req, res) => {
       category: req.body.category,
       author: req.body.userID
     })
-    const savedCourse = await course.save();
-    findCourse = await Course.findOne({"name": req.body.name, "description": req.body.description}, '_id')
 
+    const savedCourse = await course.save();
+
+    findCourse = await Course.findOne({"name": req.body.name, "description": req.body.description}, '_id')
     // console.log(findCourse._id)
     const updateUser = await User.updateOne(
       { _id: req.body.userID }, 
@@ -225,9 +199,8 @@ router.post('/create', VerifyToken, async (req, res) => {
           createdCourses:
             findCourse._id.toString()
         }
-
       });
-
+      
     console.log('added course ', savedCourse._id);
 
     res.json(savedCourse);
@@ -238,8 +211,9 @@ router.post('/create', VerifyToken, async (req, res) => {
 
 })
 
-router.post('/removeCourse', VerifyToken, async (req, res) => {
+router.post('/removeEnrollment', VerifyToken, async (req, res) => {
 
+  console.log('here')
   try {
     const update = await User.updateOne(
       { _id: req.body.userID },
@@ -260,8 +234,27 @@ router.post('/removeCourse', VerifyToken, async (req, res) => {
 
 })
 
+router.post('/deleteCreatedCourse', VerifyToken, async (req, res) => {
+
+  try {
+
+    console.log(req.body.courseID)
+    const update = await User.updateOne(
+      {_id: req.body.userID},
+      { $pull: {createdCourses: req.body.courseID}}
+     )
+
+    const updateCourse = await Course.deleteOne({_id: req.body.courseID})
+
+    fs.rmdirSync('public/' + req.body.courseID, { recursive: true });
+
+  } catch(e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+})
+
 router.post('/module/create', VerifyToken, async (req, res) => {
-  console.log(req.body)
   try {
     if (req.body.type === "Quiz") {
       const update = await Course.updateOne(

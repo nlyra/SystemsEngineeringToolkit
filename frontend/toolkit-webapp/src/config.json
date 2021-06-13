@@ -12,7 +12,7 @@
         "myCourses" : "/v0/courses/myCoursesInfo",
         "fileUpload": "/v0/upload/single",
         "updateCourseInfo": "/v0/courses/course/update",
-        "removeCourse": "/v0/courses/removeCourse",
+        "removeEnrollment": "/v0/courses/removeEnrollment",
         "myCreatedCourses": "/v0/courses/myCreatedCoursesInfo", 
         "deleteCreatedCourse": "/v0/courses/deleteCreatedCourse",
         "categories": "/v0/categories/info",

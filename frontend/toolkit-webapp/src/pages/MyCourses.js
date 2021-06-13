@@ -52,12 +52,12 @@ const MyCourses = (props) => {
         }
     }
 
-    const removeCourse = async (id) => 
+    const removeEnrollment = async (id) => 
     {
         let res = undefined
         const token = localStorage.getItem("token");
 
-        res = await fetch(config.server_url + config.paths.removeCourse, {
+        res = await fetch(config.server_url + config.paths.removeEnrollment, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
@@ -66,8 +66,8 @@ const MyCourses = (props) => {
         })
 
         // This splits the array correctly and updates courses array with courses the user is still enrolled in
-        const newVal = courses.filter((courses) => courses._id !== id);
-        setCourses(newVal)
+        // const newVal = courses.filter((courses) => courses._id !== id);
+        // setCourses(newVal)
         
         // window.location.reload()
         
@@ -127,7 +127,7 @@ const MyCourses = (props) => {
 
                                 <Link href="/MyCourses" underline='none' color="inherit"> 
                                 <div className={classes.buttonDiv}>
-                                    <Button type='submit' className={classes.removeButton} size= "small" color="inherit" variant="contained" onClick={() => removeCourse(course._id)}>
+                                    <Button type='submit' className={classes.removeButton} size= "small" color="inherit" variant="contained" onClick={() => {if (window.confirm('Are you sure you wish to delete this course permanently?')) removeEnrollment(course._id)} }>
                                     Remove Course
                                     </Button>
                                     </div>
