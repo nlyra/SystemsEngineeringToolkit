@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Box, IconButton, makeStyles, Button, Link } from "@material-ui/core";
+import { Box, IconButton, makeStyles, Button } from "@material-ui/core";
 import CreateIcon from '@material-ui/icons/Create';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -12,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
 
 }))
 
-export default function ModuleInfoEditButton({ courseID, module, hideComponent }) {
+export default function ModuleInfoEditButton(props) {
 
     const classes = useStyles();
     // href={`/ModuleManager/${id}`}
@@ -23,13 +24,13 @@ export default function ModuleInfoEditButton({ courseID, module, hideComponent }
     //   }, []);
 
     const sendModule = () => {
-        localStorage.setItem("module", JSON.stringify(module))
+        localStorage.setItem("module", JSON.stringify(props.module))
     }
 
     return (
         <div>
-            { hideComponent !== true ?
-                <Link href={`/editModule/${courseID}`} onClick={sendModule}>
+            { props.hideComponent !== true ?
+                <Link to={{pathname: `/editModule/${props.courseID}`, moduleIndex: props.moduleIndex}} onClick={sendModule}>
                     <IconButton type='submit' className={classes.button} variant="contained" color="primary" >
                         <CreateIcon />
                     </IconButton>

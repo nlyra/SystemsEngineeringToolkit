@@ -185,6 +185,7 @@ const Course = (props) => {
             <Button onClick={onEditSubmit}>Submit</Button>
           </div>
         }
+        <br></br>
         <Grid item xs={12}>
           <Divider className={classes.divider} />
         </Grid>
@@ -213,8 +214,7 @@ const Course = (props) => {
                   aria-label="Acknowledge"
                   onClick={(event) => event.stopPropagation()}
                   onFocus={(event) => event.stopPropagation()}
-                  //edit={onEditModule}
-                  control={<ModuleInfoEditButton courseID={courseID} module={module} hideComponent={false} />}
+                  control={<ModuleInfoEditButton moduleIndex={modules.indexOf(module)} courseID={courseID} module={module} hideComponent={false} />}
                 />
                 <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
               </AccordionSummary>

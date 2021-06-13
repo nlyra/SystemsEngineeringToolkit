@@ -61,6 +61,34 @@ function ModuleEditor(props) {
     }
 
     const onFinish = async (module) => {
+
+        // const saveScore = async (temp) => {
+        //     const token = localStorage.getItem("token");
+        //     const res = await fetch(config.server_url + config.paths.sendScore, {
+        //       method: 'POST',
+        //       headers: {
+        //         'Content-type': 'application/json'
+        //       },
+        //       body: JSON.stringify({
+        //         "token": token,
+        //         "courseID": props.courseID,
+        //         "moduleID": props.moduleIndex,
+        //         "score": temp
+        //       })
+        //     })
+        
+        //     const data = await res.json()
+        //     if (data.message === undefined) {
+        //       //maybe do something in the future
+        //     } else if (data.message === "wrong token") {
+        //       localStorage.removeItem('token');
+        //       props.history.push('login');
+        //       // probably alert the user
+        //     } else { // this is to check if there are errors not being addressed already
+        //       console.log(data)
+        //     }
+        //   }
+
         const token = localStorage.getItem("token");
         if (token != undefined) {
             let res = undefined
@@ -70,7 +98,7 @@ function ModuleEditor(props) {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
+                    body: JSON.stringify({ 'token': token, 'moduleID': props.location.moduleIndex, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
                 })
             } else {
                 res = await fetch(config.server_url + config.paths.newModule, {
@@ -79,7 +107,7 @@ function ModuleEditor(props) {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type })
+                    body: JSON.stringify({ 'token': token, 'moduleID': props.location.moduleIndex, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type })
                 })
             }
 
@@ -167,7 +195,7 @@ function ModuleEditor(props) {
                                     Cancel
                                 </Button>
                                 <Button type='submit' className={classes.button2} size="small" variant="contained" onSubmit={onSubmit}>
-                                    Create
+                                    Update
                                 </Button>
                             </Container>
                         </Paper>
