@@ -292,7 +292,6 @@ router.post('/module/update', VerifyToken, async (req, res) => {
               description: req.body.description,
             }
           },
-          // { arrayFilters: [{"index": {$eq: req.body.moduleID}}]}
         });
     }
 

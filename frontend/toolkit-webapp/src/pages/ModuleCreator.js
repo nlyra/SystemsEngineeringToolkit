@@ -25,7 +25,6 @@ function ModuleCreator(props) {
 
     const handleChange = (event) => {
         setType(event.target.type);
-        // handleDisplayedContent(type)
     }
 
     const onSubmit = (e) => {
@@ -47,11 +46,6 @@ function ModuleCreator(props) {
             onFinish({ title, type, description })
         }
     }
-
-    // const onUpload = (e) => {
-    //     alert('feature undefined')
-    //     return
-    // }
 
     // We ideally want to redirect to module manager page, but we do not have that yet
     const cancel = () => {

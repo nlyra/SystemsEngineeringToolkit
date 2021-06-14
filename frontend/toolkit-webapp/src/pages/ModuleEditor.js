@@ -50,44 +50,12 @@ function ModuleEditor(props) {
         }
     }
 
-    // const onUpload = (e) => {
-    //     alert('feature undefined')
-    //     return
-    // }
-
     // We ideally want to redirect to module manager page, but we do not have that yet
     const cancel = () => {
         props.history.push(`/course/${courseID}`)
     }
 
     const onFinish = async (module) => {
-
-        // const saveScore = async (temp) => {
-        //     const token = localStorage.getItem("token");
-        //     const res = await fetch(config.server_url + config.paths.sendScore, {
-        //       method: 'POST',
-        //       headers: {
-        //         'Content-type': 'application/json'
-        //       },
-        //       body: JSON.stringify({
-        //         "token": token,
-        //         "courseID": props.courseID,
-        //         "moduleID": props.moduleIndex,
-        //         "score": temp
-        //       })
-        //     })
-        
-        //     const data = await res.json()
-        //     if (data.message === undefined) {
-        //       //maybe do something in the future
-        //     } else if (data.message === "wrong token") {
-        //       localStorage.removeItem('token');
-        //       props.history.push('login');
-        //       // probably alert the user
-        //     } else { // this is to check if there are errors not being addressed already
-        //       console.log(data)
-        //     }
-        //   }
 
         const token = localStorage.getItem("token");
         if (token != undefined) {
@@ -144,7 +112,6 @@ function ModuleEditor(props) {
                                     variant="filled"
                                     label='Title'
                                     type="title"
-                                    //defaultValue="New Module"
                                     value={title}
                                     onChange={e => setTitle(e.target.value)}
                                     margin="normal"

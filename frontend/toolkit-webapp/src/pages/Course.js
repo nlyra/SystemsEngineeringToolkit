@@ -30,12 +30,6 @@ const Course = (props) => {
     setEditCourseInfo(true);
   };
 
-  // const onEditModule = (moduleID) => {
-  //   //alert("you have pressed the edit button the course ID is = " + courseID)
-  //   // console.log(moduleID)
-  //   props.history.push(`/editModule/${courseID}/${moduleID}`);
-  // };
-
   // function that will run when page is loaded
   useEffect(() => {
     const pathname = window.location.pathname.split('/') //returns the current path
@@ -171,7 +165,6 @@ const Course = (props) => {
                 label='Description'
                 type="text"
                 defaultValue={course.description}
-                //value={course.description}
                 onChange={e => setCourseDescription(e.target.value)}
                 margin="normal"
                 required={true}
