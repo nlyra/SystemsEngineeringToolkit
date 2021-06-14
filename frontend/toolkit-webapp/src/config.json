@@ -12,6 +12,7 @@
     "updateCourseInfo": "/v0/courses/course/update",
     "sendScore": "/v0/courses/module/score",
     "myCourses": "/v0/courses/myCoursesInfo",
+    "enrollment": "/v0/courses/course/enrollment",
     "removeCourse": "/v0/courses/removeCourse",
     "checkResetCreds": "/v0/auth/checkResetCreds",
     "resetPassApproved": "/v0/auth/resetPassApproved",
