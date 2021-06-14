@@ -25,7 +25,7 @@ router.post('/course', VerifyToken, async (req, res) => {
 
     // get user grades if any
     let grades = await User.findOne({ "_id": req.body.userID }, 'coursesQuizes')
-    if (grades.coursesQuizes[0] != undefined) {
+    if (grades.coursesQuizes[0] != undefined && grades.coursesQuizes[0][req.body.id] != undefined) {
       grades = grades.coursesQuizes[0][req.body.id]
       let keys = Object.keys(grades)
       for (let i = 0; i < keys.length; i++) {
@@ -200,7 +200,6 @@ router.post('/removeCourse', VerifyToken, async (req, res) => {
 })
 
 router.post('/module/create', VerifyToken, async (req, res) => {
-  console.log(req.body)
   try {
     if (req.body.type === "Quiz") {
       const update = await Course.updateOne(

@@ -3,6 +3,7 @@
   "paths": {
     "login": "/v0/auth/login",
     "registration": "/v0/auth/registration",
+    "forgotPassword": "/v0/auth/forgotPassword",
     "dashboardCourses": "/v0/courses/info",
     "course": "/v0/courses/course",
     "createCourse": "/v0/courses/create",
@@ -10,6 +11,12 @@
     "fileUpload": "/v0/upload/single",
     "updateCourseInfo": "/v0/courses/course/update",
     "sendScore": "/v0/courses/module/score",
-    "removeCourse": "/v0/courses/removeCourse"
+    "myCourses": "/v0/courses/myCoursesInfo",
+    "enrollment": "/v0/courses/course/enrollment",
+    "removeCourse": "/v0/courses/removeCourse",
+    "checkResetCreds": "/v0/auth/checkResetCreds",
+    "resetPassApproved": "/v0/auth/resetPassApproved",
+    "categories": "/v0/categories/info",
+    "addCategories": "/v0/categories/add"
     }
   }
