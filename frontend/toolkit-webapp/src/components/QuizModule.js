@@ -95,7 +95,7 @@ const QuizModule = (props) => {
           <FormControl component="fieldset">
             {questions.map((question) => (
               <div key={questions.indexOf(question)} className={classes.questionDiv}>
-                <FormLabel component="legend">{questions.indexOf(question)+1}. {question.question}</FormLabel>
+                <FormLabel component="legend">{question.question}</FormLabel>
                 <RadioGroup aria-label="gender" name="gender1" value={value[questions.indexOf(question)]} onChange={(e) => handleChange(e, questions.indexOf(question))}>
                   {question.type === "Multiple Choice" &&
                     <>
