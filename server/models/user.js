@@ -17,17 +17,6 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: true
     },
-
-    resetPassToken: {
-        type: String,
-        required: false
-    },
-
-    resetPassExpires: {
-        type: Number,
-        required: false
-    },
-    
     coursesQuizes: [],
     enrolledClasses: []
 })

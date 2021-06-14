@@ -30,13 +30,34 @@ function ModuleCreator(props) {
             return
         }
 
-        if (type === 'Quiz' && JSON.parse(sessionStorage.getItem('quiz')) !== null) {
+        if (type === 'Quiz') {
             console.log('works for Quiz')
+            var quizArray = {
+                questions: JSON.parse(sessionStorage.getItem('questions')),
+                types: JSON.parse(sessionStorage.getItem('types')),
+                answers: JSON.parse(sessionStorage.getItem('answers')),
+                fakes1: JSON.parse(sessionStorage.getItem('fakes1')),
+                fakes2: JSON.parse(sessionStorage.getItem('fakes2')),
+                fakes3: JSON.parse(sessionStorage.getItem('fakes3'))
+            }
+            var quiz = []
 
-            var quiz =[]
+            for (var i = 0; i < quizArray.questions.length; i++) {
+                quiz.push({
+                    question: quizArray.questions[i],
+                    type: quizArray.types[i],
+                    answers: [
+                        { answerText: quizArray.answers[i], isCorrect: true },
+                        { answerText: quizArray.fakes1[i], isCorrect: false },
+                        { answerText: quizArray.fakes2[i], isCorrect: false },
+                        { answerText: quizArray.fakes3[i], isCorrect: false },
+                    ]
 
-            quiz = JSON.parse(sessionStorage.getItem("quiz"))
+                })
+            }
+
             sessionStorage.clear()
+            //console.log(quiz)
             onFinish({ title, type, description, quiz })
         } else {
             console.log('works')
@@ -60,6 +81,7 @@ function ModuleCreator(props) {
             let res = undefined
             if (module.type === "Quiz") {
                 res = await fetch(config.server_url + config.paths.newModule, {
+
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json'
@@ -99,6 +121,11 @@ function ModuleCreator(props) {
         else {
             props.history.push('login')
         }
+
+    }
+
+    const getFileModule = () => {
+        return <FileModule></FileModule>
 
     }
 
@@ -178,16 +205,15 @@ function ModuleCreator(props) {
                                         <QuizModule></QuizModule>
                                     </div>
                                 }
-                                {type == 'Files' && <FileModule></FileModule>}
 
                             </div>
                             <Container className={classes.buttonGroup}>
                                 <Button type='submit' className={classes.button1} size="small" variant="contained" onClick={cancel}>
                                     Cancel
-                                </Button>
+                        </Button>
                                 <Button type='submit' className={classes.button2} size="small" variant="contained" onSubmit={onSubmit}>
                                     Create
-                                </Button>
+                        </Button>
                             </Container>
                         </Paper>
                     </form>

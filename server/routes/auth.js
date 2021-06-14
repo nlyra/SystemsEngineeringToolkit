@@ -3,9 +3,7 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const config = require('../config.json');
-const crypto = require('crypto');
-const nodemailer = require('nodemailer');
-const e = require('express');
+
 const router = express.Router();
 
 router.post('/registration', async (req, res) => {
@@ -29,61 +27,6 @@ router.post('/registration', async (req, res) => {
         else {
             res.status(401).json({ 'message': 'email already connected to an account' });
         }
-    } catch (e) {
-        console.log(e);
-        res.sendStatus(500);
-    }
-});
-
-router.post('/forgotPassword', async (req, res) => {
-    try {
-
-        const user = await User.findOne({ email: req.body.email });
-
-        if (user !== null) {
-            const userID = user._id.toString()
-
-            resetPasswordToken = crypto.randomBytes(20).toString('hex')
-
-            const update = await User.updateOne(
-                { _id: userID },
-                { $set: { resetPassToken: resetPasswordToken, resetPassExpires: (new Date()).setHours((new Date()).getHours() + 1) } }
-            )
-
-
-            const transporter = nodemailer.createTransport({
-                service: config.emailInfo.service,
-                auth: {
-                    user: config.emailInfo.emailUsername,
-                    pass: config.emailInfo.emailPassword
-                },
-
-            })
-
-            const mailOptions = {
-                from: config.emailInfo.emailUsername,
-                to: user.email,
-                subject: 'Link to reset password',
-                text:
-                    'Click the following link to reset your PEO STRI account password ' +
-                    `http://localhost:3000/reset/${resetPasswordToken}\n\n`
-            }
-
-
-            transporter.sendMail(mailOptions, (err, response) => {
-                if (err) {
-                    console.error('there was an error: ', err);
-                }
-                else {
-                    console.log('here is the res: ', response);
-                    res.status(200).json('recovery email sent');
-                }
-            })
-
-            
-        }
-        res.json({ 'message': 'Success!' })
-
     } catch (e) {
         console.log(e);
         res.sendStatus(500);
@@ -144,47 +87,6 @@ function verifyToken(req, res, next) {
     next();
 
 }
-
-router.post('/checkResetCreds', async (req, res) => {
-
-    const user = await User.findOne({ resetPassToken: req.body.resetToken, resetPassExpires: {$gt: Date.now()} }, '_id')
-    
-    if(user !== null)
-    {
-        res.json({ 'message': 'credentials approved' });
-    }
-    else
-    {
-        res.json({ 'message': 'credentials disapproved' });
-    }
-
-})
-
-router.post('/resetPassApproved', async (req, res) => {
-
-    try {
-
-            const user = await User.findOne({ resetPassToken: req.body.resetToken }, '_id');
-            
-            if(user !== undefined)
-            {
-
-                const pass = bcrypt.hashSync(req.body.password, 10);
-
-                const update = await User.updateOne(
-                    { resetPassToken: req.body.resetToken},
-                    {$set: {password: pass}}
-                )
-            
-            }
-            res.json({message: "Success!"})
-
-    } catch (e) {
-        console.log(e);
-        res.sendStatus(500);
-    }
-   
-})
 
 module.exports = {
     router,

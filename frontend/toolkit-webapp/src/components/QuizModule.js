@@ -62,6 +62,7 @@ const QuizModule = (props) => {
     } else { // this is to check if there are errors not being addressed already
       console.log(data)
     }
+  }
 
   const handleChange = (e, index) => {
 
@@ -130,24 +131,8 @@ const QuizModule = (props) => {
         </div>
       }
 
-                {type === 'Multiple Choice' &&
-                    <MultipleChoice></MultipleChoice>
-                }
-                {type === 'True or False' &&
-                    <TorF></TorF>
-                }
-            </DialogContent>
-            <DialogActions>
-                <Button variant="contained" color="default" size="small" onClick={handleEditClose}>
-                    Close
-                </Button>
-                <Button variant="contained" color="default" size="small" onClick={submitEdit}>
-                    Submit
-                </Button>
-            </DialogActions>
-        </Dialog>
     </div>
-  )
+  );
 }
 
 export default QuizModule
