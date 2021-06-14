@@ -9,30 +9,39 @@ const MultipleChoice = () => {
     const [fake3, setFake3] = useState('')
     const [edit, setEdit] = useState('')
 
+    var questions={
+        question: String,
+        type: String,
+        answers: [
+            {answerText: String, isCorrect: true},
+            {answerText: String, isCorrect: false},
+            {answerText: String, isCorrect: false},
+            {answerText: String, isCorrect: false},
+        ]
+    }
+
     if(edit === ''){
         if(sessionStorage.getItem('question')){
-            setQuestion(sessionStorage.getItem('question'))
-        }
-        if(sessionStorage.getItem('answer')){
-            setAnswer(sessionStorage.getItem('answer'))
-        }
-        if(sessionStorage.getItem('fake1')){
-            setFake1(sessionStorage.getItem('fake1'))
-        }
-        if(sessionStorage.getItem('fake2')){
-         setFake2(sessionStorage.getItem('fake2'))
-        }
-        if(sessionStorage.getItem('fake3')){
-            setFake3(sessionStorage.getItem('fake3'))
+            questions=JSON.parse(sessionStorage.getItem('question'))
+            setQuestion(questions.question)
+            setAnswer(questions.answers[0].answerText)
+            setFake1(questions.answers[1].answerText)
+            setFake2(questions.answers[2].answerText)
+            setFake3(questions.answers[3].answerText)
         }
         setEdit("no")
     }
 
-    sessionStorage.setItem('question', question)
-    sessionStorage.setItem('answer', answer)
-    sessionStorage.setItem('fake1', fake1)
-    sessionStorage.setItem('fake2', fake2)
-    sessionStorage.setItem('fake3', fake3)
+    questions.question=question
+    questions.type='Multiple Choice'
+    questions.answers[0]={answerText: answer, isCorrect: true}
+    questions.answers[1]={answerText: fake1, isCorrect: false}
+    questions.answers[2]={answerText: fake2, isCorrect: false}
+    questions.answers[3]={answerText: fake3, isCorrect: false}
+
+    sessionStorage.setItem('question', JSON.stringify(questions))
+
+
     return(
         <div>
             <TextField
