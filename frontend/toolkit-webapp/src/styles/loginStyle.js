@@ -4,7 +4,8 @@ const loginStyles = makeStyles((theme) => ({
 
     Title:
     {
-        fontWeight: "bold"
+        fontWeight: "bold",
+        textAlign: "center"
     },
 
     container: {
@@ -43,6 +44,20 @@ const loginStyles = makeStyles((theme) => ({
             color: 'black'
         }
     },
+
+    resetPassButton:
+    {
+        // paddingBottom: '2px',
+        marginTop: theme.spacing(2),
+        textAlign: "center",
+        // marginBottom: theme.spacing(2),
+        backgroundColor: 'black',
+        color: 'white',
+        "&:hover": {
+            color: 'black'
+        }
+    },
+
     button2:
     {
         fontSize: 10,
