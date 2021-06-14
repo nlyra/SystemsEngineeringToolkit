@@ -138,7 +138,7 @@ function verifyToken(req, res, next) {
             console.log(err.message)
             res.sendStatus(403)
         }
-
+        // console.log(decoded)
         req.body.userID = decoded.id;
     });
     next();

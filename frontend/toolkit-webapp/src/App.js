@@ -16,6 +16,7 @@ import VideoModule from "./components/VideoModule"
 import MyFiles from './pages/MyFiles'
 import ManageCourses from './pages/ManageCourses'
 import MyCourses from './pages/MyCourses'
+import AdminDashboard from './pages/AdminDashboard'
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
       <Route path='/MyFiles' component={MyFiles} />
       <Route path='/MyCourses' component={MyCourses} />
       <Route path='/VideoModule' component={VideoModule} />
+      <Route path='/admindashboard' component={AdminDashboard} />
     </Router>
   );
 }

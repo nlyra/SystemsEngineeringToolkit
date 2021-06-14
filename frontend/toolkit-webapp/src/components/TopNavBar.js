@@ -12,6 +12,7 @@ import DescriptionIcon from '@material-ui/icons/Description';
 //import {Link } from "react-router-dom"
 import { Link } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import clsx from 'clsx';
 const logo_url = "http://localhost:4000/misc_files/logo.jpg"
 
@@ -20,7 +21,8 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
     root:
     {
-        display: 'flex',
+        // display: 'flex',
+        // height: '5vh',
     },
     search: {
         position: 'relative',
@@ -111,7 +113,7 @@ const useStyles = makeStyles((theme) => ({
     },
     toolbar: {
         display: 'flex',
-        alignItems: 'center',
+        // alignItems: 'center',
         justifyContent: 'flex-end',
         padding: theme.spacing(0, 1),
         // necessary for content to be below app bar
@@ -204,7 +206,7 @@ export default function TopNavBar(props) {
                                 :
                                 <Link href="/dashboard" underline='none' color="inherit">
                                     {/* <div className={classes.searchIcon2}> */}
-                                        <SearchIcon></SearchIcon>
+                                    <SearchIcon></SearchIcon>
                                     {/* </div> */}
                                 </Link>
                             }
@@ -236,7 +238,7 @@ export default function TopNavBar(props) {
                             >
                                 <AccountCircle />
                             </IconButton>
-                            
+
                             : null}
                             
                             
@@ -247,16 +249,16 @@ export default function TopNavBar(props) {
                             window.location.pathname !== "/reset/" &&
                             window.location.pathname !== "/login" ?
                             <Link href="/dashboard" underline='none' color="inherit">
-                            <IconButton
-                                edge="end"
-                                aria-label="homescreen"
-                                aria-haspopup="true"
-                                color="inherit"
-                            >
-                                <HomeIcon />
-                            </IconButton>
+                                <IconButton
+                                    edge="end"
+                                    aria-label="homescreen"
+                                    aria-haspopup="true"
+                                    color="inherit"
+                                >
+                                    <HomeIcon />
+                                </IconButton>
                             </Link>
-                            
+
                             : null}
                     </div>
                 </Toolbar>
@@ -306,6 +308,15 @@ export default function TopNavBar(props) {
                                 <ListItem button>
                                     <ListItemIcon><DescriptionIcon /></ListItemIcon>
                                     <ListItemText primary="My Files" />
+                                </ListItem>
+                            </Link>
+                        </Tooltip>
+
+                        <Tooltip title="Admin Dashboard" enterDelay={500}>
+                            <Link href="/admindashboard" underline='none' color="inherit">
+                                <ListItem button>
+                                    <ListItemIcon><VerifiedUserIcon /></ListItemIcon>
+                                    <ListItemText primary="Admin Dashboard" />
                                 </ListItem>
                             </Link>
                         </Tooltip>
