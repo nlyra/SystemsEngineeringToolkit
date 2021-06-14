@@ -7,7 +7,7 @@ import TopNavBar from '../components/TopNavBar'
 import useStyles from '../styles/moduleStyle'
 import '../css/Login.css';
 import FileModule from '../components/FileModule'
-import QuizModule from '../components/QuizCreatorModule'
+import QuizCreatorModule from '../components/QuizCreatorModule'
 
 function ModuleCreator(props) {
 
@@ -157,7 +157,7 @@ function ModuleCreator(props) {
                                 </FormControl>
 
                                 {type == 'Files' && <FileModule></FileModule>}
-                                {type == 'Quiz' && <QuizModule></QuizModule>}
+                                {type == 'Quiz' && <QuizCreatorModule></QuizCreatorModule>}
 
                             </div>
                             <Container className={classes.buttonGroup}>

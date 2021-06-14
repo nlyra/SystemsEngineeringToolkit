@@ -93,7 +93,7 @@ function ModuleEditor(props) {
         if (token != undefined) {
             let res = undefined
             if (module.type === "Quiz") {
-                res = await fetch(config.server_url + config.paths.newModule, {
+                res = await fetch(config.server_url + config.paths.editModule, {
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json'
@@ -101,7 +101,7 @@ function ModuleEditor(props) {
                     body: JSON.stringify({ 'token': token, 'moduleID': props.location.moduleIndex, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
                 })
             } else {
-                res = await fetch(config.server_url + config.paths.newModule, {
+                res = await fetch(config.server_url + config.paths.editModule, {
 
                     method: 'POST',
                     headers: {
