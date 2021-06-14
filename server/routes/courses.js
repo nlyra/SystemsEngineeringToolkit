@@ -200,6 +200,7 @@ router.post('/removeCourse', VerifyToken, async (req, res) => {
 })
 
 router.post('/module/create', VerifyToken, async (req, res) => {
+  
   try {
     if (req.body.type === "Quiz") {
       const update = await Course.updateOne(
@@ -211,6 +212,7 @@ router.post('/module/create', VerifyToken, async (req, res) => {
               type: req.body.type,
               description: req.body.description,
               quiz: req.body.quiz,
+              gradeToPass: req.body.gradeToPass
             }
           }
         });

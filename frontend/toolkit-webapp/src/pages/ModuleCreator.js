@@ -14,6 +14,7 @@ function ModuleCreator(props) {
     const [title, setTitle] = useState('')
     const [type, setType] = useState('')
     const [description, setDescription] = useState('')
+    const [gradeToPass, setGradeToPass] = useState('')
 
     const classes = useStyles()
 
@@ -31,7 +32,7 @@ function ModuleCreator(props) {
 
         if (type === 'Quiz' && JSON.parse(sessionStorage.getItem('quiz')) !== null) {
             console.log('works for Quiz')
-            var quiz =[]
+            var quiz = []
 
             quiz = JSON.parse(sessionStorage.getItem("quiz"))
             sessionStorage.clear()
@@ -62,7 +63,15 @@ function ModuleCreator(props) {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': '60b7dac736539526486f1503', 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
+                    body: JSON.stringify({
+                        'token': token,
+                        'courseID': '60b7dac736539526486f1503',
+                        'title': module.title,
+                        'description': module.description,
+                        'type': module.type,
+                        'quiz': module.quiz,
+                        'gradeToPass': gradeToPass
+                    })
                 })
             } else {
                 res = await fetch(config.server_url + config.paths.newModule, {
@@ -71,7 +80,13 @@ function ModuleCreator(props) {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': '60b7dac736539526486f1503', 'title': module.title, 'description': module.description, 'type': module.type })
+                    body: JSON.stringify({
+                        'token': token,
+                        'courseID': '60b7dac736539526486f1503',
+                        'title': module.title, 'description':
+                            module.description,
+                        'type': module.type,
+                    })
                 })
             }
 
@@ -151,7 +166,24 @@ function ModuleCreator(props) {
                                 </FormControl>
 
                                 {type == 'Files' && <FileModule></FileModule>}
-                                {type == 'Quiz' && <QuizModule></QuizModule>}
+                                {type == 'Quiz' &&
+                                    <div>
+                                        <TextField color='primary'
+                                            size='small'
+                                            variant="filled"
+                                            type="number"
+                                            label='Grade to pass'
+                                            defaultValue=""
+                                            value={gradeToPass}
+                                            onChange={e => setGradeToPass(e.target.value)}
+                                            margin="normal"
+                                            required={true}
+                                            fullWidth
+                                        />
+                                        <QuizModule></QuizModule>
+                                    </div>
+                                }
+
 
                             </div>
                             <Container className={classes.buttonGroup}>
