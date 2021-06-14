@@ -213,7 +213,6 @@ router.post('/create', VerifyToken, async (req, res) => {
 
 router.post('/removeEnrollment', VerifyToken, async (req, res) => {
 
-  console.log('here')
   try {
     const update = await User.updateOne(
       { _id: req.body.userID },
