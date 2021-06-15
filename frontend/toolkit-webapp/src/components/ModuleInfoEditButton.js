@@ -1,40 +1,37 @@
-import React, { useEffect, useState } from 'react'
-import { Box, IconButton, makeStyles, Button } from "@material-ui/core";
+import React, { useState } from 'react'
+import { Link, fade, makeStyles, IconButton, AppBar, Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon, Button } from "@material-ui/core";
 import CreateIcon from '@material-ui/icons/Create';
-import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
+    root:
+    {
+        display: 'flex',
+        position: 'relative'
 
+    },
     button:
     {
-        height: 0.5,
-        // paddingLeft: 60
+        // marginTop: theme.spacing(-3),
+        // marginLeft: theme.spacing(205),
+        // alignItems: "center",
+        // justifyContent: "center",
+        //marginBottom: theme.spacing(100)
+
+        //marginLeft: "100px"
     }
 
 }))
 
-export default function ModuleInfoEditButton(props) {
+export default function ModuleInfoEditButton({ edit, id, hideComponent }) {
 
     const classes = useStyles();
     // href={`/ModuleManager/${id}`}
-    //${courseID}/
-    //onClick={(e) => edit(moduleID)}
-    // useEffect(() => {
-    //     console.log(courseID)
-    //   }, []);
-
-    const sendModule = () => {
-        localStorage.setItem("module", JSON.stringify(props.module))
-    }
-
     return (
-        <div>
-            { props.hideComponent !== true ?
-                <Link to={{pathname: `/editModule/${props.courseID}`, moduleIndex: props.moduleIndex}} onClick={sendModule}>
-                    <IconButton type='submit' className={classes.button} variant="contained" color="primary" >
-                        <CreateIcon />
-                    </IconButton>
-                </Link>
+        <div className={classes.root}>
+            {hideComponent !== true ?
+                <Button type='submit' className={classes.button} size="large" variant="contained" color="primary" onClick={edit}>
+                    Edit Modules
+                </Button>
                 : null}
         </div>
     )

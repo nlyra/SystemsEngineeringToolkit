@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Button, FormControl, Container, TextField, Typography, Box, Select, InputLabel, FormHelperText, Paper } from '@material-ui/core'
 // import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 // import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
@@ -7,7 +7,7 @@ import TopNavBar from '../components/TopNavBar'
 import useStyles from '../styles/moduleStyle'
 import '../css/Login.css';
 import FileModule from '../components/FileModule'
-import QuizCreatorModule from '../components/QuizCreatorModule'
+import QuizModule from '../components/QuizCreatorModule'
 
 function ModuleCreator(props) {
 
@@ -15,17 +15,12 @@ function ModuleCreator(props) {
     const [type, setType] = useState('')
     const [description, setDescription] = useState('')
     const [gradeToPass, setGradeToPass] = useState('')
-    const [courseID, setCourseID] = useState('')
 
     const classes = useStyles()
 
-    useEffect(() => {
-        const pathname = window.location.pathname.split('/') //returns the current path
-        setCourseID(pathname[pathname.length - 1])
-    }, []);
-
     const handleChange = (event) => {
         setType(event.target.type);
+        // handleDisplayedContent(type)
     }
 
     const onSubmit = (e) => {
@@ -48,9 +43,14 @@ function ModuleCreator(props) {
         }
     }
 
+    // const onUpload = (e) => {
+    //     alert('feature undefined')
+    //     return
+    // }
+
     // We ideally want to redirect to module manager page, but we do not have that yet
     const cancel = () => {
-        props.history.push(`/course/${courseID}`)
+        props.history.push('dashboard')
     }
 
     const onFinish = async (module) => {
@@ -87,7 +87,6 @@ function ModuleCreator(props) {
                             module.description,
                         'type': module.type,
                     })
-
                 })
             }
 
@@ -96,7 +95,7 @@ function ModuleCreator(props) {
             if (data.message === undefined) {
                 // probably change back to course manager 
                 alert('worked')
-                props.history.push(`/course/${courseID}`)
+                props.history.push('dashboard')
             }
             else { // this is to check if there are errors not being addressed already
                 console.log(data)

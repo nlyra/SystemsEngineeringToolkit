@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Box, Collapse, IconButton, TableBody, TableRow, TableCell, Button, Card, CardActions, Container, CssBaseline, makeStyles, Grid, CardMedia, CardContent, Typography, Table } from '@material-ui/core'
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import VideoModule from '../components/VideoModule'
-import PdfModule from '../components/PdfModule'
+import { Button, Card, CardActions, Container, CssBaseline, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
 import '../css/dashboard.css'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
@@ -16,87 +12,55 @@ const changeParams = (start, finish) => {
     console.log("start " + start)
 
 }
-const useRowStyles = makeStyles({
-    root: {
-        '& > *': {
-            borderBottom: 'unset',
-        },
-    },
-});
-
-const Module = (props) => {
-    const { module } = props;
-    const [open, setOpen] = React.useState(false);
-    const classes = useRowStyles();
-
-    return (
-        <React.Fragment>
-            <TableRow className={classes.root}>
-                <TableCell>
-                    <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                    </IconButton>
-                </TableCell>
-                <TableCell component="th" scope="module">
-                    {module.title}
-                </TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
-                        <Box margin={1}>
-                            <Typography >
-                                Type: {module.type}
-                                <br />
-                                <br />
-                                {module.description}
-                                <br />
-                                <br />
-                                <div >
-                                    {module.type === "Video" && <VideoModule fileUrl={module.fileUrl} />}
-                                    {module.type === "Pdf" && <PdfModule fileUrl={module.fileUrl} />}
-                                </div>
-                            </Typography>
-                        </Box>
-                    </Collapse>
-                </TableCell>
-            </TableRow>
-        </React.Fragment>
-    )
-}
 
 const Dashboard = (props) => {
-    const [course, setCourse] = useState({})
-    const [modules, setModules] = useState([])
-    const [courseID, setCourseID] = useState('')
+    const [courses, setCourses] = useState([])
+    const [page, setPage] = useState(1)
+    const [cardAmount, setCardAmount] = useState()
+    const [coursesPerPage, setCoursesPerPage] = useState(5)
+    // const [searchQuery, setSearchQuery] = useState(undefined)
 
     const classes = dashStyles()
 
     // function that will run when page is loaded
     useEffect(() => {
-        const pathname = window.location.pathname.split('/') //returns the current path
-        const id = pathname[pathname.length - 1]
-        getCourse(id)
+        loadCourses();
     }, []);
 
-    const getCourse = async (id) => {
+    const handlePage = (event, value) => {
+        setPage(value)
+        loadCourses(undefined, value)
+    }
+
+    // function to get the courses 
+    const loadCourses = async (query, s = 1) => {
         const token = localStorage.getItem("token");
         let res = undefined
+        let skip = (s - 1) * cardAmount
+        // if (query == ""){
+        //     setSearchQuery(undefined)
+        // }else{
+        //     setSearchQuery(query)
+        // }
 
-        res = await fetch(config.server_url + config.paths.course, {
+        res = await fetch(config.server_url + config.paths.dashboardCourses, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "id": id })
+            body: JSON.stringify({ "token": token, "search_query": query, "skip": skip, "cardAmount": cardAmount })
         })
+        // }
+
 
         const data = await res.json()
-
         if (data.message === undefined) {
-            setCourse(data.course);
-            setCourseID(id);
-            setModules(data.course.modules);
+
+            // console.log(data.courses);
+            // localStorage.setItem("token", data.token);
+            setCourses(data.courses);
+
+
         } else if (data.message === "wrong token") {
             localStorage.removeItem('token');
             props.history.push('login');
@@ -114,18 +78,42 @@ const Dashboard = (props) => {
     return (
         <div className={classes.div}>
             <TopNavBar
-                page={true}
+                search={loadCourses}
+                page={page}
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
                 <div className='modules'>
-                    <Table>
-                        <TableBody>
-                            {modules.map((module) => (
-                                <Module key={module.id} module={module} />
-                            ))}
-                        </TableBody>
-                    </Table>
+                    <Grid container spacing={3}>
+                        {courses.map((course) => (
+
+                            <Grid item key={course._id} xs={12} sm={4} md={3}>
+                                <Card
+                                    className={classes.card}
+                                    onClick={() => onCourse(course)}
+                                >
+                                    <CardMedia
+                                        className={classes.cardMedia}
+                                        image={course.urlImage}
+                                        title="Title"
+                                    />
+                                    <CardContent className={classes.CardContent}>
+                                        <Typography variant="h5">
+                                            {course.name}
+                                        </Typography>
+                                        <Typography gutterBottom>
+                                            {course.description.length < 100 ? course.description : course.description.substr(0, 100) + ' ...'}
+                                        </Typography>
+                                        <CardActions>
+                                        </CardActions>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+
+                        ))}
+
+
+                    </Grid>
                 </div>
                 {/* <Pagination count={6} page={page} onChange={handlePage} variant="outlined" shape="rounded" /> */}
             </Container>

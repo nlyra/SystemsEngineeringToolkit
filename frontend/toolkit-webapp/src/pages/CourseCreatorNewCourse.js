@@ -41,43 +41,40 @@ function NewCourse(props) {
 
         if (image !== undefined) { //if there is an image
 
+            // handle image
+            const imageData = new FormData();
+            imageData.append('file', image)
 
-                        // handle image
-                        const imageData = new FormData();
-                        imageData.append('file', image)
-        // alert(creds.categories)
-        const res = await fetch(config.server_url + config.paths.createCourse, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                "token": token,
-                "modules": [],
-                "name": creds.courseTitle,
-                "category": creds.categories,
-                "description": creds.description,
-                "urlImage": `http://localhost:4000/${image.name}`
-            })
-        })
-
-        // Check if there are any new categories that need to be added to the DB categories collection.
-        for (const newTag of categories) {
-            if (dialogData.find(c => c.label === newTag.label)) continue;
-
-            const res = await fetch(config.server_url + config.paths.addCategories, {
+            const res = await fetch(config.server_url + config.paths.createCourse, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify({
                     "token": token,
-                    "label": newTag.label
-                }),
+                    "modules": [],
+                    "name": creds.courseTitle,
+                    "category": creds.categories,
+                    "description": creds.description,
+                    "urlImage": `http://localhost:4000/${image.name}`
+                })
             })
-        }
 
-           
+            // Check if there are any new categories that need to be added to the DB categories collection.
+            for (const newTag of categories) {
+                if (dialogData.find(c => c.label === newTag.label)) continue;
+
+                const res = await fetch(config.server_url + config.paths.addCategories, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "token": token,
+                        "label": newTag.label
+                    }),
+                })
+            }
 
             const data = await res.json()
             if (data.message === undefined) {
@@ -99,22 +96,7 @@ function NewCourse(props) {
 
         } else {// if there is not an image
 
-            for (const newTag of categories) {
-                if (dialogData.find(c => c.label === newTag.label)) continue;
-    
-                const res = await fetch(config.server_url + config.paths.addCategories, {
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        "token": token,
-                        "label": newTag.label
-                    }),
-                })
-            }
-
-            const res2 = await fetch(config.server_url + config.paths.createCourse, {
+            const res = await fetch(config.server_url + config.paths.createCourse, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json'
@@ -129,7 +111,7 @@ function NewCourse(props) {
                 })
             }
             )
-            const data = await res2.json()
+            const data = await res.json()
             if (data.message === undefined) {
                 alert("Successfully created course!")
                 props.history.push('/dashboard')// needs to be changed to course manager
