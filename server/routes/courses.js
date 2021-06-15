@@ -282,7 +282,7 @@ router.post('/module/create', VerifyToken, async (req, res) => {
         });
     }
 
-    res.json({ 'status': 'course added' });
+    res.json({ 'status': 'module added' });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -313,6 +313,42 @@ router.post('/module/score', VerifyToken, async (req, res) => {
       });
 
     res.json({ 'status': 'course added' });
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+})
+
+router.post('/module/update', VerifyToken, async (req, res) => {
+  try {
+    if (req.body.type === "Quiz") {
+      const update = await Course.updateOne(
+        { _id: req.body.courseID }, // query parameter
+        {
+          $set: {
+            [`modules.${req.body.moduleID}`]: {
+              title: req.body.title,
+              type: req.body.type,
+              description: req.body.description,
+              quiz: req.body.quiz,
+            }
+          }
+        });
+    } else {
+      const update = await Course.updateOne(
+        { _id: req.body.courseID }, // query parameter
+        {
+          $set: {
+            [`modules.${req.body.moduleID}`]: {
+              title: req.body.title,
+              type: req.body.type,
+              description: req.body.description,
+            }
+          },
+        });
+    }
+
+    res.json({ 'status': 'module updated' });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
