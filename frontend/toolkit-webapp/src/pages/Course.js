@@ -214,7 +214,12 @@ const Course = (props) => {
               <AccordionDetails className={classes.accordionDetails}>
                 <Typography >
                   {/* Type: {module.type} */}
-                  {module.type == "Quiz" && <Typography >Grade: {module.grade}/{module.quiz.length}</Typography>}
+                  {module.type == "Quiz" &&
+                    <div>
+                      <Typography >Grade: {module.grade}/{module.quiz.length}</Typography>
+                      <Typography>Grade needed to pass: {module.gradeToPass}/{module.quiz.length}</Typography>
+                    </div>
+                  }
                   <br />
                   {module.description}
                   <br />
