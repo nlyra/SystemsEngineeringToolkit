@@ -27,8 +27,9 @@ const QuizModule = (props) => {
         setScore(temp);
         saveScore(temp);
         setState(2)
-    }
 
+    }
+  }
 
     const handleAgain = () => {
         setScore(0)
@@ -133,6 +134,7 @@ const QuizModule = (props) => {
 
         </div>
     );
+
 }
 
-export default QuizModule
+export default QuizModule;
