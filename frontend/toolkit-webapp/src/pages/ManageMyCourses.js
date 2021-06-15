@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Card, CardActions, Container, CssBaseline, Divider, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
+import { Button, Card, CardActions, Container, CssBaseline, Divider, makeStyles, TextField, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
 import '../css/dashboard.css'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
@@ -8,7 +8,7 @@ import myCoursesStyles from '../styles/myCoursesStyle'
 import jwt_decode from "jwt-decode";
 import { Link } from '@material-ui/core';
 
-const MyCourses = (props) => {
+const ManageMyCourses = (props) => {
     const [courses, setCourses] = useState([])
     const [searchQuery, setSearchQuery] = useState('')
 
@@ -22,12 +22,12 @@ const MyCourses = (props) => {
     // function to get the courses 
     const loadCourses = async (query, s = 1) => {
 
-        // grabbing user id
+        // grabbing token
         const token = localStorage.getItem("token");
 
         let res = undefined
 
-        res = await fetch(config.server_url + config.paths.myCourses, {
+        res = await fetch(config.server_url + config.paths.myCreatedCourses, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
@@ -52,18 +52,19 @@ const MyCourses = (props) => {
         }
     }
 
-    const removeEnrollment = async (id) => 
+    const deleteCourse = async (id) => 
     {
         let res = undefined
         const token = localStorage.getItem("token");
 
-        res = await fetch(config.server_url + config.paths.removeEnrollment, {
+        res = await fetch(config.server_url + config.paths.deleteCreatedCourse, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
             },
             body: JSON.stringify({ "token": token, "courseID": id})
         })
+
 
         // This splits the array correctly and updates courses array with courses the user is still enrolled in
         // const newVal = courses.filter((courses) => courses._id !== id);
@@ -90,7 +91,7 @@ const MyCourses = (props) => {
             <Grid container spacing={3}>
                 <div className={classes.header}>
                 <h1>
-                    Enrolled Courses
+                    Manage Your Courses
                 </h1>
                 </div>
                 </Grid>
@@ -125,9 +126,9 @@ const MyCourses = (props) => {
 
                              {/* TODO: Figure out a way to reload the page without simply linking back to the same page.  */}
 
-                                <Link href="/MyCourses" underline='none' color="inherit"> 
+                                <Link href="/ManageMyCourses" underline='none' color="inherit"> 
                                 <div className={classes.buttonDiv}>
-                                    <Button type='submit' className={classes.removeButton} size= "small" color="inherit" variant="contained" onClick={() => {if (window.confirm('Are you sure you wish to disenroll? Your progress may be lost.')) removeEnrollment(course._id)} }>
+                                    <Button type='submit' className={classes.removeButton} size= "small" color="inherit" variant="contained" onClick={() => {if (window.confirm('Are you sure you wish to delete this course permanently?'))  deleteCourse(course._id) }}>
                                     Remove Course
                                     </Button>
                                     </div>
@@ -146,4 +147,4 @@ const MyCourses = (props) => {
     )
 }
 
-export default MyCourses
+export default ManageMyCourses

@@ -11,6 +11,7 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import DescriptionIcon from '@material-ui/icons/Description';
 //import {Link } from "react-router-dom"
 import { Link } from '@material-ui/core';
+import BookOutlinedIcon from '@material-ui/icons/BookOutlined';
 import HomeIcon from '@material-ui/icons/Home';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import clsx from 'clsx';
@@ -187,7 +188,9 @@ export default function TopNavBar(props) {
                             >
                                 <MenuIcon style={{ color: "white" }}></MenuIcon>
                             </IconButton>
-                            {window.location.pathname === "/dashboard" || window.location.pathname === "/MyCourses" ?
+                            {window.location.pathname === "/dashboard" ||
+                                window.location.pathname === "/MyCourses" ||
+                                window.location.pathname === "/ManageMyCourses" ?
                                 <div className={classes.search}>
                                     <div className={classes.searchIcon}>
                                         <SearchIcon></SearchIcon>
@@ -240,10 +243,10 @@ export default function TopNavBar(props) {
                             </IconButton>
 
                             : null}
-                            
-                            
-                            {window.location.pathname !== "/" && 
-                            window.location.pathname !== "/registration" && 
+
+
+                        {window.location.pathname !== "/" &&
+                            window.location.pathname !== "/registration" &&
                             window.location.pathname !== "/forgot" &&
                             window.location.pathname !== "/reset/" + props.tokenProp &&
                             window.location.pathname !== "/reset/" &&
@@ -285,32 +288,32 @@ export default function TopNavBar(props) {
                     </div>
                     <Divider />
                     <List>
-                        <Tooltip title="Create Course" enterDelay={500}>
-                            <Link href="/newCourse" underline='none' color="inherit">
+                        <Link href="/newCourse" underline='none' color="inherit">
+                            <Tooltip title="Create Course" enterDelay={500}>
                                 <ListItem button>
                                     <ListItemIcon><PostAddIcon /></ListItemIcon>
                                     <ListItemText primary="Create Course" />
                                 </ListItem>
-                            </Link>
-                        </Tooltip>
+                            </Tooltip>
+                        </Link>
 
-                        <Tooltip title="My Courses" enterDelay={500}>
-                            <Link href="/MyCourses" underline='none' color="inherit">
+                        <Link href="/MyCourses" underline='none' color="inherit">
+                            <Tooltip title="My Courses" enterDelay={500}>
                                 <ListItem button>
                                     <ListItemIcon><MenuBookIcon /></ListItemIcon>
                                     <ListItemText primary="My Courses" />
                                 </ListItem>
-                            </Link>
-                        </Tooltip>
+                            </Tooltip>
+                        </Link>
 
-                        <Tooltip title="My Files" enterDelay={500}>
-                            <Link href="/MyFiles" underline='none' color="inherit">
+                        <Link href="/MyFiles" underline='none' color="inherit">
+                            <Tooltip title="My Files" enterDelay={500}>
                                 <ListItem button>
                                     <ListItemIcon><DescriptionIcon /></ListItemIcon>
                                     <ListItemText primary="My Files" />
                                 </ListItem>
-                            </Link>
-                        </Tooltip>
+                            </Tooltip>
+                        </Link>
 
                         <Tooltip title="Admin Dashboard" enterDelay={500}>
                             <Link href="/admindashboard" underline='none' color="inherit">
@@ -321,12 +324,15 @@ export default function TopNavBar(props) {
                             </Link>
                         </Tooltip>
 
-                        {/* <Tooltip title="Calendar" enterDelay={500}>
-                            <ListItem button>
-                                <ListItemIcon><CalendarTodayIcon /></ListItemIcon>
-                                <ListItemText primary="Calendar" />
-                            </ListItem>
-                        </Tooltip> */}
+                        {/* <Tooltip title="Calendar" enterDelay={500}>*/}
+                        <Link href="/ManageMyCourses" underline='none' color="inherit">
+                            <Tooltip title="My Created Courses" enterDelay={500}>
+                                <ListItem button>
+                                    <ListItemIcon><BookOutlinedIcon /></ListItemIcon>
+                                    <ListItemText primary="My Created Courses" />
+                                </ListItem>
+                            </Tooltip>
+                        </Link>
                     </List>
                 </Drawer>
                 : null}

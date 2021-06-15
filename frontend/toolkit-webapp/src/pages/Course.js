@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import { Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
+import { Link, FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
 import VideoModule from '../components/VideoModule'
 import PdfModule from '../components/PdfModule'
 import QuizModule from '../components/QuizModule'
@@ -11,7 +11,8 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CourseInfoEditButton from '../components/CourseInfoEditButton';
 import ModuleInfoEditButton from '../components/ModuleInfoEditButton';
-import courseStyles from '../styles/courseStyle'
+import AddIcon from '@material-ui/icons/Add';
+import courseStyles from '../styles/courseStyle';
 import jwt_decode from "jwt-decode";
 
 
@@ -27,11 +28,6 @@ const Course = (props) => {
 
   const onEditCourseTitle = (e) => {
     setEditCourseInfo(true);
-  };
-
-  const onEditModule = (e) => {
-    //alert("you have pressed the edit button the course ID is = " + courseID)
-    props.history.push(`/ModuleManager/${courseID}`);
   };
 
   // function that will run when page is loaded
@@ -72,10 +68,7 @@ const Course = (props) => {
   const onEditSubmit = async (e) => {
 
     setEditCourseInfo(false);
-    console.log("this is the title:" + course.name)
-    console.log(courseDescription)
-    console.log(config.server_url + config.paths.updateCourseInfo)
-    if (courseTitle == '') { setCourseTitle(course.name) }
+
     const res = await fetch(config.server_url + config.paths.updateCourseInfo, {
       method: 'POST',
       headers: {
@@ -172,7 +165,6 @@ const Course = (props) => {
                 label='Description'
                 type="text"
                 defaultValue={course.description}
-                //value={course.description}
                 onChange={e => setCourseDescription(e.target.value)}
                 margin="normal"
                 required={true}
@@ -186,12 +178,23 @@ const Course = (props) => {
             <Button onClick={onEditSubmit}>Submit</Button>
           </div>
         }
+        <br></br>
         <Grid item xs={12}>
           <Divider className={classes.divider} />
         </Grid>
-        <ModuleInfoEditButton edit={onEditModule} id={courseID} hideComponent={false} />
+        <Grid item xs={12} lg={3}>
+          <Link href={`/newModule/${courseID}`} underline={'none'}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              startIcon={<AddIcon />}
+            >
+              Add Module
+            </Button>
+          </Link>
+        </Grid>
         <Grid item xs={12} className={classes.accordion}>
-
           {/* modules starts here */}
           {modules.map((module) => (
             <Accordion key={modules.indexOf(module)} onClick={e => enroll(module)} >
@@ -200,12 +203,23 @@ const Course = (props) => {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
+                <FormControlLabel
+                  aria-label="Acknowledge"
+                  onClick={(event) => event.stopPropagation()}
+                  onFocus={(event) => event.stopPropagation()}
+                  control={<ModuleInfoEditButton moduleIndex={modules.indexOf(module)} courseID={courseID} module={module} hideComponent={false} />}
+                />
                 <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
               </AccordionSummary>
               <AccordionDetails className={classes.accordionDetails}>
                 <Typography >
                   {/* Type: {module.type} */}
-                  {module.type == "Quiz" && <Typography >Grade: {module.grade}/{module.quiz.length}</Typography>}
+                  {module.type == "Quiz" &&
+                    <div>
+                      <Typography >Grade: {module.grade}/{module.quiz.length}</Typography>
+                      <Typography>Grade needed to pass: {module.gradeToPass}/{module.quiz.length}</Typography>
+                    </div>
+                  }
                   <br />
                   {module.description}
                   <br />

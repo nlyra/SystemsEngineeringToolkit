@@ -27,14 +27,14 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 
-export default function CourseInfoEditButton({ edit, hideComponent }) {
+export default function CourseInfoEditButton(props) {
 
     const classes = useStyles();
 
     return (
         <div className={classes.root}>
-            {hideComponent !== true ?
-            <Button type='submit' className={classes.button} size="large" variant="contained" color="primary" onClick={edit}>
+            {props.hideComponent !== true ?
+            <Button type='submit' className={classes.button} size="large" variant="contained" color="primary" onClick={props.edit}>
                 Edit course info
             </Button>
             : null }
