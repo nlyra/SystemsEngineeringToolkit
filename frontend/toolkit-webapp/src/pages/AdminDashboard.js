@@ -34,6 +34,10 @@ const adminStyles = makeStyles((theme) => ({
     marginLeft: '0px',
   },
 
+  innerDiv: {
+    // paddingLeft: '1vw',
+  },
+
 }))
 const AdminDashboard = () => {
   const [currTab, setCurrTab] = useState(0)
@@ -64,12 +68,14 @@ const AdminDashboard = () => {
           </Grid>
           <Grid item xs={12}>
             <Divider className={classes.divider} />
-            <br/>
+            <br />
           </Grid>
           <Grid item xs={12}>
-            {currTab === 0 && <AdminUsersTab />}
-            {currTab === 1 && <>courses</>}
-            {currTab === 2 && <>categories</>}
+            <div className={classes.innerDiv}>
+              {currTab === 0 && <AdminUsersTab />}
+              {currTab === 1 && <>courses</>}
+              {currTab === 2 && <>categories</>}
+            </div>
           </Grid>
 
         </Grid>
