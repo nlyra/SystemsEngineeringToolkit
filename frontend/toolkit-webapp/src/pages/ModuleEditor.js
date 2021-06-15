@@ -9,23 +9,26 @@ import '../css/Login.css';
 import FileModule from '../components/FileModule'
 import QuizCreatorModule from '../components/QuizCreatorModule'
 
-function ModuleCreator(props) {
+function ModuleEditor(props) {
 
-    const [title, setTitle] = useState('')
-    const [type, setType] = useState('')
-    const [description, setDescription] = useState('')
+    const [module, setModule] = useState(JSON.parse(localStorage.getItem("module")))
+    const [title, setTitle] = useState(module.title)
+    const [type, setType] = useState(module.type)
+    const [description, setDescription] = useState(module.description)
     const [courseID, setCourseID] = useState('')
 
     const classes = useStyles()
 
+    const handleChange = (event) => {
+        setType(event.target.type);
+        // handleDisplayedContent(type)
+    }
+
     useEffect(() => {
         const pathname = window.location.pathname.split('/') //returns the current path
         setCourseID(pathname[pathname.length - 1])
+        sessionStorage.setItem('quiz', JSON.stringify(module.quiz))
     }, []);
-
-    const handleChange = (event) => {
-        setType(event.target.type);
-    }
 
     const onSubmit = (e) => {
         e.preventDefault()
@@ -53,25 +56,26 @@ function ModuleCreator(props) {
     }
 
     const onFinish = async (module) => {
+
         const token = localStorage.getItem("token");
         if (token != undefined) {
             let res = undefined
             if (module.type === "Quiz") {
-                res = await fetch(config.server_url + config.paths.newModule, {
+                res = await fetch(config.server_url + config.paths.editModule, {
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
+                    body: JSON.stringify({ 'token': token, 'moduleID': props.location.moduleIndex, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
                 })
             } else {
-                res = await fetch(config.server_url + config.paths.newModule, {
+                res = await fetch(config.server_url + config.paths.editModule, {
 
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type })
+                    body: JSON.stringify({ 'token': token, 'moduleID': props.location.moduleIndex, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type })
                 })
             }
 
@@ -108,7 +112,6 @@ function ModuleCreator(props) {
                                     variant="filled"
                                     label='Title'
                                     type="title"
-                                    defaultValue="New Module"
                                     value={title}
                                     onChange={e => setTitle(e.target.value)}
                                     margin="normal"
@@ -159,7 +162,7 @@ function ModuleCreator(props) {
                                     Cancel
                                 </Button>
                                 <Button type='submit' className={classes.button2} size="small" variant="contained" onSubmit={onSubmit}>
-                                    Create
+                                    Update
                                 </Button>
                             </Container>
                         </Paper>
@@ -170,4 +173,4 @@ function ModuleCreator(props) {
     )
 }
 
-export default ModuleCreator;
+export default ModuleEditor;

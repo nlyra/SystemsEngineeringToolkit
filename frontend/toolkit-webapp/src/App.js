@@ -5,16 +5,15 @@ import Registration from './pages/Registration'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import CourseCreatorNewCourse from './pages/CourseCreatorNewCourse'
-import ModuleSkeleton from './pages/ModuleSkeleton'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Course from './pages/Course'
 import ModuleCreator from './pages/ModuleCreator'
-import ModuleManager from './pages/ModuleManager'
+import ModuleEditor from './pages/ModuleEditor'
 // import background from "./img/image0.png";
 import videoSource from "./img/PEOSTRI.mp4"
 import VideoModule from "./components/VideoModule"
 import MyFiles from './pages/MyFiles'
-import ManageCourses from './pages/ManageCourses'
+import ManageMyCourses from './pages/ManageMyCourses'
 import MyCourses from './pages/MyCourses'
 
 function App() {
@@ -29,9 +28,9 @@ function App() {
       <Route path='/forgot' component={ForgotPassword} />
       <Route path='/NewCourse' component={CourseCreatorNewCourse} />
       <Route path='/newModule' component={ModuleCreator} />
-      <Route path='/ModuleManager' component={ModuleManager} />
+      <Route path='/editModule' component={ModuleEditor} />
       <Route path='/course' component={Course} />
-      <Route path='/ManageCourses' component={ManageCourses} />
+      <Route path= '/ManageMyCourses' component={ManageMyCourses} />
       <Route path='/MyFiles' component={MyFiles} />
       <Route path='/MyCourses' component={MyCourses} />
       <Route path='/VideoModule' component={VideoModule} />
