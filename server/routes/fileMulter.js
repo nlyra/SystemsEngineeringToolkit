@@ -21,6 +21,7 @@ const upload = multer({ storage: fileStorageEngine })
 
 router.post('/single', VerifyToken, upload.single('file'), async (req, res) => {
 
+  console.log(req.query)
   const currPath = __dirname + "/../public/" + req.query.imageName
   const newPath = __dirname + "/../public/" + req.query.courseID + "/" + req.query.imageName
 
@@ -43,4 +44,18 @@ router.post('/single', VerifyToken, upload.single('file'), async (req, res) => {
   res.send({ "status": "Success" })
 })
 
+router.post('/removeFile', VerifyToken, async (req, res) => {
+
+  console.log('hereee')
+  const path = 'public/' + req.body.courseID + '/' + req.body.imageName
+
+  try {
+    fs.unlinkSync(path)
+    //file removed
+  } catch (err) {
+    console.error(err)
+  }
+  res.send({ "status": "Success" })
+
+})
 module.exports = router;

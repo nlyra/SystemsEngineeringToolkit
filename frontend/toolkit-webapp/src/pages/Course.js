@@ -19,7 +19,8 @@ import jwt_decode from "jwt-decode";
 const Course = (props) => {
   const [course, setCourse] = useState({})
   const [modules, setModules] = useState([])
-  const [courseImage, setCourseImage] = useState('')
+  const [oldCourseImage, setOldCourseImage] = useState('')
+  const [currCourseImage, setCurrCourseImage] = useState('')
   const [courseTitle, setCourseTitle] = useState('')
   const [courseDescription, setCourseDescription] = useState('')
   const [editCourseInfo, setEditCourseInfo] = useState(false)
@@ -55,7 +56,8 @@ const Course = (props) => {
     if (data.message === undefined) {
       setCourse(data.course);
       setCourseID(id);
-      setCourseImage(data.course.urlImage);
+      setOldCourseImage(data.course.urlImage);
+      setCurrCourseImage(data.course.urlImage);
       setCourseTitle(data.course.name);
       setCourseDescription(data.course.description);
       setModules(data.course.modules);
@@ -86,32 +88,51 @@ const Course = (props) => {
     })
 
     const data = await res.json()
-    setCourseImage(data.urlImage)
-    alert('courseId is: ' + courseID)
+    // setCurrCourseImage(data.course.urlImage)
+    alert('oldCourseImage is: ' + oldCourseImage)
+    alert('new CourseImage is: ' + currCourseImage)
 
-    if(courseImage !== undefined)
+    if((oldCourseImage !== null) && (oldCourseImage !== currCourseImage))
     {
+      // const imageData = new FormData();
+      // imageData.append('file', oldCourseImage)
+
+      const res = await fetch(config.server_url + config.paths.removeFile, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          'courseID': courseID,
+          'imageName': oldCourseImage
+        })
+      })
+    }
+
+    // if(currCourseImage !== undefined)
+    // {
             
-      const imageData = new FormData();
-      imageData.append('file', courseImage)
+    //   alert('here')
+    //   const imageData = new FormData();
+    //   imageData.append('file', currCourseImage)
 
-            if (data.message === undefined) {
-                const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + courseImage.name, {
-                    method: 'POST',
-                    body: imageData
-                })
-                const data2 = await res.json()
-                console.log(data2)
+    //         if (data.message === undefined) {
+    //             const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + currCourseImage.name, {
+    //                 method: 'POST',
+    //                 body: imageData
+    //             })
+    //             const data2 = await res.json()
+    //             console.log(data2)
 
-                if (data2.status == 'Success') {
-                    // alert("Successfully created course!")
-                    // props.history.push('/dashboard')// needs to be changed to course manager
-                } //else need to do something, not sure what rn
-            }
-            else { // this is to check if there are errors not being addressed already
-                console.log(data)
-            }
-      }
+    //             if (data2.status == 'Success') {
+    //                 // alert("Successfully created course!")
+    //                 // props.history.push('/dashboard')// needs to be changed to course manager
+    //             } //else need to do something, not sure what rn
+    //         }
+    //         else { // this is to check if there are errors not being addressed already
+    //             console.log(data)
+    //         }
+    //   }
 
     window.location.reload();
   }
@@ -147,7 +168,7 @@ const Course = (props) => {
             <Grid item alignItems="center" xs={12}>
               <Grid container className={classes.topItem}>
                 <Grid item xs={3} sm={2} lg={1}>
-                  <img src={course.urlImage} className={classes.courseImageStyle} />
+                  <img src={course.urlImage} className={classes.currCourseImageStyle} />
                 </Grid>
                 <Grid item xs={8} sm={9} lg={9}>
                   <h1
@@ -171,7 +192,7 @@ const Course = (props) => {
             <Grid item xs={12} >
               <Grid container className={classes.topItem}>
                 <Grid item xs={3} sm={2} lg={1}>
-                  <img src={course.urlImage} className={classes.courseImageStyle} />
+                  <img src={course.urlImage} className={classes.currCourseImageStyle} />
                 </Grid>
                 <Grid item xs={9} sm={10} lg={11} align={"center"}>
                   <TextField
@@ -187,7 +208,7 @@ const Course = (props) => {
                   //style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                   />
                 </Grid>
-                <input type="file" name="picture" accept="image/*" onChange={e => setCourseImage(e.target.files[0])} />
+                <input type="file" name="picture" accept="image/*" onChange={e => setCurrCourseImage(e.target.files[0])} />
               </Grid>
             </Grid>
             <Grid item xs={12} >
