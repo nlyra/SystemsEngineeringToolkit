@@ -38,6 +38,11 @@ export default function CourseInfoEditButton(props) {
                 Edit course info
             </Button>
             : null }
+            {props.hideComponent === true ?
+            <Button type='submit' className={classes.button} size="large" variant="contained" color="primary" onClick={props.edit}>
+                Upload image
+            </Button>
+            : null }
         </div>
     )
 }

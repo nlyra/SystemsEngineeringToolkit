@@ -52,10 +52,30 @@ router.post('/course/update', async (req, res) => {
         $set: {
           name: req.body.name,
           description: req.body.description,
+          urlImage: req.body.courseImage
+        }
+      })
+      
+      // console.log('here')
+      res.json({ 'status': 'course updated' });
+    } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+
+})
+
+router.post('/course/updateImage', async (req, res) => {
+  try {
+    const update = await Course.updateOne(
+      { _id: req.body.courseID }, 
+      {
+        $set: {
+          "urlImage": req.body.courseImage
         }
       })
 
-    res.json({ 'status': 'course added' });
+    res.json({ 'status': 'course image updated' });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);

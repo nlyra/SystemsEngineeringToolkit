@@ -19,6 +19,7 @@ import jwt_decode from "jwt-decode";
 const Course = (props) => {
   const [course, setCourse] = useState({})
   const [modules, setModules] = useState([])
+  const [courseImage, setCourseImage] = useState('')
   const [courseTitle, setCourseTitle] = useState('')
   const [courseDescription, setCourseDescription] = useState('')
   const [editCourseInfo, setEditCourseInfo] = useState(false)
@@ -50,9 +51,11 @@ const Course = (props) => {
     })
 
     const data = await res.json()
+
     if (data.message === undefined) {
       setCourse(data.course);
       setCourseID(id);
+      setCourseImage(data.course.urlImage);
       setCourseTitle(data.course.name);
       setCourseDescription(data.course.description);
       setModules(data.course.modules);
@@ -68,6 +71,7 @@ const Course = (props) => {
   const onEditSubmit = async (e) => {
 
     setEditCourseInfo(false);
+    const token = localStorage.getItem("token");
 
     const res = await fetch(config.server_url + config.paths.updateCourseInfo, {
       method: 'POST',
@@ -80,6 +84,34 @@ const Course = (props) => {
         "description": courseDescription,
       })
     })
+
+    const data = await res.json()
+    setCourseImage(data.urlImage)
+    alert('courseId is: ' + courseID)
+
+    if(courseImage !== undefined)
+    {
+            
+      const imageData = new FormData();
+      imageData.append('file', courseImage)
+
+            if (data.message === undefined) {
+                const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + courseImage.name, {
+                    method: 'POST',
+                    body: imageData
+                })
+                const data2 = await res.json()
+                console.log(data2)
+
+                if (data2.status == 'Success') {
+                    // alert("Successfully created course!")
+                    // props.history.push('/dashboard')// needs to be changed to course manager
+                } //else need to do something, not sure what rn
+            }
+            else { // this is to check if there are errors not being addressed already
+                console.log(data)
+            }
+      }
 
     window.location.reload();
   }
@@ -155,6 +187,7 @@ const Course = (props) => {
                   //style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                   />
                 </Grid>
+                <input type="file" name="picture" accept="image/*" onChange={e => setCourseImage(e.target.files[0])} />
               </Grid>
             </Grid>
             <Grid item xs={12} >

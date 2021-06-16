@@ -26,6 +26,7 @@ router.post('/single', VerifyToken, upload.single('file'), async (req, res) => {
 
   const made = mkdirp.sync(__dirname + "/../public/" + req.query.courseID)
 
+  // console.log(req.query)
   fs.rename(currPath, newPath, function (err) {
     if (err) {
       throw err
