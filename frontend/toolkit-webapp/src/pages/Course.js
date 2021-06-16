@@ -81,6 +81,7 @@ const Course = (props) => {
         'Content-type': 'application/json'
       },
       body: JSON.stringify({
+        'token' : token,
         'courseID': courseID,
         "name": courseTitle,
         "description": courseDescription,
@@ -88,14 +89,9 @@ const Course = (props) => {
     })
 
     const data = await res.json()
-    // setCurrCourseImage(data.course.urlImage)
-    alert('oldCourseImage is: ' + oldCourseImage)
-    alert('new CourseImage is: ' + currCourseImage)
 
-    if((oldCourseImage !== null) && (oldCourseImage !== currCourseImage))
-    {
-      // const imageData = new FormData();
-      // imageData.append('file', oldCourseImage)
+    // We have a new image being passed in so delete old file
+    if ((oldCourseImage !== null) && (oldCourseImage !== currCourseImage)) {
 
       const res = await fetch(config.server_url + config.paths.removeFile, {
         method: 'POST',
@@ -103,37 +99,45 @@ const Course = (props) => {
           'Content-type': 'application/json'
         },
         body: JSON.stringify({
+          'token': token,
           'courseID': courseID,
           'imageName': oldCourseImage
         })
       })
     }
 
-    // if(currCourseImage !== undefined)
-    // {
-            
-    //   alert('here')
-    //   const imageData = new FormData();
-    //   imageData.append('file', currCourseImage)
 
-    //         if (data.message === undefined) {
-    //             const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + currCourseImage.name, {
-    //                 method: 'POST',
-    //                 body: imageData
-    //             })
-    //             const data2 = await res.json()
-    //             console.log(data2)
+    const imageData = new FormData();
+    imageData.append('file', currCourseImage)
 
-    //             if (data2.status == 'Success') {
-    //                 // alert("Successfully created course!")
-    //                 // props.history.push('/dashboard')// needs to be changed to course manager
-    //             } //else need to do something, not sure what rn
-    //         }
-    //         else { // this is to check if there are errors not being addressed already
-    //             console.log(data)
-    //         }
-    //   }
+    if (currCourseImage.name !== oldCourseImage.name) {
 
+      if (data.message === undefined) {
+        const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + currCourseImage.name, {
+          method: 'POST',
+          body: imageData
+        })
+        const data2 = await res.json()
+
+      }
+      else { // this is to check if there are errors not being addressed already
+        console.log(data)
+      }
+    }
+    else {
+      const res = await fetch(config.server_url + config.paths.updateCourseImage, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          'token': token,
+          'courseID': courseID,
+          "imageLink": currCourseImage,
+        })
+      })
+    }
+       
     window.location.reload();
   }
 
@@ -192,7 +196,7 @@ const Course = (props) => {
             <Grid item xs={12} >
               <Grid container className={classes.topItem}>
                 <Grid item xs={3} sm={2} lg={1}>
-                  <img src={course.urlImage} className={classes.currCourseImageStyle} />
+                  <img src={course.urlImage} className={classes.courseImageStyle} />
                 </Grid>
                 <Grid item xs={9} sm={10} lg={11} align={"center"}>
                   <TextField

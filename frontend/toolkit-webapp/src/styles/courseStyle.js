@@ -17,10 +17,10 @@ const dashStyles = makeStyles((theme) => ({
     paddingBottom: '5%',
   },
 
-  courseImageStyle: {
-    maxWidth: '260px',
-    marginBottom: "15px"
-  },
+  // courseImageStyle: {
+  //   maxWidth: '260px',
+  //   marginBottom: "15px"
+  // },
 
   description: {
     fontSize: '25px',

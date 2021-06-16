@@ -5,6 +5,8 @@ const express = require('express');
 const jwt_decode = require('jwt-decode');
 const router = express.Router();
 const fs = require('fs')
+const config = require('../config.json');
+
 
 router.post('/course', VerifyToken, async (req, res) => {
   try {
@@ -44,7 +46,7 @@ router.post('/course', VerifyToken, async (req, res) => {
 
 })
 
-router.post('/course/update', async (req, res) => {
+router.post('/course/update', VerifyToken, async (req, res) => {
   try {
     const update = await Course.updateOne(
       { _id: req.body.courseID }, // query parameter
@@ -52,12 +54,34 @@ router.post('/course/update', async (req, res) => {
         $set: {
           name: req.body.name,
           description: req.body.description,
-          urlImage: req.body.courseImage
+          // urlImage: req.body.courseImage
         }
       })
       
       // console.log('here')
       res.json({ 'status': 'course updated' });
+    } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+
+})
+
+router.post('/course/updateImage', VerifyToken, async (req, res) => {
+  try {
+    const pathname = req.body.imageLink.split('/')
+   const imageName = pathname[pathname.length - 1]
+
+   const update = await Course.updateOne(
+    { _id: req.body.courseID }, 
+    {
+      $set: {
+          urlImage: config.server_url + '/' + req.body.courseID + '/' + imageName
+      }
+    })
+
+    res.json({'status': 'success'})
+
     } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -238,11 +262,14 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
 
 })
 
-// Need to move this to fileMulter once I figure out why it's not getting called when it sits in fileMulter
+// TODO: Need to move this to fileMulter once I figure out why it's not getting called when it sits in fileMulter
 router.post('/removeFile', VerifyToken, async (req, res) => {
 
-  console.log('hereee')
-  const path = 'public/' + req.body.courseID + '/' + req.body.imageName
+  // console.log('hereee')
+  const pathname = req.body.imageName.split('/')
+  const imageName = pathname[pathname.length - 1]
+  console.log(imageName)
+  const path = 'public/' + req.body.courseID + '/' + imageName
 
   try {
     fs.unlinkSync(path)
