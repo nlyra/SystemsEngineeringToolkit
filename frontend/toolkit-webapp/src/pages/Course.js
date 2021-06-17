@@ -190,6 +190,7 @@ const Course = (props) => {
             <Grid item xs={12} >
               <Typography className={classes.description}>{course.description}</Typography>
             </Grid>
+            <br></br>
             <Grid item xs={12}>
           <Divider className={classes.divider} />
         </Grid>
@@ -291,7 +292,7 @@ const Course = (props) => {
             <Button variant="contained" onClick={onEditSubmit}>Submit</Button>
           </div>
         }
-        <br></br>
+      
         {/* <Grid item xs={12}>
           <Divider className={classes.divider} />
         </Grid>
