@@ -265,7 +265,6 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
 // TODO: Need to move this to fileMulter once I figure out why it's not getting called when it sits in fileMulter
 router.post('/removeFile', VerifyToken, async (req, res) => {
 
-  // console.log('hereee')
   const pathname = req.body.imageName.split('/')
   const imageName = pathname[pathname.length - 1]
   console.log(imageName)
@@ -273,11 +272,12 @@ router.post('/removeFile', VerifyToken, async (req, res) => {
 
   try {
     fs.unlinkSync(path)
-    //file removed
+    res.json({ 'status': 'module added' });
+
   } catch (err) {
     console.error(err)
+    res.sendStatus(500);
   }
-  res.send({ "status": "Success" })
 
 })
 
@@ -294,7 +294,9 @@ router.post('/deleteCreatedCourse', VerifyToken, async (req, res) => {
     const updateCourse = await Course.deleteOne({ _id: req.body.courseID })
 
     fs.rmdirSync('public/' + req.body.courseID, { recursive: true });
-
+    
+    res.json({ 'status': 'module added' });
+    
   } catch (e) {
     console.log(e);
     res.sendStatus(500);

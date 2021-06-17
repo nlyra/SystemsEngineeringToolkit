@@ -171,7 +171,7 @@ const Course = (props) => {
           <div maxWidth>
             <Grid item alignItems="center" xs={12}>
               <Grid container className={classes.topItem}>
-                <Grid item xs={3} sm={2} lg={1}>
+                <Grid item xs={3} sm={2} lg={1} >
                   <img src={course.urlImage} className={classes.currCourseImageStyle} />
                 </Grid>
                 <Grid item xs={8} sm={9} lg={9}>
@@ -190,54 +190,7 @@ const Course = (props) => {
             <Grid item xs={12} >
               <Typography className={classes.description}>{course.description}</Typography>
             </Grid>
-          </div>
-          :
-          <div maxWidth>
-            <Grid item xs={12} >
-              <Grid container className={classes.topItem}>
-                <Grid item xs={3} sm={2} lg={1}>
-                  <img src={course.urlImage} className={classes.courseImageStyle} />
-                </Grid>
-                <Grid item xs={9} sm={10} lg={11} align={"center"}>
-                  <TextField
-                    color='primary'
-                    size='medium'
-                    variant="filled"
-                    label='Title'
-                    type="text"
-                    defaultValue={course.name}
-                    onChange={e => setCourseTitle(e.target.value)}
-                    margin="normal"
-                  //fullWidth
-                  //style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
-                  />
-                </Grid>
-                <input type="file" name="picture" accept="image/*" onChange={e => setCurrCourseImage(e.target.files[0])} />
-              </Grid>
-            </Grid>
-            <Grid item xs={12} >
-              <TextField
-                color='primary'
-                size='medium'
-                variant="filled"
-                label='Description'
-                type="text"
-                defaultValue={course.description}
-                onChange={e => setCourseDescription(e.target.value)}
-                margin="normal"
-                required={true}
-                fullWidth
-                multiline
-                rows={10}
-                rowsMax={15}
-              //style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
-              />
-            </Grid>
-            <Button onClick={onEditSubmit}>Submit</Button>
-          </div>
-        }
-        <br></br>
-        <Grid item xs={12}>
+            <Grid item xs={12}>
           <Divider className={classes.divider} />
         </Grid>
         <Grid item xs={12} lg={3}>
@@ -292,6 +245,108 @@ const Course = (props) => {
             </Accordion>
           ))}
         </Grid>
+          </div>
+          :
+          <div maxWidth>
+            <Grid item xs={12} >
+              <Grid container className={classes.topItem}>
+                <Grid item xs={3} sm={2} lg={1}>
+                  <img src={course.urlImage} className={classes.currCourseImageStyle} />
+                </Grid>
+                <Grid item xs={9} sm={10} lg={11} align={"center"}>
+                  <TextField
+                    color='primary'
+                    size='medium'
+                    variant="outlined"
+                    inputProps={{ style: {textAlign: 'center'} }}
+                    label='Title'
+                    type="text"
+                    defaultValue={course.name}
+                    onChange={e => setCourseTitle(e.target.value)}
+                    margin="normal"
+                  //fullWidth
+                  //style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                  />
+                </Grid>
+                  <input type="file" name="picture" accept="image/*" className={classes.currCourseImageStyle} onChange={e => setCurrCourseImage(e.target.files[0])} />
+              </Grid>
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <TextField
+                color='primary'
+                size='medium'
+                variant='filled'
+                label='Description'
+                type="text"
+                defaultValue={course.description}
+                onChange={e => setCourseDescription(e.target.value)}
+                margin="normal"
+                required={true}
+                fullWidth
+                multiline
+                rows={4}
+                rowsMax={10}
+              />
+            </Grid>
+            <Button variant="contained" onClick={onEditSubmit}>Submit</Button>
+          </div>
+        }
+        <br></br>
+        {/* <Grid item xs={12}>
+          <Divider className={classes.divider} />
+        </Grid>
+        <Grid item xs={12} lg={3}>
+          <Link href={`/newModule/${courseID}`} underline={'none'}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              startIcon={<AddIcon />}
+            >
+              Add Module
+            </Button>
+          </Link>
+        </Grid> */}
+        {/* <Grid item xs={12} className={classes.accordion}>
+          {/* modules starts here */}
+          {/* {modules.map((module) => (
+            <Accordion key={modules.indexOf(module)} onClick={e => enroll(module)} >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <FormControlLabel
+                  aria-label="Acknowledge"
+                  onClick={(event) => event.stopPropagation()}
+                  onFocus={(event) => event.stopPropagation()}
+                  control={<ModuleInfoEditButton moduleIndex={modules.indexOf(module)} courseID={courseID} module={module} hideComponent={false} />}
+                /> */}
+                {/* <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
+              </AccordionSummary>
+              <AccordionDetails className={classes.accordionDetails}>
+                <Typography > */}
+                  {/* Type: {module.type} */}
+                  {/* {module.type == "Quiz" &&
+                    <div>
+                      <Typography >Grade: {module.grade}/{module.quiz.length}</Typography>
+                      <Typography>Grade needed to pass: {module.gradeToPass}/{module.quiz.length}</Typography>
+                    </div>
+                  }
+                  <br />
+                  {module.description}
+                  <br />
+                  <br />
+                  <div >
+                    {module.type === "Video" && <VideoModule fileUrl={module.fileUrl} />}
+                    {module.type === "Pdf" && <PdfModule fileUrl={module.fileUrl} />}
+                    {module.type === "Quiz" && <QuizModule quiz={module.quiz} moduleIndex={modules.indexOf(module)} courseID={courseID} />}
+                  </div>
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+          ))}
+        </Grid> */} 
       </Grid>
     </div >
   )
