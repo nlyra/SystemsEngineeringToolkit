@@ -123,8 +123,7 @@ const AdminUsersTab = (props) => {
     const data = await res.json()
     // console.log(data)
     if (data.message === "success") {
-      props.setCurrTab(0)
-      // alert(`Successfully deleted user`)
+      // localStorage.setItem("tab", 0);
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
@@ -183,7 +182,7 @@ const AdminUsersTab = (props) => {
                           {column.id === 'delete' &&
                             <Link
                               className={classes.deleteButton}
-                              href="/admindashboard"
+                              href="/admindashboard?tab=0"
                               onClick={() => { window.confirm(`Are you sure you wish to Delete user: ${row.first_name} ${row.last_name}?`) && handleDelete(row._id) }}
                             >
                               <DeleteIcon color="secondary" />

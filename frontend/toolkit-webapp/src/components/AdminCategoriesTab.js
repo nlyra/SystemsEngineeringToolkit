@@ -63,6 +63,8 @@ const AdminCategoriesTab = (props) => {
   const getCategories = async (props) => {
     const token = localStorage.getItem("token");
 
+    // console.log(typeof(new URLSearchParams(window.location.search).get('tab')))
+
     const res = await fetch(config.server_url + config.paths.getCategories, {
       method: 'POST',
       headers: {
@@ -93,14 +95,13 @@ const AdminCategoriesTab = (props) => {
       headers: {
         'Content-type': 'application/json'
       },
-      body: JSON.stringify({ "token": token, "deleteID": id})
+      body: JSON.stringify({ "token": token, "deleteID": id })
     })
 
     const data = await res.json()
     // console.log(data)
     if (data.message === undefined) {
-      props.setCurrTab(2)
-      // alert(`Successfully deleted user`)
+      // localStorage.setItem("tab", 2);
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
@@ -143,7 +144,7 @@ const AdminCategoriesTab = (props) => {
                           {column.id === 'delete' &&
                             <Link
                               className={classes.deleteButton}
-                              href="/admindashboard"
+                              href="/admindashboard?tab=2"
                               onClick={() => { window.confirm(`Are you sure you wish to Delete label: ${row.label}`) && handleDelete(row._id) }}
                             >
                               <DeleteIcon color="secondary" />
