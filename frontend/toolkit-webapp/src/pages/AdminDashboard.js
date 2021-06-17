@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import TopNavBar from '../components/TopNavBar'
 import { Divider, makeStyles, Grid, Button, Container } from '@material-ui/core'
 import AdminUsersTab from '../components/AdminUsersTab'
+import AdminCoursesTab from '../components/AdminCoursesTab'
+import AdminCategoriesTab from '../components/AdminCategoriesTab'
 
 const adminStyles = makeStyles((theme) => ({
   div: {
@@ -35,7 +37,7 @@ const adminStyles = makeStyles((theme) => ({
   },
 
   innerDiv: {
-    // paddingLeft: '1vw',
+    paddingBottom: '100px',
   },
 
 }))
@@ -43,6 +45,8 @@ const AdminDashboard = () => {
   const [currTab, setCurrTab] = useState(0)
 
   const classes = adminStyles()
+
+
   return (
     <div className={classes.div}>
       <TopNavBar />
@@ -72,9 +76,9 @@ const AdminDashboard = () => {
           </Grid>
           <Grid item xs={12}>
             <div className={classes.innerDiv}>
-              {currTab === 0 && <AdminUsersTab />}
-              {currTab === 1 && <>courses</>}
-              {currTab === 2 && <>categories</>}
+              {currTab === 0 && <AdminUsersTab setCurrTab={setCurrTab}/>}
+              {currTab === 1 && <AdminCoursesTab setCurrTab={setCurrTab}/>}
+              {currTab === 2 && <AdminCategoriesTab setCurrTab={setCurrTab}/>}
             </div>
           </Grid>
 

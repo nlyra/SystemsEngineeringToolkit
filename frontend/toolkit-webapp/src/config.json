@@ -21,6 +21,12 @@
     "resetPassApproved": "/v0/auth/resetPassApproved",
     "categories": "/v0/categories/info",
     "addCategories": "/v0/categories/add",
-    "getUsers": "/v0/admin/users"
+    "getUsers": "/v0/admin/users",
+    "deleteUser": "/v0/admin/user",
+    "changeUserRole": "/v0/admin/userrole",
+    "getCourses": "/v0/admin/courses",
+    "adminDeleteCourse": "/v0/admin/course",
+    "getCategories": "/v0/admin/categories",
+    "adminDeleteCategory": "/v0/admin/category"
   }
 }
