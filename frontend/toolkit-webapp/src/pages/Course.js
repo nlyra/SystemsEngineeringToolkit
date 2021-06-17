@@ -105,6 +105,10 @@ const Course = (props) => {
 
   }
 
+  const isDisabled = (index) => {
+    return (index === 3)
+  }
+
   return (
     <div className={classes.div}>
       <TopNavBar >
@@ -197,41 +201,61 @@ const Course = (props) => {
         <Grid item xs={12} className={classes.accordion}>
           {/* modules starts here */}
           {modules.map((module) => (
-            <Accordion key={modules.indexOf(module)} onClick={e => enroll(module)} >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <FormControlLabel
-                  aria-label="Acknowledge"
-                  onClick={(event) => event.stopPropagation()}
-                  onFocus={(event) => event.stopPropagation()}
-                  control={<ModuleInfoEditButton moduleIndex={modules.indexOf(module)} courseID={courseID} module={module} hideComponent={false} />}
-                />
-                <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
-              </AccordionSummary>
-              <AccordionDetails className={classes.accordionDetails}>
-                <Typography >
-                  {/* Type: {module.type} */}
-                  {module.type == "Quiz" &&
-                    <div>
-                      <Typography >Grade: {module.grade}/{module.quiz.length}</Typography>
-                      <Typography>Grade needed to pass: {module.gradeToPass}/{module.quiz.length}</Typography>
-                    </div>
-                  }
-                  <br />
-                  {module.description}
-                  <br />
-                  <br />
-                  <div >
-                    {module.type === "Video" && <VideoModule fileUrl={module.fileUrl} />}
-                    {module.type === "Pdf" && <PdfModule fileUrl={module.fileUrl} />}
-                    {module.type === "Quiz" && <QuizModule quiz={module.quiz} moduleIndex={modules.indexOf(module)} courseID={courseID} />}
-                  </div>
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
+            <div>
+              {isDisabled(modules.indexOf(module)) ?
+                <Accordion key={modules.indexOf(module)} onClick={e => enroll(module)} disabled >
+
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <FormControlLabel
+                      aria-label="Acknowledge"
+                      onClick={(event) => event.stopPropagation()}
+                      onFocus={(event) => event.stopPropagation()}
+                      control={<ModuleInfoEditButton moduleIndex={modules.indexOf(module)} courseID={courseID} module={module} hideComponent={false} />}
+                    />
+                    <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
+                  </AccordionSummary>
+                </Accordion>
+                :
+                <Accordion key={modules.indexOf(module)} onClick={e => enroll(module)} >
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <FormControlLabel
+                      aria-label="Acknowledge"
+                      onClick={(event) => event.stopPropagation()}
+                      onFocus={(event) => event.stopPropagation()}
+                      control={<ModuleInfoEditButton moduleIndex={modules.indexOf(module)} courseID={courseID} module={module} hideComponent={false} />}
+                    />
+                    <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails className={classes.accordionDetails}>
+                    <Typography >
+                      {/* Type: {module.type} */}
+                      {module.type == "Quiz" &&
+                        <div>
+                          <Typography >Grade: {module.grade}/{module.quiz.length}</Typography>
+                          <Typography>Grade needed to pass: {module.gradeToPass}/{module.quiz.length}</Typography>
+                        </div>
+                      }
+                      <br />
+                      {module.description}
+                      <br />
+                      <br />
+                      <div >
+                        {module.type === "Video" && <VideoModule fileUrl={module.fileUrl} />}
+                        {module.type === "Pdf" && <PdfModule fileUrl={module.fileUrl} />}
+                        {module.type === "Quiz" && <QuizModule quiz={module.quiz} moduleIndex={modules.indexOf(module)} courseID={courseID} />}
+                      </div>
+                    </Typography>
+                  </AccordionDetails>
+                </Accordion>}
+            </div>
           ))}
         </Grid>
       </Grid>
