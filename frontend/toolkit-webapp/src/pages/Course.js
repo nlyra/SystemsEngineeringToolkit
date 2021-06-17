@@ -190,62 +190,6 @@ const Course = (props) => {
             <Grid item xs={12} >
               <Typography className={classes.description}>{course.description}</Typography>
             </Grid>
-            <br></br>
-            <Grid item xs={12}>
-          <Divider className={classes.divider} />
-        </Grid>
-        <Grid item xs={12} lg={3}>
-          <Link href={`/newModule/${courseID}`} underline={'none'}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              startIcon={<AddIcon />}
-            >
-              Add Module
-            </Button>
-          </Link>
-        </Grid>
-        <Grid item xs={12} className={classes.accordion}>
-          {/* modules starts here */}
-          {modules.map((module) => (
-            <Accordion key={modules.indexOf(module)} onClick={e => enroll(module)} >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <FormControlLabel
-                  aria-label="Acknowledge"
-                  onClick={(event) => event.stopPropagation()}
-                  onFocus={(event) => event.stopPropagation()}
-                  control={<ModuleInfoEditButton moduleIndex={modules.indexOf(module)} courseID={courseID} module={module} hideComponent={false} />}
-                />
-                <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
-              </AccordionSummary>
-              <AccordionDetails className={classes.accordionDetails}>
-                <Typography >
-                  {/* Type: {module.type} */}
-                  {module.type == "Quiz" &&
-                    <div>
-                      <Typography >Grade: {module.grade}/{module.quiz.length}</Typography>
-                      <Typography>Grade needed to pass: {module.gradeToPass}/{module.quiz.length}</Typography>
-                    </div>
-                  }
-                  <br />
-                  {module.description}
-                  <br />
-                  <br />
-                  <div >
-                    {module.type === "Video" && <VideoModule fileUrl={module.fileUrl} />}
-                    {module.type === "Pdf" && <PdfModule fileUrl={module.fileUrl} />}
-                    {module.type === "Quiz" && <QuizModule quiz={module.quiz} moduleIndex={modules.indexOf(module)} courseID={courseID} />}
-                  </div>
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-          ))}
-        </Grid>
           </div>
           :
           <div maxWidth>
@@ -293,7 +237,8 @@ const Course = (props) => {
           </div>
         }
       
-        {/* <Grid item xs={12}>
+      <br></br>
+        <Grid item xs={12}>
           <Divider className={classes.divider} />
         </Grid>
         <Grid item xs={12} lg={3}>
@@ -307,10 +252,10 @@ const Course = (props) => {
               Add Module
             </Button>
           </Link>
-        </Grid> */}
-        {/* <Grid item xs={12} className={classes.accordion}>
+        </Grid> 
+         <Grid item xs={12} className={classes.accordion}>
           {/* modules starts here */}
-          {/* {modules.map((module) => (
+           {modules.map((module) => (
             <Accordion key={modules.indexOf(module)} onClick={e => enroll(module)} >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -322,13 +267,13 @@ const Course = (props) => {
                   onClick={(event) => event.stopPropagation()}
                   onFocus={(event) => event.stopPropagation()}
                   control={<ModuleInfoEditButton moduleIndex={modules.indexOf(module)} courseID={courseID} module={module} hideComponent={false} />}
-                /> */}
-                {/* <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
+                /> 
+                 <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
               </AccordionSummary>
               <AccordionDetails className={classes.accordionDetails}>
-                <Typography > */}
-                  {/* Type: {module.type} */}
-                  {/* {module.type == "Quiz" &&
+                <Typography > 
+                  Type: {module.type} 
+                 {module.type == "Quiz" &&
                     <div>
                       <Typography >Grade: {module.grade}/{module.quiz.length}</Typography>
                       <Typography>Grade needed to pass: {module.gradeToPass}/{module.quiz.length}</Typography>
@@ -347,7 +292,7 @@ const Course = (props) => {
               </AccordionDetails>
             </Accordion>
           ))}
-        </Grid> */} 
+        </Grid> 
       </Grid>
     </div >
   )
