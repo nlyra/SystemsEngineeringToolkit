@@ -123,7 +123,7 @@ function NewCourse(props) {
                     "token": token,
                     "modules": [],
                     "name": creds.courseTitle,
-                    "category": creds.category,
+                    "categories": creds.categories,
                     "description": creds.description,
                     "urlImage": `http://localhost:4000/misc_files/logo.jpg`
                 })
