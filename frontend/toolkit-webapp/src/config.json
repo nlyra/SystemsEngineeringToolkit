@@ -20,6 +20,7 @@
         "checkResetCreds": "/v0/auth/checkResetCreds",
         "resetPassApproved": "/v0/auth/resetPassApproved",
         "categories": "/v0/categories/info",
-        "addCategories": "/v0/categories/add"
+        "addCategories": "/v0/categories/add",
+        "completedModule": "/v0/courses/module/completed"
     }
   }

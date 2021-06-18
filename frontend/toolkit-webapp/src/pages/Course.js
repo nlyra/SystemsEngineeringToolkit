@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import { Link, FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
+import { Link, FormControlLabel, Divider, Grid, Typography, TextField, Button } from '@material-ui/core'
 import VideoModule from '../components/VideoModule'
 import PdfModule from '../components/PdfModule'
 import QuizModule from '../components/QuizModule'
@@ -13,7 +13,6 @@ import CourseInfoEditButton from '../components/CourseInfoEditButton';
 import ModuleInfoEditButton from '../components/ModuleInfoEditButton';
 import AddIcon from '@material-ui/icons/Add';
 import courseStyles from '../styles/courseStyle';
-import jwt_decode from "jwt-decode";
 
 
 const Course = (props) => {
@@ -106,7 +105,47 @@ const Course = (props) => {
   }
 
   const isDisabled = (index) => {
-    return (index === 3)
+    if (index >= 3) {
+      if (modules[index - 1].completed === 1) {
+        return false
+      }
+      return true
+    }
+    return false
+  }
+
+  const handleComplete = async (index) => {
+    // send the completed news to db
+    const token = localStorage.getItem("token");
+    const res = await fetch(config.server_url + config.paths.completedModule, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        "courseID": courseID,
+        "token": token,
+        "moduleID": index
+      })
+    })
+
+    const data = await res.json()
+    if (data.message === undefined) {
+      let temp = modules;
+      temp[index]["completed"] = 1
+      setModules(temp)
+      window.location.reload();
+
+    } else if (data.message === "wrong token") {
+      localStorage.removeItem('token');
+      props.history.push('login');
+      // probably alert the user
+
+    } else { // this is to check if there are errors not being addressed already
+      console.log(data)
+    }
+
+
   }
 
   return (
@@ -235,24 +274,43 @@ const Course = (props) => {
                     <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
                   </AccordionSummary>
                   <AccordionDetails className={classes.accordionDetails}>
-                    <Typography >
-                      {/* Type: {module.type} */}
-                      {module.type == "Quiz" &&
-                        <div>
-                          <Typography >Grade: {module.grade}/{module.quiz.length}</Typography>
-                          <Typography>Grade needed to pass: {module.gradeToPass}/{module.quiz.length}</Typography>
-                        </div>
-                      }
+                    <div className={classes.accordionDiv}>
+                      <Typography >
+
+                        {/* Type: {module.type} */}
+                        {module.type == "Quiz" &&
+                          <div>
+                            <Typography >Grade: {module.grade}/{module.quiz.length}</Typography>
+                            <Typography>Grade needed to pass: {module.gradeToPass}/{module.quiz.length}</Typography>
+                          </div>
+                        }
+                        <br />
+                        {module.description}
+                      </Typography>
                       <br />
-                      {module.description}
                       <br />
-                      <br />
-                      <div >
+                      <div className={classes.fileDiv}>
                         {module.type === "Video" && <VideoModule fileUrl={module.fileUrl} />}
                         {module.type === "Pdf" && <PdfModule fileUrl={module.fileUrl} />}
-                        {module.type === "Quiz" && <QuizModule quiz={module.quiz} moduleIndex={modules.indexOf(module)} courseID={courseID} />}
+                        {module.type === "Quiz" && <QuizModule quiz={module.quiz} moduleIndex={modules.indexOf(module)} courseID={courseID} gradeToPass={module.gradeToPass} />}
                       </div>
-                    </Typography>
+                      <br />
+                      {module.type !== "Quiz" &&
+                        <div className={classes.completeDiv}>
+                          {/* {module.completed === 1 ?
+                            <Button disabled>Complete!</Button> */}
+                          {/* : */}
+                          <Button
+                            variant="contained"
+                            onClick={() => handleComplete(modules.indexOf(module))}
+                            disabled={module.completed === 1}
+                          >
+                            Complete!
+                          </Button>
+                          {/* } */}
+                        </div>
+                      }
+                    </div>
                   </AccordionDetails>
                 </Accordion>}
             </div>

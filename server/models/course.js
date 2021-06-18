@@ -23,6 +23,11 @@ const CourseSchema = mongoose.Schema({
     "default": 0
   },
 
+  totalCompletedStudents: {
+    type: Number,
+    "default": 0
+  },
+
   studentsEnrolled: [],
 
   urlImage: {

@@ -1,4 +1,4 @@
-import { Button, Typography } from '@material-ui/core';
+import { Button, Typography, Link } from '@material-ui/core';
 import React, { useState, } from 'react';
 import quizStyles from '../styles/quizModuleStyle'
 import config from '../config.json'
@@ -11,7 +11,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 const QuizModule = (props) => {
   const classes = quizStyles()
 
-  const [state, setState] = useState(0);  // 0 == start button, 1 == quiz, 2 == score and again
+  const [state, setState] = useState(props.gradeToPass !== undefined ? 2 : 0);  // 0 == start button, 1 == quiz, 2 == score and again
   const [questions, setQuestions] = useState(props.quiz);
   const [score, setScore] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -54,6 +54,7 @@ const QuizModule = (props) => {
 
     const data = await res.json()
     if (data.message === undefined) {
+      window.location.reload();
       //maybe do something in the future
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
@@ -123,9 +124,13 @@ const QuizModule = (props) => {
       {state === 2 &&
         <div className={classes.afterSubmitDiv}>
           <div >
-            <Typography>Your score is: {score}/{questions.length}</Typography>
+            {/* <Typography>Your score is: {score}/{questions.length}</Typography> */}
             <br />
-            <Button variant="contained" onClick={() => window.confirm('Are you sure you wish to try again?') && handleAgain()}>Try again?</Button>
+            <Button variant="contained" onClick={() => window.confirm('Are you sure you wish to try again?') && handleAgain()}>
+              {/* <Link href={`/course/${props.courseID}`} underline={'none'}> */}
+                Try again?
+              {/* </Link> */}
+            </Button>
             <Button variant="contained" onClick={() => window.confirm('Are you sure you wish to try again?') && handleAgain()}>Show answers</Button>
           </div>
         </div>

@@ -18,22 +18,24 @@ const UserSchema = mongoose.Schema({
         required: true
     },
 
-    
+
     resetPassToken: {
         type: String,
         required: false
     },
-    
+
     resetPassExpires: {
         type: Number,
         required: false
     },
-    
+
     enrolledClasses: [],
 
     createdCourses: [],
-    
+
     coursesQuizes: [],
+
+    coursesData: [],
 })
 
 
