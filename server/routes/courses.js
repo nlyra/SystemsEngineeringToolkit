@@ -402,8 +402,6 @@ router.post('/module/completed', VerifyToken, async (req, res) => {
       courses[req.body.courseID][req.body.moduleID] = { status: 1 }
     }
 
-    // console.log(courses)
-
     const update = await User.updateOne(
       { _id: req.body.userID }, // query parameter
       {
@@ -412,6 +410,7 @@ router.post('/module/completed', VerifyToken, async (req, res) => {
         }
       });
 
+      // If the user completed the first module, do the checks for enrollment. Otherwise, proceed as usual
       if(req.body.moduleID == 0)
       {
         let studentExists = {}
