@@ -102,7 +102,7 @@ const Course = (props) => {
       })
     })
 
-    // window.location.reload();
+    window.location.reload();
   }
 
   const enroll = async (module) => {
