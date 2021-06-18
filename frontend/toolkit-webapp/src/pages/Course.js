@@ -97,6 +97,8 @@ const Course = (props) => {
         'token': token,
         'courseID': course._id,
         'moduleID': modules.indexOf(module),
+        'title': module.title,
+        'description': module.description,
       })
     })
 
