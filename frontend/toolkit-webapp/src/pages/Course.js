@@ -242,7 +242,7 @@ const Course = (props) => {
           {modules.map((module) => (
             <div>
               {isDisabled(modules.indexOf(module)) ?
-                <Accordion key={modules.indexOf(module)} onClick={e => enroll(module)} disabled >
+                <Accordion key={modules.indexOf(module)} disabled >
 
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -259,7 +259,7 @@ const Course = (props) => {
                   </AccordionSummary>
                 </Accordion>
                 :
-                <Accordion key={modules.indexOf(module)} onClick={e => enroll(module)} >
+                <Accordion key={modules.indexOf(module)} >
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"

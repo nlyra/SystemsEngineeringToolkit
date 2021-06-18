@@ -68,45 +68,45 @@ router.post('/course/update', async (req, res) => {
 
 })
 
-router.post('/course/enrollment', VerifyToken, async (req, res) => {
+// router.post('/course/enrollment', VerifyToken, async (req, res) => {
 
-  try {
+//   try {
 
-    // studentExists is a variable that will tell me if the course contains the user as an enrolled student
-    let studentExists = {}
-    studentExists = await Course.findOne({ "_id": req.body.courseID, "studentsEnrolled": req.body.userID }, '_id studentsEnrolled')
+//     // studentExists is a variable that will tell me if the course contains the user as an enrolled student
+//     let studentExists = {}
+//     studentExists = await Course.findOne({ "_id": req.body.courseID, "studentsEnrolled": req.body.userID }, '_id studentsEnrolled')
 
-    if (studentExists === null) {
+//     if (studentExists === null) {
 
-      const updateCourse = await Course.updateOne(
-        { _id: req.body.courseID },
-        {
-          $push: {
-            studentsEnrolled:
-              req.body.userID
-          },
-          $inc: { totalStudents: 1 }
-        });
+//       const updateCourse = await Course.updateOne(
+//         { _id: req.body.courseID },
+//         {
+//           $push: {
+//             studentsEnrolled:
+//               req.body.userID
+//           },
+//           $inc: { totalStudents: 1 }
+//         });
 
-      const updateUser = await User.updateOne(
-        { _id: req.body.userID },
-        {
-          $push: {
-            enrolledClasses:
-              req.body.courseID
-          }
+//       const updateUser = await User.updateOne(
+//         { _id: req.body.userID },
+//         {
+//           $push: {
+//             enrolledClasses:
+//               req.body.courseID
+//           }
 
-        });
+//         });
 
-      res.json({ 'status': 'student enrolled in course' });
-    }
+//       res.json({ 'status': 'student enrolled in course' });
+//     }
 
-  } catch (e) {
-    console.log(e);
-    res.sendStatus(500);
-  }
+//   } catch (e) {
+//     console.log(e);
+//     res.sendStatus(500);
+//   }
 
-})
+// })
 
 router.post('/info', VerifyToken, async (req, res) => {
   try {
@@ -230,7 +230,7 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
       { _id: req.body.courseID },
       {
         $pull: { studentsEnrolled: req.body.userID },
-        $inc: { totalStudents: -1 }
+        // $inc: { totalStudents: -1 }
       })
 
   } catch (e) {
@@ -411,6 +411,37 @@ router.post('/module/completed', VerifyToken, async (req, res) => {
           coursesData: courses
         }
       });
+
+      if(req.body.moduleID == 0)
+      {
+        let studentExists = {}
+        studentExists = await Course.findOne({ "_id": req.body.courseID, "studentsEnrolled": req.body.userID }, '_id studentsEnrolled')
+
+        if (studentExists === null) {
+
+          const updateCourse = await Course.updateOne(
+            { _id: req.body.courseID },
+            {
+              $push: {
+                studentsEnrolled:
+                  req.body.userID
+              },
+              $inc: { totalStudents: 1 }
+            });
+
+          const updateUser = await User.updateOne(
+            { _id: req.body.userID },
+            {
+              $push: {
+                enrolledClasses:
+                  req.body.courseID
+              }
+
+            });
+
+          // res.json({ 'status': 'student enrolled in course' });
+        }
+      }
 
     let modules = await Course.findOne({ _id: req.body.courseID }, 'modules');
     if (modules.modules.length == req.body.moduleID + 1) {

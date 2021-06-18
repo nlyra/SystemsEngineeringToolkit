@@ -128,7 +128,7 @@ const MyCourses = (props) => {
                                 <Link href="/MyCourses" underline='none' color="inherit"> 
                                 <div className={classes.buttonDiv}>
                                     <Button type='submit' className={classes.removeButton} size= "small" color="inherit" variant="contained" onClick={() => {if (window.confirm('Are you sure you wish to disenroll? Your progress may be lost.')) removeEnrollment(course._id)} }>
-                                    Remove Course
+                                    Disenroll Course
                                     </Button>
                                     </div>
                                 </Link> 

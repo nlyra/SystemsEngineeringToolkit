@@ -139,16 +139,16 @@ const QuizModule = (props) => {
               <br />
               {question.type === "Multiple Choice" &&
                 <div>
-                  <Typography>Answer: {question.answers[0].answerText} is {question.answers[0].isCorrect ? "correct" : "incorrect"}</Typography>
-                  <Typography>Answer: {question.answers[1].answerText} is {question.answers[1].isCorrect ? "correct" : "incorrect"}</Typography>
-                  <Typography>Answer: {question.answers[2].answerText} is {question.answers[2].isCorrect ? "correct" : "incorrect"}</Typography>
-                  <Typography>Answer: {question.answers[3].answerText} is {question.answers[3].isCorrect ? "correct" : "incorrect"}</Typography>
+                  <Typography>Answer Option: {question.answers[0].answerText} is {question.answers[0].isCorrect ? "correct" : "incorrect"}</Typography>
+                  <Typography>Answer Option: {question.answers[1].answerText} is {question.answers[1].isCorrect ? "correct" : "incorrect"}</Typography>
+                  <Typography>Answer Option: {question.answers[2].answerText} is {question.answers[2].isCorrect ? "correct" : "incorrect"}</Typography>
+                  <Typography>Answer Option: {question.answers[3].answerText} is {question.answers[3].isCorrect ? "correct" : "incorrect"}</Typography>
                 </div>
               }
               {question.type === "True or False" &&
                 <div>
-                  <Typography>Answer: {question.answers[0].answerText} is {question.answers[0].isCorrect ? "correct" : "incorrect"}</Typography>
-                  <Typography>Answer: {question.answers[0].answerText === "True" ? "False" : "True"} is {question.answers[1].isCorrect ? "correct" : "incorrect"}</Typography>
+                  <Typography>Answer Option: {question.answers[0].answerText} is {question.answers[0].isCorrect ? "correct" : "incorrect"}</Typography>
+                  <Typography>Answer Option: {question.answers[0].answerText === "True" ? "False" : "True"} is {question.answers[1].isCorrect ? "correct" : "incorrect"}</Typography>
                 </div>
               }
               <br />
