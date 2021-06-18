@@ -1,9 +1,14 @@
 import React, { useState } from 'react'
-import { fade, makeStyles, IconButton, AppBar, Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
+import { fade, makeStyles, IconButton, AppBar, Typography, Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu'
 import SearchIcon from '@material-ui/icons/Search'
 import AccountCircle from '@material-ui/icons/AccountCircle';
 //import logo from '../img/peostrilogo.png';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import PostAddIcon from '@material-ui/icons/PostAdd';
@@ -19,10 +24,18 @@ const logo_url = "http://localhost:4000/misc_files/logo.jpg"
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
+
     root:
     {
         display: 'flex',
     },
+
+    dialog:
+    {
+        // display: 'flex',
+        position: 'absolute'
+    },
+
     search: {
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
@@ -150,6 +163,15 @@ export default function TopNavBar(props) {
 
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpenDialog(true)
+    }
+
+    const handleClose = () => {
+        setOpenDialog(false);
+    };
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -233,7 +255,7 @@ export default function TopNavBar(props) {
                                 aria-label="account of current user"
                                 //aria-controls={menuId}
                                 aria-haspopup="true"
-                                //onClick={handleProfileMenuOpen}
+                                onClick={handleClickOpen}
                                 color="inherit"
                                 className={classes.iconbutton}
                             >
@@ -241,8 +263,39 @@ export default function TopNavBar(props) {
                             </IconButton>
                             
                             : null}
-                            
-                            
+
+                        {openDialog === true ?
+
+                            <div className={classes.dialog}>
+                                <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={openDialog}>
+                                    <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+                                        Modal title
+                                </DialogTitle>
+                                    <DialogContent dividers>
+                                        <Typography gutterBottom>
+                                            Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
+                                            in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+                                        </Typography>
+                                        <Typography gutterBottom>
+                                            Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
+                                            lacus vel augue laoreet rutrum faucibus dolor auctor.
+                                        </Typography>
+                                        <Typography gutterBottom>
+                                            Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
+                                            scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
+                                            auctor fringilla.
+                                        </Typography>
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Button autoFocus onClick={handleClose} color="primary">
+                                            Save changes
+                                        </Button>
+                                    </DialogActions>
+                                </Dialog>
+                            </div>
+
+                            : null}
+
                             {window.location.pathname !== "/" && 
                             window.location.pathname !== "/registration" && 
                             window.location.pathname !== "/forgot" &&
