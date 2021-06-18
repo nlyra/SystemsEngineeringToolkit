@@ -73,7 +73,7 @@ const Course = (props) => {
   }
 
   const onEditSubmit = async (e) => {
-
+    // e.preventDefault()
     setEditCourseInfo(false);
     const token = localStorage.getItem("token");
 
@@ -92,8 +92,13 @@ const Course = (props) => {
 
     const data = await res.json()
 
+    // No new image assigned to course so only refresh to show other updates
+    if(currCourseImage.name === undefined)
+      window.location.reload();
+    
+
     // We have a new image being passed in so delete old file
-    if ((oldCourseImage !== null) && (oldCourseImage !== currCourseImage)) {
+    if ((oldCourseImage !== null) && (oldCourseImage.name !== currCourseImage.name)) {
 
       const res = await fetch(config.server_url + config.paths.removeFile, {
         method: 'POST',
@@ -118,6 +123,7 @@ const Course = (props) => {
     const imageType = imageTypePath[imageTypePath.length - 1]
     const validInput = validImageTypes.includes(imageType);
 
+    // If it isn't, return and allow user to input valid image
     if(!validInput)
     {
       alert('Invalid file type. Please upload an image with the extension .jpg or .png')
@@ -126,7 +132,6 @@ const Course = (props) => {
 
     if (currCourseImage.name !== oldCourseImage.name) {
 
-      if(currCourseImage)
       if (data.message === undefined) {
         const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + currCourseImage.name, {
           method: 'POST',
