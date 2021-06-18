@@ -362,7 +362,7 @@ router.post('/module/delete', VerifyToken, async (req, res) => {
 
   try {
 
-    console.log(req.body.moduleID)
+    // console.log(req.body.moduleID)
     const update = await Course.updateOne(
       { _id: req.body.courseID },
       { $pull: {modules: {title: req.body.title, description: req.body.description} } }
