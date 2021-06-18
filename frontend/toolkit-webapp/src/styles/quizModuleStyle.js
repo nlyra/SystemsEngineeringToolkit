@@ -29,11 +29,16 @@ const dashStyles = makeStyles((theme) => ({
   },
 
   afterSubmitDiv: {
-    // backgroundColor: 'grey',
     width: '100%',
     display: 'flex',
     justifyContent: "center",
   },
+
+  answersDiv: {
+    backgroundColor: 'grey',
+    // width: '100%',
+    // display: 'flex'
+  }
 
 }))
 

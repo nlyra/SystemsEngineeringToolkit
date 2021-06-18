@@ -126,12 +126,36 @@ const QuizModule = (props) => {
           <div >
             {/* <Typography>Your score is: {score}/{questions.length}</Typography> */}
             <br />
-            <Button variant="contained" onClick={() => window.confirm('Are you sure you wish to try again?') && handleAgain()}>
-              {/* <Link href={`/course/${props.courseID}`} underline={'none'}> */}
-                Try again?
-              {/* </Link> */}
-            </Button>
-            <Button variant="contained" onClick={() => window.confirm('Are you sure you wish to try again?') && handleAgain()}>Show answers</Button>
+            <Button variant="contained" onClick={() => window.confirm('Are you sure you wish to try again?') && handleAgain()}>Try again?</Button>
+            <Button variant="contained" onClick={() => window.confirm('Are you sure you wish to show answers?') && setState(3)}>Show answers</Button>
+          </div>
+        </div>
+      }
+      {state === 3 &&
+        <div>
+          {questions.map((question) => (
+            <div >
+              <Typography>{questions.indexOf(question) + 1}. {question.question}</Typography>
+              <br />
+              {question.type === "Multiple Choice" &&
+                <div>
+                  <Typography>Answer: {question.answers[0].answerText} is {question.answers[0].isCorrect ? "correct" : "incorrect"}</Typography>
+                  <Typography>Answer: {question.answers[1].answerText} is {question.answers[1].isCorrect ? "correct" : "incorrect"}</Typography>
+                  <Typography>Answer: {question.answers[2].answerText} is {question.answers[2].isCorrect ? "correct" : "incorrect"}</Typography>
+                  <Typography>Answer: {question.answers[3].answerText} is {question.answers[3].isCorrect ? "correct" : "incorrect"}</Typography>
+                </div>
+              }
+              {question.type === "True or False" &&
+                <div>
+                  <Typography>Answer: {question.answers[0].answerText} is {question.answers[0].isCorrect ? "correct" : "incorrect"}</Typography>
+                  <Typography>Answer: {question.answers[0].answerText === "True" ? "False" : "True"} is {question.answers[1].isCorrect ? "correct" : "incorrect"}</Typography>
+                </div>
+              }
+              <br />
+            </div>
+          ))}
+          <div >
+            <Button variant="contained" onClick={() => window.confirm('Are you sure you wish to go back?') && setState(2)}>Go back</Button>
           </div>
         </div>
       }
