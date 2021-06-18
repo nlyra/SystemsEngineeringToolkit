@@ -95,7 +95,7 @@ const Course = (props) => {
       body: JSON.stringify({
         'token': token,
         'courseID': course._id,
-        'moduleID': modules.indexOf(module),
+        'moduleID': module.indexOf(module),
         'title': module.title,
         'description': module.description,
       })
