@@ -18,10 +18,10 @@ const dashStyles = makeStyles((theme) => ({
   },
 
   currCourseImageStyle: {
-    paddingTop: '3vh',
+   marginTop: '3vh',
     maxWidth: '35vh',
     maxHeight: '35vh',
-    // marginBottom: "5px"
+    // marginRight: "10%"
   },
 
   description: {

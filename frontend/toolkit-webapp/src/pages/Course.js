@@ -26,6 +26,8 @@ const Course = (props) => {
   const [editCourseInfo, setEditCourseInfo] = useState(false)
   const [courseID, setCourseID] = useState('')
 
+  let validImageTypes = ["png", "PNG", "jpeg", "jpg"]
+
   const classes = courseStyles()
 
   const onEditCourseTitle = (e) => {
@@ -110,8 +112,21 @@ const Course = (props) => {
     const imageData = new FormData();
     imageData.append('file', currCourseImage)
 
+
+    // Checking to see if the file inputted is not an actual image
+    const imageTypePath = currCourseImage.name.split('.') 
+    const imageType = imageTypePath[imageTypePath.length - 1]
+    const validInput = validImageTypes.includes(imageType);
+
+    if(!validInput)
+    {
+      alert('Invalid file type. Please upload an image with the extension .jpg or .png')
+      return
+    }
+
     if (currCourseImage.name !== oldCourseImage.name) {
 
+      if(currCourseImage)
       if (data.message === undefined) {
         const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + currCourseImage.name, {
           method: 'POST',
@@ -155,7 +170,6 @@ const Course = (props) => {
         body: JSON.stringify({
           "courseID": course._id,
           "token": token
-          // "userID": decoded.id
         })
       })
     }

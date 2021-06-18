@@ -19,6 +19,7 @@ function NewCourse(props) {
     const [image, setImage] = useState()
     const [dialogData, setDialogData] = React.useState([]);
     const filter = createFilterOptions();
+    let validImageTypes = ["png", "PNG", "jpeg", "jpg"]
 
     const onSubmit = (e) => {
         e.preventDefault()
@@ -41,7 +42,15 @@ function NewCourse(props) {
 
         if (image !== undefined) { //if there is an image
 
+            // Checking to see if the file inputted is not an actual image
+            const imageTypePath = image.name.split('.') 
+            const imageType = imageTypePath[imageTypePath.length - 1]
+            const validInput = validImageTypes.includes(imageType);
 
+            if (!validInput) {
+                alert('Invalid file type. Please upload an image with the extension .jpg or .png')
+                return
+            }
                         // handle image
                         const imageData = new FormData();
                         imageData.append('file', image)
