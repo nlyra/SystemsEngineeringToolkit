@@ -235,7 +235,7 @@ const Course = (props) => {
                   onFocus={(event) => event.stopPropagation()}
                   // <ModuleDeleteButton moduleIndex={modules.indexOf(module)} courseID={courseID} hideComponent={false} delete={deleteModule}/>
                   control={
-                    <IconButton type='submit' className={classes.deleteButton} variant="contained" color="secondary" onClick={e => deleteModule(module)}>
+                    <IconButton type='submit' className={classes.deleteButton} variant="contained" color="secondary" onClick={() => window.confirm('Are you sure you wish to delete this module: ' + (modules.indexOf(module)+1) + '?') && deleteModule(module)}>
                       <DeleteIcon />
                     </IconButton>
                   }
