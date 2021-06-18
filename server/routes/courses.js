@@ -391,9 +391,6 @@ router.post('/module/completed', VerifyToken, async (req, res) => {
   try {
     let courses = await User.findOne({ _id: req.body.userID }, 'coursesData');
 
-    if (courses.coursesData[0] == undefined)
-      courses.coursesData.append({})
-
     courses = courses.coursesData[0];
     if (courses === undefined)
       courses = {}
@@ -422,7 +419,6 @@ router.post('/module/completed', VerifyToken, async (req, res) => {
         {
           $inc: { totalCompletedStudents: 1 }
         });
-      console.log(updateCourse)
     }
 
     res.json({ 'status': 'saved' });
