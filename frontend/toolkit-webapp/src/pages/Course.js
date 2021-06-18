@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import { Link, FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
+import { IconButton, Link, FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
 import VideoModule from '../components/VideoModule'
 import PdfModule from '../components/PdfModule'
 import QuizModule from '../components/QuizModule'
@@ -11,7 +11,9 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CourseInfoEditButton from '../components/CourseInfoEditButton';
 import ModuleInfoEditButton from '../components/ModuleInfoEditButton';
+import ModuleDeleteButton from '../components/ModuleDeleteButton';
 import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
 import courseStyles from '../styles/courseStyle';
 import jwt_decode from "jwt-decode";
 
@@ -82,6 +84,23 @@ const Course = (props) => {
     })
 
     window.location.reload();
+  }
+
+  const deleteModule = async (module) => {
+    const token = localStorage.getItem("token");
+    const res = await fetch(config.server_url + config.paths.deleteModule, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        'token': token,
+        'courseID': course._id,
+        'moduleID': modules.indexOf(module),
+      })
+    })
+
+    // window.location.reload();
   }
 
   const enroll = async (module) => {
@@ -209,7 +228,19 @@ const Course = (props) => {
                   onFocus={(event) => event.stopPropagation()}
                   control={<ModuleInfoEditButton moduleIndex={modules.indexOf(module)} courseID={courseID} module={module} hideComponent={false} />}
                 />
+                <FormControlLabel
+                  aria-label="Acknowledge"
+                  onClick={(event) => event.stopPropagation()}
+                  onFocus={(event) => event.stopPropagation()}
+                  // <ModuleDeleteButton moduleIndex={modules.indexOf(module)} courseID={courseID} hideComponent={false} delete={deleteModule}/>
+                  control={
+                    <IconButton type='submit' className={classes.deleteButton} variant="contained" color="secondary" onClick={e => deleteModule(module)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  }
+                />
                 <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
+
               </AccordionSummary>
               <AccordionDetails className={classes.accordionDetails}>
                 <Typography >

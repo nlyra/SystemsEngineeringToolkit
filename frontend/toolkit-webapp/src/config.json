@@ -9,6 +9,7 @@
         "createCourse": "/v0/courses/create",
         "newModule": "/v0/courses/module/create",
         "editModule": "/v0/courses/module/update",
+        "deleteModule": "/v0/courses/module/delete",
         "enrollment": "/v0/courses/course/enrollment",
         "myCourses" : "/v0/courses/myCoursesInfo",
         "fileUpload": "/v0/upload/single",

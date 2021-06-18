@@ -358,4 +358,24 @@ router.post('/module/update', VerifyToken, async (req, res) => {
   }
 })
 
+router.post('/module/delete', VerifyToken, async (req, res) => {
+
+  try {
+
+    console.log(req.body.courseID)
+    const update = await Course.updateOne(
+      { _id: req.body.courseID },
+      { $pull: [`modules.${req.body.moduleID}`] }
+    )
+
+    // const updateCourse = await Course.deleteOne({ _id: req.body.courseID })
+
+    // fs.rmdirSync('public/' + req.body.courseID, { recursive: true });
+
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+})
+
 module.exports = router;
