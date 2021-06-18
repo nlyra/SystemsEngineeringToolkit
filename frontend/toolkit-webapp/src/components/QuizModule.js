@@ -11,7 +11,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 const QuizModule = (props) => {
   const classes = quizStyles()
 
-  const [state, setState] = useState(props.gradeToPass !== undefined ? 2 : 0);  // 0 == start button, 1 == quiz, 2 == score and again
+  const [state, setState] = useState(props.grade !== undefined ? 2 : 0);  // 0 == start button, 1 == quiz, 2 == score and again
   const [questions, setQuestions] = useState(props.quiz);
   const [score, setScore] = useState(0);
   const [answers, setAnswers] = useState({});

@@ -33,8 +33,6 @@ const UserSchema = mongoose.Schema({
 
     createdCourses: [],
 
-    coursesQuizes: [],
-
     coursesData: [],
 })
 
