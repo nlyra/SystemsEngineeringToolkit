@@ -34,13 +34,18 @@ const useStyles = makeStyles((theme) => ({
 
     dialog:
     {
-        position: 'absolute',
+        position: 'absolute'
 
+    },
+
+    dialogContent:
+    {
+        width: '40vh'
     },
 
     divider:
     {
-        border: '2px solid teal',
+        border: 'solid teal',
     },
 
     dialogTitle:
@@ -393,81 +398,79 @@ export default function TopNavBar(props) {
                                                 Your Profile                                
                                         </DialogTitle>
                                     </div>
-                                    <DialogContent >
+                                    <DialogContent className={classes.dialogContent}>
                                         <form autoComplete="off">
-                                                <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar>
-                                                <div className={classes.TextBox} alignItems="center">
-                                                    <TextField color='primary'
-                                                        alignContent="center"
-                                                        disabled
-                                                        size='small'
-                                                        variant="outlined"
-                                                        label='First Name'
-                                                        inputProps={{min: 0, style: { textAlign: 'center' }}}
-                                                        type="text"
-                                                        defaultValue={user.first_name}
-                                                        // onChange={e => setFirstName(e.target.value)}
-                                                        margin="normal"
-                                                        required={false}
-                                                        // fullWidth
-                                                        // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
-                                                    />
-                                                    <br/>
-                                                    <TextField color='primary'
-                                                        disabled
-                                                        size='small'
-                                                        variant="outlined"
-                                                        inputProps={{min: 0, style: { textAlign: 'center' }}}
-                                                        label='Last Name'
-                                                        type="name"
-                                                        defaultValue={user.last_name}
-                                                        onChange={e => setLastName(e.target.value)}
-                                                        margin="normal"
-                                                        required={false}
-                                                        // fullWidth
-                                                        // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
-                                                    />
-                                                    <br/>
-                                                    <TextField color='primary'
-                                                        disabled
-                                                        size='small'
-                                                        variant="outlined"
-                                                        inputProps={{min: 0, style: { textAlign: 'center' }}}
-                                                        label='Email'
-                                                        type="name"
-                                                        defaultValue={user.email}
-                                                        // onChange={e => setEmail(e.target.value)}
-                                                        margin="normal"
-                                                        required={false}
-                                                        // fullWidth
-                                                        // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
-                                                    />
-                                                    <br/><br/>
-                                                    <Grid item xs={12}>
-                                                        <Divider variant= 'fullWidth' className={classes.divider} />
-                                                    </Grid>
-                                                    <div className={classes.statsTitle}>
-                                                        <h1>Stats</h1>
-                                                    </div>
-                                
-                                                    <Grid container direction="row" >
-                                                        <Grid item xs={6} sm={6} lg={4}>
-                                                            <h6>Enrolled Courses </h6>
-                                                            <Avatar className= {classes.orange}>{user.enrolledClasses.length}</Avatar>
-                                                        </Grid>
-                                                        <Grid item xs={6} sm={6} lg={4} >
-                                                            <h6>Courses Created</h6>
-                                                            <Avatar className= {classes.orange}>{user.createdCourses.length}</Avatar>
-                                                        </Grid>
-                                                        {/* <Grid item xs={6} sm={6} lg={4} >
-                                                            <h6>Role ID</h6>
-                                                            <Avatar className= {classes.orange}>{user.roleID}</Avatar>
-                                                        </Grid> */}
-                                                    </Grid>
-
+                                            <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar>
+                                            <div className={classes.TextBox} alignItems="center">
+                                                <TextField color='primary'
+                                                    alignContent="center"
+                                                    disabled
+                                                    size='small'
+                                                    variant="outlined"
+                                                    label='First Name'
+                                                    inputProps={{min: 0, style: { textAlign: 'center' }}}
+                                                    type="text"
+                                                    defaultValue={user.first_name}
+                                                    // onChange={e => setFirstName(e.target.value)}
+                                                    margin="normal"
+                                                    required={false}
+                                                    fullWidth
+                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                                                />
+                                                <br/>
+                                                <TextField color='primary'
+                                                    disabled
+                                                    size='small'
+                                                    variant="outlined"
+                                                    inputProps={{min: 0, style: { textAlign: 'center' }}}
+                                                    label='Last Name'
+                                                    type="text"
+                                                    defaultValue={user.last_name}
+                                                    // onChange={e => setLastName(e.target.value)}
+                                                    margin="normal"
+                                                    required={false}
+                                                    fullWidth
+                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                                                />
+                                                <br/>
+                                                <TextField color='primary'
+                                                    disabled
+                                                    size='small'
+                                                    variant="outlined"
+                                                    inputProps={{min: 0, style: { textAlign: 'center' }}}
+                                                    label='Email'
+                                                    type="text"
+                                                    defaultValue={user.email}
+                                                    // onChange={e => setEmail(e.target.value)}
+                                                    margin="normal"
+                                                    required={false}
+                                                    fullWidth
+                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                                                />
+                                                <br/><br/>
+                                                <Grid item xs={12}>
+                                                    <Divider variant= 'fullWidth' className={classes.divider} />
+                                                </Grid>
+                                                <div className={classes.statsTitle}>
+                                                    <h1>Stats</h1>
                                                 </div>
-                                            {/* </Paper> */}
-                                        </form>
+                            
+                                                <Grid container direction="row" >
+                                                    <Grid item xs={6} sm={6} lg={4}>
+                                                        <h6>Enrolled Courses </h6>
+                                                        <Avatar className= {classes.orange}>{user.enrolledClasses.length}</Avatar>
+                                                    </Grid>
+                                                    <Grid item xs={6} sm={6} lg={4} >
+                                                        <h6>Courses Created</h6>
+                                                        <Avatar className= {classes.orange}>{user.createdCourses.length}</Avatar>
+                                                    </Grid>
+                                                    {/* <Grid item xs={6} sm={6} lg={4} >
+                                                        <h6>Role ID</h6>
+                                                        <Avatar className= {classes.orange}>{user.roleID}</Avatar>
+                                                    </Grid> */}
+                                                </Grid>
+                                                </div>
+                                            </form>
                                     </DialogContent>
                                     <DialogActions>
                                         <Button autoFocus onClick={handleClose} color="primary">
