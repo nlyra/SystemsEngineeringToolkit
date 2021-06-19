@@ -62,10 +62,10 @@ router.post('/course/update', VerifyToken, async (req, res) => {
           // urlImage: req.body.courseImage
         }
       })
-      
-      // console.log('here')
-      res.json({ 'status': 'course updated' });
-    } catch (e) {
+
+    // console.log('here')
+    res.json({ 'status': 'course updated' });
+  } catch (e) {
     console.log(e);
     res.sendStatus(500);
   }
@@ -75,19 +75,19 @@ router.post('/course/update', VerifyToken, async (req, res) => {
 router.post('/course/updateImage', VerifyToken, async (req, res) => {
   try {
     const pathname = req.body.imageLink.split('/')
-   const imageName = pathname[pathname.length - 1]
+    const imageName = pathname[pathname.length - 1]
 
-   const update = await Course.updateOne(
-    { _id: req.body.courseID }, 
-    {
-      $set: {
+    const update = await Course.updateOne(
+      { _id: req.body.courseID },
+      {
+        $set: {
           urlImage: config.server_url + '/' + req.body.courseID + '/' + imageName
-      }
-    })
+        }
+      })
 
-    res.json({'status': 'success'})
+    res.json({ 'status': 'success' })
 
-    } catch (e) {
+  } catch (e) {
     console.log(e);
     res.sendStatus(500);
   }
@@ -256,7 +256,7 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
       { _id: req.body.courseID },
       {
         $pull: { studentsEnrolled: req.body.userID },
-        // $inc: { totalStudents: -1 }
+        $inc: { currStudents: -1 }
       })
 
   } catch (e) {
@@ -469,7 +469,7 @@ router.post('/module/completed', VerifyToken, async (req, res) => {
               studentsEnrolled:
                 req.body.userID
             },
-            $inc: { totalStudents: 1 }
+            $inc: { totalStudents: 1, currStudents: 1 }
           });
 
         const updateUser = await User.updateOne(

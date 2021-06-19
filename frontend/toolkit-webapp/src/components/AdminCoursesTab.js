@@ -15,6 +15,7 @@ const columns = [
   { id: '_id', label: 'Id' },
   { id: 'name', label: 'Name' },
   { id: 'author', label: 'Author' },
+  { id: 'currStudents', label: 'Current students' },
   { id: 'totalStudents', label: 'Started students' },
   { id: 'totalCompletedStudents', label: 'Completed students' },
   { id: 'delete', label: 'Delete' },
@@ -141,7 +142,8 @@ const AdminCoursesTab = (props) => {
                             column.id === 'name' ||
                             column.id === 'author' ||
                             column.id === 'totalStudents' ||
-                            column.id === 'totalCompletedStudents') && row[column.id]}
+                            column.id === 'totalCompletedStudents' ||
+                            column.id === 'currStudents') && row[column.id]}
                           {column.id === 'delete' &&
                             <Link
                               className={classes.deleteButton}

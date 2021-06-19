@@ -18,7 +18,7 @@ router.post('/users', VerifyToken, async (req, res) => {
 
 router.post('/courses', VerifyToken, async (req, res) => {
   try {
-    const courses = await Course.find({}, '_id name totalStudents author totalCompletedStudents');
+    const courses = await Course.find({}, '_id name totalStudents author totalCompletedStudents currStudents');
     res.json({ 'courses': courses });
   } catch (e) {
     console.log(e);
