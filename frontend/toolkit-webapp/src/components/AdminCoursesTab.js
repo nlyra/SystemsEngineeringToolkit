@@ -9,17 +9,14 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import config from '../config.json'
 import DeleteIcon from '@material-ui/icons/Delete';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import Link from '@material-ui/core/Link';
 
 const columns = [
-  { id: 'urlImage', label: 'Image' },
   { id: '_id', label: 'Id' },
   { id: 'name', label: 'Name' },
   { id: 'author', label: 'Author' },
-  { id: 'totalStudents', label: 'Total Students' },
+  { id: 'totalStudents', label: 'Started students' },
+  { id: 'totalCompletedStudents', label: 'Completed students' },
   { id: 'delete', label: 'Delete' },
 ];
 
@@ -140,11 +137,11 @@ const AdminCoursesTab = (props) => {
                       const value = row[column.id];
                       return (
                         <TableCell key={column.id}>
-                          {column.id === 'urlImage' && <img src={row.urlImage} className={classes.courseImageStyle} />}
                           {(column.id === '_id' ||
                             column.id === 'name' ||
                             column.id === 'author' ||
-                            column.id === 'totalStudents') && row[column.id]}
+                            column.id === 'totalStudents' ||
+                            column.id === 'totalCompletedStudents') && row[column.id]}
                           {column.id === 'delete' &&
                             <Link
                               className={classes.deleteButton}
