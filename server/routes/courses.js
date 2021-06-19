@@ -371,7 +371,7 @@ router.post('/module/delete', VerifyToken, async (req, res) => {
     // const updateCourse = await Course.deleteOne({ _id: req.body.courseID })
 
     // fs.rmdirSync('public/' + req.body.courseID, { recursive: true });
-
+    res.json({'status': 'success'})
   } catch (e) {
     console.log(e);
     res.sendStatus(500);

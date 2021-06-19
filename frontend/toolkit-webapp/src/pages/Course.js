@@ -101,6 +101,8 @@ const Course = (props) => {
       })
     })
 
+    const data = await res.json()
+    
     window.location.reload();
   }
 
