@@ -18,6 +18,7 @@ router.post('/registration', async (req, res) => {
                 last_name: req.body.last_name,
                 email: req.body.email,
                 password: pass,
+                roleID: 0,
             });
 
             const savedUser = await user.save();
@@ -80,7 +81,7 @@ router.post('/forgotPassword', async (req, res) => {
                 }
             })
 
-            
+
         }
         res.json({ 'message': 'Success!' })
 
@@ -138,7 +139,7 @@ function verifyToken(req, res, next) {
             console.log(err.message)
             res.sendStatus(403)
         }
-
+        // console.log(decoded)
         req.body.userID = decoded.id;
     });
     next();
@@ -147,14 +148,12 @@ function verifyToken(req, res, next) {
 
 router.post('/checkResetCreds', async (req, res) => {
 
-    const user = await User.findOne({ resetPassToken: req.body.resetToken, resetPassExpires: {$gt: Date.now()} }, '_id')
-    
-    if(user !== null)
-    {
+    const user = await User.findOne({ resetPassToken: req.body.resetToken, resetPassExpires: { $gt: Date.now() } }, '_id')
+
+    if (user !== null) {
         res.json({ 'message': 'credentials approved' });
     }
-    else
-    {
+    else {
         res.json({ 'message': 'credentials disapproved' });
     }
 
@@ -164,26 +163,25 @@ router.post('/resetPassApproved', async (req, res) => {
 
     try {
 
-            const user = await User.findOne({ resetPassToken: req.body.resetToken }, '_id');
-            
-            if(user !== undefined)
-            {
+        const user = await User.findOne({ resetPassToken: req.body.resetToken }, '_id');
 
-                const pass = bcrypt.hashSync(req.body.password, 10);
+        if (user !== undefined) {
 
-                const update = await User.updateOne(
-                    { resetPassToken: req.body.resetToken},
-                    {$set: {password: pass}}
-                )
-            
-            }
-            res.json({message: "Success!"})
+            const pass = bcrypt.hashSync(req.body.password, 10);
+
+            const update = await User.updateOne(
+                { resetPassToken: req.body.resetToken },
+                { $set: { password: pass } }
+            )
+
+        }
+        res.json({ message: "Success!" })
 
     } catch (e) {
         console.log(e);
         res.sendStatus(500);
     }
-   
+
 })
 
 module.exports = {
