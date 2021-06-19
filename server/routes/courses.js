@@ -243,8 +243,6 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
 router.post('/deleteCreatedCourse', VerifyToken, async (req, res) => {
 
   try {
-
-    // console.log(req.body.courseID)
     const update = await User.updateOne(
       { _id: req.body.userID },
       { $pull: { createdCourses: req.body.courseID } }
@@ -253,6 +251,8 @@ router.post('/deleteCreatedCourse', VerifyToken, async (req, res) => {
     const updateCourse = await Course.deleteOne({ _id: req.body.courseID })
 
     fs.rmdirSync('public/' + req.body.courseID, { recursive: true });
+
+    res.sendStatus(400);
 
   } catch (e) {
     console.log(e);
@@ -410,37 +410,36 @@ router.post('/module/completed', VerifyToken, async (req, res) => {
         }
       });
 
-      // If the user completed the first module, do the checks for enrollment. Otherwise, proceed as usual
-      if(req.body.moduleID == 0)
-      {
-        let studentExists = {}
-        studentExists = await Course.findOne({ "_id": req.body.courseID, "studentsEnrolled": req.body.userID }, '_id studentsEnrolled')
+    // If the user completed the first module, do the checks for enrollment. Otherwise, proceed as usual
+    if (req.body.moduleID == 0) {
+      let studentExists = {}
+      studentExists = await Course.findOne({ "_id": req.body.courseID, "studentsEnrolled": req.body.userID }, '_id studentsEnrolled')
 
-        if (studentExists === null) {
+      if (studentExists === null) {
 
-          const updateCourse = await Course.updateOne(
-            { _id: req.body.courseID },
-            {
-              $push: {
-                studentsEnrolled:
-                  req.body.userID
-              },
-              $inc: { totalStudents: 1 }
-            });
+        const updateCourse = await Course.updateOne(
+          { _id: req.body.courseID },
+          {
+            $push: {
+              studentsEnrolled:
+                req.body.userID
+            },
+            $inc: { totalStudents: 1 }
+          });
 
-          const updateUser = await User.updateOne(
-            { _id: req.body.userID },
-            {
-              $push: {
-                enrolledClasses:
-                  req.body.courseID
-              }
+        const updateUser = await User.updateOne(
+          { _id: req.body.userID },
+          {
+            $push: {
+              enrolledClasses:
+                req.body.courseID
+            }
 
-            });
+          });
 
-          // res.json({ 'status': 'student enrolled in course' });
-        }
+        // res.json({ 'status': 'student enrolled in course' });
       }
+    }
 
     let modules = await Course.findOne({ _id: req.body.courseID }, 'modules');
     if (modules.modules.length == req.body.moduleID + 1) {
