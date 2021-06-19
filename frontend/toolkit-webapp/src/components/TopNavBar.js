@@ -405,11 +405,10 @@ export default function TopNavBar(props) {
                                             <div className={classes.TextBox} alignItems="center">
                                                 <TextField color='primary'
                                                     alignContent="center"
-                                                    disabled
                                                     size='small'
                                                     variant="outlined"
                                                     label='First Name'
-                                                    inputProps={{min: 0, style: { textAlign: 'center' }}}
+                                                    inputProps={{min: 0, readOnly: true, style: { textAlign: 'center' }}}
                                                     type="text"
                                                     defaultValue={user.first_name}
                                                     // onChange={e => setFirstName(e.target.value)}
@@ -420,10 +419,9 @@ export default function TopNavBar(props) {
                                                 />
                                                 <br/>
                                                 <TextField color='primary'
-                                                    disabled
                                                     size='small'
                                                     variant="outlined"
-                                                    inputProps={{min: 0, style: { textAlign: 'center' }}}
+                                                    inputProps={{min: 0, readOnly: true, style: { textAlign: 'center' }}}
                                                     label='Last Name'
                                                     type="text"
                                                     defaultValue={user.last_name}
@@ -435,10 +433,9 @@ export default function TopNavBar(props) {
                                                 />
                                                 <br/>
                                                 <TextField color='primary'
-                                                    disabled
                                                     size='small'
                                                     variant="outlined"
-                                                    inputProps={{min: 0, style: { textAlign: 'center' }}}
+                                                    inputProps={{min: 0, readOnly: true, style: { textAlign: 'center' }}}
                                                     label='Email'
                                                     type="text"
                                                     defaultValue={user.email}
