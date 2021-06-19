@@ -395,12 +395,13 @@ export default function TopNavBar(props) {
                                 <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={openDialog}>
                                     <div className={classes.dialogTitleDiv}>
                                         <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleClose}>
-                                                Your Profile                                
+                                            <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar> 
+                                                {/* Your Profile */}
                                         </DialogTitle>
                                     </div>
                                     <DialogContent className={classes.dialogContent}>
                                         <form autoComplete="off">
-                                            <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar>
+                                            {/* <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar> */}
                                             <div className={classes.TextBox} alignItems="center">
                                                 <TextField color='primary'
                                                     alignContent="center"
@@ -464,10 +465,10 @@ export default function TopNavBar(props) {
                                                         <h6>Courses Created</h6>
                                                         <Avatar className= {classes.orange}>{user.createdCourses.length}</Avatar>
                                                     </Grid>
-                                                    {/* <Grid item xs={6} sm={6} lg={4} >
+                                                    <Grid item xs={6} sm={6} lg={4} >
                                                         <h6>Role ID</h6>
                                                         <Avatar className= {classes.orange}>{user.roleID}</Avatar>
-                                                    </Grid> */}
+                                                    </Grid>
                                                 </Grid>
                                                 </div>
                                             </form>
