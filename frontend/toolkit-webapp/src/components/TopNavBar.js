@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
-import { fade, makeStyles, IconButton, AppBar, Typography, Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
+import { fade, makeStyles, IconButton, AppBar, Paper, TextField, Typography, Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu'
+import Avatar from '@material-ui/core/Avatar';
+import { deepOrange, deepPurple } from '@material-ui/core/colors';
+import config from '../config.json'
 import SearchIcon from '@material-ui/icons/Search'
 import AccountCircle from '@material-ui/icons/AccountCircle';
 //import logo from '../img/peostrilogo.png';
@@ -33,8 +36,21 @@ const useStyles = makeStyles((theme) => ({
     dialog:
     {
         // display: 'flex',
-        position: 'absolute'
+        position: 'absolute',
+        
     },
+
+    dialogTitle:
+    {
+        alignContent: 'center',
+        width: '100%',
+        backgroundColor: 'cyan'
+    },
+
+    purple: {
+        color: theme.palette.getContrastText(deepPurple[500]),
+        backgroundColor: deepPurple[500],
+      },
 
     search: {
         position: 'relative',
@@ -164,9 +180,38 @@ export default function TopNavBar(props) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [openDialog, setOpenDialog] = useState(false);
+    const [user, setUser] = useState({})
+    const [firstName, setFirstName] = useState('')
+    const [lastName, setLastName] = useState('')
 
-    const handleClickOpen = () => {
+    const handleClickOpen = async () => {
+
+        if(firstName !== '')
+        {
+            setOpenDialog(true)
+            return
+        }
+
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(config.server_url + config.paths.getUserInfo, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                "token": token
+            })
+        })
+
+        const data = await res.json()
+
+        setUser(data.user)
+        setFirstName(data.user.first_name)
+        setLastName(data.user.last_name)
         setOpenDialog(true)
+
+
     }
 
     const handleClose = () => {
@@ -268,23 +313,43 @@ export default function TopNavBar(props) {
 
                             <div className={classes.dialog}>
                                 <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={openDialog}>
-                                    <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-                                        Modal title
-                                </DialogTitle>
-                                    <DialogContent dividers>
-                                        <Typography gutterBottom>
-                                            Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
-                                            in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-                                        </Typography>
-                                        <Typography gutterBottom>
-                                            Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-                                            lacus vel augue laoreet rutrum faucibus dolor auctor.
-                                        </Typography>
-                                        <Typography gutterBottom>
-                                            Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
-                                            scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
-                                            auctor fringilla.
-                                        </Typography>
+                                    <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleClose}>
+                                            Your Profile                                
+                                    </DialogTitle>
+                                    <DialogContent >
+                                        <form autoComplete="off" >
+                                            {/* <Paper className={classes.paper} elevation={3} square={false}> */}
+                                            <Avatar className={classes.purple}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar>
+                                                <div className={classes.TextBox}>
+                                                    <TextField color='primary'
+                                                        size='small'
+                                                        variant="filled"
+                                                        label='First Name'
+                                                        type="text"
+                                                        defaultValue={user.first_name}
+                                                        onChange={e => setFirstName(e.target.value)}
+                                                        margin="normal"
+                                                        required={false}
+                                                        // fullWidth
+                                                        style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                                                    />
+
+                                                    <TextField color='primary'
+                                                        size='small'
+                                                        variant="filled"
+                                                        label='Last Name'
+                                                        type="name"
+                                                        defaultValue={user.last_name}
+                                                        onChange={e => setLastName(e.target.value)}
+                                                        margin="normal"
+                                                        required={true}
+                                                        fullWidth
+                                                        style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                                                    />
+
+                                                </div>
+                                            {/* </Paper> */}
+                                        </form>
                                     </DialogContent>
                                     <DialogActions>
                                         <Button autoFocus onClick={handleClose} color="primary">
