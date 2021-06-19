@@ -1,28 +1,25 @@
 import React, { useState } from 'react'
-import { fade, makeStyles, IconButton, AppBar, Paper, TextField, Typography, Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
+import { fade, makeStyles, IconButton, AppBar, Paper, TextField, Typography } from "@material-ui/core";
+import { Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
+import {Avatar, Dialog, DialogTitle, DialogActions, DialogContent, Grid} from "@material-ui/core";
+
 import MenuIcon from '@material-ui/icons/Menu'
-import Avatar from '@material-ui/core/Avatar';
 import { deepOrange, deepPurple } from '@material-ui/core/colors';
 import config from '../config.json'
 import SearchIcon from '@material-ui/icons/Search'
 import AccountCircle from '@material-ui/icons/AccountCircle';
-//import logo from '../img/peostrilogo.png';
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import DescriptionIcon from '@material-ui/icons/Description';
-//import {Link } from "react-router-dom"
-import { Link } from '@material-ui/core';
 import BookOutlinedIcon from '@material-ui/icons/BookOutlined';
 import HomeIcon from '@material-ui/icons/Home';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
+
 import clsx from 'clsx';
+import { Link } from '@material-ui/core';
+
 const logo_url = "http://localhost:4000/misc_files/logo.jpg"
 
 const drawerWidth = 240;
@@ -37,22 +34,51 @@ const useStyles = makeStyles((theme) => ({
 
     dialog:
     {
-        // display: 'flex',
         position: 'absolute',
-        
+
+    },
+
+    divider:
+    {
+        border: '2px solid teal',
     },
 
     dialogTitle:
     {
-        alignContent: 'center',
-        width: '100%',
-        backgroundColor: 'cyan'
+        textAlign: 'center',
+        verticalAlign: 'middle',
+        backgroundColor: 'silver',
+        border: '2px solid white'
+  
     },
 
-    purple: {
+    avatar:
+    {
         color: theme.palette.getContrastText(deepPurple[500]),
         backgroundColor: deepPurple[500],
-      },
+        height: '6vh',
+        width: '6vh',
+        margin: 'auto'
+    },
+
+    statsDiv:
+    {
+        width: '100%',
+        margin: 'auto',
+    },
+
+    statsTitle:
+    {
+        textAlign: 'center',
+        verticalAlign: 'middle',
+        textDecoration: 'underline'
+    },
+
+    orange: 
+    {
+        color: theme.palette.getContrastText(deepOrange[500]),
+        backgroundColor: deepOrange[500],
+    },
 
     search: {
         position: 'relative',
@@ -185,6 +211,7 @@ export default function TopNavBar(props) {
     const [user, setUser] = useState({})
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
+    const [email, setEmail] = useState('')
 
     const handleClickOpen = async () => {
 
@@ -194,6 +221,7 @@ export default function TopNavBar(props) {
             return
         }
 
+        // Retrieve token, then feed topNavBar with information about the current user
         const token = localStorage.getItem("token");
 
         const res = await fetch(config.server_url + config.paths.getUserInfo, {
@@ -211,6 +239,7 @@ export default function TopNavBar(props) {
         setUser(data.user)
         setFirstName(data.user.first_name)
         setLastName(data.user.last_name)
+        setEmail(data.user.email)
         setOpenDialog(true)
 
 
@@ -232,6 +261,50 @@ export default function TopNavBar(props) {
         props.history.push(`/dashboard`);
     };
 
+    // const onSubmit = (e) => {
+        
+    //     e.preventDefault()
+    //     if (firstName === user.first_name && lastName === user.last_name) {
+    //         alert('No update made!')
+    //         return
+    //     }
+
+    //     updateUserInfo({ firstName, lastName})
+    //     // setFirstName('')
+    //     // setLastName('')
+    //     // setEmail('')
+    //     // setPassword('')
+    //     // setPasswordCopy('')
+    // }
+
+    // const updateUserInfo = async (creds) => {
+
+    //     const res = await fetch(config.server_url + config.paths.updateUserInfo, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-type': 'application/json'
+    //         },
+    //         body: JSON.stringify({ 
+    //         "first_name": creds.firstName, 
+    //         "last_name": creds.lastName, 
+    //         "email": creds.email, 
+    //         "password": creds.password, 
+    //         "password_copy": creds.passwordCopy,
+    //         "classesEnrolled": [] })
+    //     })
+
+    //     const data = await res.json()
+
+    //     if (data.message == "added user") {
+    //         alert("Success, user Created!!");
+    //         props.history.push('login')
+
+    //     } else if (data.message === "email already connected to an account") {
+    //         alert("email already connected to an account, please try again.");
+    //     } else { // this is to check if there are errors not being addressed already
+    //         console.log(data)
+    //     }
+    // }
     return (
         <div className={classes.root}>
             <AppBar
@@ -315,39 +388,82 @@ export default function TopNavBar(props) {
 
                             <div className={classes.dialog}>
                                 <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={openDialog}>
-                                    <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleClose}>
-                                            Your Profile                                
-                                    </DialogTitle>
+                                    <div className={classes.dialogTitleDiv}>
+                                        <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleClose}>
+                                                Your Profile                                
+                                        </DialogTitle>
+                                    </div>
                                     <DialogContent >
-                                        <form autoComplete="off" >
-                                            {/* <Paper className={classes.paper} elevation={3} square={false}> */}
-                                            <Avatar className={classes.purple}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar>
-                                                <div className={classes.TextBox}>
+                                        <form autoComplete="off">
+                                                <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar>
+                                                <div className={classes.TextBox} alignItems="center">
                                                     <TextField color='primary'
+                                                        alignContent="center"
+                                                        disabled
                                                         size='small'
-                                                        variant="filled"
+                                                        variant="outlined"
                                                         label='First Name'
+                                                        inputProps={{min: 0, style: { textAlign: 'center' }}}
                                                         type="text"
                                                         defaultValue={user.first_name}
-                                                        onChange={e => setFirstName(e.target.value)}
+                                                        // onChange={e => setFirstName(e.target.value)}
                                                         margin="normal"
                                                         required={false}
                                                         // fullWidth
-                                                        style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                                                        // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                                                     />
-
+                                                    <br/>
                                                     <TextField color='primary'
+                                                        disabled
                                                         size='small'
-                                                        variant="filled"
+                                                        variant="outlined"
+                                                        inputProps={{min: 0, style: { textAlign: 'center' }}}
                                                         label='Last Name'
                                                         type="name"
                                                         defaultValue={user.last_name}
                                                         onChange={e => setLastName(e.target.value)}
                                                         margin="normal"
-                                                        required={true}
-                                                        fullWidth
-                                                        style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                                                        required={false}
+                                                        // fullWidth
+                                                        // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                                                     />
+                                                    <br/>
+                                                    <TextField color='primary'
+                                                        disabled
+                                                        size='small'
+                                                        variant="outlined"
+                                                        inputProps={{min: 0, style: { textAlign: 'center' }}}
+                                                        label='Email'
+                                                        type="name"
+                                                        defaultValue={user.email}
+                                                        // onChange={e => setEmail(e.target.value)}
+                                                        margin="normal"
+                                                        required={false}
+                                                        // fullWidth
+                                                        // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                                                    />
+                                                    <br/><br/>
+                                                    <Grid item xs={12}>
+                                                        <Divider variant= 'fullWidth' className={classes.divider} />
+                                                    </Grid>
+                                                    <div className={classes.statsTitle}>
+                                                        <h1>Stats</h1>
+                                                    </div>
+                                
+                                                    <Grid container direction="row" >
+                                                        <Grid item xs={6} sm={6} lg={4}>
+                                                            <h6>Enrolled Courses </h6>
+                                                            <Avatar className= {classes.orange}>{user.enrolledClasses.length}</Avatar>
+                                                        </Grid>
+                                                        <Grid item xs={6} sm={6} lg={4} >
+                                                            <h6>Courses Created</h6>
+                                                            <Avatar className= {classes.orange}>{user.createdCourses.length}</Avatar>
+                                                        </Grid>
+                                                        {/* <Grid item xs={6} sm={6} lg={4} >
+                                                            <h6>Role ID</h6>
+                                                            <Avatar className= {classes.orange}>{user.roleID}</Avatar>
+                                                        </Grid> */}
+                                                    </Grid>
 
                                                 </div>
                                             {/* </Paper> */}
@@ -355,7 +471,7 @@ export default function TopNavBar(props) {
                                     </DialogContent>
                                     <DialogActions>
                                         <Button autoFocus onClick={handleClose} color="primary">
-                                            Save changes
+                                            Close Page
                                         </Button>
                                     </DialogActions>
                                 </Dialog>
