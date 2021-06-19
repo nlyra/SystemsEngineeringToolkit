@@ -50,13 +50,27 @@ const dashStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,
     align: 'right',
-    // position: 'right'
   },
 
   accordionDetails: {
     paddingLeft: '5%',
-    paddingRight: '5%'
+    paddingRight: '5%',
   },
+
+  fileDiv: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  
+  accordionDiv: {
+    width: '100%'
+  },
+
+  completeDiv: {
+    display: 'flex',
+    justifyContent: 'flex-end'
+  }
 }))
 
 export default dashStyles;
