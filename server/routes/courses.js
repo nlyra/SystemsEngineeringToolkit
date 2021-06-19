@@ -238,8 +238,6 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
 router.post('/deleteCreatedCourse', VerifyToken, async (req, res) => {
 
   try {
-
-    console.log(req.body.courseID)
     const update = await User.updateOne(
       { _id: req.body.userID },
       { $pull: { createdCourses: req.body.courseID } }
@@ -248,6 +246,8 @@ router.post('/deleteCreatedCourse', VerifyToken, async (req, res) => {
     const updateCourse = await Course.deleteOne({ _id: req.body.courseID })
 
     fs.rmdirSync('public/' + req.body.courseID, { recursive: true });
+
+    res.sendStatus(400);
 
   } catch (e) {
     console.log(e);
