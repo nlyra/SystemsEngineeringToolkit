@@ -4,7 +4,7 @@ import { Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemT
 import {Avatar, Dialog, DialogTitle, DialogActions, DialogContent, Grid} from "@material-ui/core";
 
 import MenuIcon from '@material-ui/icons/Menu'
-import { deepOrange, deepPurple } from '@material-ui/core/colors';
+import { deepOrange, deepPurple, green } from '@material-ui/core/colors';
 import config from '../config.json'
 import SearchIcon from '@material-ui/icons/Search'
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -34,7 +34,8 @@ const useStyles = makeStyles((theme) => ({
 
     dialog:
     {
-        position: 'absolute'
+        position: 'absolute',
+        minWidth: '30%'
 
     },
 
@@ -66,10 +67,17 @@ const useStyles = makeStyles((theme) => ({
         margin: 'auto'
     },
 
+
+    statContent:
+    {
+        verticalAlign: 'middle',
+        margin: 'auto',
+        width: '50%',
+    },
+
     statsDiv:
     {
-        width: '100%',
-        margin: 'auto',
+        width: '100%'
     },
 
     statsTitle:
@@ -83,6 +91,15 @@ const useStyles = makeStyles((theme) => ({
     {
         color: theme.palette.getContrastText(deepOrange[500]),
         backgroundColor: deepOrange[500],
+    },
+
+    green: 
+    {
+        color: '#fff',
+        backgroundColor: green[500],
+
+        // For the avatar that uses this color. Can be changed to another div if needed
+        width: '10vh',
     },
 
     search: {
@@ -218,13 +235,12 @@ export default function TopNavBar(props) {
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
 
-    const handleClickOpen = async () => {
+    let roles = ['Student', 'Creator', 'Admin']
 
-        if(firstName !== '')
-        {
-            setOpenDialog(true)
-            return
-        }
+    // TODO: Consider a better way to handle this, as it will be making an api call every time the user
+    // opens their profile page. 
+    
+    const handleClickOpen = async () => {
 
         // Retrieve token, then feed topNavBar with information about the current user
         const token = localStorage.getItem("token");
@@ -454,17 +470,23 @@ export default function TopNavBar(props) {
                                                 </div>
                             
                                                 <Grid container direction="row" >
-                                                    <Grid item xs={6} sm={6} lg={4}>
-                                                        <h6>Enrolled Courses </h6>
-                                                        <Avatar className= {classes.orange}>{user.enrolledClasses.length}</Avatar>
+                                                    <Grid item xs={6} sm={6} lg={3} className={classes.statsDiv}>
+                                                        <div className={classes.statContent}>
+                                                            <h6>Enrolled Courses </h6>
+                                                            <Avatar className={classes.orange}>{user.enrolledClasses.length}</Avatar>
+                                                        </div>
                                                     </Grid>
-                                                    <Grid item xs={6} sm={6} lg={4} >
-                                                        <h6>Courses Created</h6>
-                                                        <Avatar className= {classes.orange}>{user.createdCourses.length}</Avatar>
+                                                    <Grid item xs={6} sm={6} lg={3} className={classes.statsDiv}>
+                                                        <div className={classes.statContent}>
+                                                            <h6>Courses Created</h6>
+                                                            <Avatar className={classes.orange}>{user.createdCourses.length}</Avatar>
+                                                        </div>
                                                     </Grid>
-                                                    <Grid item xs={6} sm={6} lg={4} >
-                                                        <h6>Role ID</h6>
-                                                        <Avatar className= {classes.orange}>{user.roleID}</Avatar>
+                                                    <Grid item xs={6} sm={6} lg={6} className={classes.statsDiv}>
+                                                        <div className={classes.statContent}>
+                                                            <h6>Role</h6>
+                                                            <Avatar variant="rounded" className={classes.green}>{roles[user.roleID]}</Avatar>
+                                                        </div>
                                                     </Grid>
                                                 </Grid>
                                                 </div>
