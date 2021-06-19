@@ -25,7 +25,7 @@ router.post('/info', VerifyToken, async (req, res) => {
 //     }
 // })
 
-router.post('/add', async (req, res) => {
+router.post('/add', VerifyToken, async (req, res) => {
 
     try {
       const newCat = new Category({

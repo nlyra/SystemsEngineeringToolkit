@@ -18,10 +18,14 @@ import courseStyles from '../styles/courseStyle';
 const Course = (props) => {
   const [course, setCourse] = useState({})
   const [modules, setModules] = useState([])
+  const [oldCourseImage, setOldCourseImage] = useState('')
+  const [currCourseImage, setCurrCourseImage] = useState('')
   const [courseTitle, setCourseTitle] = useState('')
   const [courseDescription, setCourseDescription] = useState('')
   const [editCourseInfo, setEditCourseInfo] = useState(false)
   const [courseID, setCourseID] = useState('')
+
+  let validImageTypes = ["png", "PNG", "jpeg", "jpg"]
 
   const classes = courseStyles()
 
@@ -49,9 +53,12 @@ const Course = (props) => {
     })
 
     const data = await res.json()
+
     if (data.message === undefined) {
       setCourse(data.course);
       setCourseID(id);
+      setOldCourseImage(data.course.urlImage);
+      setCurrCourseImage(data.course.urlImage);
       setCourseTitle(data.course.name);
       setCourseDescription(data.course.description);
       setModules(data.course.modules);
@@ -65,8 +72,9 @@ const Course = (props) => {
   }
 
   const onEditSubmit = async (e) => {
-
+    // e.preventDefault()
     setEditCourseInfo(false);
+    const token = localStorage.getItem("token");
 
     const res = await fetch(config.server_url + config.paths.updateCourseInfo, {
       method: 'POST',
@@ -74,12 +82,81 @@ const Course = (props) => {
         'Content-type': 'application/json'
       },
       body: JSON.stringify({
+        'token' : token,
         'courseID': courseID,
         "name": courseTitle,
         "description": courseDescription,
       })
     })
 
+    const data = await res.json()
+
+    // No new image assigned to course so only refresh to show other updates
+    if(currCourseImage.name === undefined)
+      window.location.reload();
+    
+
+    // We have a new image being passed in so delete old file
+    if ((oldCourseImage !== null) && (oldCourseImage.name !== currCourseImage.name)) {
+
+      const res = await fetch(config.server_url + config.paths.removeFile, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          'token': token,
+          'courseID': courseID,
+          'imageName': oldCourseImage
+        })
+      })
+    }
+
+
+    const imageData = new FormData();
+    imageData.append('file', currCourseImage)
+
+
+    // Checking to see if the file inputted is not an actual image
+    const imageTypePath = currCourseImage.name.split('.') 
+    const imageType = imageTypePath[imageTypePath.length - 1]
+    const validInput = validImageTypes.includes(imageType);
+
+    // If it isn't, return and allow user to input valid image
+    if(!validInput)
+    {
+      alert('Invalid file type. Please upload an image with the extension .jpg or .png')
+      return
+    }
+
+    if (currCourseImage.name !== oldCourseImage.name) {
+
+      if (data.message === undefined) {
+        const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + currCourseImage.name, {
+          method: 'POST',
+          body: imageData
+        })
+        const data2 = await res.json()
+
+      }
+      else { // this is to check if there are errors not being addressed already
+        console.log(data)
+      }
+    }
+    else {
+      const res = await fetch(config.server_url + config.paths.updateCourseImage, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          'token': token,
+          'courseID': courseID,
+          "imageLink": currCourseImage,
+        })
+      })
+    }
+       
     window.location.reload();
   }
 
@@ -97,7 +174,6 @@ const Course = (props) => {
         body: JSON.stringify({
           "courseID": course._id,
           "token": token
-          // "userID": decoded.id
         })
       })
     }
@@ -157,8 +233,8 @@ const Course = (props) => {
           <div maxWidth>
             <Grid item alignItems="center" xs={12}>
               <Grid container className={classes.topItem}>
-                <Grid item xs={3} sm={2} lg={1}>
-                  <img src={course.urlImage} className={classes.courseImageStyle} />
+                <Grid item xs={3} sm={2} lg={1} >
+                  <img src={course.urlImage} className={classes.currCourseImageStyle} />
                 </Grid>
                 <Grid item xs={8} sm={9} lg={9}>
                   <h1
@@ -182,13 +258,14 @@ const Course = (props) => {
             <Grid item xs={12} >
               <Grid container className={classes.topItem}>
                 <Grid item xs={3} sm={2} lg={1}>
-                  <img src={course.urlImage} className={classes.courseImageStyle} />
+                  <img src={course.urlImage} className={classes.currCourseImageStyle} />
                 </Grid>
                 <Grid item xs={9} sm={10} lg={11} align={"center"}>
                   <TextField
                     color='primary'
                     size='medium'
-                    variant="filled"
+                    variant="outlined"
+                    inputProps={{ style: {textAlign: 'center'} }}
                     label='Title'
                     type="text"
                     defaultValue={course.name}
@@ -198,13 +275,14 @@ const Course = (props) => {
                   //style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                   />
                 </Grid>
+                  <input type="file" name="picture" accept="image/*" className={classes.currCourseImageStyle} onChange={e => setCurrCourseImage(e.target.files[0])} />
               </Grid>
             </Grid>
-            <Grid item xs={12} >
+            <Grid item xs={12} lg={6}>
               <TextField
                 color='primary'
                 size='medium'
-                variant="filled"
+                variant='filled'
                 label='Description'
                 type="text"
                 defaultValue={course.description}
@@ -213,15 +291,15 @@ const Course = (props) => {
                 required={true}
                 fullWidth
                 multiline
-                rows={10}
-                rowsMax={15}
-              //style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                rows={4}
+                rowsMax={10}
               />
             </Grid>
-            <Button onClick={onEditSubmit}>Submit</Button>
+            <Button variant="contained" onClick={onEditSubmit}>Submit</Button>
           </div>
         }
-        <br></br>
+      
+      <br></br>
         <Grid item xs={12}>
           <Divider className={classes.divider} />
         </Grid>
@@ -236,8 +314,8 @@ const Course = (props) => {
               Add Module
             </Button>
           </Link>
-        </Grid>
-        <Grid item xs={12} className={classes.accordion}>
+        </Grid> 
+         <Grid item xs={12} className={classes.accordion}>
           {/* modules starts here */}
           {modules.map((module) => (
             <div>
@@ -315,7 +393,7 @@ const Course = (props) => {
                 </Accordion>}
             </div>
           ))}
-        </Grid>
+        </Grid> 
       </Grid>
     </div >
   )
