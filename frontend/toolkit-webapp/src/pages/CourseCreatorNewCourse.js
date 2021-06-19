@@ -81,7 +81,7 @@ function NewCourse(props) {
 
             const data = await res.json()
             if (data.message === undefined) {
-                const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + data._id + "&imageName=" + image.name + "&typeofload=courseimage", {
+                const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + data._id + "&imageName=" + image.name, {
                     method: 'POST',
                     body: imageData
                 })
