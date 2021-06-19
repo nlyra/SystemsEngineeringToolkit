@@ -255,6 +255,7 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
         $inc: { totalStudents: -1 }
       })
 
+    res.json({'status': 'success'})
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
