@@ -21,11 +21,13 @@ const upload = multer({ storage: fileStorageEngine })
 
 router.post('/single', VerifyToken, upload.single('file'), async (req, res) => {
 
+  console.log(req.query)
   const currPath = __dirname + "/../public/" + req.query.imageName
   const newPath = __dirname + "/../public/" + req.query.courseID + "/" + req.query.imageName
 
   const made = mkdirp.sync(__dirname + "/../public/" + req.query.courseID)
 
+  // console.log(req.query)
   fs.rename(currPath, newPath, function (err) {
     if (err) {
       throw err

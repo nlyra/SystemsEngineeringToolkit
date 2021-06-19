@@ -27,6 +27,7 @@
     "getCourses": "/v0/admin/courses",
     "adminDeleteCourse": "/v0/admin/course",
     "getCategories": "/v0/admin/categories",
-    "adminDeleteCategory": "/v0/admin/category"
+    "adminDeleteCategory": "/v0/admin/category",
+    "completedModule": "/v0/courses/module/completed"
   }
 }

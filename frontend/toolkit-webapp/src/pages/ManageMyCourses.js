@@ -65,6 +65,7 @@ const ManageMyCourses = (props) => {
             body: JSON.stringify({ "token": token, "courseID": id})
         })
 
+        const data = await res.json()
 
         // This splits the array correctly and updates courses array with courses the user is still enrolled in
         // const newVal = courses.filter((courses) => courses._id !== id);
