@@ -62,10 +62,10 @@ router.post('/course/update', VerifyToken, async (req, res) => {
           // urlImage: req.body.courseImage
         }
       })
-      
-      // console.log('here')
-      res.json({ 'status': 'course updated' });
-    } catch (e) {
+
+    // console.log('here')
+    res.json({ 'status': 'course updated' });
+  } catch (e) {
     console.log(e);
     res.sendStatus(500);
   }
@@ -75,19 +75,19 @@ router.post('/course/update', VerifyToken, async (req, res) => {
 router.post('/course/updateImage', VerifyToken, async (req, res) => {
   try {
     const pathname = req.body.imageLink.split('/')
-   const imageName = pathname[pathname.length - 1]
+    const imageName = pathname[pathname.length - 1]
 
-   const update = await Course.updateOne(
-    { _id: req.body.courseID }, 
-    {
-      $set: {
+    const update = await Course.updateOne(
+      { _id: req.body.courseID },
+      {
+        $set: {
           urlImage: config.server_url + '/' + req.body.courseID + '/' + imageName
-      }
-    })
+        }
+      })
 
-    res.json({'status': 'success'})
+    res.json({ 'status': 'success' })
 
-    } catch (e) {
+  } catch (e) {
     console.log(e);
     res.sendStatus(500);
   }
@@ -431,6 +431,25 @@ router.post('/module/update', VerifyToken, async (req, res) => {
   }
 })
 
+router.post('/module/delete', VerifyToken, async (req, res) => {
+
+  try {
+
+    // console.log(req.body.moduleID)
+    const update = await Course.updateOne(
+      { _id: req.body.courseID },
+      { $pull: { modules: { title: req.body.title, description: req.body.description } } }
+    )
+
+    // const updateCourse = await Course.deleteOne({ _id: req.body.courseID })
+
+    // fs.rmdirSync('public/' + req.body.courseID, { recursive: true });
+    res.json({ 'status': 'success' })
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+})
 
 router.post('/module/completed', VerifyToken, async (req, res) => {
   try {

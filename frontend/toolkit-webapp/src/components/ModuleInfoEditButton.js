@@ -8,7 +8,6 @@ const useStyles = makeStyles((theme) => ({
     button:
     {
         height: 0.5,
-        // paddingLeft: 60
     }
 
 }))
@@ -16,12 +15,6 @@ const useStyles = makeStyles((theme) => ({
 export default function ModuleInfoEditButton(props) {
 
     const classes = useStyles();
-    // href={`/ModuleManager/${id}`}
-    //${courseID}/
-    //onClick={(e) => edit(moduleID)}
-    // useEffect(() => {
-    //     console.log(courseID)
-    //   }, []);
 
     const sendModule = () => {
         localStorage.setItem("module", JSON.stringify(props.module))

@@ -57,6 +57,10 @@ const dashStyles = makeStyles((theme) => ({
     paddingRight: '5%',
   },
 
+  deleteButton: {
+    height: 0.5,
+  },
+  
   fileDiv: {
     width: '100%',
     display: 'flex',
