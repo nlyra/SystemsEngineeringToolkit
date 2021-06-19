@@ -391,19 +391,22 @@ export default function TopNavBar(props) {
                         {/* </Badge> */}
                         {/* </IconButton> */}
                         {props.hideComponents !== true ?
-                            <IconButton
-                                edge="end"
-                                aria-label="account of current user"
-                                //aria-controls={menuId}
-                                aria-haspopup="true"
-                                onClick={handleClickOpen}
-                                color="inherit"
-                                className={classes.iconbutton}
-                            >
-                                <AccountCircle />
-                            </IconButton>
+                            <Tooltip title="My Profile" >
+                                <IconButton
+                                    edge="end"
+                                    aria-label="account of current user"
+                                    //aria-controls={menuId}
+                                    aria-haspopup="true"
+                                    onClick={handleClickOpen}
+                                    color="inherit"
+                                    className={classes.iconbutton}
+                                >
+                                    <AccountCircle />
+                                </IconButton>
+                            </Tooltip>
 
                             : null}
+                        
 
                         {openDialog === true ?
 
@@ -509,14 +512,16 @@ export default function TopNavBar(props) {
                             window.location.pathname !== "/reset/" &&
                             window.location.pathname !== "/login" ?
                             <Link href="/dashboard" underline='none' color="inherit">
-                                <IconButton
-                                    edge="end"
-                                    aria-label="homescreen"
-                                    aria-haspopup="true"
-                                    color="inherit"
-                                >
-                                    <HomeIcon />
-                                </IconButton>
+                                <Tooltip title="Home Screen" >
+                                    <IconButton
+                                        edge="end"
+                                        aria-label="homescreen"
+                                        aria-haspopup="true"
+                                        color="inherit"
+                                    >
+                                        <HomeIcon />
+                                    </IconButton>
+                                </Tooltip>
                             </Link>
 
                             : null}
