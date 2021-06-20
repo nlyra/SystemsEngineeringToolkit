@@ -7,6 +7,7 @@ const categoriesRoute = require('./routes/categories');
 const adminRoute = require('./routes/admin');
 const coursesRoute = require('./routes/courses');
 const multerRoute = require('./routes/fileMulter');
+const settingsRoute = require('./routes/settings');
 const config = require('./config.json');
 const multer = require('multer');
 
@@ -39,6 +40,7 @@ app.use('/api/v0/auth', authRoute);
 app.use('/api/v0/courses', coursesRoute);
 app.use('/api/v0/upload', multerRoute);
 app.use('/api/v0/categories', categoriesRoute);
+app.use('/api/v0/settings', settingsRoute);
 app.use('/api/v0/admin', adminRoute);
 
 app.listen(process.env.PORT || '4000', () => {

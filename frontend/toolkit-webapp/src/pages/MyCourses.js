@@ -34,7 +34,6 @@ const MyCourses = (props) => {
             },
             body: JSON.stringify({ "token": token, "search_query": query})
         })
-        // }
 
 
         const data = await res.json()
@@ -69,7 +68,9 @@ const MyCourses = (props) => {
         // const newVal = courses.filter((courses) => courses._id !== id);
         // setCourses(newVal)
         
-        // window.location.reload()
+        const data = await res.json()
+
+        window.location.reload()
         
     }
 
@@ -123,18 +124,13 @@ const MyCourses = (props) => {
                                     </Grid>
                                 </Card>
 
-                             {/* TODO: Figure out a way to reload the page without simply linking back to the same page.  */}
-
-                                <Link href="/MyCourses" underline='none' color="inherit"> 
                                 <div className={classes.buttonDiv}>
                                     <Button type='submit' className={classes.removeButton} size= "small" color="inherit" variant="contained" onClick={() => {if (window.confirm('Are you sure you wish to disenroll? Your progress may be lost.')) removeEnrollment(course._id)} }>
                                     Disenroll Course
                                     </Button>
-                                    </div>
-                                </Link> 
+                                 </div>
                                 
                             </Grid>
-
                         ))}
 
 

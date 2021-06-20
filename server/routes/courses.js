@@ -247,17 +247,27 @@ router.post('/create', VerifyToken, async (req, res) => {
 router.post('/removeEnrollment', VerifyToken, async (req, res) => {
 
   try {
+
+    const find = await User.findOne({ _id: req.body.userID }, 'coursesData')
+
+    delete find.coursesData[0][req.body.courseID]
+  
     const update = await User.updateOne(
       { _id: req.body.userID },
-      { $pull: { enrolledClasses: req.body.courseID } }
+      {
+        $pull: { enrolledClasses: req.body.courseID },
+        $set: { coursesData: find.coursesData}
+      }
     )
 
     const updateCourse = await Course.updateOne(
       { _id: req.body.courseID },
       {
-        $pull: { studentsEnrolled: req.body.userID },
-        // $inc: { totalStudents: -1 }
+        $pull: { studentsEnrolled: req.body.userID }
+        // $inc: { currStudents: -1 }
       })
+
+    res.json({'status': 'success'})
 
   } catch (e) {
     console.log(e);
