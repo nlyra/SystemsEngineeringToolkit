@@ -2,9 +2,8 @@ import React, { useState } from 'react'
 import { fade, makeStyles, IconButton, AppBar, Paper, TextField, Typography } from "@material-ui/core";
 import { Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
 import {Avatar, Dialog, DialogTitle, DialogActions, DialogContent, Grid} from "@material-ui/core";
-
 import MenuIcon from '@material-ui/icons/Menu'
-import { deepOrange, deepPurple, green } from '@material-ui/core/colors';
+import {deepPurple, grey, amber } from '@material-ui/core/colors';
 import config from '../config.json'
 import SearchIcon from '@material-ui/icons/Search'
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -46,16 +45,17 @@ const useStyles = makeStyles((theme) => ({
 
     divider:
     {
-        border: 'solid teal',
+        border: '1px solid grey',
+        borderRadius: '10px',
+        backgroundColor: 'grey'
     },
 
     dialogTitle:
     {
         textAlign: 'center',
         verticalAlign: 'middle',
-        backgroundColor: 'silver',
+        backgroundColor: grey[900],
         border: '2px solid white'
-  
     },
 
     avatar:
@@ -73,12 +73,13 @@ const useStyles = makeStyles((theme) => ({
         verticalAlign: 'middle',
         margin: 'auto',
         width: '50%',
+        textAlign: 'center'
     },
 
-    statsDiv:
-    {
-        width: '100%'
-    },
+    // statsDiv:
+    // {
+    //     width: '100%',
+    // },
 
     statsTitle:
     {
@@ -87,19 +88,42 @@ const useStyles = makeStyles((theme) => ({
         textDecoration: 'underline'
     },
 
-    orange: 
+    statsAvi: 
     {
-        color: theme.palette.getContrastText(deepOrange[500]),
-        backgroundColor: deepOrange[500],
+        color: theme.palette.getContrastText(amber[600]),
+        backgroundColor: amber[600],
     },
 
-    green: 
+    roleAvi: 
     {
-        color: '#fff',
-        backgroundColor: green[500],
+        color: theme.palette.getContrastText(amber[600]),
+        backgroundColor: amber[600],
 
         // For the avatar that uses this color. Can be changed to another div if needed
         width: '10vh',
+        // paddingTop: '10px'
+        marginTop: '34px',
+        marginLeft: '5px'
+    },
+
+    roleStatContent:
+    {
+        verticalAlign: 'middle',
+        margin: 'auto',
+        width: '60%',
+    },
+
+    roleText:
+    {
+        width: '100%',
+        textAlign: 'center'
+
+    },
+
+    statText:
+    {
+        width: '100%',
+        textAlign: 'center'
     },
 
     search: {
@@ -473,22 +497,28 @@ export default function TopNavBar(props) {
                                                 </div>
                             
                                                 <Grid container direction="row" >
-                                                    <Grid item xs={6} sm={6} lg={3} className={classes.statsDiv}>
+                                                    <Grid item xs={6} sm={6} lg={3} >
                                                         <div className={classes.statContent}>
-                                                            <h6>Enrolled Courses </h6>
-                                                            <Avatar className={classes.orange}>{user.enrolledClasses.length}</Avatar>
+                                                            <div className={classes.statText}>
+                                                                <h5>Enrolled Courses </h5>
+                                                            </div>
+                                                            <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
                                                         </div>
                                                     </Grid>
-                                                    <Grid item xs={6} sm={6} lg={3} className={classes.statsDiv}>
+                                                    <Grid item xs={6} sm={6} lg={3} >
                                                         <div className={classes.statContent}>
-                                                            <h6>Courses Created</h6>
-                                                            <Avatar className={classes.orange}>{user.createdCourses.length}</Avatar>
+                                                            <div className={classes.statText}>
+                                                                <h5>Courses Created</h5>
+                                                            </div>
+                                                            <Avatar className={classes.statsAvi}>{user.createdCourses.length}</Avatar>
                                                         </div>
                                                     </Grid>
-                                                    <Grid item xs={6} sm={6} lg={6} className={classes.statsDiv}>
-                                                        <div className={classes.statContent}>
-                                                            <h6>Role</h6>
-                                                            <Avatar variant="rounded" className={classes.green}>{roles[user.roleID]}</Avatar>
+                                                    <Grid item xs={6} sm={6} lg={6} >
+                                                        <div className={classes.roleStatContent}>
+                                                            <div className={classes.roleText}>
+                                                                <h5>Role</h5>
+                                                            </div>
+                                                            <Avatar variant="rounded" className={classes.roleAvi}>{roles[user.roleID]}</Avatar>
                                                         </div>
                                                     </Grid>
                                                 </Grid>
