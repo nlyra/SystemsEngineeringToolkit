@@ -9,10 +9,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import config from '../config.json'
 import DeleteIcon from '@material-ui/icons/Delete';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import Link from '@material-ui/core/Link';
+import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import SearchIcon from '@material-ui/icons/Search';
 
 const columns = [
   { id: '_id', label: 'Id' },
@@ -48,19 +48,25 @@ const useStyles = makeStyles({
 
   courseImageStyle: {
     maxHeight: '30px',
-  }
+  },
+
+  search: {
+    width: '20%',
+    paddingBottom: '8px'
+  },
 });
 
 const AdminCategoriesTab = (props) => {
   const classes = useStyles();
   const [categories, setCategories] = useState([]);
+  const [search, setSearch] = useState([]);
 
   // function that will run when page is loaded
   useEffect(() => {
     getCategories()
   }, []);
 
-  const getCategories = async (props) => {
+  const getCategories = async () => {
     const token = localStorage.getItem("token");
 
     // console.log(typeof(new URLSearchParams(window.location.search).get('tab')))
@@ -71,6 +77,33 @@ const AdminCategoriesTab = (props) => {
         'Content-type': 'application/json'
       },
       body: JSON.stringify({ "token": token })
+    })
+
+    const data = await res.json()
+    if (data.message === undefined) {
+      setCategories(data.categories)
+    } else if (data.message === "wrong token") {
+      localStorage.removeItem('token');
+      props.history.push('login');
+      // probably alert the user
+    } else if (data.message === "unauthorized") {
+      // eventually do something
+    } else { // this is to check if there are errors not being addressed already
+      console.log(data)
+    }
+  }
+
+  const getSearch = async (query) => {
+    setSearch(query)
+    // console.log(query)
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(config.server_url + config.paths.getCategoriesSearch, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({ "token": token, "query": query })
     })
 
     const data = await res.json()
@@ -118,6 +151,26 @@ const AdminCategoriesTab = (props) => {
   return (
     <div>
       <Paper className={classes.root}>
+        <div className={classes.search}>
+          <TextField color='primary'
+            size='small'
+            variant="outlined"
+            label='Search'
+            type="string"
+            value={search}
+            onChange={e => getSearch(e.target.value)}
+            margin="normal"
+            required={true}
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </div>
         <TableContainer className={classes.container}>
           <Table stickyHeader size="small" aria-label="a dense table">
             <TableHead>

@@ -263,8 +263,8 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
     const updateCourse = await Course.updateOne(
       { _id: req.body.courseID },
       {
-        $pull: { studentsEnrolled: req.body.userID }
-        // $inc: { currStudents: -1 }
+        $pull: { studentsEnrolled: req.body.userID },
+        $inc: { currStudents: -1 }
       })
 
     res.json({'status': 'success'})
@@ -493,7 +493,7 @@ router.post('/module/completed', VerifyToken, async (req, res) => {
               studentsEnrolled:
                 req.body.userID
             },
-            $inc: { totalStudents: 1 }
+            $inc: { totalStudents: 1, currStudents: 1 }
           });
 
         const updateUser = await User.updateOne(
