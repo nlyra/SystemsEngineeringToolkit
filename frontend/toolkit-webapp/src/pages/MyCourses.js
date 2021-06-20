@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Card, CardActions, Container, CssBaseline, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
+import { Button, Card, CardActions, Container, CssBaseline, Divider, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
 import '../css/dashboard.css'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
@@ -24,7 +24,6 @@ const MyCourses = (props) => {
 
         // grabbing user id
         const token = localStorage.getItem("token");
-        const decoded = jwt_decode(token)
 
         let res = undefined
 
@@ -33,9 +32,8 @@ const MyCourses = (props) => {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "userID": decoded.id, "search_query": query})
+            body: JSON.stringify({ "token": token, "search_query": query})
         })
-        // }
 
 
         const data = await res.json()
@@ -53,12 +51,12 @@ const MyCourses = (props) => {
         }
     }
 
-    const removeCourse = async (id) => 
+    const removeEnrollment = async (id) => 
     {
         let res = undefined
         const token = localStorage.getItem("token");
 
-        res = await fetch(config.server_url + config.paths.removeCourse, {
+        res = await fetch(config.server_url + config.paths.removeEnrollment, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
@@ -67,10 +65,12 @@ const MyCourses = (props) => {
         })
 
         // This splits the array correctly and updates courses array with courses the user is still enrolled in
-        const newVal = courses.filter((courses) => courses._id !== id);
-        setCourses(newVal)
+        // const newVal = courses.filter((courses) => courses._id !== id);
+        // setCourses(newVal)
         
-        // window.location.reload()
+        const data = await res.json()
+
+        window.location.reload()
         
     }
 
@@ -88,6 +88,14 @@ const MyCourses = (props) => {
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
+            <Grid container spacing={3}>
+                <div className={classes.header}>
+                <h1>
+                    Enrolled Courses
+                </h1>
+                </div>
+                </Grid>
+                <Divider className={classes.divider} />
                 <div className='modules'>
                     <Grid container spacing={3}>
                         {courses.map((course) => (
@@ -116,18 +124,13 @@ const MyCourses = (props) => {
                                     </Grid>
                                 </Card>
 
-                             {/* TODO: Figure out a way to reload the page without simply linking back to the same page.  */}
-
-                                <Link href="/MyCourses" underline='none' color="inherit"> 
                                 <div className={classes.buttonDiv}>
-                                    <Button type='submit' className={classes.removeButton} size= "small" color="inherit" variant="contained" onClick={() => removeCourse(course._id)}>
-                                    Remove Course
+                                    <Button type='submit' className={classes.removeButton} size= "small" color="inherit" variant="contained" onClick={() => {if (window.confirm('Are you sure you wish to disenroll? Your progress may be lost.')) removeEnrollment(course._id)} }>
+                                    Disenroll Course
                                     </Button>
-                                    </div>
-                                </Link> 
+                                 </div>
                                 
                             </Grid>
-
                         ))}
 
 
