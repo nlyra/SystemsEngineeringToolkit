@@ -6,20 +6,63 @@ import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 import useStyles from '../styles/moduleStyle'
 import '../css/Login.css';
-import FileModule from '../components/FileModule'
 import QuizModule from '../components/QuizCreatorModule'
+import VideoCreator from '../components/VideoCreatorModule'
+import PDFCreator from '../components/PDFCreatorModule'
+import FileCreator from '../components/FileCreatorModule'
 
 function ModuleCreator(props) {
-
     const [title, setTitle] = useState('')
     const [type, setType] = useState('')
     const [description, setDescription] = useState('')
-
     const classes = useStyles()
+    const [file, setFile] = useState()
+    const [video, setVideo] = useState()
+    const [pdf, setPDF] = useState()
 
-    const handleChange = (event) => {
-        setType(event.target.type);
+    //const handleChange = (event) => {
+        //setType(event.target.type);
         // handleDisplayedContent(type)
+    //}
+
+    function getExtention(filename){
+        var parts = filename.split('.');
+        return parts[parts.length-1]
+    }
+
+    function isPDF(filename){
+        var ext = getExtention(filename)
+        switch(ext.toLowerCase()){
+            case 'pdf':
+                return true;
+            default:
+        }
+        return false
+    }
+    function isVideo(filename){
+        var ext = getExtention(filename)
+        switch(ext.toLowerCase()){
+            case 'webm':
+            case 'mpg':
+            case 'mp2':
+            case 'mpeg':
+            case 'mpe':
+            case 'mpv':
+            case 'ogg':
+            case 'mp4':
+            case 'm4p':
+            case 'm4v':
+            case 'avi':
+            case 'wmv':
+            case 'mov':
+            case 'qt':
+            case 'flv':
+            case 'swf':
+            case 'avchd':
+                return true;
+            default:
+        }
+        return false;
     }
 
     const onSubmit = (e) => {
@@ -36,7 +79,37 @@ function ModuleCreator(props) {
             quiz = JSON.parse(sessionStorage.getItem("quiz"))
             sessionStorage.clear()
             onFinish({ title, type, description, quiz })
-        } else {
+        }else if(type === 'PDF' && pdf !== null){
+            if(isPDF(pdf.name) === false){
+                alert("File must be a PDF")
+            } else {
+                console.log('works for PDF')
+                var pdfData = {
+                    pdf: pdf,
+                    description: sessionStorage.getItem('pdfDescription')
+                }
+                onFinish({ title, type, description, pdfData })
+            }
+        } else if(type === 'File' && pdf !== null){
+            console.log('works for File')
+            var fileData = {
+                file: file,
+                description: sessionStorage.getItem('fileDescription')
+            }
+            onFinish({ title, type, description, fileData })
+            
+        }else if(type === 'Video' && video !== null){
+            if(isVideo(video.name) === false){
+                alert("File must be a video")
+            } else {
+                console.log('works for Video')
+                var videoData = {
+                    video: video,
+                    description: sessionStorage.getItem('videoDescription')
+                }
+                onFinish({ title, type, description, videoData })
+            }
+        }else {
             console.log('works')
             onFinish({ title, type, description })
         }
@@ -54,7 +127,7 @@ function ModuleCreator(props) {
 
     const onFinish = async (module) => {
         const token = localStorage.getItem("token");
-        if (token != undefined) {
+        if (token !== undefined) {
             let res = undefined
             if (module.type === "Quiz") {
                 res = await fetch(config.server_url + config.paths.newModule, {
@@ -64,7 +137,120 @@ function ModuleCreator(props) {
                     },
                     body: JSON.stringify({ 'token': token, 'courseID': '60b7dac736539526486f1503', 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
                 })
-            } else {
+            }else if(module.type === "PDF"){
+                // handle image
+                const newFile = new FormData();
+                newFile.append('file', module.pdfData.pdf)
+
+                const res = await fetch(config.server_url + config.paths.newModule, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "token": token,
+                        'courseID': '60b7dac736539526486f1503',
+                        "title": module.title,
+                        'description': module.description,
+                        'type': module.type,
+                        "fileDescription" : module.pdfData.description,
+                        "urlFile": `http://localhost:4000/60b7dac736539526486f1503/${module.pdfData.pdf.name}`
+                    })
+                })
+                const data = await res.json()
+                const myData = "60b7dac736539526486f1503"
+                if (data.message === undefined) {
+                    const res = await fetch(config.server_url + config.paths.fileUpload +"?token=" + token + "&courseID=" + myData + "&imageName=" + module.pdfData.pdf.name, {
+                    method: 'POST',
+                    body: newFile
+                    })
+                    const data2 = await res.json()
+                    console.log(data2)
+
+                    if (data2.status === 'Success') {
+                        alert("Successfully added PDF module")
+                        props.history.push('/dashboard')// needs to be changed to course manager
+                    } //else need to do something, not sure what rn
+                } else { // this is to check if there are errors not being addressed already
+                    console.log(data)
+                }
+            } else if(module.type === "File"){
+                // handle image
+                const newFile = new FormData();
+                newFile.append('file', module.fileData.file)
+
+                const res = await fetch(config.server_url + config.paths.newModule, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "token": token,
+                        'courseID': '60b7dac736539526486f1503',
+                        "title": module.title,
+                        'description': module.description,
+                        'type': module.type,
+                        "fileDescription" : module.fileData.description,
+                        "urlFile": `http://localhost:4000/60b7dac736539526486f1503/${module.fileData.file.name}`
+                    })
+                })
+                const data = await res.json()
+                const myData = "60b7dac736539526486f1503"
+                if (data.message === undefined) {
+                    const res = await fetch(config.server_url + config.paths.fileUpload +"?token=" + token + "&courseID=" + myData + "&imageName=" + module.fileData.file.name, {
+                    method: 'POST',
+                    body: newFile
+                    })
+                    const data2 = await res.json()
+                    console.log(data2)
+
+                    if (data2.status === 'Success') {
+                        alert("Successfully added PDF module")
+                        props.history.push('/dashboard')// needs to be changed to course manager
+                    } //else need to do something, not sure what rn
+                } else { // this is to check if there are errors not being addressed already
+                    console.log(data)
+                }
+            }else if(module.type === "Video"){
+
+                // handle image
+                const newVideo = new FormData();
+                newVideo.append('file', module.videoData.video)
+                const res = await fetch(config.server_url + config.paths.newModule, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "token": token,
+                        'courseID': '60b7dac736539526486f1503',
+                        "title": module.title,
+                        'description': module.description,
+                        'type': module.type,
+                        "videoDescription" : module.videoData.description,
+                        "urlVideo": `http://localhost:4000/60b7dac736539526486f1503/${module.videoData.video.name}`,
+                    })
+                    
+                })
+
+                const data = await res.json()
+                const myData = '60b7dac736539526486f1503'
+                if (data.message === undefined) {
+                    const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + myData + "&imageName=" + module.videoData.video.name, {
+                    method: 'POST',
+                    body: newVideo
+                    })
+                    const data2 = await res.json()
+                    console.log(data2)
+
+                    if (data2.status === 'Success') {
+                        alert("Successfully added video module")
+                        props.history.push('/dashboard')// needs to be changed to course manager
+                    } //else need to do something, not sure what rn
+                } else { // this is to check if there are errors not being addressed already
+                    console.log(data)
+                }
+            }else {
                 res = await fetch(config.server_url + config.paths.newModule, {
 
                     method: 'POST',
@@ -73,23 +259,19 @@ function ModuleCreator(props) {
                     },
                     body: JSON.stringify({ 'token': token, 'courseID': '60b7dac736539526486f1503', 'title': module.title, 'description': module.description, 'type': module.type })
                 })
-            }
 
-            const data = await res.json()
+                const data = await res.json()
 
-            if (data.message === undefined) {
-                // probably change back to course manager 
-                alert('worked')
-                props.history.push('dashboard')
-            }
-            else { // this is to check if there are errors not being addressed already
-                console.log(data)
-            }
+                if (data.message === undefined) {
+                    //probably change back to course manager 
+                    alert('worked')
+                    props.history.push('dashboard')
+                }
+                else { // this is to check if there are errors not being addressed already
+                    console.log(data)
+                }
+            } 
         }
-        else {
-            props.history.push('login')
-        }
-
     }
 
     return (
@@ -100,7 +282,7 @@ function ModuleCreator(props) {
                     <form autoComplete="off" onSubmit={onSubmit}>
                         <Paper className={classes.paper} elevation={3} square={false}>
                             <Box m={2} pt={2}>
-                                <Typography className={classes.Title} variant="h5">{title == "" ? 'New Module' : title}</Typography>
+                                <Typography className={classes.Title} variant="h5">{title === "" ? 'New Module' : title}</Typography>
                             </Box>
                             <div className={classes.TextBox}>
                                 <TextField color='primary'
@@ -135,7 +317,7 @@ function ModuleCreator(props) {
                                     <Select
                                         native
                                         value={type}
-                                        onChange={handleChange}
+                                        //onChange={handleChange}
                                         name="Module Type"
                                         inputProps={{
                                             id: 'category-native-required',
@@ -145,13 +327,16 @@ function ModuleCreator(props) {
                                         <option aria-label="None" value="" />
                                         <option value={"Quiz"}>Quiz</option>
                                         <option value={"Video"}>Video</option>
-                                        <option value={"Files"}>Files</option>
+                                        <option value={"PDF"}>PDF</option>
+                                        <option value={"File"}>File</option>
                                     </Select>
                                     <FormHelperText>Required</FormHelperText>
                                 </FormControl>
 
-                                {type == 'Files' && <FileModule></FileModule>}
-                                {type == 'Quiz' && <QuizModule></QuizModule>}
+                                {type === 'PDF' && <PDFCreator setPDF={setPDF} pdf={pdf}/>}
+                                {type === 'Video' && <VideoCreator setVideo={setVideo} video = {video}/>}
+                                {type === 'Quiz' && <QuizModule/>}
+                                {type === 'File' && <FileCreator setFile={setFile} file = {file}/>}
 
                             </div>
                             <Container className={classes.buttonGroup}>
