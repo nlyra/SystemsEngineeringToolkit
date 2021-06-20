@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Container, TextField, Typography, Box, Select, InputLabel, FormHelperText, Paper } from '@material-ui/core'
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import { Button, Container, TextField, Typography, Box, Paper } from '@material-ui/core'
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import Chip from '@material-ui/core/Chip';
@@ -30,10 +29,10 @@ function NewCourse(props) {
         onFinish({ courseTitle, categories, description })
     }
 
-    const onUpload = (e) => {
-        alert('feature undefined')
-        return
-    }
+    //const onUpload = (e) => {
+    //    alert('feature undefined')
+    //    return
+    //}
 
     const onFinish = async (creds) => {
 
@@ -41,10 +40,11 @@ function NewCourse(props) {
 
         if (image !== undefined) { //if there is an image
 
+
             // handle image
             const imageData = new FormData();
             imageData.append('file', image)
-
+            // alert(creds.categories)
             const res = await fetch(config.server_url + config.paths.createCourse, {
                 method: 'POST',
                 headers: {
@@ -54,7 +54,7 @@ function NewCourse(props) {
                     "token": token,
                     "modules": [],
                     "name": creds.courseTitle,
-                    "category": creds.categories,
+                    "categories": creds.categories,
                     "description": creds.description,
                     "urlImage": `http://localhost:4000/${image.name}`
                 })
@@ -76,6 +76,8 @@ function NewCourse(props) {
                 })
             }
 
+
+
             const data = await res.json()
             if (data.message === undefined) {
                 const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + data._id + "&imageName=" + image.name, {
@@ -85,7 +87,7 @@ function NewCourse(props) {
                 const data2 = await res.json()
                 console.log(data2)
 
-                if (data2.status == 'Success') {
+                if (data2.status === 'Success') {
                     alert("Successfully created course!")
                     props.history.push('/dashboard')// needs to be changed to course manager
                 } //else need to do something, not sure what rn
@@ -96,7 +98,22 @@ function NewCourse(props) {
 
         } else {// if there is not an image
 
-            const res = await fetch(config.server_url + config.paths.createCourse, {
+            for (const newTag of categories) {
+                if (dialogData.find(c => c.label === newTag.label)) continue;
+
+                const res = await fetch(config.server_url + config.paths.addCategories, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "token": token,
+                        "label": newTag.label
+                    }),
+                })
+            }
+
+            const res2 = await fetch(config.server_url + config.paths.createCourse, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json'
@@ -105,13 +122,13 @@ function NewCourse(props) {
                     "token": token,
                     "modules": [],
                     "name": creds.courseTitle,
-                    "category": creds.category,
+                    "categories": creds.categories,
                     "description": creds.description,
                     "urlImage": `http://localhost:4000/misc_files/logo.jpg`
                 })
             }
             )
-            const data = await res.json()
+            const data = await res2.json()
             if (data.message === undefined) {
                 alert("Successfully created course!")
                 props.history.push('/dashboard')// needs to be changed to course manager
@@ -159,7 +176,7 @@ function NewCourse(props) {
                     <form autoComplete="off" onSubmit={onSubmit}>
                         <Paper className={classes.paper} elevation={3} square={false}>
                             <Box m={2} pt={2}>
-                                <Typography className={classes.Title} variant="h5">{courseTitle == "" ? 'New Course' : courseTitle}</Typography>
+                                <Typography className={classes.Title} variant="h5">{courseTitle === "" ? 'New Course' : courseTitle}</Typography>
                             </Box>
                             <div className={classes.TextBox}>
                                 <TextField color='primary'
