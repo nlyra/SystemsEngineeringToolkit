@@ -359,7 +359,13 @@ const Course = (props) => {
                       onClick={(event) => event.stopPropagation()}
                       onFocus={(event) => event.stopPropagation()}
                       control={
-                        <IconButton type='submit' className={classes.deleteButton} variant="contained" color="secondary" onClick={() => window.confirm('Are you sure you wish to delete this module: ' + (modules.indexOf(module) + 1) + '?') && deleteModule(module)}>
+                        <IconButton
+                          type='submit'
+                          className={classes.deleteButton}
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => window.confirm('Are you sure you wish to delete this module: ' + (modules.indexOf(module) + 1) + '?') && deleteModule(module)}
+                        >
                           <DeleteIcon />
                         </IconButton>
                       }
@@ -379,6 +385,22 @@ const Course = (props) => {
                       onClick={(event) => event.stopPropagation()}
                       onFocus={(event) => event.stopPropagation()}
                       control={<ModuleInfoEditButton moduleIndex={modules.indexOf(module)} courseID={courseID} module={module} hideComponent={false} />}
+                    />
+                    <FormControlLabel
+                      aria-label="Acknowledge"
+                      onClick={(event) => event.stopPropagation()}
+                      onFocus={(event) => event.stopPropagation()}
+                      control={
+                        <IconButton
+                          type='submit'
+                          className={classes.deleteButton}
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => window.confirm('Are you sure you wish to delete this module: ' + (modules.indexOf(module) + 1) + '?') && deleteModule(module)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      }
                     />
                     <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
                   </AccordionSummary>
