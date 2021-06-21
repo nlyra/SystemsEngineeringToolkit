@@ -127,6 +127,9 @@ function ModuleCreator(props) {
 
     const onFinish = async (module) => {
         const token = localStorage.getItem("token");
+        const pathname = window.location.pathname.split('/') //returns the current path
+        const id = pathname[pathname.length - 1]
+
         if (token !== undefined) {
             let res = undefined
             if (module.type === "Quiz") {
@@ -135,7 +138,7 @@ function ModuleCreator(props) {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': '60b7dac736539526486f1503', 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
+                    body: JSON.stringify({ 'token': token, 'courseID': id, 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
                 })
             }else if(module.type === "PDF"){
                 // handle image
@@ -149,18 +152,17 @@ function ModuleCreator(props) {
                     },
                     body: JSON.stringify({
                         "token": token,
-                        'courseID': '60b7dac736539526486f1503',
+                        'courseID': id,
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
                         "fileDescription" : module.pdfData.description,
-                        "urlFile": `http://localhost:4000/60b7dac736539526486f1503/${module.pdfData.pdf.name}`
+                        "urlFile": `http://localhost:4000/`+id+`/${module.pdfData.pdf.name}`
                     })
                 })
                 const data = await res.json()
-                const myData = "60b7dac736539526486f1503"
                 if (data.message === undefined) {
-                    const res = await fetch(config.server_url + config.paths.fileUpload +"?token=" + token + "&courseID=" + myData + "&imageName=" + module.pdfData.pdf.name, {
+                    const res = await fetch(config.server_url + config.paths.fileUpload +"?token=" + token + "&courseID=" + id + "&imageName=" + module.pdfData.pdf.name, {
                     method: 'POST',
                     body: newFile
                     })
@@ -186,18 +188,17 @@ function ModuleCreator(props) {
                     },
                     body: JSON.stringify({
                         "token": token,
-                        'courseID': '60b7dac736539526486f1503',
+                        'courseID': id,
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
                         "fileDescription" : module.fileData.description,
-                        "urlFile": `http://localhost:4000/60b7dac736539526486f1503/${module.fileData.file.name}`
+                        "urlFile": `http://localhost:4000/`+id+`/${module.fileData.file.name}`
                     })
                 })
                 const data = await res.json()
-                const myData = "60b7dac736539526486f1503"
                 if (data.message === undefined) {
-                    const res = await fetch(config.server_url + config.paths.fileUpload +"?token=" + token + "&courseID=" + myData + "&imageName=" + module.fileData.file.name, {
+                    const res = await fetch(config.server_url + config.paths.fileUpload +"?token=" + token + "&courseID=" + id + "&imageName=" + module.fileData.file.name, {
                     method: 'POST',
                     body: newFile
                     })
@@ -223,20 +224,19 @@ function ModuleCreator(props) {
                     },
                     body: JSON.stringify({
                         "token": token,
-                        'courseID': '60b7dac736539526486f1503',
+                        'courseID': id,
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
                         "videoDescription" : module.videoData.description,
-                        "urlVideo": `http://localhost:4000/60b7dac736539526486f1503/${module.videoData.video.name}`,
+                        "urlVideo": `http://localhost:4000/`+id+`/${module.videoData.video.name}`,
                     })
                     
                 })
 
                 const data = await res.json()
-                const myData = '60b7dac736539526486f1503'
                 if (data.message === undefined) {
-                    const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + myData + "&imageName=" + module.videoData.video.name, {
+                    const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + id + "&imageName=" + module.videoData.video.name, {
                     method: 'POST',
                     body: newVideo
                     })
@@ -257,7 +257,7 @@ function ModuleCreator(props) {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': '60b7dac736539526486f1503', 'title': module.title, 'description': module.description, 'type': module.type })
+                    body: JSON.stringify({ 'token': token, 'courseID': id, 'title': module.title, 'description': module.description, 'type': module.type })
                 })
 
                 const data = await res.json()

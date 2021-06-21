@@ -27,7 +27,7 @@ router.post('/course', VerifyToken, async (req, res) => {
     }
 
     // get user grades if any
-    let data = await User.findOne({ "_id": req.body.userID }, 'coursesData')
+    /*let data = await User.findOne({ "_id": req.body.userID }, 'coursesData')
     for (let i = 0; i < course.modules.length; i++) {
       if (data.coursesData[0] != undefined) {
         if (data.coursesData[0][req.body.id] != undefined) {
@@ -39,7 +39,7 @@ router.post('/course', VerifyToken, async (req, res) => {
           }
         }
       }
-    }
+    }*/
 
 
 
