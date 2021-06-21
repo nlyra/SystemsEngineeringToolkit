@@ -3,8 +3,14 @@ const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const authRoute = require('./routes/auth').router;
+const categoriesRoute = require('./routes/categories');
+const adminRoute = require('./routes/admin');
 const coursesRoute = require('./routes/courses');
+const multerRoute = require('./routes/fileMulter');
+const settingsRoute = require('./routes/settings');
 const config = require('./config.json');
+const multer = require('multer');
+
 
 const app = express();
 
@@ -15,7 +21,7 @@ var corsOptions = {
 app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "1gb" }));
 
 // connect to db
 //(i called my db se_toolkit so it would be [url + /se_toolkit])
@@ -30,9 +36,12 @@ mongoose.connect(config.db_url,
 //serve static files
 app.use(express.static('public'));
 
-
 app.use('/api/v0/auth', authRoute);
 app.use('/api/v0/courses', coursesRoute);
+app.use('/api/v0/upload', multerRoute);
+app.use('/api/v0/categories', categoriesRoute);
+app.use('/api/v0/settings', settingsRoute);
+app.use('/api/v0/admin', adminRoute);
 
 app.listen(process.env.PORT || '4000', () => {
     console.log(`Listening on ${process.env.PORT || '4000'}`);

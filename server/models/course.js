@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
+const Module = require('module');
 
 const CourseSchema = mongoose.Schema({
   name: {
     type: String,
     required: true
   },
-  category: {
-    type: String,
+  categories: {
+    type: [],
     // required: true
   },
   description: {
@@ -15,23 +16,36 @@ const CourseSchema = mongoose.Schema({
   },
   author: {
     type: String,
-    // required: true
+    required: true
   },
-  totalStudent: {
+  totalStudents: {
     type: Number,
     "default": 0
   },
-  
+
+  totalCompletedStudents: {
+    type: Number,
+    "default": 0
+  },
+
+  currStudents: {
+    type: Number,
+    "default": 0
+  },
+
+  studentsEnrolled: [],
+
   urlImage: {
     type: String,
     required: true
   },
-  modules: [
-    {
-      name: String,
-      type: String
-    }
-  ]
+
+  modules: [],
+
+  author: {
+    type: String
+  }
+
 })
 
 

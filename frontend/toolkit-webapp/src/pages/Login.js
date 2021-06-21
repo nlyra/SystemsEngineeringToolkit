@@ -1,19 +1,17 @@
 import React, { useState } from 'react'
 import { Button, Container, TextField, Typography, Paper, Box } from '@material-ui/core'
 import config from '../config.json'
-import useStyles from './styles'
-import TopNavBar from '../components/topNavBar'
+import loginStyles from '../styles/loginStyle'
+import TopNavBar from '../components/TopNavBar'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Avatar from '@material-ui/core/Avatar';
-import '../css/Login.css';
 import videoSource from '../img/PEOSTRI.mp4'
-
 
 function Login(props) {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const classes = useStyles()
+    const classes = loginStyles()
 
     const onRegister = (e) => {
         props.history.push('registration');
