@@ -142,7 +142,7 @@ router.post('/info', VerifyToken, async (req, res) => {
       const query = req.body.search_query;
       courses = await Course.find({
         $or: [
-          { "categories": { "$regex": query, $options: 'i' } },
+          { "categories.label": { "$regex": query, $options: 'i' } },
           { "name": { "$regex": query, $options: 'i' } },
         ]
       }, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
@@ -168,7 +168,7 @@ router.post('/myCreatedCoursesInfo', VerifyToken, async (req, res) => {
       courses = await Course.find({
         $and: [
           { _id: user.createdCourses },
-          { $or: [{ "categories": { "$regex": query, $options: 'i' } }, { "name": { "$regex": query, $options: 'i' } }] },
+          { $or: [{ "categories.label": { "$regex": query, $options: 'i' } }, { "name": { "$regex": query, $options: 'i' } }] },
         ]
       }), '_id name description urlImage categories'
     }
@@ -194,7 +194,7 @@ router.post('/myCoursesInfo', VerifyToken, async (req, res) => {
       courses = await Course.find({
         $and: [
           { _id: user.enrolledClasses },
-          { $or: [{ "categories": { "$regex": query, $options: 'i' } }, { "name": { "$regex": query, $options: 'i' } }] },
+          { $or: [{ "categories.label": { "$regex": query, $options: 'i' } }, { "name": { "$regex": query, $options: 'i' } }] },
         ]
       }), '_id name description urlImage categories'
     }
@@ -264,7 +264,7 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
       { _id: req.body.courseID },
       {
         $pull: { studentsEnrolled: req.body.userID },
-        $inc: { currStudents: -1 }
+        // $inc: { currStudents: -1 }
       })
 
     res.json({'status': 'success'})
