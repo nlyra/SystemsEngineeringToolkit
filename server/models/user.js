@@ -20,8 +20,7 @@ const UserSchema = mongoose.Schema({
 
     roleID: {
         type: String,
-        emun: ['admin', 'creator', 'student'],
-        default: 'student'
+        required: true
     },
 
     resetPassToken: {

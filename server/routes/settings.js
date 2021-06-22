@@ -4,9 +4,11 @@ const VerifyToken = require('./auth').verifyToken;
 const express = require('express');
 const jwt_decode = require('jwt-decode');
 const router = express.Router();
+const authorize = require('./auth').authorize;
+const Role = require('../_helpers/role');
 const fs = require('fs')
 
-router.post('/userInfo', VerifyToken, async (req, res) => {
+router.post('/userInfo', VerifyToken, authorize(Role.Admin), async (req, res) => {
     try {
         
         // console.log(req.body)

@@ -5,8 +5,54 @@ const jwt = require('jsonwebtoken');
 const config = require('../config.json');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const Role = require('../_helpers/role');
 const e = require('express');
 const router = express.Router();
+
+module.exports = {
+    router,
+    verifyToken,
+    authorize
+};
+
+function verifyToken(req, res, next) {
+    // get auth header value
+    let token = '';
+    if (req.query.token != undefined)
+        token = req.query.token
+    else
+        token = req.body.token;
+
+    if (token === undefined) {
+        res.sendStatus(403);
+    }
+
+    jwt.verify(token, config.key, function (err, decoded) {
+        if (err) {
+            console.log(err.message)
+            res.sendStatus(403)
+        }
+        // console.log(decoded)
+        req.body.userID = decoded.id;
+    });
+    next();
+
+}
+
+function authorize(roles = []){
+    if (typeof roles === 'string')
+        roles = [roles]
+    
+    return [
+        (req, res, next) => {
+            if (roles.length && !roles.includes(req.user.role)) {
+                // user's role is not authorized
+                return res.status(401).json({ message: 'Unauthorized' });
+            }
+        next();
+        }
+    ];
+}
 
 router.post('/registration', async (req, res) => {
     try {
@@ -18,7 +64,7 @@ router.post('/registration', async (req, res) => {
                 last_name: req.body.last_name,
                 email: req.body.email,
                 password: pass,
-                roleID: 0,
+                roleID: "Admin",
             });
 
             const savedUser = await user.save();
@@ -122,30 +168,6 @@ router.post('/login', async (req, res) => {
     }
 });
 
-function verifyToken(req, res, next) {
-    // get auth header value
-    let token = '';
-    if (req.query.token != undefined)
-        token = req.query.token
-    else
-        token = req.body.token;
-
-    if (token === undefined) {
-        res.sendStatus(403);
-    }
-
-    jwt.verify(token, config.key, function (err, decoded) {
-        if (err) {
-            console.log(err.message)
-            res.sendStatus(403)
-        }
-        // console.log(decoded)
-        req.body.userID = decoded.id;
-    });
-    next();
-
-}
-
 router.post('/checkResetCreds', async (req, res) => {
 
     const user = await User.findOne({ resetPassToken: req.body.resetToken, resetPassExpires: { $gt: Date.now() } }, '_id')
@@ -183,8 +205,3 @@ router.post('/resetPassApproved', async (req, res) => {
     }
 
 })
-
-module.exports = {
-    router,
-    verifyToken
-};
