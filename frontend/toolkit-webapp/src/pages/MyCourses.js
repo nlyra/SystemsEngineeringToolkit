@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Card, CardActions, Container, CssBaseline, Divider, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
+import { Dialog, DialogTitle, DialogActions, DialogContent } from '@material-ui/core'
 import '../css/dashboard.css'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
@@ -11,6 +12,7 @@ import { Link } from '@material-ui/core';
 const MyCourses = (props) => {
     const [courses, setCourses] = useState([])
     const [searchQuery, setSearchQuery] = useState('')
+    const [openDialog, setOpenDialog] = useState(false);
 
     const classes = myCoursesStyles()
 
@@ -50,6 +52,14 @@ const MyCourses = (props) => {
             console.log(data)
         }
     }
+
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
+
 
     const removeEnrollment = async (id) => 
     {
@@ -125,10 +135,32 @@ const MyCourses = (props) => {
                                 </Card>
 
                                 <div className={classes.buttonDiv}>
-                                    <Button type='submit' className={classes.removeButton} size= "small" color="inherit" variant="contained" onClick={() => {if (window.confirm('Are you sure you wish to disenroll? Your progress may be lost.')) removeEnrollment(course._id)} }>
-                                    Disenroll Course
+                                    <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick= {handleOpenDialog}>
+                                        Disenroll Course
                                     </Button>
-                                 </div>
+                                </div>
+
+                                {openDialog === true ?
+
+                                    <div className={classes.dialog}>
+                                        <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" open={openDialog}>
+                                            <div className={classes.dialogTitleDiv}>
+                                                <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleCloseDialog}>
+                                                    Are you sure you wish to disenroll from this course? 
+                                                </DialogTitle>
+                                            </div>
+                                            <DialogContent className={classes.dialogContent}>
+                                                <Button type= 'submit' size="small" color="inherit" variant="contained" onClick={() => removeEnrollment(course._id)}>
+                                                        Yes
+                                                    </Button>
+                                                    <Button type='submit' size="small" color="inherit" variant="contained" >
+                                                        No
+                                                    </Button>
+                                            </DialogContent>
+                                        </Dialog>
+                                    </div>
+
+                                    : null}
                                 
                             </Grid>
                         ))}

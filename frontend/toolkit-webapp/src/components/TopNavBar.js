@@ -306,50 +306,6 @@ export default function TopNavBar(props) {
         props.history.push(`/dashboard`);
     };
 
-    // const onSubmit = (e) => {
-        
-    //     e.preventDefault()
-    //     if (firstName === user.first_name && lastName === user.last_name) {
-    //         alert('No update made!')
-    //         return
-    //     }
-
-    //     updateUserInfo({ firstName, lastName})
-    //     // setFirstName('')
-    //     // setLastName('')
-    //     // setEmail('')
-    //     // setPassword('')
-    //     // setPasswordCopy('')
-    // }
-
-    // const updateUserInfo = async (creds) => {
-
-    //     const res = await fetch(config.server_url + config.paths.updateUserInfo, {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-type': 'application/json'
-    //         },
-    //         body: JSON.stringify({ 
-    //         "first_name": creds.firstName, 
-    //         "last_name": creds.lastName, 
-    //         "email": creds.email, 
-    //         "password": creds.password, 
-    //         "password_copy": creds.passwordCopy,
-    //         "classesEnrolled": [] })
-    //     })
-
-    //     const data = await res.json()
-
-    //     if (data.message == "added user") {
-    //         alert("Success, user Created!!");
-    //         props.history.push('login')
-
-    //     } else if (data.message === "email already connected to an account") {
-    //         alert("email already connected to an account, please try again.");
-    //     } else { // this is to check if there are errors not being addressed already
-    //         console.log(data)
-    //     }
-    // }
     return (
         <div className={classes.root}>
             <AppBar

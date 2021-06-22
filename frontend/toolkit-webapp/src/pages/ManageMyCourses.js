@@ -4,6 +4,7 @@ import '../css/dashboard.css'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 // import Pagination from '@material-ui/lab/Pagination'
+import { Dialog, DialogTitle, DialogActions, DialogContent } from '@material-ui/core'
 import myCoursesStyles from '../styles/myCoursesStyle'
 import jwt_decode from "jwt-decode";
 import { Link } from '@material-ui/core';
@@ -11,6 +12,7 @@ import { Link } from '@material-ui/core';
 const ManageMyCourses = (props) => {
     const [courses, setCourses] = useState([])
     const [searchQuery, setSearchQuery] = useState('')
+    const [openDialog, setOpenDialog] = useState(false);
 
     const classes = myCoursesStyles()
 
@@ -52,6 +54,13 @@ const ManageMyCourses = (props) => {
         }
     }
 
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
+
     const deleteCourse = async (id) => 
     {
         let res = undefined
@@ -71,7 +80,7 @@ const ManageMyCourses = (props) => {
         // const newVal = courses.filter((courses) => courses._id !== id);
         // setCourses(newVal)
         
-        // window.location.reload()
+        window.location.reload()
         
     }
 
@@ -125,16 +134,37 @@ const ManageMyCourses = (props) => {
                                     </Grid>
                                 </Card>
 
-                             {/* TODO: Figure out a way to reload the page without simply linking back to the same page.  */}
+                                {/* TODO: Figure out a way to reload the page without simply linking back to the same page.  */}
 
-                                <Link href="/ManageMyCourses" underline='none' color="inherit"> 
+                                {/* <Link href="/ManageMyCourses" underline='none' color="inherit">  */}
                                 <div className={classes.buttonDiv}>
-                                    <Button type='submit' className={classes.removeButton} size= "small" color="inherit" variant="contained" onClick={() => {if (window.confirm('Are you sure you wish to delete this course permanently?'))  deleteCourse(course._id) }}>
-                                    Remove Course
+                                    <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick={handleOpenDialog}>
+                                        Delete Course
                                     </Button>
+                                </div>
+                                {/* </Link>  */}
+
+                                {openDialog === true ?
+
+                                    <div className={classes.dialog}>
+                                        <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" open={openDialog}>
+                                            <div className={classes.dialogTitleDiv}>
+                                                <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleCloseDialog}>
+                                                    Are you sure you wish to delete this course permanently?
+                                                </DialogTitle>
+                                            </div>
+                                            <DialogContent className={classes.dialogContent}>
+                                                <Button type='submit' size="small" color="inherit" variant="contained" onClick={() => deleteCourse(course._id)}>
+                                                    Yes
+                                                </Button>
+                                                <Button type='submit' size="small" color="inherit" variant="contained" >
+                                                    No
+                                                </Button>
+                                            </DialogContent>
+                                        </Dialog>
                                     </div>
-                                </Link> 
-                                
+
+                                    : null}
                             </Grid>
 
                         ))}
