@@ -6,7 +6,7 @@ const CourseSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  category: {
+  categories: {
     type: [],
     // required: true
   },
@@ -19,6 +19,16 @@ const CourseSchema = mongoose.Schema({
     required: true
   },
   totalStudents: {
+    type: Number,
+    "default": 0
+  },
+
+  totalCompletedStudents: {
+    type: Number,
+    "default": 0
+  },
+
+  currStudents: {
     type: Number,
     "default": 0
   },

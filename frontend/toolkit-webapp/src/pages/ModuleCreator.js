@@ -15,6 +15,7 @@ function ModuleCreator(props) {
     const [type, setType] = useState('')
     const [description, setDescription] = useState('')
     const [courseID, setCourseID] = useState('')
+    const [gradeToPass, setGradeToPass] = useState('')
 
     const classes = useStyles()
 
@@ -62,7 +63,7 @@ function ModuleCreator(props) {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
+                    body: JSON.stringify({ 'token': token, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz, 'gradeToPass': gradeToPass })
                 })
             } else {
                 res = await fetch(config.server_url + config.paths.newModule, {
@@ -151,7 +152,23 @@ function ModuleCreator(props) {
                                 </FormControl>
 
                                 {type == 'Files' && <FileModule></FileModule>}
-                                {type == 'Quiz' && <QuizCreatorModule></QuizCreatorModule>}
+                                {type == 'Quiz' &&
+                                    <div>
+                                        <TextField color='primary'
+                                            size='small'
+                                            variant="filled"
+                                            type="number"
+                                            label='Grade to pass'
+                                            defaultValue=""
+                                            value={gradeToPass}
+                                            onChange={e => setGradeToPass(e.target.value)}
+                                            margin="normal"
+                                            required={true}
+                                            fullWidth
+                                        />
+                                        <QuizCreatorModule></QuizCreatorModule>
+                                    </div>
+                                }
 
                             </div>
                             <Container className={classes.buttonGroup}>

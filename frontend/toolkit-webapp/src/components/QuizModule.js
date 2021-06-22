@@ -1,38 +1,21 @@
-import { Grid } from '@material-ui/core';
-import React, { useState, useEffect } from 'react';
+import { Button, Typography, Link } from '@material-ui/core';
+import React, { useState, } from 'react';
 import quizStyles from '../styles/quizModuleStyle'
 import config from '../config.json'
-
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
 
 const QuizModule = (props) => {
   const classes = quizStyles()
 
-  const [questions, setQuestions] = useState(props.quiz)
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [showScore, setShowScore] = useState(false);
+  const [state, setState] = useState(props.grade !== undefined ? 2 : 0);  // 0 == start button, 1 == quiz, 2 == score and again
+  const [questions, setQuestions] = useState(props.quiz);
   const [score, setScore] = useState(0);
   const [answers, setAnswers] = useState({});
-
-  const handleAnswerOptionClick = (isCorrect) => {
-    let temp = answers
-    if (isCorrect) {
-      temp[currentQuestion.toString()] = 1
-    } else {
-      temp[currentQuestion.toString()] = 0
-    }
-    setAnswers(temp)
-  };
-
-  const handlePrevious = () => {
-    if (currentQuestion > 0)
-      setCurrentQuestion(currentQuestion - 1)
-  }
-
-  const handleNext = () => {
-    if (currentQuestion < questions.length - 1)
-      setCurrentQuestion(currentQuestion + 1)
-
-  }
+  const [value, setValue] = React.useState({});
 
   const handleSubmit = () => {
     let temp = 0;
@@ -42,20 +25,16 @@ const QuizModule = (props) => {
       }
     }
     setScore(temp);
-    setShowScore(true);
     saveScore(temp);
+    setState(2)
   }
 
 
   const handleAgain = () => {
-    setCurrentQuestion(0)
     setScore(0)
     setAnswers({})
-    setShowScore(false)
-  }
-
-  const shuffeAnswers = () => {
-    console.log('hola')
+    setValue({})
+    setState(1)
   }
 
   const saveScore = async (temp) => {
@@ -75,6 +54,7 @@ const QuizModule = (props) => {
 
     const data = await res.json()
     if (data.message === undefined) {
+      window.location.reload();
       //maybe do something in the future
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
@@ -85,49 +65,103 @@ const QuizModule = (props) => {
     }
   }
 
-  return (
-    <div className={classes.app}>
-      {showScore ? (
-        <>
-          <div className={classes.scoreSection}>
-            You scored {score} out of {questions.length}
-          </div>
-          <button className={classes.buttonBack} onClick={() => handleAgain()}>Again?</button>
-        </>
-      ) : (
-        <>
-          <div className={classes.app2} >
-            <div className={classes.questionSection} >
-              <div className={classes.questionCount}>
+  const handleChange = (e, index) => {
 
-                <span className={classes.questionCountSpan}>Question {currentQuestion + 1}</span>/{questions.length}
+    let temp = value;
+    temp[index] = e.target.value
+    setValue(temp);
+
+    let temp2 = answers;
+    for (let i = 0; i < questions[index].answers.length; i++) {
+      if (questions[index].answers[i].isCorrect) {
+        if (questions[index].answers[i].answerText === e.target.value) {
+          temp2[index] = 1
+        } else {
+          temp2[index] = 0
+        }
+        setAnswers(temp2)
+      }
+    }
+  };
+
+  return (
+    <div className={classes.outerDiv}>
+      {state === 0 &&
+        <div className={classes.buttonDiv}>
+          <Button variant="contained" onClick={() => setState(1)}>Start!</Button>
+        </div>
+      }
+      {state === 1 &&
+        <div className={classes.quizDiv}>
+          <FormControl component="fieldset">
+            {questions.map((question) => (
+              <div key={questions.indexOf(question)} className={classes.questionDiv}>
+                <FormLabel component="legend">{questions.indexOf(question) + 1}. {question.question}</FormLabel>
+                <RadioGroup aria-label="gender" name="gender1" value={value[questions.indexOf(question)]} onChange={(e) => handleChange(e, questions.indexOf(question))}>
+                  {question.type === "Multiple Choice" &&
+                    <>
+                      {question.answers.map((answer) => (
+                        <FormControlLabel value={answer.answerText} control={<Radio />} label={answer.answerText} />
+                      ))}
+                    </>
+                  }
+                  {question.type === "True or False" &&
+                    <>
+                      <FormControlLabel value={question.answers[0].answerText} control={<Radio />} label={question.answers[0].answerText} />
+                      <FormControlLabel value={question.answers[0].answerText === "True" ? "False" : "True"} control={<Radio />} label={question.answers[0].answerText === "True" ? "False" : "True"} />
+                    </>
+                  }
+
+                </RadioGroup>
               </div>
-              <div className={classes.questionText}>{questions[currentQuestion].question}</div>
+            ))}
+          </FormControl>
+          <div className={classes.submitDiv}>
+            <Button variant="contained" onClick={() => window.confirm('Are you sure you wish to submit?') && handleSubmit()}>Submit</Button>
+          </div>
+        </div>
+      }
+      {state === 2 &&
+        <div className={classes.afterSubmitDiv}>
+          <div >
+            {/* <Typography>Your score is: {score}/{questions.length}</Typography> */}
+            <br />
+            <Button variant="contained" onClick={() => window.confirm('Are you sure you wish to try again?') && handleAgain()}>Try again?</Button>
+            <Button variant="contained" onClick={() => window.confirm('Are you sure you wish to show answers?') && setState(3)}>Show answers</Button>
+          </div>
+        </div>
+      }
+      {state === 3 &&
+        <div>
+          {questions.map((question) => (
+            <div >
+              <Typography>{questions.indexOf(question) + 1}. {question.question}</Typography>
+              <br />
+              {question.type === "Multiple Choice" &&
+                <div>
+                  <Typography>Answer Option: {question.answers[0].answerText} is {question.answers[0].isCorrect ? "correct" : "incorrect"}</Typography>
+                  <Typography>Answer Option: {question.answers[1].answerText} is {question.answers[1].isCorrect ? "correct" : "incorrect"}</Typography>
+                  <Typography>Answer Option: {question.answers[2].answerText} is {question.answers[2].isCorrect ? "correct" : "incorrect"}</Typography>
+                  <Typography>Answer Option: {question.answers[3].answerText} is {question.answers[3].isCorrect ? "correct" : "incorrect"}</Typography>
+                </div>
+              }
+              {question.type === "True or False" &&
+                <div>
+                  <Typography>Answer Option: {question.answers[0].answerText} is {question.answers[0].isCorrect ? "correct" : "incorrect"}</Typography>
+                  <Typography>Answer Option: {question.answers[0].answerText === "True" ? "False" : "True"} is {question.answers[1].isCorrect ? "correct" : "incorrect"}</Typography>
+                </div>
+              }
+              <br />
             </div>
-            {questions[currentQuestion].type === "Multiple Choice" &&
-              <div className={classes.answerSection}>
-                {questions[currentQuestion].answers.map((answers) => (
-                  <button className={classes.button} onClick={() => handleAnswerOptionClick(answers.isCorrect)}>{answers.answerText}</button>
-                ))}
-              </div>
-            }
-            {questions[currentQuestion].type === "True or False" &&
-              <div className={classes.answerSection}>
-                <button className={classes.button} onClick={() => handleAnswerOptionClick(questions[currentQuestion].answers[0].isCorrect)}>{questions[currentQuestion].answers[0].answerText}</button>
-                <button className={classes.button} onClick={() => handleAnswerOptionClick(!questions[currentQuestion].answers[0].isCorrect)}>{questions[currentQuestion].answers[0].answerText === "True" ? "False" : "True"}</button>
-              </div>
-            }
+          ))}
+          <div >
+            <Button variant="contained" onClick={() => window.confirm('Are you sure you wish to go back?') && setState(2)}>Go back</Button>
           </div>
-          <div className={classes.buttons}>
-            <button className={classes.buttonBack} onClick={() => handlePrevious()}>Previous</button>
-            <button className={classes.buttonBack} onClick={() => handleNext()}>Next</button>
-            <button className={classes.buttonBack} onClick={() => handleSubmit()}>Submit</button>
-          </div>
-        </>
-      )}
+        </div>
+      }
 
     </div>
   );
 }
 
-export default QuizModule;
+export default QuizModule
