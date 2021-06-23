@@ -425,7 +425,7 @@ const Course = (props) => {
                         {module.type === "Video" && <VideoModule videoUrl={module.urlVideo} />}
                         {module.type === "PDF" && <PdfModule fileUrl={module.urlFile} />}
                         {module.type === "File" && <FileModule fileUrl={module.urlFile} />}
-                        {module.type === "Quiz" && <QuizModule quiz={module.quiz} moduleIndex={modules.indexOf(module)} courseID={courseID} />}
+                        {module.type === "Quiz" && <QuizModule quiz={module.quiz} moduleIndex={modules.indexOf(module)} courseID={courseID} grade={module.grade} />}
                       </div>
                       <br />
                       {module.type !== "Quiz" &&

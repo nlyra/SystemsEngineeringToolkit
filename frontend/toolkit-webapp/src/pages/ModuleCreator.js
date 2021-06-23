@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, FormControl, Container, TextField, Typography, Box, Select, InputLabel, FormHelperText, Paper } from '@material-ui/core'
 // import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 // import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
@@ -6,7 +6,7 @@ import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 import useStyles from '../styles/moduleStyle'
 import '../css/Login.css';
-import QuizModule from '../components/QuizCreatorModule'
+import QuizCreator from '../components/QuizCreatorModule'
 import VideoCreator from '../components/VideoCreatorModule'
 import PDFCreator from '../components/PDFCreatorModule'
 import FileCreator from '../components/FileCreatorModule'
@@ -15,6 +15,9 @@ function ModuleCreator(props) {
     const [title, setTitle] = useState('')
     const [type, setType] = useState('')
     const [description, setDescription] = useState('')
+    const [courseID, setCourseID] = useState('')
+    const [gradeToPass, setGradeToPass] = useState('')
+
     const classes = useStyles()
     const [file, setFile] = useState()
     const [video, setVideo] = useState()
@@ -65,6 +68,11 @@ function ModuleCreator(props) {
         return false;
     }
 
+    useEffect(() => {
+        const pathname = window.location.pathname.split('/') //returns the current path
+        setCourseID(pathname[pathname.length - 1])
+    }, []);
+
     const onSubmit = (e) => {
         e.preventDefault()
         if (!title || !type || !description) {
@@ -74,7 +82,7 @@ function ModuleCreator(props) {
 
         if (type === 'Quiz' && JSON.parse(sessionStorage.getItem('quiz')) !== null) {
             console.log('works for Quiz')
-            var quiz =[]
+            var quiz = []
 
             quiz = JSON.parse(sessionStorage.getItem("quiz"))
             sessionStorage.clear()
@@ -84,30 +92,18 @@ function ModuleCreator(props) {
                 alert("File must be a PDF")
             } else {
                 console.log('works for PDF')
-                var pdfData = {
-                    pdf: pdf,
-                    description: sessionStorage.getItem('pdfDescription')
-                }
-                onFinish({ title, type, description, pdfData })
+                onFinish({ title, type, description, pdf })
             }
-        } else if(type === 'File' && pdf !== null){
+        } else if(type === 'File' && file !== null){
             console.log('works for File')
-            var fileData = {
-                file: file,
-                description: sessionStorage.getItem('fileDescription')
-            }
-            onFinish({ title, type, description, fileData })
+            onFinish({ title, type, description, file })
             
         }else if(type === 'Video' && video !== null){
             if(isVideo(video.name) === false){
                 alert("File must be a video")
             } else {
                 console.log('works for Video')
-                var videoData = {
-                    video: video,
-                    description: sessionStorage.getItem('videoDescription')
-                }
-                onFinish({ title, type, description, videoData })
+                onFinish({ title, type, description, video })
             }
         }else {
             console.log('works')
@@ -115,20 +111,13 @@ function ModuleCreator(props) {
         }
     }
 
-    // const onUpload = (e) => {
-    //     alert('feature undefined')
-    //     return
-    // }
-
     // We ideally want to redirect to module manager page, but we do not have that yet
     const cancel = () => {
-        props.history.push('dashboard')
+        props.history.push(`/course/${courseID}`)
     }
 
     const onFinish = async (module) => {
         const token = localStorage.getItem("token");
-        const pathname = window.location.pathname.split('/') //returns the current path
-        const id = pathname[pathname.length - 1]
 
         if (token !== undefined) {
             let res = undefined
@@ -138,12 +127,16 @@ function ModuleCreator(props) {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': id, 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
+                    body: JSON.stringify({ 'token': token, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz, 'gradeToPass': gradeToPass })
                 })
+
+                alert("Successfully added Quiz module")
+                props.history.push('/course/'+courseID)
+
             }else if(module.type === "PDF"){
                 // handle image
                 const newFile = new FormData();
-                newFile.append('file', module.pdfData.pdf)
+                newFile.append('file', module.pdf)
 
                 const res = await fetch(config.server_url + config.paths.newModule, {
                     method: 'POST',
@@ -152,17 +145,16 @@ function ModuleCreator(props) {
                     },
                     body: JSON.stringify({
                         "token": token,
-                        'courseID': id,
+                        'courseID': courseID,
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "fileDescription" : module.pdfData.description,
-                        "urlFile": `http://localhost:4000/`+id+`/${module.pdfData.pdf.name}`
+                        "urlFile": `http://localhost:4000/`+courseID+`/${module.pdf.name}`
                     })
                 })
                 const data = await res.json()
                 if (data.message === undefined) {
-                    const res = await fetch(config.server_url + config.paths.fileUpload +"?token=" + token + "&courseID=" + id + "&imageName=" + module.pdfData.pdf.name, {
+                    const res = await fetch(config.server_url + config.paths.fileUpload +"?token=" + token + "&courseID=" + courseID + "&imageName=" + module.pdf.name, {
                     method: 'POST',
                     body: newFile
                     })
@@ -171,7 +163,7 @@ function ModuleCreator(props) {
 
                     if (data2.status === 'Success') {
                         alert("Successfully added PDF module")
-                        props.history.push('/dashboard')// needs to be changed to course manager
+                        props.history.push('/course/'+courseID)
                     } //else need to do something, not sure what rn
                 } else { // this is to check if there are errors not being addressed already
                     console.log(data)
@@ -179,7 +171,7 @@ function ModuleCreator(props) {
             } else if(module.type === "File"){
                 // handle image
                 const newFile = new FormData();
-                newFile.append('file', module.fileData.file)
+                newFile.append('file', module.file)
 
                 const res = await fetch(config.server_url + config.paths.newModule, {
                     method: 'POST',
@@ -188,17 +180,16 @@ function ModuleCreator(props) {
                     },
                     body: JSON.stringify({
                         "token": token,
-                        'courseID': id,
+                        'courseID': courseID,
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "fileDescription" : module.fileData.description,
-                        "urlFile": `http://localhost:4000/`+id+`/${module.fileData.file.name}`
+                        "urlFile": `http://localhost:4000/`+courseID+`/${module.file.name}`
                     })
                 })
                 const data = await res.json()
                 if (data.message === undefined) {
-                    const res = await fetch(config.server_url + config.paths.fileUpload +"?token=" + token + "&courseID=" + id + "&imageName=" + module.fileData.file.name, {
+                    const res = await fetch(config.server_url + config.paths.fileUpload +"?token=" + token + "&courseID=" + courseID + "&imageName=" + module.file.name, {
                     method: 'POST',
                     body: newFile
                     })
@@ -207,7 +198,7 @@ function ModuleCreator(props) {
 
                     if (data2.status === 'Success') {
                         alert("Successfully added PDF module")
-                        props.history.push('/dashboard')// needs to be changed to course manager
+                        props.history.push('/course/'+courseID)
                     } //else need to do something, not sure what rn
                 } else { // this is to check if there are errors not being addressed already
                     console.log(data)
@@ -216,7 +207,7 @@ function ModuleCreator(props) {
 
                 // handle image
                 const newVideo = new FormData();
-                newVideo.append('file', module.videoData.video)
+                newVideo.append('file', module.video)
                 const res = await fetch(config.server_url + config.paths.newModule, {
                     method: 'POST',
                     headers: {
@@ -224,19 +215,18 @@ function ModuleCreator(props) {
                     },
                     body: JSON.stringify({
                         "token": token,
-                        'courseID': id,
+                        'courseID': courseID,
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "videoDescription" : module.videoData.description,
-                        "urlVideo": `http://localhost:4000/`+id+`/${module.videoData.video.name}`,
+                        "urlVideo": `http://localhost:4000/`+courseID+`/${module.video.name}`,
                     })
                     
                 })
 
                 const data = await res.json()
                 if (data.message === undefined) {
-                    const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + id + "&imageName=" + module.videoData.video.name, {
+                    const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.video.name, {
                     method: 'POST',
                     body: newVideo
                     })
@@ -245,7 +235,7 @@ function ModuleCreator(props) {
 
                     if (data2.status === 'Success') {
                         alert("Successfully added video module")
-                        props.history.push('/dashboard')// needs to be changed to course manager
+                        props.history.push('/course/'+courseID)
                     } //else need to do something, not sure what rn
                 } else { // this is to check if there are errors not being addressed already
                     console.log(data)
@@ -257,15 +247,14 @@ function ModuleCreator(props) {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': id, 'title': module.title, 'description': module.description, 'type': module.type })
+                    body: JSON.stringify({ 'token': token, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type })
                 })
 
                 const data = await res.json()
 
                 if (data.message === undefined) {
-                    //probably change back to course manager 
                     alert('worked')
-                    props.history.push('dashboard')
+                    props.history.push('/course/'+courseID)
                 }
                 else { // this is to check if there are errors not being addressed already
                     console.log(data)
@@ -335,8 +324,8 @@ function ModuleCreator(props) {
 
                                 {type === 'PDF' && <PDFCreator setPDF={setPDF} pdf={pdf}/>}
                                 {type === 'Video' && <VideoCreator setVideo={setVideo} video = {video}/>}
-                                {type === 'Quiz' && <QuizModule/>}
                                 {type === 'File' && <FileCreator setFile={setFile} file = {file}/>}
+                                {type == 'Quiz' && <QuizCreator gradeToPass={gradeToPass} setGradeToPass={setGradeToPass}/>}
 
                             </div>
                             <Container className={classes.buttonGroup}>

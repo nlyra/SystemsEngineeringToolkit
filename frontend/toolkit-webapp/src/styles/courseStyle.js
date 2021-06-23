@@ -17,9 +17,11 @@ const dashStyles = makeStyles((theme) => ({
     paddingBottom: '5%',
   },
 
-  courseImageStyle: {
-    maxWidth: '260px',
-    marginBottom: "15px"
+  currCourseImageStyle: {
+   marginTop: '3vh',
+    maxWidth: '35vh',
+    maxHeight: '35vh',
+    // marginRight: "10%"
   },
 
   description: {
@@ -48,13 +50,31 @@ const dashStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,
     align: 'right',
-    // position: 'right'
   },
 
   accordionDetails: {
     paddingLeft: '5%',
-    paddingRight: '5%'
+    paddingRight: '5%',
   },
+
+  deleteButton: {
+    height: 0.5,
+  },
+  
+  fileDiv: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  
+  accordionDiv: {
+    width: '100%'
+  },
+
+  completeDiv: {
+    display: 'flex',
+    justifyContent: 'flex-end'
+  }
 }))
 
 export default dashStyles;

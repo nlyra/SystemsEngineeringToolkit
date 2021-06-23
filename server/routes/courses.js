@@ -27,7 +27,7 @@ router.post('/course', VerifyToken, async (req, res) => {
     }
 
     // get user grades if any
-    /*let data = await User.findOne({ "_id": req.body.userID }, 'coursesData')
+    let data = await User.findOne({ "_id": req.body.userID }, 'coursesData')
     for (let i = 0; i < course.modules.length; i++) {
       if (data.coursesData[0] != undefined) {
         if (data.coursesData[0][req.body.id] != undefined) {
@@ -39,7 +39,7 @@ router.post('/course', VerifyToken, async (req, res) => {
           }
         }
       }
-    }*/
+    }
 
 
 
@@ -142,7 +142,7 @@ router.post('/info', VerifyToken, async (req, res) => {
       const query = req.body.search_query;
       courses = await Course.find({
         $or: [
-          { "categories": { "$regex": query, $options: 'i' } },
+          { "categories.label": { "$regex": query, $options: 'i' } },
           { "name": { "$regex": query, $options: 'i' } },
         ]
       }, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
@@ -168,7 +168,7 @@ router.post('/myCreatedCoursesInfo', VerifyToken, async (req, res) => {
       courses = await Course.find({
         $and: [
           { _id: user.createdCourses },
-          { $or: [{ "categories": { "$regex": query, $options: 'i' } }, { "name": { "$regex": query, $options: 'i' } }] },
+          { $or: [{ "categories.label": { "$regex": query, $options: 'i' } }, { "name": { "$regex": query, $options: 'i' } }] },
         ]
       }), '_id name description urlImage categories'
     }
@@ -194,7 +194,7 @@ router.post('/myCoursesInfo', VerifyToken, async (req, res) => {
       courses = await Course.find({
         $and: [
           { _id: user.enrolledClasses },
-          { $or: [{ "categories": { "$regex": query, $options: 'i' } }, { "name": { "$regex": query, $options: 'i' } }] },
+          { $or: [{ "categories.label": { "$regex": query, $options: 'i' } }, { "name": { "$regex": query, $options: 'i' } }] },
         ]
       }), '_id name description urlImage categories'
     }
@@ -263,7 +263,7 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
     const updateCourse = await Course.updateOne(
       { _id: req.body.courseID },
       {
-        $pull: { studentsEnrolled: req.body.userID }
+        $pull: { studentsEnrolled: req.body.userID },
         // $inc: { currStudents: -1 }
       })
 
@@ -341,7 +341,6 @@ router.post('/module/create', VerifyToken, async (req, res) => {
               type: req.body.type,
               description: req.body.description,
               urlVideo: req.body.urlVideo,
-              videoDescription: req.body.videoDescription
             }
           }
         });
@@ -355,7 +354,6 @@ router.post('/module/create', VerifyToken, async (req, res) => {
               type: req.body.type,
               description: req.body.description,
               urlFile: req.body.urlFile,
-              fileDescription: req.body.fileDescription
             }
           }
         });
@@ -369,7 +367,6 @@ router.post('/module/create', VerifyToken, async (req, res) => {
               type: req.body.type,
               description: req.body.description,
               urlFile: req.body.urlFile,
-              fileDescription: req.body.fileDescription
             }
           }
         });
@@ -535,7 +532,7 @@ router.post('/module/completed', VerifyToken, async (req, res) => {
               studentsEnrolled:
                 req.body.userID
             },
-            $inc: { totalStudents: 1 }
+            $inc: { totalStudents: 1, currStudents: 1 }
           });
 
         const updateUser = await User.updateOne(

@@ -1,37 +1,33 @@
-import React, { useState } from 'react'
-import { Link, fade, makeStyles, IconButton, AppBar, Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon, Button } from "@material-ui/core";
+import React, { useEffect, useState } from 'react'
+import { Box, IconButton, makeStyles, Button } from "@material-ui/core";
 import CreateIcon from '@material-ui/icons/Create';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
-    root:
-    {
-        display: 'flex',
-        position: 'relative'
 
-    },
     button:
     {
-        // marginTop: theme.spacing(-3),
-        // marginLeft: theme.spacing(205),
-        // alignItems: "center",
-        // justifyContent: "center",
-        //marginBottom: theme.spacing(100)
-
-        //marginLeft: "100px"
+        height: 0.5,
     }
 
 }))
 
-export default function ModuleInfoEditButton({ edit, id, hideComponent }) {
+export default function ModuleInfoEditButton(props) {
 
     const classes = useStyles();
-    // href={`/ModuleManager/${id}`}
+
+    const sendModule = () => {
+        localStorage.setItem("module", JSON.stringify(props.module))
+    }
+
     return (
-        <div className={classes.root}>
-            {hideComponent !== true ?
-                <Button type='submit' className={classes.button} size="large" variant="contained" color="primary" onClick={edit}>
-                    Edit Modules
-                </Button>
+        <div>
+            { props.hideComponent !== true ?
+                <Link to={{pathname: `/editModule/${props.courseID}`, moduleIndex: props.moduleIndex}} onClick={sendModule}>
+                    <IconButton type='submit' className={classes.button} variant="contained" color="primary" >
+                        <CreateIcon />
+                    </IconButton>
+                </Link>
                 : null}
         </div>
     )

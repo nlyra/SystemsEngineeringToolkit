@@ -55,14 +55,14 @@ const AdminDashboard = (props) => {
           <Grid item xs={12} >
             <Grid container className={classes.topItem}>
               <Grid item xs={12} sm={2} lg={1} classeName={classes.innerGrid}>
-                <Button className={classes.button} onClick={() => setCurrTab(0)} >users</Button>
+                <Button color={currTab === 0 ? "secondary" : ""} className={classes.button} onClick={() => setCurrTab(0)} >users</Button>
               </Grid>
 
               <Grid item xs={3} sm={2} lg={1} classeName={classes.innerGrid}>
-                <Button className={classes.button} onClick={() => setCurrTab(1)} >Courses</Button>
+                <Button color={currTab === 1 ? "secondary" : ""} className={classes.button} onClick={() => setCurrTab(1)} >Courses</Button>
               </Grid>
               <Grid item xs={3} sm={2} lg={1} classeName={classes.innerGrid}>
-                <Button className={classes.button} onClick={() => setCurrTab(2)} >Categories</Button>
+                <Button color={currTab === 2 ? "secondary" : ""} className={classes.button} onClick={() => setCurrTab(2)} >Categories</Button>
               </Grid>
 
             </Grid>
@@ -76,9 +76,9 @@ const AdminDashboard = (props) => {
           </Grid>
           <Grid item xs={12}>
             <div className={classes.innerDiv}>
-              {currTab === 0 && <AdminUsersTab setCurrTab={setCurrTab}/>}
-              {currTab === 1 && <AdminCoursesTab setCurrTab={setCurrTab}/>}
-              {currTab === 2 && <AdminCategoriesTab setCurrTab={setCurrTab}/>}
+              {currTab === 0 && <AdminUsersTab setCurrTab={setCurrTab} />}
+              {currTab === 1 && <AdminCoursesTab setCurrTab={setCurrTab} />}
+              {currTab === 2 && <AdminCategoriesTab setCurrTab={setCurrTab} />}
             </div>
           </Grid>
 

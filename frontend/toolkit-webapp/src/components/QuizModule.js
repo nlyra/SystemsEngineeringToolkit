@@ -1,5 +1,3 @@
-
-  
 import { Button, Typography, Link } from '@material-ui/core';
 import React, { useState, } from 'react';
 import quizStyles from '../styles/quizModuleStyle'
