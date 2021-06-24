@@ -39,10 +39,10 @@ const UserSchema = mongoose.Schema({
 
     coursesData: [],
 
-    roleID: {
-        type: Number,
-        required: true
-    },
+    // roleID: {
+    //     type: Number,
+    //     required: true
+    // },
 })
 
 

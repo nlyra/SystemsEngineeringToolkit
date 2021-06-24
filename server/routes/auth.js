@@ -44,8 +44,10 @@ function authorize(roles = []){
         roles = [roles]
     
     return [
+
         (req, res, next) => {
-            if (roles.length && !roles.includes(req.user.role)) {
+
+            if (roles.length && !roles.includes(req.user.roleID)) {
                 // user's role is not authorized
                 return res.status(401).json({ message: 'Unauthorized' });
             }
@@ -64,7 +66,7 @@ router.post('/registration', async (req, res) => {
                 last_name: req.body.last_name,
                 email: req.body.email,
                 password: pass,
-                roleID: "Admin",
+                roleID: Role.Admin,
             });
 
             const savedUser = await user.save();
@@ -149,7 +151,7 @@ router.post('/login', async (req, res) => {
                 // everything is correct
 
                 // token handling  (we might discuss what will be the secret key)
-                const token = jwt.sign({ id: user._id, email: req.body.email }, config.key, { expiresIn: '2h' });
+                const token = jwt.sign({ id: user._id, roleID: user.roleID, email: req.body.email }, config.key, { expiresIn: '2h' });
 
                 // set payload and return response
                 res.json({ token: token });

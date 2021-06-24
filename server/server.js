@@ -11,7 +11,6 @@ const settingsRoute = require('./routes/settings');
 const config = require('./config.json');
 const multer = require('multer');
 
-
 const app = express();
 
 var corsOptions = {
