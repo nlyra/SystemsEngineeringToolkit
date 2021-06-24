@@ -133,7 +133,7 @@ function ModuleEditor(props) {
                     body: JSON.stringify({ 'token': token, 'moduleID': props.location.moduleIndex, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz, 'gradeToPass': module.gradeToPass })
                 })
 
-                alert("Successfully added Quiz module")
+                alert("Successfully Edited Quiz module")
                 props.history.push('/course/'+courseID)
 
             }else if(module.type === "PDF"){
@@ -165,7 +165,7 @@ function ModuleEditor(props) {
                     console.log(data2)
 
                     if (data2.status === 'Success') {
-                        alert("Successfully added PDF module")
+                        alert("Successfully Edited PDF module")
                         props.history.push('/course/'+courseID)
                     } //else need to do something, not sure what rn
                 } else { // this is to check if there are errors not being addressed already
@@ -201,7 +201,7 @@ function ModuleEditor(props) {
                     console.log(data2)
 
                     if (data2.status === 'Success') {
-                        alert("Successfully added PDF module")
+                        alert("Successfully Edited File module")
                         props.history.push('/course/'+courseID)
                     } //else need to do something, not sure what rn
                 } else { // this is to check if there are errors not being addressed already
@@ -239,7 +239,7 @@ function ModuleEditor(props) {
                     console.log(data2)
 
                     if (data2.status === 'Success') {
-                        alert("Successfully added video module")
+                        alert("Successfully Edited video module")
                         props.history.push('/course/'+courseID)
                     } //else need to do something, not sure what rn
                 } else { // this is to check if there are errors not being addressed already

@@ -197,7 +197,7 @@ function ModuleCreator(props) {
                     console.log(data2)
 
                     if (data2.status === 'Success') {
-                        alert("Successfully added PDF module")
+                        alert("Successfully added File module")
                         props.history.push('/course/'+courseID)
                     } //else need to do something, not sure what rn
                 } else { // this is to check if there are errors not being addressed already
