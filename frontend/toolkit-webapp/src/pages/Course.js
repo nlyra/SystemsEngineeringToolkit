@@ -117,7 +117,6 @@ const Course = (props) => {
     const imageData = new FormData();
     imageData.append('file', currCourseImage)
 
-
     // Checking to see if the file inputted is not an actual image
     const imageTypePath = currCourseImage.name.split('.')
     const imageType = imageTypePath[imageTypePath.length - 1]

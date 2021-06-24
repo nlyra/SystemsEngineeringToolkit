@@ -213,6 +213,9 @@ router.post('/myCoursesInfo', VerifyToken, async (req, res) => {
 
 router.post('/create', VerifyToken, async (req, res) => {
   try {
+
+    console.log('here = ' + req.body.urlImage)
+
     const course = new Course({
       name: req.body.name,
       description: req.body.description,
@@ -224,6 +227,8 @@ router.post('/create', VerifyToken, async (req, res) => {
     const savedCourse = await course.save();
 
     findCourse = await Course.findOne({ "name": req.body.name, "description": req.body.description }, '_id')
+
+    
     // console.log(findCourse._id)
     const updateUser = await User.updateOne(
       { _id: req.body.userID },

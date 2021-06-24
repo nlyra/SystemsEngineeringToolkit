@@ -20,6 +20,8 @@ function NewCourse(props) {
     const [dialogData, setDialogData] = React.useState([]);
     const filter = createFilterOptions();
 
+    let validImageTypes = ["png", "PNG", "jpeg", "jpg"]
+
     const onSubmit = (e) => {
         e.preventDefault()
         if (!courseTitle || !categories || !description) {
@@ -42,7 +44,22 @@ function NewCourse(props) {
         if (image !== undefined) { //if there is an image
 
 
+            // alert('image is ' + image.name)
+            const imageTypePath = image.name.split('.')
+            // alert('image is ' + imageTypePath)
+
+            const imageType = imageTypePath[imageTypePath.length - 1]
+            const validInput = validImageTypes.includes(imageType);
+
+            // If it isn't, return and allow user to input valid image
+            if (!validInput) {
+            alert('Invalid file type. Please upload an image with the extension .jpg or .png')
+            return
+            }
+
             // handle image
+            alert('image is ' + image)
+
             const imageData = new FormData();
             imageData.append('file', image)
             // alert(creds.categories)
@@ -80,7 +97,9 @@ function NewCourse(props) {
 
 
             const data = await res.json()
+            alert('image name issss ' + image.name)
             if (data.message === undefined) {
+            alert('image name issss ' + image.name)
                 const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + data._id + "&imageName=" + image.name, {
                     method: 'POST',
                     body: imageData
