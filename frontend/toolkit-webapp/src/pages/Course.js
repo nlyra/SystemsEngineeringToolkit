@@ -5,6 +5,7 @@ import { IconButton, Link, FormControlLabel, Divider, makeStyles, Grid, Typograp
 import VideoModule from '../components/VideoModule'
 import PdfModule from '../components/PdfModule'
 import QuizModule from '../components/QuizModule'
+import FileModule from '../components/FileModule'
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -40,6 +41,11 @@ const Course = (props) => {
     const id = pathname[pathname.length - 1]
     getCourse(id)
   }, []);
+
+  const addModule = () => {
+    sessionStorage.clear()
+    props.history.push(`/newModule/${courseID}`)
+  }
 
   const getCourse = async (id) => {
     const token = localStorage.getItem("token");
@@ -325,16 +331,19 @@ const Course = (props) => {
           <Divider className={classes.divider} />
         </Grid>
         <Grid item xs={12} lg={3}>
-          <Link href={`/newModule/${courseID}`} underline={'none'}>
+          {//<Link href={`/newModule/${courseID}`} underline={'none'}>
+          }
             <Button
               variant="contained"
               color="primary"
               className={classes.button}
               startIcon={<AddIcon />}
+              onClick={addModule}
             >
               Add Module
             </Button>
-          </Link>
+          {//</Link>
+          }
         </Grid>
         <Grid item xs={12} className={classes.accordion}>
           {/* modules starts here */}
@@ -421,8 +430,9 @@ const Course = (props) => {
                       <br />
                       <br />
                       <div className={classes.fileDiv}>
-                        {module.type === "Video" && <VideoModule fileUrl={module.fileUrl} />}
-                        {module.type === "Pdf" && <PdfModule fileUrl={module.fileUrl} />}
+                        {module.type === "Video" && <VideoModule videoUrl={module.urlVideo} />}
+                        {module.type === "PDF" && <PdfModule fileUrl={module.urlFile} />}
+                        {module.type === "File" && <FileModule fileUrl={module.urlFile} />}
                         {module.type === "Quiz" && <QuizModule quiz={module.quiz} moduleIndex={modules.indexOf(module)} courseID={courseID} grade={module.grade} />}
                       </div>
                       <br />

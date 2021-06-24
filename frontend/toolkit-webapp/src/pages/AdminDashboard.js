@@ -29,7 +29,6 @@ const adminStyles = makeStyles((theme) => ({
 
   button: {
     fontWeight: 'bold',
-
   },
 
   innerGrid: {

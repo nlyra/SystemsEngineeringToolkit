@@ -11,7 +11,7 @@ import ModuleCreator from './pages/ModuleCreator'
 import ModuleEditor from './pages/ModuleEditor'
 // import background from "./img/image0.png";
 import videoSource from "./img/PEOSTRI.mp4"
-import VideoModule from "./components/VideoModule"
+import VideoModule from "./components/VideoModule" 
 import MyFiles from './pages/MyFiles'
 import ManageMyCourses from './pages/ManageMyCourses'
 import MyCourses from './pages/MyCourses'

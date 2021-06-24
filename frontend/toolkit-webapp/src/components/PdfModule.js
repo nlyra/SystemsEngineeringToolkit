@@ -2,6 +2,9 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core'
 
 const pdfStyles = makeStyles((theme) => ({
+  div:{
+    width: '100%'
+  }
 }))
 
 const PdfModule = ({ fileUrl }) => {

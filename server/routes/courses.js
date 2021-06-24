@@ -331,7 +331,46 @@ router.post('/module/create', VerifyToken, async (req, res) => {
             }
           }
         });
-    } else {
+    } else if (req.body.type === "Video") {
+      const update = await Course.updateOne(
+        { _id: req.body.courseID }, // query parameter
+        {
+          $push: {
+            modules: {
+              title: req.body.title,
+              type: req.body.type,
+              description: req.body.description,
+              urlVideo: req.body.urlVideo,
+            }
+          }
+        });
+    } else if (req.body.type === "File") {
+      const update = await Course.updateOne(
+        { _id: req.body.courseID }, // query parameter
+        {
+          $push: {
+            modules: {
+              title: req.body.title,
+              type: req.body.type,
+              description: req.body.description,
+              urlFile: req.body.urlFile,
+            }
+          }
+        });
+    } else if (req.body.type === "PDF") {
+      const update = await Course.updateOne(
+        { _id: req.body.courseID }, // query parameter
+        {
+          $push: {
+            modules: {
+              title: req.body.title,
+              type: req.body.type,
+              description: req.body.description,
+              urlFile: req.body.urlFile,
+            }
+          }
+        });
+    } else if (req.body.type === "Text") {
       const update = await Course.updateOne(
         { _id: req.body.courseID }, // query parameter
         {
@@ -417,10 +456,50 @@ router.post('/module/update', VerifyToken, async (req, res) => {
               type: req.body.type,
               description: req.body.description,
               quiz: req.body.quiz,
+              gradeToPass: req.body.gradeToPass
             }
           }
         });
-    } else {
+    } else if (req.body.type === "Video") {
+      const update = await Course.updateOne(
+        { _id: req.body.courseID }, // query parameter
+        {
+          $set: {
+            [`modules.${req.body.moduleID}`]: {
+                title: req.body.title,
+                type: req.body.type,
+                description: req.body.description,
+                urlVideo: req.body.urlVideo,
+            }
+          }
+        });
+    } else if (req.body.type === "File") {
+      const update = await Course.updateOne(
+        { _id: req.body.courseID }, // query parameter
+        {
+          $set: {
+            [`modules.${req.body.moduleID}`]: {
+              title: req.body.title,
+              type: req.body.type,
+              description: req.body.description,
+              urlFile: req.body.urlFile,
+            }
+          }
+        });
+    } else if (req.body.type === "PDF") {
+      const update = await Course.updateOne(
+        { _id: req.body.courseID }, // query parameter
+        {
+          $set: {
+            [`modules.${req.body.moduleID}`]: {
+              title: req.body.title,
+              type: req.body.type,
+              description: req.body.description,
+              urlFile: req.body.urlFile,
+            }
+          }
+        });
+    } else if (req.body.type === "Text") {
       const update = await Course.updateOne(
         { _id: req.body.courseID }, // query parameter
         {
