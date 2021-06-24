@@ -105,8 +105,8 @@ function ModuleCreator(props) {
                 console.log('works for Video')
                 onFinish({ title, type, description, video })
             }
-        }else {
-            console.log('works')
+        }else if(type === 'Text'){
+            console.log('works for Text')
             onFinish({ title, type, description })
         }
     }
@@ -240,7 +240,7 @@ function ModuleCreator(props) {
                 } else { // this is to check if there are errors not being addressed already
                     console.log(data)
                 }
-            }else {
+            }else if (module.type === 'Text'){
                 res = await fetch(config.server_url + config.paths.newModule, {
 
                     method: 'POST',
@@ -318,6 +318,7 @@ function ModuleCreator(props) {
                                         <option value={"Video"}>Video</option>
                                         <option value={"PDF"}>PDF</option>
                                         <option value={"File"}>File</option>
+                                        <option value={"Text"}>Text</option>
                                     </Select>
                                     <FormHelperText>Required</FormHelperText>
                                 </FormControl>

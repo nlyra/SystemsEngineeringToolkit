@@ -246,13 +246,13 @@ function ModuleEditor(props) {
                     console.log(data)
                 }
             }else {
-                res = await fetch(config.server_url + config.paths.newModule, {
+                res = await fetch(config.server_url + config.paths.editModule, {
 
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type })
+                    body: JSON.stringify({ 'token': token, 'moduleID': props.location.moduleIndex, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type })
                 })
 
                 const data = await res.json()
@@ -322,6 +322,7 @@ function ModuleEditor(props) {
                                         <option value={"Video"}>Video</option>
                                         <option value={"File"}>File</option>
                                         <option value={"PDF"}>PDF</option>
+                                        <option value={"Text"}>Text</option>
                                     </Select>
                                     <FormHelperText>Required</FormHelperText>
                                 </FormControl>

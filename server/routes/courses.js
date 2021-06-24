@@ -370,7 +370,7 @@ router.post('/module/create', VerifyToken, async (req, res) => {
             }
           }
         });
-    } else {
+    } else if (req.body.type === "Text") {
       const update = await Course.updateOne(
         { _id: req.body.courseID }, // query parameter
         {
@@ -499,7 +499,7 @@ router.post('/module/update', VerifyToken, async (req, res) => {
             }
           }
         });
-    } else {
+    } else if (req.body.type === "Text") {
       const update = await Course.updateOne(
         { _id: req.body.courseID }, // query parameter
         {
