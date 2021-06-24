@@ -42,6 +42,11 @@ const Course = (props) => {
     getCourse(id)
   }, []);
 
+  const addModule = () => {
+    sessionStorage.clear()
+    props.history.push(`/newModule/${courseID}`)
+  }
+
   const getCourse = async (id) => {
     const token = localStorage.getItem("token");
     let res = undefined
@@ -326,16 +331,19 @@ const Course = (props) => {
           <Divider className={classes.divider} />
         </Grid>
         <Grid item xs={12} lg={3}>
-          <Link href={`/newModule/${courseID}`} underline={'none'}>
+          {//<Link href={`/newModule/${courseID}`} underline={'none'}>
+          }
             <Button
               variant="contained"
               color="primary"
               className={classes.button}
               startIcon={<AddIcon />}
+              onClick={addModule}
             >
               Add Module
             </Button>
-          </Link>
+          {//</Link>
+          }
         </Grid>
         <Grid item xs={12} className={classes.accordion}>
           {/* modules starts here */}
