@@ -445,10 +445,8 @@ router.post('/module/score', VerifyToken, async (req, res) => {
 })
 
 router.post('/module/update', VerifyToken, async (req, res) => {
-  console.log("Fix my server please!")
   try {
     if (req.body.type === "Quiz") {
-      console.log("this is working")
       const update = await Course.updateOne(
         { _id: req.body.courseID }, // query parameter
         {

@@ -74,7 +74,6 @@ function ModuleEditor(props) {
     useEffect(() => {
         const pathname = window.location.pathname.split('/') //returns the current path
         setCourseID(pathname[pathname.length - 1])
-        sessionStorage.setItem('quiz', JSON.stringify(module.quiz))
     }, []);
 
     const onSubmit = (e) => {
@@ -90,7 +89,7 @@ function ModuleEditor(props) {
 
             quiz = JSON.parse(sessionStorage.getItem("quiz"))
             sessionStorage.clear()
-            onFinish({ title, type, description, quiz })
+            onFinish({ title, type, description, quiz, gradeToPass })
         }else if(type === 'PDF' && pdf !== null){
             if(isPDF(pdf.name) === false){
                 alert("File must be a PDF")
@@ -131,7 +130,7 @@ function ModuleEditor(props) {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz, 'gradeToPass': gradeToPass })
+                    body: JSON.stringify({ 'token': token, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz, 'gradeToPass': module.gradeToPass })
                 })
 
                 alert("Successfully added Quiz module")

@@ -18,11 +18,10 @@ export default function ModuleInfoEditButton(props) {
 
     const sendModule = () => {
         sessionStorage.clear()
-
+        localStorage.setItem("module", JSON.stringify(props.module))
         if(props.module.type === "Quiz"){
             sessionStorage.setItem("quiz", JSON.stringify(props.module.quiz))
         }
-        localStorage.setItem("module", JSON.stringify(props.module))
     }
     return (
         <div>
