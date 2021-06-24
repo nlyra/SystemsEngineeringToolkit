@@ -130,7 +130,7 @@ function ModuleEditor(props) {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz, 'gradeToPass': module.gradeToPass })
+                    body: JSON.stringify({ 'token': token, 'moduleID': props.location.moduleIndex, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz, 'gradeToPass': module.gradeToPass })
                 })
 
                 alert("Successfully added Quiz module")
@@ -147,6 +147,7 @@ function ModuleEditor(props) {
                     },
                     body: JSON.stringify({
                         "token": token,
+                        'moduleID': props.location.moduleIndex,
                         'courseID': courseID,
                         "title": module.title,
                         'description': module.description,
@@ -182,6 +183,7 @@ function ModuleEditor(props) {
                     },
                     body: JSON.stringify({
                         "token": token,
+                        'moduleID': props.location.moduleIndex,
                         'courseID': courseID,
                         "title": module.title,
                         'description': module.description,
@@ -217,6 +219,7 @@ function ModuleEditor(props) {
                     },
                     body: JSON.stringify({
                         "token": token,
+                        'moduleID': props.location.moduleIndex,
                         'courseID': courseID,
                         "title": module.title,
                         'description': module.description,
