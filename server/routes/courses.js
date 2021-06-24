@@ -460,6 +460,45 @@ router.post('/module/update', VerifyToken, async (req, res) => {
             }
           }
         });
+    } else if (req.body.type === "Video") {
+      const update = await Course.updateOne(
+        { _id: req.body.courseID }, // query parameter
+        {
+          $set: {
+            [`modules.${req.body.moduleID}`]: {
+                title: req.body.title,
+                type: req.body.type,
+                description: req.body.description,
+                urlVideo: req.body.urlVideo,
+            }
+          }
+        });
+    } else if (req.body.type === "File") {
+      const update = await Course.updateOne(
+        { _id: req.body.courseID }, // query parameter
+        {
+          $set: {
+            [`modules.${req.body.moduleID}`]: {
+              title: req.body.title,
+              type: req.body.type,
+              description: req.body.description,
+              urlFile: req.body.urlFile,
+            }
+          }
+        });
+    } else if (req.body.type === "PDF") {
+      const update = await Course.updateOne(
+        { _id: req.body.courseID }, // query parameter
+        {
+          $set: {
+            [`modules.${req.body.moduleID}`]: {
+              title: req.body.title,
+              type: req.body.type,
+              description: req.body.description,
+              urlFile: req.body.urlFile,
+            }
+          }
+        });
     } else {
       const update = await Course.updateOne(
         { _id: req.body.courseID }, // query parameter
