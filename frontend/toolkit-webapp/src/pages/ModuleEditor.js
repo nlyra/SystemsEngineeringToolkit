@@ -19,7 +19,7 @@ function ModuleEditor(props) {
     const [type, setType] = useState(module.type)
     const [description, setDescription] = useState(module.description)
     const [courseID, setCourseID] = useState('')
-    const [gradeToPass, setGradeToPass] = useState('')
+    const [gradeToPass, setGradeToPass] = useState(module.gradeToPass)
 
     const classes = useStyles()
     const [file, setFile] = useState()
@@ -126,7 +126,7 @@ function ModuleEditor(props) {
         if (token !== undefined) {
             let res = undefined
             if (module.type === "Quiz") {
-                res = await fetch(config.server_url + config.paths.newModule, {
+                res = await fetch(config.server_url + config.paths.editModule, {
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json'
@@ -138,11 +138,10 @@ function ModuleEditor(props) {
                 props.history.push('/course/'+courseID)
 
             }else if(module.type === "PDF"){
-                // handle image
                 const newFile = new FormData();
                 newFile.append('file', module.pdf)
 
-                const res = await fetch(config.server_url + config.paths.newModule, {
+                const res = await fetch(config.server_url + config.paths.editModule, {
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json'
@@ -177,7 +176,7 @@ function ModuleEditor(props) {
                 const newFile = new FormData();
                 newFile.append('file', module.file)
 
-                const res = await fetch(config.server_url + config.paths.newModule, {
+                const res = await fetch(config.server_url + config.paths.editModule, {
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json'
@@ -212,7 +211,7 @@ function ModuleEditor(props) {
                 // handle image
                 const newVideo = new FormData();
                 newVideo.append('file', module.video)
-                const res = await fetch(config.server_url + config.paths.newModule, {
+                const res = await fetch(config.server_url + config.paths.editModule, {
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json'
