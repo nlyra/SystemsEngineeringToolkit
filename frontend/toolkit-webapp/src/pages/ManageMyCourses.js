@@ -92,7 +92,7 @@ const ManageMyCourses = (props) => {
             <Grid container spacing={3}>
                 <div className={classes.header}>
                 <h1>
-                    Manage Your Courses
+                    Manage My Courses
                 </h1>
                 </div>
                 </Grid>
@@ -116,7 +116,7 @@ const ManageMyCourses = (props) => {
                                             {course.name}
                                         </Typography>
                                         <Typography gutterBottom>
-                                            {course.description.length < 100 ? course.description : course.description.substr(0, 100) + ' ...'}
+                                            {course.description.length < 100 ? course.description : course.description.substr(0, 100) + '...'}
                                         </Typography>
                                         {/* <CardActions>
                                         </CardActions> */}
