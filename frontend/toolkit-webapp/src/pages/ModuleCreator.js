@@ -167,7 +167,7 @@ function ModuleCreator(props) {
                 })
                 const data = await res.json()
                 if (data.message === undefined) {
-                    const res = await fetch(config.server_url + config.paths.moduleFileUpload +"?token=" + token + "&courseID=" + courseID + "&imageName=" + module.pdf.name, {
+                    const res = await fetch(config.server_url + config.paths.moduleFileUpload +"?token=" + token + "&courseID=" + courseID + "&fileName=" + module.pdf.name, {
                     method: 'POST',
                     body: newFile
                     })
@@ -215,7 +215,7 @@ function ModuleCreator(props) {
                 })
                 const data = await res.json()
                 if (data.message === undefined) {
-                    const res = await fetch(config.server_url + config.paths.moduleFileUpload +"?token=" + token + "&courseID=" + courseID + "&imageName=" + module.file.name, {
+                    const res = await fetch(config.server_url + config.paths.moduleFileUpload +"?token=" + token + "&courseID=" + courseID + "&fileName=" + module.file.name, {
                     method: 'POST',
                     body: newFile
                     })
@@ -265,7 +265,7 @@ function ModuleCreator(props) {
 
                 const data = await res.json()
                 if (data.message === undefined) {
-                    const res = await fetch(config.server_url + config.paths.moduleFileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.video.name, {
+                    const res = await fetch(config.server_url + config.paths.moduleFileUpload + "?token=" + token + "&courseID=" + courseID + "&fileName=" + module.video.name, {
                     method: 'POST',
                     body: newVideo
                     })
