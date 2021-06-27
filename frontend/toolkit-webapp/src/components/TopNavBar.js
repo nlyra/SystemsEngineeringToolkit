@@ -70,10 +70,10 @@ const useStyles = makeStyles((theme) => ({
 
     statContent:
     {
-        verticalAlign: 'middle',
+        verticalAlign: 'right',
         margin: 'auto',
-        width: '50%',
-        textAlign: 'center'
+        width: '100%',
+        alignSelf: 'center'
     },
 
     // statsDiv:
@@ -93,6 +93,7 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.getContrastText(amber[600]),
         backgroundColor: amber[600],
         border: '1px solid black',
+        margin: 'auto'
         // borderRadius: '4px'
     },
 
