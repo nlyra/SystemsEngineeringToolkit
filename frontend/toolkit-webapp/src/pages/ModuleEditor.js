@@ -6,18 +6,65 @@ import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 import useStyles from '../styles/moduleStyle'
 import '../css/Login.css';
-import FileModule from '../components/FileModule'
-import QuizCreatorModule from '../components/QuizCreatorModule'
+import QuizCreator from '../components/QuizCreatorModule'
+import VideoCreator from '../components/VideoCreatorModule'
+import PDFCreator from '../components/PDFCreatorModule'
+import FileCreator from '../components/FileCreatorModule'
 
 function ModuleEditor(props) {
+
 
     const [module, setModule] = useState(JSON.parse(localStorage.getItem("module")))
     const [title, setTitle] = useState(module.title)
     const [type, setType] = useState(module.type)
     const [description, setDescription] = useState(module.description)
     const [courseID, setCourseID] = useState('')
+    const [gradeToPass, setGradeToPass] = useState(module.gradeToPass)
 
     const classes = useStyles()
+    const [file, setFile] = useState()
+    const [video, setVideo] = useState()
+    const [pdf, setPDF] = useState()
+
+    function getExtention(filename){
+        var parts = filename.split('.');
+        return parts[parts.length-1]
+    }
+
+    function isPDF(filename){
+        var ext = getExtention(filename)
+        switch(ext.toLowerCase()){
+            case 'pdf':
+                return true;
+            default:
+        }
+        return false
+    }
+    function isVideo(filename){
+        var ext = getExtention(filename)
+        switch(ext.toLowerCase()){
+            case 'webm':
+            case 'mpg':
+            case 'mp2':
+            case 'mpeg':
+            case 'mpe':
+            case 'mpv':
+            case 'ogg':
+            case 'mp4':
+            case 'm4p':
+            case 'm4v':
+            case 'avi':
+            case 'wmv':
+            case 'mov':
+            case 'qt':
+            case 'flv':
+            case 'swf':
+            case 'avchd':
+                return true;
+            default:
+        }
+        return false;
+    }
 
     const handleChange = (event) => {
         setType(event.target.type);
@@ -27,7 +74,6 @@ function ModuleEditor(props) {
     useEffect(() => {
         const pathname = window.location.pathname.split('/') //returns the current path
         setCourseID(pathname[pathname.length - 1])
-        sessionStorage.setItem('quiz', JSON.stringify(module.quiz))
     }, []);
 
     const onSubmit = (e) => {
@@ -43,8 +89,26 @@ function ModuleEditor(props) {
 
             quiz = JSON.parse(sessionStorage.getItem("quiz"))
             sessionStorage.clear()
-            onFinish({ title, type, description, quiz })
-        } else {
+            onFinish({ title, type, description, quiz, gradeToPass })
+        }else if(type === 'PDF' && pdf !== null){
+            if(isPDF(pdf.name) === false){
+                alert("File must be a PDF")
+            } else {
+                console.log('works for PDF')
+                onFinish({ title, type, description, pdf })
+            }
+        } else if(type === 'File' && file !== null){
+            console.log('works for File')
+            onFinish({ title, type, description, file })
+            
+        }else if(type === 'Video' && video !== null){
+            if(isVideo(video.name) === false){
+                alert("File must be a video")
+            } else {
+                console.log('works for Video')
+                onFinish({ title, type, description, video })
+            }
+        }else {
             console.log('works')
             onFinish({ title, type, description })
         }
@@ -56,9 +120,9 @@ function ModuleEditor(props) {
     }
 
     const onFinish = async (module) => {
-
         const token = localStorage.getItem("token");
-        if (token != undefined) {
+
+        if (token !== undefined) {
             let res = undefined
             if (module.type === "Quiz") {
                 res = await fetch(config.server_url + config.paths.editModule, {
@@ -66,9 +130,122 @@ function ModuleEditor(props) {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ 'token': token, 'moduleID': props.location.moduleIndex, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz })
+                    body: JSON.stringify({ 'token': token, 'moduleID': props.location.moduleIndex, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz, 'gradeToPass': module.gradeToPass })
                 })
-            } else {
+
+                alert("Successfully Edited Quiz module")
+                props.history.push('/course/'+courseID)
+
+            }else if(module.type === "PDF"){
+                const newFile = new FormData();
+                newFile.append('file', module.pdf)
+
+                const res = await fetch(config.server_url + config.paths.editModule, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "token": token,
+                        'moduleID': props.location.moduleIndex,
+                        'courseID': courseID,
+                        "title": module.title,
+                        'description': module.description,
+                        'type': module.type,
+                        "urlFile": `http://localhost:4000/`+courseID+`/${module.pdf.name}`
+                    })
+                })
+                const data = await res.json()
+                if (data.message === undefined) {
+                    const res = await fetch(config.server_url + config.paths.fileUpload +"?token=" + token + "&courseID=" + courseID + "&imageName=" + module.pdf.name, {
+                    method: 'POST',
+                    body: newFile
+                    })
+                    const data2 = await res.json()
+                    console.log(data2)
+
+                    if (data2.status === 'Success') {
+                        alert("Successfully Edited PDF module")
+                        props.history.push('/course/'+courseID)
+                    } //else need to do something, not sure what rn
+                } else { // this is to check if there are errors not being addressed already
+                    console.log(data)
+                }
+            } else if(module.type === "File"){
+                // handle image
+                const newFile = new FormData();
+                newFile.append('file', module.file)
+
+                const res = await fetch(config.server_url + config.paths.editModule, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "token": token,
+                        'moduleID': props.location.moduleIndex,
+                        'courseID': courseID,
+                        "title": module.title,
+                        'description': module.description,
+                        'type': module.type,
+                        "urlFile": `http://localhost:4000/`+courseID+`/${module.file.name}`
+                    })
+                })
+                const data = await res.json()
+                if (data.message === undefined) {
+                    const res = await fetch(config.server_url + config.paths.fileUpload +"?token=" + token + "&courseID=" + courseID + "&imageName=" + module.file.name, {
+                    method: 'POST',
+                    body: newFile
+                    })
+                    const data2 = await res.json()
+                    console.log(data2)
+
+                    if (data2.status === 'Success') {
+                        alert("Successfully Edited File module")
+                        props.history.push('/course/'+courseID)
+                    } //else need to do something, not sure what rn
+                } else { // this is to check if there are errors not being addressed already
+                    console.log(data)
+                }
+            }else if(module.type === "Video"){
+
+                // handle image
+                const newVideo = new FormData();
+                newVideo.append('file', module.video)
+                const res = await fetch(config.server_url + config.paths.editModule, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "token": token,
+                        'moduleID': props.location.moduleIndex,
+                        'courseID': courseID,
+                        "title": module.title,
+                        'description': module.description,
+                        'type': module.type,
+                        "urlVideo": `http://localhost:4000/`+courseID+`/${module.video.name}`,
+                    })
+                    
+                })
+
+                const data = await res.json()
+                if (data.message === undefined) {
+                    const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.video.name, {
+                    method: 'POST',
+                    body: newVideo
+                    })
+                    const data2 = await res.json()
+                    console.log(data2)
+
+                    if (data2.status === 'Success') {
+                        alert("Successfully Edited video module")
+                        props.history.push('/course/'+courseID)
+                    } //else need to do something, not sure what rn
+                } else { // this is to check if there are errors not being addressed already
+                    console.log(data)
+                }
+            }else {
                 res = await fetch(config.server_url + config.paths.editModule, {
 
                     method: 'POST',
@@ -77,23 +254,18 @@ function ModuleEditor(props) {
                     },
                     body: JSON.stringify({ 'token': token, 'moduleID': props.location.moduleIndex, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type })
                 })
-            }
 
-            const data = await res.json()
+                const data = await res.json()
 
-            if (data.message === undefined) {
-                // probably change back to course manager 
-                alert('worked')
-                props.history.push(`/course/${courseID}`)
-            }
-            else { // this is to check if there are errors not being addressed already
-                console.log(data)
-            }
+                if (data.message === undefined) {
+                    alert('worked')
+                    props.history.push('/course/'+courseID)
+                }
+                else { // this is to check if there are errors not being addressed already
+                    console.log(data)
+                }
+            } 
         }
-        else {
-            props.history.push('login')
-        }
-
     }
 
     return (
@@ -148,13 +320,17 @@ function ModuleEditor(props) {
                                         <option aria-label="None" value="" />
                                         <option value={"Quiz"}>Quiz</option>
                                         <option value={"Video"}>Video</option>
-                                        <option value={"Files"}>Files</option>
+                                        <option value={"File"}>File</option>
+                                        <option value={"PDF"}>PDF</option>
+                                        <option value={"Text"}>Text</option>
                                     </Select>
                                     <FormHelperText>Required</FormHelperText>
                                 </FormControl>
 
-                                {type == 'Files' && <FileModule></FileModule>}
-                                {type == 'Quiz' && <QuizCreatorModule></QuizCreatorModule>}
+                                {type === 'PDF' && <PDFCreator setPDF={setPDF} pdf={pdf}/>}
+                                {type === 'Video' && <VideoCreator setVideo={setVideo} video = {video}/>}
+                                {type === 'File' && <FileCreator setFile={setFile} file = {file}/>}
+                                {type == 'Quiz' && <QuizCreator gradeToPass={gradeToPass} setGradeToPass={setGradeToPass}/>}
 
                             </div>
                             <Container className={classes.buttonGroup}>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Container, TextField, Typography, Box, Select, InputLabel, FormHelperText, Paper } from '@material-ui/core'
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import { Button, Container, TextField, Typography, Box, Paper } from '@material-ui/core'
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import Chip from '@material-ui/core/Chip';
@@ -32,10 +31,10 @@ function NewCourse(props) {
         onFinish({ courseTitle, categories, description })
     }
 
-    const onUpload = (e) => {
-        alert('feature undefined')
-        return
-    }
+    //const onUpload = (e) => {
+    //    alert('feature undefined')
+    //    return
+    //}
 
     const onFinish = async (creds) => {
 
@@ -107,7 +106,7 @@ function NewCourse(props) {
                 const data2 = await res.json()
                 console.log(data2)
 
-                if (data2.status == 'Success') {
+                if (data2.status === 'Success') {
                     alert("Successfully created course!")
                     props.history.push('/dashboard')// needs to be changed to course manager
                 } //else need to do something, not sure what rn
@@ -196,7 +195,7 @@ function NewCourse(props) {
                     <form autoComplete="off" onSubmit={onSubmit}>
                         <Paper className={classes.paper} elevation={3} square={false}>
                             <Box m={2} pt={2}>
-                                <Typography className={classes.Title} variant="h5">{courseTitle == "" ? 'New Course' : courseTitle}</Typography>
+                                <Typography className={classes.Title} variant="h5">{courseTitle === "" ? 'New Course' : courseTitle}</Typography>
                             </Box>
                             <div className={classes.TextBox}>
                                 <TextField color='primary'

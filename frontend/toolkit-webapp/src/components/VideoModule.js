@@ -1,5 +1,4 @@
 import React from 'react'
-import CardMedia from '@material-ui/core/CardMedia';
 import { makeStyles } from '@material-ui/core'
 
 const videoStyles = makeStyles((theme) => ({
@@ -9,13 +8,13 @@ const videoStyles = makeStyles((theme) => ({
 }))
 
 
-const VideoModule = ({ fileUrl }) => {
+const VideoModule = ({ videoUrl }) => {
   const classes = videoStyles()
-
+  console.log(videoUrl)
   return (
     <div className={classes.div}>
       <video width="100%" controls >
-        <source src={fileUrl} />
+        <source src={videoUrl} />
       </video>
     </div>
   )

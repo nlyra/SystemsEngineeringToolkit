@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { IconButton, Toolbar, Button, Dialog, DialogActions, DialogContent, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox, Typography, FormControl, Select, InputLabel, FormHelperText } from '@material-ui/core'
+import { TextField, IconButton, Toolbar, Button, Dialog, DialogActions, DialogContent, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox, Typography, FormControl, Select, InputLabel, FormHelperText } from '@material-ui/core'
 import useStyles from '../styles/moduleStyle'
 import { Delete, Edit, ArrowUpward, ArrowDownward } from '@material-ui/icons'
 import MultipleChoice from '../components/MultipleChoiceCreator'
@@ -19,7 +19,7 @@ var questions = {
 
 var quiz = []
 
-const QuizCreatorModule = () => {
+const QuizCreator = (props) => {
     const [type, setType] = useState('')
     const [open, setOpen] = React.useState(false)
     const [editOpen, setEdit] = React.useState(false)
@@ -28,7 +28,8 @@ const QuizCreatorModule = () => {
     sessionStorage.setItem('editing', '')
 
     useEffect(() => {
-        if (sessionStorage.getItem('quiz') !== null) {
+        if (sessionStorage.getItem('quiz')) {
+            //this is causing the quiz creator to not load properly inside of the newModule creator
             quiz = JSON.parse(sessionStorage.getItem('quiz'))
         }
     }, []);
@@ -218,6 +219,18 @@ const QuizCreatorModule = () => {
 
     return (
         <div>
+            <TextField color='primary'
+                size='small'
+                variant="filled"
+                type="number"
+                label='Grade to pass'
+                defaultValue=""
+                value={props.gradeToPass}
+                onChange={e => props.setGradeToPass(e.target.value)}
+                margin="normal"
+                required={true}
+                fullWidth
+            />
             <FormControl required className={classes.formControl} fullWidth={true}>
                 <InputLabel htmlFor="category-native-required">Question Type</InputLabel>
                 <Select
@@ -229,11 +242,11 @@ const QuizCreatorModule = () => {
                         id: 'category-native-required',
                     }}
                     onChange={e => setType(e.target.value)}
+                    required={false}
                 >
                     <option aria-label="None" value="" />
                     <option value={"Multiple Choice"}>Multiple Choice</option>
                     <option value={"True or False"}>True or False</option>
-                    <option value={"Submit"}>Submit</option>
                 </Select>
                 <FormHelperText>Required</FormHelperText>
             </FormControl>
@@ -394,4 +407,4 @@ const QuizCreatorModule = () => {
     )
 }
 
-export default QuizCreatorModule;
+export default QuizCreator;
