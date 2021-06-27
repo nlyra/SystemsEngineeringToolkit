@@ -12,8 +12,17 @@ router.post('/userInfo', VerifyToken, async (req, res) => {
         // console.log(req.body)
       let user = {}
       user = await User.findOne({ _id: req.body.userID }, ' first_name last_name email completedCourses enrolledClasses createdCourses roleID');
-  
-      res.json({ "user": user });
+      
+      if(user.roleID === 2)
+      {
+        numUsers = await User.find().countDocuments()
+        numCourses = await Course.find().countDocuments()
+        
+        res.json({"user": user, "numUsers": numUsers, "numCourses": numCourses})
+      }
+      else
+        res.json({ "user": user });
+
     } catch (e) {
       console.log(e);
       res.sendStatus(500);
