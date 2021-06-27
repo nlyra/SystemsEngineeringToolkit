@@ -1,6 +1,7 @@
 const Course = require('../models/course');
 const User = require('../models/user');
 const VerifyToken = require('./auth').verifyToken;
+const GetRole = require('./auth').getRole;
 const express = require('express');
 const jwt_decode = require('jwt-decode');
 const router = express.Router();
@@ -13,7 +14,7 @@ router.post('/course', VerifyToken, async (req, res) => {
 
     // get course info
     let course = {}
-    course = await Course.findOne({ "_id": req.body.id }, '_id name description urlImage modules');
+    course = await Course.findOne({ "_id": req.body.id }, '_id name description urlImage modules author');
 
     for (let i = 0; i < course.modules.length; i++) {
       if (course.modules[i].type == "Quiz") {
@@ -41,6 +42,9 @@ router.post('/course', VerifyToken, async (req, res) => {
       }
     }
 
+    if (course.author === req.body.userID) {
+      course.author = "yes"
+    }
 
 
     res.json({ "course": course });
@@ -51,8 +55,13 @@ router.post('/course', VerifyToken, async (req, res) => {
 
 })
 
-router.post('/course/update', VerifyToken, async (req, res) => {
+router.post('/course/update', VerifyToken, GetRole, async (req, res) => {
   try {
+    if (req.body.roleID != 1) {
+      res.json({ message: "unauthorized" })
+      return
+    }
+
     const update = await Course.updateOne(
       { _id: req.body.courseID }, // query parameter
       {
@@ -72,8 +81,13 @@ router.post('/course/update', VerifyToken, async (req, res) => {
 
 })
 
-router.post('/course/updateImage', VerifyToken, async (req, res) => {
+router.post('/course/updateImage', VerifyToken, GetRole, async (req, res) => {
   try {
+    if (req.body.roleID != 1) {
+      res.json({ message: "unauthorized" })
+      return
+    }
+
     const pathname = req.body.imageLink.split('/')
     const imageName = pathname[pathname.length - 1]
 
@@ -135,6 +149,7 @@ router.post('/course/updateImage', VerifyToken, async (req, res) => {
 // })
 
 router.post('/info', VerifyToken, async (req, res) => {
+
   try {
     let courses = []
 
@@ -158,8 +173,13 @@ router.post('/info', VerifyToken, async (req, res) => {
 
 })
 
-router.post('/myCreatedCoursesInfo', VerifyToken, async (req, res) => {
+router.post('/myCreatedCoursesInfo', VerifyToken, GetRole, async (req, res) => {
   try {
+    if (req.body.roleID != 1) {
+      res.json({ message: "unauthorized" })
+      return
+    }
+
 
     let courses = []
     const user = await User.findOne({ _id: req.body.userID })
@@ -211,8 +231,13 @@ router.post('/myCoursesInfo', VerifyToken, async (req, res) => {
 
 })
 
-router.post('/create', VerifyToken, async (req, res) => {
+router.post('/create', VerifyToken, GetRole, async (req, res) => {
   try {
+    if (req.body.roleID != 1) {
+      res.json({ message: "unauthorized" })
+      return
+    }
+
     const course = new Course({
       name: req.body.name,
       description: req.body.description,
@@ -251,12 +276,12 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
     const find = await User.findOne({ _id: req.body.userID }, 'coursesData')
 
     delete find.coursesData[0][req.body.courseID]
-  
+
     const update = await User.updateOne(
       { _id: req.body.userID },
       {
         $pull: { enrolledClasses: req.body.courseID },
-        $set: { coursesData: find.coursesData}
+        $set: { coursesData: find.coursesData }
       }
     )
 
@@ -267,7 +292,7 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
         // $inc: { currStudents: -1 }
       })
 
-    res.json({'status': 'success'})
+    res.json({ 'status': 'success' })
 
   } catch (e) {
     console.log(e);
@@ -277,7 +302,12 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
 })
 
 // TODO: Need to move this to fileMulter once I figure out why it's not getting called when it sits in fileMulter
-router.post('/removeFile', VerifyToken, async (req, res) => {
+router.post('/removeFile', VerifyToken, GetRole, async (req, res) => {
+  if (req.body.roleID != 1) {
+    res.json({ message: "unauthorized" })
+    return
+  }
+
 
   const pathname = req.body.imageName.split('/')
   const imageName = pathname[pathname.length - 1]
@@ -295,9 +325,14 @@ router.post('/removeFile', VerifyToken, async (req, res) => {
 
 })
 
-router.post('/deleteCreatedCourse', VerifyToken, async (req, res) => {
+router.post('/deleteCreatedCourse', VerifyToken, GetRole, async (req, res) => {
 
   try {
+    if (req.body.roleID != 1) {
+      res.json({ message: "unauthorized" })
+      return
+    }
+
     const update = await User.updateOne(
       { _id: req.body.userID },
       { $pull: { createdCourses: req.body.courseID } }
@@ -315,8 +350,13 @@ router.post('/deleteCreatedCourse', VerifyToken, async (req, res) => {
   }
 })
 
-router.post('/module/create', VerifyToken, async (req, res) => {
+router.post('/module/create', VerifyToken, GetRole, async (req, res) => {
   try {
+    if (req.body.roleID != 1) {
+      res.json({ message: "unauthorized" })
+      return
+    }
+
     if (req.body.type === "Quiz") {
       const update = await Course.updateOne(
         { _id: req.body.courseID }, // query parameter
@@ -444,8 +484,13 @@ router.post('/module/score', VerifyToken, async (req, res) => {
   }
 })
 
-router.post('/module/update', VerifyToken, async (req, res) => {
+router.post('/module/update', VerifyToken, GetRole, async (req, res) => {
   try {
+    if (req.body.roleID != 1) {
+      res.json({ message: "unauthorized" })
+      return
+    }
+
     if (req.body.type === "Quiz") {
       const update = await Course.updateOne(
         { _id: req.body.courseID }, // query parameter
@@ -466,10 +511,10 @@ router.post('/module/update', VerifyToken, async (req, res) => {
         {
           $set: {
             [`modules.${req.body.moduleID}`]: {
-                title: req.body.title,
-                type: req.body.type,
-                description: req.body.description,
-                urlVideo: req.body.urlVideo,
+              title: req.body.title,
+              type: req.body.type,
+              description: req.body.description,
+              urlVideo: req.body.urlVideo,
             }
           }
         });
@@ -520,9 +565,14 @@ router.post('/module/update', VerifyToken, async (req, res) => {
   }
 })
 
-router.post('/module/delete', VerifyToken, async (req, res) => {
+router.post('/module/delete', VerifyToken, GetRole, async (req, res) => {
 
   try {
+    if (req.body.roleID != 1) {
+      res.json({ message: "unauthorized" })
+      return
+    }
+
     const update = await Course.updateOne(
       { _id: req.body.courseID },
       { $pull: { modules: { title: req.body.title, description: req.body.description } } }

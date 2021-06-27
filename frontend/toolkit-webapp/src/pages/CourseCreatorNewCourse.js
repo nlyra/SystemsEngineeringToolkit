@@ -74,20 +74,29 @@ function NewCourse(props) {
                         "label": newTag.label
                     }),
                 })
+                const data = await res.json()
+
+                if (data.message === "unauthorized") {
+                    props.history.push('dashboard');
+                }
             }
 
 
 
             const data = await res.json()
-            if (data.message === undefined) {
+            
+            if (data.message === "unauthorized") {
+                props.history.push('dashboard');
+            } else if (data.message === undefined) {
                 const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + data._id + "&imageName=" + image.name, {
                     method: 'POST',
                     body: imageData
                 })
                 const data2 = await res.json()
-                console.log(data2)
 
-                if (data2.status === 'Success') {
+                if (data2.message === "unauthorized") {
+                    props.history.push('dashboard');
+                } else if (data2.status === 'Success') {
                     alert("Successfully created course!")
                     props.history.push('/dashboard')// needs to be changed to course manager
                 } //else need to do something, not sure what rn
@@ -111,6 +120,11 @@ function NewCourse(props) {
                         "label": newTag.label
                     }),
                 })
+                const data = await res.json()
+
+                if (data.message === "unauthorized") {
+                    props.history.push('dashboard');
+                }
             }
 
             const res2 = await fetch(config.server_url + config.paths.createCourse, {
@@ -129,7 +143,10 @@ function NewCourse(props) {
             }
             )
             const data = await res2.json()
-            if (data.message === undefined) {
+            
+            if (data.message === "unauthorized") {
+                props.history.push('dashboard');
+            } else if (data.message === undefined) {
                 alert("Successfully created course!")
                 props.history.push('/dashboard')// needs to be changed to course manager
             } else { // this is to check if there are errors not being addressed already
@@ -160,6 +177,9 @@ function NewCourse(props) {
             })
 
             const fetchedCategories = await res.json()
+            if (fetchedCategories.message === "unauthorized") {
+                props.history.push('dashboard');
+            } else 
             setDialogData(fetchedCategories.categories)
         }
         categoriesCollection()

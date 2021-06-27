@@ -1,11 +1,17 @@
 const Category = require('../models/categories');
 const VerifyToken = require('./auth').verifyToken;
+const GetRole = require('./auth').getRole;
 const express = require('express');
 
 const router = express.Router();
 
-router.post('/info', VerifyToken, async (req, res) => {
+router.post('/info', VerifyToken, GetRole, async (req, res) => {
     try {
+      if(req.body.roleID === 1){
+        res.json({ message: "unauthorized" })
+        return
+      }
+
       let categories = []
       categories = await Category.find()
       res.json({"categories": categories})
@@ -25,7 +31,13 @@ router.post('/info', VerifyToken, async (req, res) => {
 //     }
 // })
 
-router.post('/add', VerifyToken, async (req, res) => {
+router.post('/add', VerifyToken, GetRole, async (req, res) => {
+
+    if(req.body.roleID === 1){
+      res.json({ message: "unauthorized" })
+      return
+    }
+
 
     try {
       const newCat = new Category({

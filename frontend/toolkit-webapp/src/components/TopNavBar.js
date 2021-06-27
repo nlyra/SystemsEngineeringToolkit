@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { fade, makeStyles, IconButton, AppBar, Paper, TextField, Typography } from "@material-ui/core";
 import { Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
-import {Avatar, Dialog, DialogTitle, DialogActions, DialogContent, Grid} from "@material-ui/core";
+import { Avatar, Dialog, DialogTitle, DialogActions, DialogContent, Grid } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu'
-import {deepPurple, grey, amber } from '@material-ui/core/colors';
+import { deepPurple, grey, amber } from '@material-ui/core/colors';
 import config from '../config.json'
 import SearchIcon from '@material-ui/icons/Search'
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -88,13 +88,13 @@ const useStyles = makeStyles((theme) => ({
         textDecoration: 'underline'
     },
 
-    statsAvi: 
+    statsAvi:
     {
         color: theme.palette.getContrastText(amber[600]),
         backgroundColor: amber[600],
     },
 
-    roleAvi: 
+    roleAvi:
     {
         color: theme.palette.getContrastText(amber[600]),
         backgroundColor: amber[600],
@@ -258,12 +258,59 @@ export default function TopNavBar(props) {
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [isCreator, setIsCreator] = useState(false);
 
     let roles = ['Student', 'Creator', 'Admin']
 
+    // function that will run when page is loaded
+    useEffect(() => {
+        getAuthorization();
+    }, []);
+
+    const getAuthorization = async () => {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(config.server_url + config.paths.getIsAdmin, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                "token": token
+            })
+        })
+
+        const data = await res.json()
+
+        if (data.message === "yes")
+            setIsAdmin(true);
+        else
+            setIsAdmin(false);
+
+        const res2 = await fetch(config.server_url + config.paths.getIsCreator, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                "token": token
+            })
+        })
+
+        const data2 = await res2.json()
+
+        if (data2.message === "yes")
+            setIsCreator(true);
+        else
+            setIsCreator(false);
+
+    }
+
+
     // TODO: Consider a better way to handle this, as it will be making an api call every time the user
     // opens their profile page. 
-    
+
     const handleClickOpen = async () => {
 
         // Retrieve token, then feed topNavBar with information about the current user
@@ -307,7 +354,7 @@ export default function TopNavBar(props) {
     };
 
     // const onSubmit = (e) => {
-        
+
     //     e.preventDefault()
     //     if (firstName === user.first_name && lastName === user.last_name) {
     //         alert('No update made!')
@@ -430,7 +477,7 @@ export default function TopNavBar(props) {
                             </Tooltip>
 
                             : null}
-                        
+
 
                         {openDialog === true ?
 
@@ -438,8 +485,8 @@ export default function TopNavBar(props) {
                                 <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={openDialog}>
                                     <div className={classes.dialogTitleDiv}>
                                         <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleClose}>
-                                            <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar> 
-                                                {/* Your Profile */}
+                                            <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar>
+                                            {/* Your Profile */}
                                         </DialogTitle>
                                     </div>
                                     <DialogContent className={classes.dialogContent}>
@@ -451,20 +498,20 @@ export default function TopNavBar(props) {
                                                     size='small'
                                                     variant="outlined"
                                                     label='First Name'
-                                                    inputProps={{min: 0, readOnly: true, style: { textAlign: 'center' }}}
+                                                    inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
                                                     type="text"
                                                     defaultValue={user.first_name}
                                                     // onChange={e => setFirstName(e.target.value)}
                                                     margin="normal"
                                                     required={false}
                                                     fullWidth
-                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                                                // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                                                 />
-                                                <br/>
+                                                <br />
                                                 <TextField color='primary'
                                                     size='small'
                                                     variant="outlined"
-                                                    inputProps={{min: 0, readOnly: true, style: { textAlign: 'center' }}}
+                                                    inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
                                                     label='Last Name'
                                                     type="text"
                                                     defaultValue={user.last_name}
@@ -472,13 +519,13 @@ export default function TopNavBar(props) {
                                                     margin="normal"
                                                     required={false}
                                                     fullWidth
-                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                                                // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                                                 />
-                                                <br/>
+                                                <br />
                                                 <TextField color='primary'
                                                     size='small'
                                                     variant="outlined"
-                                                    inputProps={{min: 0, readOnly: true, style: { textAlign: 'center' }}}
+                                                    inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
                                                     label='Email'
                                                     type="text"
                                                     defaultValue={user.email}
@@ -486,16 +533,16 @@ export default function TopNavBar(props) {
                                                     margin="normal"
                                                     required={false}
                                                     fullWidth
-                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                                                // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                                                 />
-                                                <br/><br/>
+                                                <br /><br />
                                                 <Grid item xs={12}>
-                                                    <Divider variant= 'fullWidth' className={classes.divider} />
+                                                    <Divider variant='fullWidth' className={classes.divider} />
                                                 </Grid>
                                                 <div className={classes.statsTitle}>
                                                     <h1>Stats</h1>
                                                 </div>
-                            
+
                                                 <Grid container direction="row" >
                                                     <Grid item xs={6} sm={6} lg={3} >
                                                         <div className={classes.statContent}>
@@ -522,8 +569,8 @@ export default function TopNavBar(props) {
                                                         </div>
                                                     </Grid>
                                                 </Grid>
-                                                </div>
-                                            </form>
+                                            </div>
+                                        </form>
                                     </DialogContent>
                                     <DialogActions>
                                         <Button autoFocus onClick={handleClose} color="primary">
@@ -535,8 +582,8 @@ export default function TopNavBar(props) {
 
                             : null}
 
-                            {window.location.pathname !== "/" && 
-                            window.location.pathname !== "/registration" && 
+                        {window.location.pathname !== "/" &&
+                            window.location.pathname !== "/registration" &&
                             window.location.pathname !== "/forgot" &&
                             window.location.pathname !== "/reset/" + props.tokenProp &&
                             window.location.pathname !== "/reset/" &&
@@ -580,7 +627,8 @@ export default function TopNavBar(props) {
                     </div>
                     <Divider />
                     <List>
-                        <Link href="/newCourse" underline='none' color="inherit">
+                        {isCreator &&
+                            <Link href="/newCourse" underline='none' color="inherit">
                             <Tooltip title="Create Course" enterDelay={500}>
                                 <ListItem button>
                                     <ListItemIcon><PostAddIcon /></ListItemIcon>
@@ -588,6 +636,7 @@ export default function TopNavBar(props) {
                                 </ListItem>
                             </Tooltip>
                         </Link>
+                        }
 
                         <Link href="/MyCourses" underline='none' color="inherit">
                             <Tooltip title="My Courses" enterDelay={500}>
@@ -607,16 +656,19 @@ export default function TopNavBar(props) {
                             </Tooltip>
                         </Link>
 
-                        <Tooltip title="Admin Dashboard" enterDelay={500}>
-                            <Link href="/admindashboard" underline='none' color="inherit">
-                                <ListItem button>
-                                    <ListItemIcon><VerifiedUserIcon /></ListItemIcon>
-                                    <ListItemText primary="Admin Dashboard" />
-                                </ListItem>
-                            </Link>
-                        </Tooltip>
+                        {isAdmin &&
+                            <Tooltip title="Admin Dashboard" enterDelay={500}>
+                                <Link href="/admindashboard" underline='none' color="inherit">
+                                    <ListItem button>
+                                        <ListItemIcon><VerifiedUserIcon /></ListItemIcon>
+                                        <ListItemText primary="Admin Dashboard" />
+                                    </ListItem>
+                                </Link>
+                            </Tooltip>
+                        }
 
                         {/* <Tooltip title="Calendar" enterDelay={500}>*/}
+                        {isCreator && 
                         <Link href="/ManageMyCourses" underline='none' color="inherit">
                             <Tooltip title="My Created Courses" enterDelay={500}>
                                 <ListItem button>
@@ -625,6 +677,7 @@ export default function TopNavBar(props) {
                                 </ListItem>
                             </Tooltip>
                         </Link>
+                        }
                     </List>
                 </Drawer>
                 : null}

@@ -33,6 +33,8 @@
     "getUsersSearch": "/v0/admin/users/search",
     "getCoursesSearch": "/v0/admin/courses/search",
     "getCategoriesSearch": "/v0/admin/categories/search",
-    "getUserInfo": "/v0/settings/userInfo"
+    "getUserInfo": "/v0/settings/userInfo",
+    "getIsAdmin": "/v0/auth/isadmin",
+    "getIsCreator": "/v0/auth/iscreator"
   }
 }
