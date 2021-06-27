@@ -69,9 +69,34 @@ function ModuleCreator(props) {
     }
 
     useEffect(() => {
+        const message = getAuthorization();
+        if (message !== "yes") {
+            props.history.push('/dashboard');
+            return
+        }
+
         const pathname = window.location.pathname.split('/') //returns the current path
         setCourseID(pathname[pathname.length - 1])
     }, []);
+
+    const getAuthorization = async () => {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(config.server_url + config.paths.getIsCreator, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                "token": token
+            })
+        })
+
+        const data = await res.json()
+
+        return data.message
+
+    }
 
     const onSubmit = (e) => {
         e.preventDefault()
