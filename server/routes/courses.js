@@ -264,7 +264,7 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
       { _id: req.body.courseID },
       {
         $pull: { studentsEnrolled: req.body.userID },
-        // $inc: { currStudents: -1 }
+        $inc: { currStudents: -1 }
       })
 
     res.json({'status': 'success'})
