@@ -147,7 +147,7 @@ function ModuleEditor(props) {
 
                 // Input contains non-alphanumeric values so we must alert the user to rename the file 
                 if (isValid === false) {
-                    alert('Invalid file type. Please upload an image for which name is aplhanumeric.')
+                    alert('Invalid file type. Please upload an image for which name is alphanumeric and has no spaces.')
                     return
                 }
 
@@ -196,7 +196,7 @@ function ModuleEditor(props) {
 
                 // Input contains non-alphanumeric values so we must alert the user to rename the file 
                 if (isValid === false) {
-                    alert('Invalid file type. Please upload an image for which name is aplhanumeric.')
+                    alert('Invalid file type. Please upload an image for which name is alphanumeric and has no spaces.')
                     return
                 }
 
@@ -244,7 +244,7 @@ function ModuleEditor(props) {
 
                 // Input contains non-alphanumeric values so we must alert the user to rename the file 
                 if (isValid === false) {
-                    alert('Invalid file type. Please upload an image for which name is aplhanumeric.')
+                    alert('Invalid file type. Please upload an image for which name is alphanumeric and has no spaces.')
                     return
                 }
     
@@ -269,7 +269,7 @@ function ModuleEditor(props) {
 
                 const data = await res.json()
                 if (data.message === undefined) {
-                    const res = await fetch(config.server_url + config.paths.moduleFileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.video.name + "&moduleID=" + props.location.moduleIndex, {
+                    const res = await fetch(config.server_url + config.paths.moduleFileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.video.name, {
                     method: 'POST',
                     body: newVideo
                     })

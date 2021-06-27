@@ -46,6 +46,20 @@ router.post('/single', VerifyToken, upload.single('file'), async (req, res) => {
 
 router.post('/singleModuleFile', VerifyToken, upload.single('file'), async (req, res) => {
 
+  // splitting file name so we can validate the input
+  const fileTypePath = req.query.imageName.split('.')
+
+  // Grabbing the actual filename minus its extension so that we can validate alphanumeric inputs
+  var val = fileTypePath[fileTypePath.length - 2];
+  var RegEx = /[^0-9a-z]/i;
+  var isValid = !(RegEx.test(val));
+
+  // If the value does contain invalid symbols (non-alphanumeric), tell user the input is invalid
+  if (isValid === false) {
+    console.log('Invalid file type. Please upload an image for which name is alphanumeric and has no spaces.')
+    res.json({ 'status': 'incorrect upload type' })
+  }
+
   const currPath = __dirname + "/../public/" + req.query.imageName
   const newPath = __dirname + "/../public/" + req.query.courseID + "/moduleData/" + req.query.imageName
 
