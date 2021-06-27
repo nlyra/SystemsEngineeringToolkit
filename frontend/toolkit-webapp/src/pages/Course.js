@@ -134,6 +134,17 @@ const Course = (props) => {
       return
     }
 
+    // Check that the input given is alphanumeric to avoid the possibility of commands being 
+    // passed in to the backend
+    var val = imageTypePath[imageTypePath.length - 2];
+    var RegEx = /[^0-9a-z]/i;
+    var isValid = !(RegEx.test(val));
+
+    if (isValid === false) {
+      alert('Invalid file type. Please upload an image for which name is aplhanumeric.')
+      return
+    }
+
     if (currCourseImage.name !== oldCourseImage.name) {
 
       if (data.message === undefined) {

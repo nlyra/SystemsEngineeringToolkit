@@ -21,9 +21,31 @@ const upload = multer({ storage: fileStorageEngine })
 
 router.post('/single', VerifyToken, upload.single('file'), async (req, res) => {
 
-  console.log('image = ' + req.query.imageName)
+  // validating image types in case someone attempts to access route without using frontend
+  let validImageTypes = ["png", "PNG", "jpeg", "jpg"]
 
-  console.log(req.query)
+  // Checking to see if the extension is one of the valid types
+  const imageTypePath = req.query.imageName.split('.')
+  const imageType = imageTypePath[imageTypePath.length - 1]
+  const validInput = validImageTypes.includes(imageType);
+
+  // If it isn't, return and allow user to input valid image
+  if (!validInput) {
+    console.log('Invalid file type. Please upload an image with the extension .jpg or .png')
+    res.json({ 'status': 'Incorrect upload type' })
+  }
+
+  // Grabbing the actual filename minus its extension so that we can validate alphanumeric inputs
+  var val = imageTypePath[imageTypePath.length - 2];
+  var RegEx = /[^0-9a-z]/i;
+  var isValid = !(RegEx.test(val));
+
+  // If the value does contain invalid symbols (non-alphanumeric), tell user the input is invalid
+  if (isValid === false) {
+    console.log('Invalid file type. Please upload an image for which name is aplhanumeric.')
+    res.json({ 'status': 'incorrect upload type' })
+  }
+
   const currPath = __dirname + "/../public/" + req.query.imageName
   const newPath = __dirname + "/../public/" + req.query.courseID + "/" + req.query.imageName
 

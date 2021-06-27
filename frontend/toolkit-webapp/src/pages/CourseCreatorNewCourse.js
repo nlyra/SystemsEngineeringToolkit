@@ -56,12 +56,22 @@ function NewCourse(props) {
             return
             }
 
-            // handle image
-            alert('image is ' + image)
+            // Grabbing the actual filename minus extension so that we can validate alphanumeric inputs
+            var val = imageTypePath[imageTypePath.length - 2];
+            var RegEx = /[^0-9a-z]/i;
+            var isValid = !(RegEx.test(val));
+    
+            // Input contains non-alphanumeric values so we must alert the user to rename the file 
+            if (isValid === false)
+            {
+                alert('Invalid file type. Please upload an image for which name is aplhanumeric.')
+                return
+            }
 
+            // handle image
             const imageData = new FormData();
             imageData.append('file', image)
-            // alert(creds.categories)
+    
             const res = await fetch(config.server_url + config.paths.createCourse, {
                 method: 'POST',
                 headers: {
@@ -92,8 +102,6 @@ function NewCourse(props) {
                     }),
                 })
             }
-
-
 
             const data = await res.json()
             alert('image name issss ' + image.name)
