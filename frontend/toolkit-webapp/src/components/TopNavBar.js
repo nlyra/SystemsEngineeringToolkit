@@ -92,6 +92,8 @@ const useStyles = makeStyles((theme) => ({
     {
         color: theme.palette.getContrastText(amber[600]),
         backgroundColor: amber[600],
+        border: '1px solid black',
+        // borderRadius: '4px'
     },
 
     roleAvi: 
@@ -102,15 +104,18 @@ const useStyles = makeStyles((theme) => ({
         // For the avatar that uses this color. Can be changed to another div if needed
         width: '10vh',
         // paddingTop: '10px'
-        marginTop: '34px',
-        marginLeft: '5px'
+        marginTop: '5%',
+        marginLeft: '15%',
+        border: '1px solid black',
+        borderRadius: '8px',
     },
 
     roleStatContent:
     {
-        verticalAlign: 'middle',
-        margin: 'auto',
-        width: '60%',
+        // verticalAlign: 'middle',
+        // margin: 'auto',
+        width: '100%'
+        // backgroundColor: 'cyan'
     },
 
     roleText:
@@ -118,6 +123,11 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         textAlign: 'center'
 
+    },
+    
+    roleGrid:
+    {
+        justifyContent: 'center'
     },
 
     statText:
@@ -488,7 +498,21 @@ export default function TopNavBar(props) {
                                                     fullWidth
                                                     // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                                                 />
-                                                <br/><br/>
+                                                <Grid container direction="row" className={classes.roleGrid}>
+                                                    <Grid item xs={6} sm={6} lg={6} >
+                                                        <div className={classes.roleStatContent}>
+                                                            <div className={classes.roleText}>
+                                                                <h3>User Role</h3>
+                                                            </div>
+                                                        </div>
+                                                    </Grid>
+                                                    <Grid item xs={6} sm={6} lg={6} >
+                                                    <Avatar variant="rounded" className={classes.roleAvi}>{roles[user.roleID]}</Avatar>
+                                                        
+                                                         
+                                                    </Grid>
+
+                                                </Grid>
                                                 <Grid item xs={12}>
                                                     <Divider variant= 'fullWidth' className={classes.divider} />
                                                 </Grid>
@@ -497,28 +521,28 @@ export default function TopNavBar(props) {
                                                 </div>
                             
                                                 <Grid container direction="row" >
-                                                    <Grid item xs={6} sm={6} lg={3} >
+                                                    <Grid item xs={6} sm={6} lg={4} >
                                                         <div className={classes.statContent}>
                                                             <div className={classes.statText}>
-                                                                <h5>Enrolled Courses </h5>
+                                                                <h5>Enrolled Courses</h5>
                                                             </div>
                                                             <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
                                                         </div>
                                                     </Grid>
-                                                    <Grid item xs={6} sm={6} lg={3} >
+                                                    <Grid item xs={6} sm={6} lg={4} >
+                                                        <div className={classes.statContent}>
+                                                            <div className={classes.statText}>
+                                                                <h5>Completed Courses</h5>
+                                                            </div>
+                                                            <Avatar className={classes.statsAvi}>{user.completedCourses.length}</Avatar>
+                                                        </div>
+                                                    </Grid>
+                                                    <Grid item xs={6} sm={6} lg={4} >
                                                         <div className={classes.statContent}>
                                                             <div className={classes.statText}>
                                                                 <h5>Courses Created</h5>
                                                             </div>
                                                             <Avatar className={classes.statsAvi}>{user.createdCourses.length}</Avatar>
-                                                        </div>
-                                                    </Grid>
-                                                    <Grid item xs={6} sm={6} lg={6} >
-                                                        <div className={classes.roleStatContent}>
-                                                            <div className={classes.roleText}>
-                                                                <h5>Role</h5>
-                                                            </div>
-                                                            <Avatar variant="rounded" className={classes.roleAvi}>{roles[user.roleID]}</Avatar>
                                                         </div>
                                                     </Grid>
                                                 </Grid>
