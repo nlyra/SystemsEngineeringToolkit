@@ -44,4 +44,33 @@ router.post('/single', VerifyToken, upload.single('file'), async (req, res) => {
   res.send({ "status": "Success" })
 })
 
+router.post('/singleModuleFile', VerifyToken, upload.single('file'), async (req, res) => {
+
+  const currPath = __dirname + "/../public/" + req.query.imageName
+  const newPath = __dirname + "/../public/" + req.query.courseID + "/moduleData/" + req.query.imageName
+
+  const made = mkdirp.sync(__dirname + "/../public/" + req.query.courseID + "/moduleData")
+
+  // console.log(req.query)
+  fs.rename(currPath, newPath, function (err) {
+    if (err) {
+      throw err
+    } else {
+      console.log(`Successfully moved the file ${req.query.imageName}!`);
+    }
+  });
+
+  // const update = await Course.updateOne(
+  //   { _id: req.body.courseID }, // query parameter
+  //   {
+  //     $set: {
+  //       [`modules.${req.body.moduleID}`]: {
+  //           urlFile: config.server_url + "/" + req.query.courseID + "/moduleData/" + req.query.imageName,
+  //       }
+  //     }
+  //   });
+
+  res.send({ "status": "Success" })
+})
+
 module.exports = router;

@@ -286,7 +286,7 @@ router.post('/removeFile', VerifyToken, async (req, res) => {
 
   try {
     fs.unlinkSync(path)
-    res.json({ 'status': 'module added' });
+    res.json({ 'status': 'removed file' });
 
   } catch (err) {
     console.error(err)
@@ -487,6 +487,7 @@ router.post('/module/update', VerifyToken, async (req, res) => {
           }
         });
     } else if (req.body.type === "PDF") {
+      
       const update = await Course.updateOne(
         { _id: req.body.courseID }, // query parameter
         {

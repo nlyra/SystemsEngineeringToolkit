@@ -137,6 +137,20 @@ function ModuleEditor(props) {
                 props.history.push('/course/'+courseID)
 
             }else if(module.type === "PDF"){
+               
+                const pdfTypePath = module.pdf.name.split('.')
+
+                // Grabbing the actual filename minus extension so that we can validate alphanumeric inputs
+                var val = pdfTypePath[pdfTypePath.length - 2];
+                var RegEx = /[^0-9a-z]/i;
+                var isValid = !(RegEx.test(val));
+
+                // Input contains non-alphanumeric values so we must alert the user to rename the file 
+                if (isValid === false) {
+                    alert('Invalid file type. Please upload an image for which name is aplhanumeric.')
+                    return
+                }
+
                 const newFile = new FormData();
                 newFile.append('file', module.pdf)
 
@@ -152,12 +166,12 @@ function ModuleEditor(props) {
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "urlFile": `http://localhost:4000/`+courseID+`/${module.pdf.name}`
+                        "urlFile": `http://localhost:4000/`+courseID+`/moduleData/${module.pdf.name}`
                     })
                 })
                 const data = await res.json()
                 if (data.message === undefined) {
-                    const res = await fetch(config.server_url + config.paths.fileUpload +"?token=" + token + "&courseID=" + courseID + "&imageName=" + module.pdf.name, {
+                    const res = await fetch(config.server_url + config.paths.moduleFileUpload +"?token=" + token + "&courseID=" + courseID + "&imageName=" + module.pdf.name, {
                     method: 'POST',
                     body: newFile
                     })
@@ -172,7 +186,20 @@ function ModuleEditor(props) {
                     console.log(data)
                 }
             } else if(module.type === "File"){
-                // handle image
+
+                const fileTypePath = module.file.name.split('.')
+
+                // Grabbing the actual filename minus extension so that we can validate alphanumeric inputs
+                var val = fileTypePath[fileTypePath.length - 2];
+                var RegEx = /[^0-9a-z]/i;
+                var isValid = !(RegEx.test(val));
+
+                // Input contains non-alphanumeric values so we must alert the user to rename the file 
+                if (isValid === false) {
+                    alert('Invalid file type. Please upload an image for which name is aplhanumeric.')
+                    return
+                }
+
                 const newFile = new FormData();
                 newFile.append('file', module.file)
 
@@ -188,12 +215,12 @@ function ModuleEditor(props) {
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "urlFile": `http://localhost:4000/`+courseID+`/${module.file.name}`
+                        "urlFile": `http://localhost:4000/`+courseID+`/moduleData/${module.file.name}`
                     })
                 })
                 const data = await res.json()
                 if (data.message === undefined) {
-                    const res = await fetch(config.server_url + config.paths.fileUpload +"?token=" + token + "&courseID=" + courseID + "&imageName=" + module.file.name, {
+                    const res = await fetch(config.server_url + config.paths.moduleFileUpload +"?token=" + token + "&courseID=" + courseID + "&imageName=" + module.file.name, {
                     method: 'POST',
                     body: newFile
                     })
@@ -209,7 +236,18 @@ function ModuleEditor(props) {
                 }
             }else if(module.type === "Video"){
 
-                // handle image
+                const videoTypePath = module.video.name.split('.')
+                var val = videoTypePath[videoTypePath.length - 2];
+
+                var RegEx = /[^0-9a-z]/i;
+                var isValid = !(RegEx.test(val));
+
+                // Input contains non-alphanumeric values so we must alert the user to rename the file 
+                if (isValid === false) {
+                    alert('Invalid file type. Please upload an image for which name is aplhanumeric.')
+                    return
+                }
+    
                 const newVideo = new FormData();
                 newVideo.append('file', module.video)
                 const res = await fetch(config.server_url + config.paths.editModule, {
@@ -224,14 +262,14 @@ function ModuleEditor(props) {
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "urlVideo": `http://localhost:4000/`+courseID+`/${module.video.name}`,
+                        "urlVideo": `http://localhost:4000/`+courseID+`/moduleData/${module.video.name}`,
                     })
                     
                 })
 
                 const data = await res.json()
                 if (data.message === undefined) {
-                    const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.video.name, {
+                    const res = await fetch(config.server_url + config.paths.moduleFileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.video.name + "&moduleID=" + props.location.moduleIndex, {
                     method: 'POST',
                     body: newVideo
                     })
