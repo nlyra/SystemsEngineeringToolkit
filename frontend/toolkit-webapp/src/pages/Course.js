@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import { TableBody, TableCell, TableContainer, TableHead, TableRow, DialogTitle, DialogContent, Dialog, IconButton, Link, FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
+import { DialogActions, DialogTitle, DialogContent, Dialog, IconButton, Link, FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
 import VideoModule from '../components/VideoModule'
 import PdfModule from '../components/PdfModule'
 import QuizModule from '../components/QuizModule'
@@ -16,6 +16,7 @@ import AddIcon from '@material-ui/icons/Add';
 import MenuIcon from '@material-ui/icons/Menu';
 import DeleteIcon from '@material-ui/icons/Delete';
 import courseStyles from '../styles/courseStyle';
+import MoveModules from '../components/MoveModules';
 
 
 const Course = (props) => {
@@ -54,6 +55,11 @@ const Course = (props) => {
   }
 
   const handleClickClose = () => {
+    setMove(false)
+  }
+
+  const handleClickSave = () => {
+    
     setMove(false)
   }
 
@@ -261,6 +267,20 @@ const Course = (props) => {
 
   }
 
+  const getTitles = () => {
+    let temparray = []
+    modules.forEach(module => {
+      temparray = temparray.concat(module.title)
+    })
+    console.log(temparray)
+    return temparray
+  }
+
+  const headCells = [
+    { id: 'module', numeric: false, disablePadding: false, label: 'Module Number' },
+    { id: 'title', numeric: false, disablePadding: false, label: 'Module Title' },
+  ]
+
   return (
     <div className={classes.div}>
       <TopNavBar >
@@ -368,59 +388,18 @@ const Course = (props) => {
           open={move}
           onClose={handleClickClose}
         >
-          <DialogTitle>Modules</DialogTitle>
-          {/* <DialogContent>
-            <TableContainer>
-              <TableHead>
-                <TableRow>
-                  <TableCell padding="checkbox">
-                  </TableCell>
-                  {modules.map((module) => (
-                    <TableCell
-                      key={module._id}
-                      align={headCell.numeric ? 'right' : 'left'}
-                      padding={headCell.disablePadding ? 'none' : 'default'}
-                    >
-                      {headCell.label}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-
-              <TableBody>
-                {quiz.map((question, index) => {
-                  const isItemSelected = isSelected(question.question);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, question.question)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
-                      </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
-                        {question.question}
-                      </TableCell>
-
-                      <TableCell align="right">{question.answers[0].answerText}</TableCell>
-                      <TableCell align="right">{question.answers[1].answerText}</TableCell>
-                      <TableCell align="right">{question.answers[2].answerText}</TableCell>
-                      <TableCell align="right">{question.answers[3].answerText}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </TableContainer>
-          </DialogContent> */}
+          <DialogTitle>Reorder Modules</DialogTitle>
+          <DialogContent>
+            <MoveModules modules={modules} moduleTitles={getTitles}></MoveModules>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" color="default" size="small" onClick={handleClickSave}>
+              Save Changes
+            </Button>
+            <Button variant="contained" color="default" size="small" onClick={handleClickClose}>
+              Close
+            </Button>
+          </DialogActions>
         </Dialog>
         <Grid item xs={12} className={classes.accordion}>
           {/* modules starts here */}
