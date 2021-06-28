@@ -90,27 +90,30 @@ function ModuleEditor(props) {
             quiz = JSON.parse(sessionStorage.getItem("quiz"))
             sessionStorage.clear()
             onFinish({ title, type, description, quiz, gradeToPass })
-        }else if(type === 'PDF' && pdf !== null){
+        }else if(type === 'PDF' && pdf !== null && typeof(pdf) !== 'undefined'){
             if(isPDF(pdf.name) === false){
                 alert("File must be a PDF")
             } else {
                 console.log('works for PDF')
                 onFinish({ title, type, description, pdf })
             }
-        } else if(type === 'File' && file !== null){
+        } else if(type === 'File' && file !== null && typeof(file) !== 'undefined'){
             console.log('works for File')
             onFinish({ title, type, description, file })
             
-        }else if(type === 'Video' && video !== null){
+        }else if(type === 'Video' && video !== null && typeof(video) !== 'undefined'){
             if(isVideo(video.name) === false){
                 alert("File must be a video")
             } else {
                 console.log('works for Video')
                 onFinish({ title, type, description, video })
             }
-        }else {
+        }else if (type === 'Text') {
             console.log('works')
             onFinish({ title, type, description })
+        }
+        else {
+            alert("Please attach proper file corresponding to module type.")
         }
     }
 
@@ -136,7 +139,7 @@ function ModuleEditor(props) {
                 alert("Successfully Edited Quiz module")
                 props.history.push('/course/'+courseID)
 
-            }else if(module.type === "PDF"){
+            }else if(module.type === "PDF" && (typeof(module.pdf) !== 'undefined')){
                
                 const pdfTypePath = module.pdf.name.split('.')
 
@@ -185,7 +188,7 @@ function ModuleEditor(props) {
                 } else { // this is to check if there are errors not being addressed already
                     console.log(data)
                 }
-            } else if(module.type === "File"){
+            } else if(module.type === "File" && (typeof(module.file) !== 'undefined')){
 
                 const fileTypePath = module.file.name.split('.')
 
@@ -234,7 +237,7 @@ function ModuleEditor(props) {
                 } else { // this is to check if there are errors not being addressed already
                     console.log(data)
                 }
-            }else if(module.type === "Video"){
+            }else if(module.type === "Video" && (typeof(module.video) !== 'undefined')){
 
                 const videoTypePath = module.video.name.split('.')
                 var val = videoTypePath[videoTypePath.length - 2];
