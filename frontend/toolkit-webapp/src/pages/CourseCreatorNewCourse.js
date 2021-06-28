@@ -163,12 +163,8 @@ function NewCourse(props) {
     // useEffect() hook will make it so it only gets rendered once, once the page loads,
     // as opposed to after every time the form is rendered (as long as the array at the end remains empty).
     useEffect(() => {
-        const message = getAuthorization();
-        if(message !== "yes"){
-            props.history.push('/dashboard');
-            return
-        }
-        
+        getAuthorization();
+
         const categoriesCollection = async () => {
             const token = localStorage.getItem("token");
             const res = await fetch(config.server_url + config.paths.categories, {
@@ -183,6 +179,7 @@ function NewCourse(props) {
 
             const fetchedCategories = await res.json()
             if (fetchedCategories.message === "unauthorized") {
+                console.log(fetchedCategories.message)
                 props.history.push('dashboard');
             } else
                 setDialogData(fetchedCategories.categories)
@@ -193,7 +190,7 @@ function NewCourse(props) {
 
     const getAuthorization = async () => {
         const token = localStorage.getItem("token");
-        
+
         const res = await fetch(config.server_url + config.paths.getIsCreator, {
             method: 'POST',
             headers: {
@@ -203,11 +200,13 @@ function NewCourse(props) {
                 "token": token
             })
         })
-        
+
         const data = await res.json()
-        
-        return data.message
-            
+        // console.log(data.message)
+        if (data.message !== "yes") {
+            props.history.push('/dashboard');
+        }
+
     }
 
     return (

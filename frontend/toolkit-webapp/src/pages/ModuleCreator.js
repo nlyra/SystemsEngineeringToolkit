@@ -69,11 +69,7 @@ function ModuleCreator(props) {
     }
 
     useEffect(() => {
-        const message = getAuthorization();
-        if (message !== "yes") {
-            props.history.push('/dashboard');
-            return
-        }
+        getAuthorization();
 
         const pathname = window.location.pathname.split('/') //returns the current path
         setCourseID(pathname[pathname.length - 1])
@@ -94,7 +90,9 @@ function ModuleCreator(props) {
 
         const data = await res.json()
 
-        return data.message
+        if (data.message !== "yes") {
+            props.history.push('/dashboard');
+        }
 
     }
 

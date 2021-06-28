@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post('/info', VerifyToken, GetRole, async (req, res) => {
     try {
-      if(req.body.roleID === 1){
+      if(req.body.roleID != 1){
         res.json({ message: "unauthorized" })
         return
       }
@@ -33,7 +33,7 @@ router.post('/info', VerifyToken, GetRole, async (req, res) => {
 
 router.post('/add', VerifyToken, GetRole, async (req, res) => {
 
-    if(req.body.roleID === 1){
+    if(req.body.roleID != 1){
       res.json({ message: "unauthorized" })
       return
     }

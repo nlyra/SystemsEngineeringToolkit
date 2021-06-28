@@ -21,8 +21,8 @@ const fileStorageEngine = multer.diskStorage({
 const upload = multer({ storage: fileStorageEngine })
 
 router.post('/single', VerifyToken, GetRole, upload.single('file'), async (req, res) => {
-  
-  if(req.body.roleID === 1){
+
+  if (req.body.roleID != 1) {
     res.json({ message: "unauthorized" })
     return
   }
