@@ -21,9 +21,9 @@ var quiz = []
 
 const QuizCreator = (props) => {
     const [type, setType] = useState('')
-    const [open, setOpen] = React.useState(false)
-    const [editOpen, setEdit] = React.useState(false)
-    const [selected, setSelected] = React.useState([]);
+    const [open, setOpen] = useState(false)
+    const [editOpen, setEdit] = useState(false)
+    const [selected, setSelected] = useState([]);
 
     sessionStorage.setItem('editing', '')
 

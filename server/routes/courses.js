@@ -4,7 +4,8 @@ const VerifyToken = require('./auth').verifyToken;
 const express = require('express');
 const jwt_decode = require('jwt-decode');
 const router = express.Router();
-const fs = require('fs')
+const fs = require('fs');
+const crypto = require('crypto');
 const config = require('../config.json');
 
 
@@ -317,12 +318,14 @@ router.post('/deleteCreatedCourse', VerifyToken, async (req, res) => {
 
 router.post('/module/create', VerifyToken, async (req, res) => {
   try {
+    id = crypto.randomBytes(10).toString('hex')
     if (req.body.type === "Quiz") {
       const update = await Course.updateOne(
         { _id: req.body.courseID }, // query parameter
         {
           $push: {
             modules: {
+              _id: id,
               title: req.body.title,
               type: req.body.type,
               description: req.body.description,
@@ -337,6 +340,7 @@ router.post('/module/create', VerifyToken, async (req, res) => {
         {
           $push: {
             modules: {
+              _id: id,
               title: req.body.title,
               type: req.body.type,
               description: req.body.description,
@@ -350,6 +354,7 @@ router.post('/module/create', VerifyToken, async (req, res) => {
         {
           $push: {
             modules: {
+              _id: id,
               title: req.body.title,
               type: req.body.type,
               description: req.body.description,
@@ -363,6 +368,7 @@ router.post('/module/create', VerifyToken, async (req, res) => {
         {
           $push: {
             modules: {
+              _id: id,
               title: req.body.title,
               type: req.body.type,
               description: req.body.description,
@@ -376,6 +382,7 @@ router.post('/module/create', VerifyToken, async (req, res) => {
         {
           $push: {
             modules: {
+              _id: id,
               title: req.body.title,
               type: req.body.type,
               description: req.body.description,

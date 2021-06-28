@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import { IconButton, Link, FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
+import { TableBody, TableCell, TableContainer, TableHead, TableRow, DialogTitle, DialogContent, Dialog, IconButton, Link, FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
 import VideoModule from '../components/VideoModule'
 import PdfModule from '../components/PdfModule'
 import QuizModule from '../components/QuizModule'
@@ -13,6 +13,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CourseInfoEditButton from '../components/CourseInfoEditButton';
 import ModuleInfoEditButton from '../components/ModuleInfoEditButton';
 import AddIcon from '@material-ui/icons/Add';
+import MenuIcon from '@material-ui/icons/Menu';
 import DeleteIcon from '@material-ui/icons/Delete';
 import courseStyles from '../styles/courseStyle';
 
@@ -26,6 +27,7 @@ const Course = (props) => {
   const [courseDescription, setCourseDescription] = useState('')
   const [editCourseInfo, setEditCourseInfo] = useState(false)
   const [courseID, setCourseID] = useState('')
+  const [move, setMove] = useState(false)
 
   let validImageTypes = ["png", "PNG", "jpeg", "jpg"]
 
@@ -45,6 +47,14 @@ const Course = (props) => {
   const addModule = () => {
     sessionStorage.clear()
     props.history.push(`/newModule/${courseID}`)
+  }
+
+  const handleClickOpen = () => {
+    setMove(true)
+  }
+
+  const handleClickClose = () => {
+    setMove(false)
   }
 
   const getCourse = async (id) => {
@@ -330,9 +340,8 @@ const Course = (props) => {
         <Grid item xs={12}>
           <Divider className={classes.divider} />
         </Grid>
-        <Grid item xs={12} lg={3}>
-          {//<Link href={`/newModule/${courseID}`} underline={'none'}>
-          }
+        <Grid container>
+          <Grid item xs={12} lg={3}>
             <Button
               variant="contained"
               color="primary"
@@ -342,9 +351,77 @@ const Course = (props) => {
             >
               Add Module
             </Button>
-          {//</Link>
-          }
+          </Grid>
+          <Grid item xs={12} lg={3}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              startIcon={<MenuIcon />}
+              onClick={handleClickOpen}
+            >
+              Move modules
+            </Button>
+          </Grid>
         </Grid>
+        <Dialog
+          open={move}
+          onClose={handleClickClose}
+        >
+          <DialogTitle>Modules</DialogTitle>
+          {/* <DialogContent>
+            <TableContainer>
+              <TableHead>
+                <TableRow>
+                  <TableCell padding="checkbox">
+                  </TableCell>
+                  {modules.map((module) => (
+                    <TableCell
+                      key={module._id}
+                      align={headCell.numeric ? 'right' : 'left'}
+                      padding={headCell.disablePadding ? 'none' : 'default'}
+                    >
+                      {headCell.label}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+
+              <TableBody>
+                {quiz.map((question, index) => {
+                  const isItemSelected = isSelected(question.question);
+                  const labelId = `enhanced-table-checkbox-${index}`;
+
+                  return (
+                    <TableRow
+                      hover
+                      onClick={(event) => handleClick(event, question.question)}
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      selected={isItemSelected}
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          checked={isItemSelected}
+                          inputProps={{ 'aria-labelledby': labelId }}
+                        />
+                      </TableCell>
+                      <TableCell component="th" id={labelId} scope="row" padding="none">
+                        {question.question}
+                      </TableCell>
+
+                      <TableCell align="right">{question.answers[0].answerText}</TableCell>
+                      <TableCell align="right">{question.answers[1].answerText}</TableCell>
+                      <TableCell align="right">{question.answers[2].answerText}</TableCell>
+                      <TableCell align="right">{question.answers[3].answerText}</TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </TableContainer>
+          </DialogContent> */}
+        </Dialog>
         <Grid item xs={12} className={classes.accordion}>
           {/* modules starts here */}
           {modules.map((module) => (
