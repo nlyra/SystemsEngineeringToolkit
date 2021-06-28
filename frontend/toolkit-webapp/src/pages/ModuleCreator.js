@@ -87,18 +87,18 @@ function ModuleCreator(props) {
             quiz = JSON.parse(sessionStorage.getItem("quiz"))
             sessionStorage.clear()
             onFinish({ title, type, description, quiz })
-        }else if(type === 'PDF' && pdf !== null){
+        }else if(type === 'PDF' && pdf !== null && typeof(pdf) !== 'undefined'){
             if(isPDF(pdf.name) === false){
                 alert("File must be a PDF")
             } else {
                 console.log('works for PDF')
                 onFinish({ title, type, description, pdf })
             }
-        } else if(type === 'File' && file !== null){
+        } else if(type === 'File' && file !== null && typeof(file) !== 'undefined'){
             console.log('works for File')
             onFinish({ title, type, description, file })
             
-        }else if(type === 'Video' && video !== null){
+        }else if(type === 'Video' && video !== null && typeof(video) !== 'undefined'){
             if(isVideo(video.name) === false){
                 alert("File must be a video")
             } else {
@@ -108,6 +108,9 @@ function ModuleCreator(props) {
         }else if(type === 'Text'){
             console.log('works for Text')
             onFinish({ title, type, description })
+        }
+        else {
+            alert("Please upload file for the respective module type selected.")
         }
     }
 
