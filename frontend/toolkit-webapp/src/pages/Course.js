@@ -392,7 +392,7 @@ const Course = (props) => {
               color="primary"
               className={classes.button}
               startIcon={<MenuIcon />}
-              onClick={handleClickOpen}
+              onClick={() => handleClickOpen}
             >
               Move modules
             </Button>

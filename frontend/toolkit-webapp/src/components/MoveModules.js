@@ -186,51 +186,53 @@ export default function MoveModules(props) {
   );
 
   return (
-    <Dialog
-      open={move}
-      onClose={handleClickClose}
-    >
-      <DialogTitle>Reorder Modules</DialogTitle>
-      <DialogContent>
-        {/* <MoveModules modules={modules} moduleTitles={getTitles}></MoveModules> */}
-        <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
-          <Grid item>{customList('Choices', left)}</Grid>
-          <Grid item>
-            <Grid container direction="column" alignItems="center">
-              <Button
-                variant="outlined"
-                size="small"
-                className={classes.button}
-                onClick={handleCheckedRight}
-                disabled={leftChecked.length === 0}
-                aria-label="move selected right"
-              >
-                &gt;
-              </Button>
-              <Button
-                variant="outlined"
-                size="small"
-                className={classes.button}
-                onClick={handleCheckedLeft}
-                disabled={rightChecked.length === 0}
-                aria-label="move selected left"
-              >
-                &lt;
-              </Button>
+    // { move === true ?
+        <Dialog
+          // open={move}
+          onClose={handleClickClose}
+        >
+          <DialogTitle>Reorder Modules</DialogTitle>
+          <DialogContent>
+            {/* <MoveModules modules={modules} moduleTitles={getTitles}></MoveModules> */}
+            <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
+              <Grid item>{customList('Choices', left)}</Grid>
+              <Grid item>
+                <Grid container direction="column" alignItems="center">
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    className={classes.button}
+                    onClick={handleCheckedRight}
+                    disabled={leftChecked.length === 0}
+                    aria-label="move selected right"
+                  >
+                    &gt;
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    className={classes.button}
+                    onClick={handleCheckedLeft}
+                    disabled={rightChecked.length === 0}
+                    aria-label="move selected left"
+                  >
+                    &lt;
+                  </Button>
+                </Grid>
+              </Grid>
+              <Grid item>{customList('Chosen', right)}</Grid>
+              {/* <Grid item><Button onClick={setNewModules}>Hello There</Button></Grid> */}
             </Grid>
-          </Grid>
-          <Grid item>{customList('Chosen', right)}</Grid>
-          {/* <Grid item><Button onClick={setNewModules}>Hello There</Button></Grid> */}
-        </Grid>
-      </DialogContent>
-      <DialogActions>
-        <Button variant="contained" color="default" size="small" onClick={saveModules}>
-          Save Changes
-        </Button>
-        {/* <Button variant="contained" color="default" size="small" onClick={handleClickClose}>
-                    Close
-                </Button> */}
-      </DialogActions>
-    </Dialog>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" color="default" size="small" onClick={saveModules}>
+              Save Changes
+            </Button>
+            {/* <Button variant="contained" color="default" size="small" onClick={handleClickClose}>
+            Close
+          </Button> */}
+          </DialogActions>
+        </Dialog>
+      // : null}
   );
 }
