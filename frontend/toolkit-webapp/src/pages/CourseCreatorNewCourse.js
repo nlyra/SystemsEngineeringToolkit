@@ -56,7 +56,7 @@ function NewCourse(props) {
 
             // Input contains non-alphanumeric values so we must alert the user to rename the file 
             if (isValid === false) {
-                alert('Invalid file type. Please upload an image for which name is aplhanumeric.')
+                alert('Invalid file type. Please upload an image for which name is alphanumeric.')
                 return
             }
 

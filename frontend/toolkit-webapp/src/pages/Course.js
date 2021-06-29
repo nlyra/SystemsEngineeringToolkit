@@ -136,7 +136,7 @@ const Course = (props) => {
     var isValid = !(RegEx.test(val));
 
     if (isValid === false) {
-      alert('Invalid file type. Please upload an image for which name is aplhanumeric.')
+      alert('Invalid file type. Please upload an image for which name is alphanumeric.')
       return
     }
     
