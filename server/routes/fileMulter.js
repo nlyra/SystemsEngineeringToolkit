@@ -33,7 +33,6 @@ router.post('/single', VerifyToken, upload.single('file'), async (req, res) => {
 
     // If it isn't, return and allow user to input valid image
     if (!validInput) {
-      alert('Invalid file type. Please upload an image with a proper image extension')
       res.json({ 'status': 'Incorrect upload type' })
     }
 
@@ -44,8 +43,7 @@ router.post('/single', VerifyToken, upload.single('file'), async (req, res) => {
 
     // If the value does contain invalid symbols (non-alphanumeric), tell user the input is invalid
     if (isValid === false) {
-      console.log('Invalid file type. Please upload an image for which name is aplhanumeric.')
-      res.json({ 'status': 'incorrect upload type' })
+      res.json({ 'status': 'not alphanumeric' })
     }
 
     const currPath = __dirname + "/../public/" + req.query.imageName
@@ -53,7 +51,6 @@ router.post('/single', VerifyToken, upload.single('file'), async (req, res) => {
 
     const made = mkdirp.sync(__dirname + "/../public/" + req.query.courseID)
 
-    // console.log(req.query)
     fs.rename(currPath, newPath, function (err) {
       if (err) {
         throw err
@@ -71,7 +68,6 @@ router.post('/single', VerifyToken, upload.single('file'), async (req, res) => {
   }
   catch (e){
     console.log(e);
-    // res.sendStatus(500);
   }
   
 })
