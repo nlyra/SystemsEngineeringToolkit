@@ -22,6 +22,8 @@ function NewCourse(props) {
     const [dialogData, setDialogData] = React.useState([]);
     const filter = createFilterOptions();
 
+    let validImageTypes = ["PNG", "JPEG", "GIF", "TIF", "RAW", "JPG"]
+
     const onSubmit = (e) => {
         e.preventDefault()
         if (!courseTitle || !categories || !description || !intendedAudience || !prerequisite) {
@@ -39,11 +41,32 @@ function NewCourse(props) {
 
         if (image !== undefined) { //if there is an image
 
+            const imageTypePath = image.name.split('.')
+
+            const imageType = imageTypePath[imageTypePath.length - 1]
+            const validInput = validImageTypes.includes(imageType.toUpperCase());
+
+            // If it isn't, return and allow user to input valid image
+            if (!validInput) {
+                alert('Invalid file type. Please upload an image with a proper image extension')
+                return
+            }
+
+            // Grabbing the actual filename minus extension so that we can validate alphanumeric inputs
+            var val = imageTypePath[imageTypePath.length - 2];
+            var RegEx = /[^0-9a-z]/i;
+            var isValid = !(RegEx.test(val));
+
+            // Input contains non-alphanumeric values so we must alert the user to rename the file 
+            if (isValid === false) {
+                alert('Invalid file type. Please upload an image for which name is alphanumeric.')
+                return
+            }
 
             // handle image
             const imageData = new FormData();
             imageData.append('file', image)
-            // alert(creds.categories)
+
             const res = await fetch(config.server_url + config.paths.createCourse, {
                 method: 'POST',
                 headers: {
@@ -78,9 +101,8 @@ function NewCourse(props) {
                 })
             }
 
-
-
             const data = await res.json()
+
             if (data.message === undefined) {
                 const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + data._id + "&imageName=" + image.name, {
                     method: 'POST',
