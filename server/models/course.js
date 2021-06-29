@@ -44,6 +44,18 @@ const CourseSchema = mongoose.Schema({
 
   author: {
     type: String
+  },
+
+  skillLevel: {
+    type: String
+  },
+  
+  intendedAudience: {
+    type: String
+  },
+
+  prerequisite: {
+    type: String
   }
 
 })
