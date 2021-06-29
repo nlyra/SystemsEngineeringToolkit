@@ -301,7 +301,7 @@ export default function TopNavBar(props) {
         setEmail(data.user.email)
         setRoleInfo(data.user.roleID)
 
-        if(roleInfo === 2)
+        if(data.user.roleID === 2)
         {
             setNumUsers(data.numUsers)
             setNumCourses(data.numCourses)
@@ -329,50 +329,6 @@ export default function TopNavBar(props) {
         props.history.push(`/dashboard`);
     };
 
-    // const onSubmit = (e) => {
-        
-    //     e.preventDefault()
-    //     if (firstName === user.first_name && lastName === user.last_name) {
-    //         alert('No update made!')
-    //         return
-    //     }
-
-    //     updateUserInfo({ firstName, lastName})
-    //     // setFirstName('')
-    //     // setLastName('')
-    //     // setEmail('')
-    //     // setPassword('')
-    //     // setPasswordCopy('')
-    // }
-
-    // const updateUserInfo = async (creds) => {
-
-    //     const res = await fetch(config.server_url + config.paths.updateUserInfo, {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-type': 'application/json'
-    //         },
-    //         body: JSON.stringify({ 
-    //         "first_name": creds.firstName, 
-    //         "last_name": creds.lastName, 
-    //         "email": creds.email, 
-    //         "password": creds.password, 
-    //         "password_copy": creds.passwordCopy,
-    //         "classesEnrolled": [] })
-    //     })
-
-    //     const data = await res.json()
-
-    //     if (data.message == "added user") {
-    //         alert("Success, user Created!!");
-    //         props.history.push('login')
-
-    //     } else if (data.message === "email already connected to an account") {
-    //         alert("email already connected to an account, please try again.");
-    //     } else { // this is to check if there are errors not being addressed already
-    //         console.log(data)
-    //     }
-    // }
     return (
         <div className={classes.root}>
             <AppBar
@@ -629,7 +585,15 @@ export default function TopNavBar(props) {
                                                     </div>
 
                                                     <Grid container direction="row" >
-                                                        <Grid item xs={6} sm={6} lg={12} >
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Enrolled Courses</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid item xs={6} sm={6} lg={6} >
                                                             <div className={classes.statContent}>
                                                                 <div className={classes.statText}>
                                                                     <h5>Created Courses</h5>
@@ -638,14 +602,6 @@ export default function TopNavBar(props) {
                                                             </div>
                                                         </Grid>
                                                         {/* <Grid item xs={6} sm={6} lg={4} >
-                                                            <div className={classes.statContent}>
-                                                                <div className={classes.statText}>
-                                                                    <h5>Completed Courses</h5>
-                                                                </div>
-                                                                <Avatar className={classes.statsAvi}>{user.completedCourses.length}</Avatar>
-                                                            </div>
-                                                        </Grid>
-                                                        <Grid item xs={6} sm={6} lg={4} >
                                                             <div className={classes.statContent}>
                                                                 <div className={classes.statText}>
                                                                     <h5>Courses Created</h5>
@@ -725,7 +681,16 @@ export default function TopNavBar(props) {
                                                     </div>
 
                                                     <Grid container direction="row" >
-                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                        <Grid item xs={4} sm={4} lg={4} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Courses Enrolled</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
+                                                            </div>
+                                                        </Grid>
+
+                                                        <Grid item xs={4} sm={4} lg={4} >
                                                             <div className={classes.statContent}>
                                                                 <div className={classes.statText}>
                                                                     <h5>Users in System</h5>
@@ -733,7 +698,7 @@ export default function TopNavBar(props) {
                                                                 <Avatar className={classes.statsAvi}>{numUsers}</Avatar>
                                                             </div>
                                                         </Grid>
-                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                        <Grid item xs={4} sm={4} lg={4} >
                                                             <div className={classes.statContent}>
                                                                 <div className={classes.statText}>
                                                                     <h5>Courses Overseen</h5>
