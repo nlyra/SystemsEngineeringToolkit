@@ -21,27 +21,55 @@ const upload = multer({ storage: fileStorageEngine })
 
 router.post('/single', VerifyToken, upload.single('file'), async (req, res) => {
 
-  console.log(req.query)
-  const currPath = __dirname + "/../public/" + req.query.imageName
-  const newPath = __dirname + "/../public/" + req.query.courseID + "/" + req.query.imageName
+  try {
+    
+    // validating image types in case someone attempts to access route without using frontend
+    let validImageTypes = ["PNG", "JPEG", "GIF", "TIF", "RAW", "JPG"]
+    
+    // Checking to see if the extension is one of the valid types
+    const imageTypePath = req.query.imageName.split('.')
+    const imageType = imageTypePath[imageTypePath.length - 1]
+    const validInput = validImageTypes.includes(imageType.toUpperCase());
 
-  const made = mkdirp.sync(__dirname + "/../public/" + req.query.courseID)
-
-  // console.log(req.query)
-  fs.rename(currPath, newPath, function (err) {
-    if (err) {
-      throw err
-    } else {
-      console.log(`Successfully moved the file ${req.query.imageName}!`);
+    // If it isn't, return and allow user to input valid image
+    if (!validInput) {
+      res.json({ 'status': 'Incorrect upload type' })
     }
-  });
 
-  const update = await Course.updateOne(
-    { _id: req.query.courseID },
-    { $set: { "urlImage": config.server_url + "/" + req.query.courseID + "/" + req.query.imageName } }
-  )
+    // Grabbing the actual filename minus its extension so that we can validate alphanumeric inputs
+    var val = imageTypePath[imageTypePath.length - 2];
+    var RegEx = /[^0-9a-z]/i;
+    var isValid = !(RegEx.test(val));
 
-  res.send({ "status": "Success" })
+    // If the value does contain invalid symbols (non-alphanumeric), tell user the input is invalid
+    if (isValid === false) {
+      res.json({ 'status': 'not alphanumeric' })
+    }
+
+    const currPath = __dirname + "/../public/" + req.query.imageName
+    const newPath = __dirname + "/../public/" + req.query.courseID + "/" + req.query.imageName
+
+    const made = mkdirp.sync(__dirname + "/../public/" + req.query.courseID)
+
+    fs.rename(currPath, newPath, function (err) {
+      if (err) {
+        throw err
+      } else {
+        console.log(`Successfully moved the file ${req.query.imageName}!`);
+      }
+    });
+
+    const update = await Course.updateOne(
+      { _id: req.query.courseID },
+      { $set: { "urlImage": config.server_url + "/" + req.query.courseID + "/" + req.query.imageName } }
+    )
+
+    res.send({ "status": "Success" })
+  }
+  catch (e){
+    console.log(e);
+  }
+  
 })
 
 module.exports = router;
