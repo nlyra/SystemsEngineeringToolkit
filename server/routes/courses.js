@@ -612,4 +612,22 @@ router.post('/module/completed', VerifyToken, async (req, res) => {
   }
 })
 
+router.post('/module/reorder', VerifyToken, async (req, res) => {
+
+  try {
+    const update = await Course.updateOne(
+      { _id: req.body.courseID },
+      {
+        $set: {
+          modules: req.body.modules
+        }
+      }
+    )
+
+    res.json({ 'status': 'success' })
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+})
 module.exports = router;

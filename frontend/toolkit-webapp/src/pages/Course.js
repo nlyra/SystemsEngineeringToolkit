@@ -54,14 +54,28 @@ const Course = (props) => {
     setMove(true)
   }
 
-  const handleClickClose = () => {
-    setMove(false)
-  }
+  // const handleClickClose = () => {
+  //   setMove(false)
+  // }
 
-  const handleClickSave = () => {
-    
-    setMove(false)
-  }
+  // const handleClickSave = async () => {
+  //   const token = localStorage.getItem("token");
+  //   const res = await fetch(config.server_url + config.paths.reorderModules, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-type': 'application/json'
+  //     },
+  //     body: JSON.stringify({
+  //       'token': token,
+  //       'courseID': course._id,
+  //       'modules': modules
+  //     })
+  //   })
+
+  //   const data = await res.json()
+
+  //   setMove(false)
+  // }
 
   const getCourse = async (id) => {
     const token = localStorage.getItem("token");
@@ -384,14 +398,14 @@ const Course = (props) => {
             </Button>
           </Grid>
         </Grid>
-        <Dialog
+        {/* <Dialog
           open={move}
           onClose={handleClickClose}
         >
           <DialogTitle>Reorder Modules</DialogTitle>
-          <DialogContent>
-            <MoveModules modules={modules} moduleTitles={getTitles}></MoveModules>
-          </DialogContent>
+          <DialogContent> */}
+        <MoveModules move={move} modules={modules} moduleTitles={getTitles} course={course}></MoveModules>
+        {/* </DialogContent>
           <DialogActions>
             <Button variant="contained" color="default" size="small" onClick={handleClickSave}>
               Save Changes
@@ -400,7 +414,7 @@ const Course = (props) => {
               Close
             </Button>
           </DialogActions>
-        </Dialog>
+        </Dialog> */}
         <Grid item xs={12} className={classes.accordion}>
           {/* modules starts here */}
           {modules.map((module) => (
