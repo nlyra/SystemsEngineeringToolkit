@@ -284,14 +284,20 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
 // TODO: Need to move this to fileMulter once I figure out why it's not getting called when it sits in fileMulter
 router.post('/removeFile', VerifyToken, async (req, res) => {
 
-  const pathname = req.body.imageName.split('/')
-  const imageName = pathname[pathname.length - 1]
-  console.log(imageName)
-  const path = 'public/' + req.body.courseID + '/' + imageName
-
   try {
-    fs.unlinkSync(path)
-    res.json({ 'status': 'module added' });
+
+    course = await Course.findOne({ _id: req.body.courseID }, 'urlImage')
+
+    if(course !== undefined)
+    {
+      const pathname = course.urlImage.split('/')
+      const imageName = pathname[pathname.length - 1]
+
+      const path = 'public/' + req.body.courseID + '/' + imageName
+
+      fs.unlinkSync(path)
+      res.json({ 'status': 'module added' });
+    }
 
   } catch (err) {
     console.error(err)

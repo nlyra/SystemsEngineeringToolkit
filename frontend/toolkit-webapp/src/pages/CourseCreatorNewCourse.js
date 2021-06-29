@@ -19,7 +19,7 @@ function NewCourse(props) {
     const [dialogData, setDialogData] = React.useState([]);
     const filter = createFilterOptions();
 
-    let validImageTypes = ["png", "PNG", "jpeg", "jpg"]
+    let validImageTypes = ["PNG", "JPEG", "GIF", "TIF", "RAW", "JPG"]
 
     const onSubmit = (e) => {
         e.preventDefault()
@@ -31,10 +31,6 @@ function NewCourse(props) {
         onFinish({ courseTitle, categories, description })
     }
 
-    //const onUpload = (e) => {
-    //    alert('feature undefined')
-    //    return
-    //}
 
     const onFinish = async (creds) => {
 
@@ -42,28 +38,24 @@ function NewCourse(props) {
 
         if (image !== undefined) { //if there is an image
 
-
-            // alert('image is ' + image.name)
             const imageTypePath = image.name.split('.')
-            // alert('image is ' + imageTypePath)
 
             const imageType = imageTypePath[imageTypePath.length - 1]
-            const validInput = validImageTypes.includes(imageType);
+            const validInput = validImageTypes.includes(imageType.toUpperCase());
 
             // If it isn't, return and allow user to input valid image
             if (!validInput) {
-            alert('Invalid file type. Please upload an image with the extension .jpg or .png')
-            return
+                alert('Invalid file type. Please upload an image with a proper image extension')
+                return
             }
 
             // Grabbing the actual filename minus extension so that we can validate alphanumeric inputs
             var val = imageTypePath[imageTypePath.length - 2];
             var RegEx = /[^0-9a-z]/i;
             var isValid = !(RegEx.test(val));
-    
+
             // Input contains non-alphanumeric values so we must alert the user to rename the file 
-            if (isValid === false)
-            {
+            if (isValid === false) {
                 alert('Invalid file type. Please upload an image for which name is aplhanumeric.')
                 return
             }
@@ -71,7 +63,7 @@ function NewCourse(props) {
             // handle image
             const imageData = new FormData();
             imageData.append('file', image)
-    
+
             const res = await fetch(config.server_url + config.paths.createCourse, {
                 method: 'POST',
                 headers: {
@@ -104,9 +96,8 @@ function NewCourse(props) {
             }
 
             const data = await res.json()
-            alert('image name issss ' + image.name)
+
             if (data.message === undefined) {
-            alert('image name issss ' + image.name)
                 const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + data._id + "&imageName=" + image.name, {
                     method: 'POST',
                     body: imageData
