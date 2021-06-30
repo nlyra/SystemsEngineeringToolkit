@@ -274,6 +274,7 @@ export default function TopNavBar(props) {
     const [roleInfo, setRoleInfo] = useState(-1)
     const [numUsers, setNumUsers] = useState(0)
     const [numCourses, setNumCourses] = useState(0)
+    const [loggingout, setLoggingout] = useState(false)
 
     let roles = ['Student', 'Creator', 'Admin']
 
@@ -331,10 +332,18 @@ export default function TopNavBar(props) {
     };
 
     const logout = () => {
-        
+
         localStorage.clear()
         sessionStorage.clear()
     }
+
+    const handleOpenDialog = () => {
+        setLoggingout(true);
+    }
+
+    const handleCloseDialog = () => {
+        setLoggingout(false);
+    };
 
     return (
         <div className={classes.root}>
@@ -783,7 +792,7 @@ export default function TopNavBar(props) {
                     </div>
                     <Divider />
                     <List>
-                        <Link href="/" underline='none' color="inherit" onClick={logout}>
+                        <Link underline='none' color="inherit" onClick={handleOpenDialog}>
                             <Tooltip title="Log out" enterDelay={500}>
                                 <ListItem button>
                                     <ListItemIcon><ExitToAppIcon /></ListItemIcon>
@@ -791,6 +800,25 @@ export default function TopNavBar(props) {
                                 </ListItem>
                             </Tooltip>
                         </Link>
+                        {loggingout === true ?
+                            <div className={classes.dialog}>
+                                <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" open={openDialog}>
+                                    <div className={classes.dialogTitleDiv}>
+                                        <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleCloseDialog}>
+                                            Are you sure you wish to log out of your account?
+                                        </DialogTitle>
+                                    </div>
+                                    <DialogContent className={classes.dialogContent}>
+                                        <Button type='submit' size="small" color="inherit" variant="contained" onClick={() => logout}>
+                                            Yes
+                                        </Button>
+                                        <Button type='submit' size="small" color="inherit" variant="contained" >
+                                            No
+                                        </Button>
+                                    </DialogContent>
+                                </Dialog>
+                            </div>
+                            : null}
                         <Link href="/newCourse" underline='none' color="inherit">
                             <Tooltip title="Create Course" enterDelay={500}>
                                 <ListItem button>
@@ -837,9 +865,10 @@ export default function TopNavBar(props) {
                             </Tooltip>
                         </Link>
                     </List>
-                </Drawer>
-                : null}
-        </div>
+                </Drawer >
+                : null
+            }
+        </div >
     )
 
 }
