@@ -15,9 +15,15 @@ const dashStyles = makeStyles((theme) => ({
     {
         height: '100%',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        border: '2px solid purple',
+        borderRadius: '10px'
     },
 
+    cardTitle:
+    {
+        textAlign: 'center'
+    },
     cardMedia:
     {
         paddingTop: '56.25%',
@@ -27,6 +33,14 @@ const dashStyles = makeStyles((theme) => ({
     CardContent:
     {
         flexGrow: 1,
+        marginTop: '5px',
+        padding: 0,
+        "&:last-child": {
+        paddingBottom: 0
+        },
+        marginTop: '3%',
+        marginLeft: '5%',
+        marginRight: '2%'
     },
     grow:
     {

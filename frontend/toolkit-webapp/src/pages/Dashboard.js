@@ -98,9 +98,11 @@ const Dashboard = (props) => {
                                         title="Title"
                                     />
                                     <CardContent className={classes.CardContent}>
+                                        <div className={classes.cardTitle}>
                                         <Typography variant="h5">
                                             {course.name}
                                         </Typography>
+                                        </div>
                                         <Typography gutterBottom>
                                             {course.description.length < 100 ? course.description : course.description.substr(0, 100) + ' ...'}
                                         </Typography>
