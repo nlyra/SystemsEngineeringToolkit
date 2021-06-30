@@ -1,24 +1,142 @@
 import React, { useState } from 'react'
-import { fade, makeStyles, IconButton, AppBar, Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
+import { fade, makeStyles, IconButton, AppBar, Paper, TextField, Typography } from "@material-ui/core";
+import { Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
+import {Avatar, Dialog, DialogTitle, DialogActions, DialogContent, Grid} from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu'
+import {deepPurple, grey, amber } from '@material-ui/core/colors';
+import config from '../config.json'
 import SearchIcon from '@material-ui/icons/Search'
 import AccountCircle from '@material-ui/icons/AccountCircle';
-//import logo from '../img/peostrilogo.png';
+import Button from '@material-ui/core/Button';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import DescriptionIcon from '@material-ui/icons/Description';
+import BookOutlinedIcon from '@material-ui/icons/BookOutlined';
+import HomeIcon from '@material-ui/icons/Home';
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
+
 import clsx from 'clsx';
+import { Link } from '@material-ui/core';
+
 const logo_url = "http://localhost:4000/misc_files/logo.jpg"
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
+
     root:
     {
-        display: 'flex',
+        // display: 'flex',
+        // height: '5vh',
     },
+
+    dialog:
+    {
+        position: 'absolute',
+        minWidth: '30%'
+
+    },
+
+    dialogContent:
+    {
+        width: '40vh'
+    },
+
+    divider:
+    {
+        border: '1px solid grey',
+        borderRadius: '10px',
+        backgroundColor: 'grey'
+    },
+
+    dialogTitle:
+    {
+        textAlign: 'center',
+        verticalAlign: 'middle',
+        backgroundColor: grey[900],
+        border: '2px solid white'
+    },
+
+    avatar:
+    {
+        color: theme.palette.getContrastText(deepPurple[500]),
+        backgroundColor: deepPurple[500],
+        height: '6vh',
+        width: '6vh',
+        margin: 'auto'
+    },
+
+
+    statContent:
+    {
+        verticalAlign: 'right',
+        margin: 'auto',
+        width: '100%',
+        alignSelf: 'center'
+    },
+
+    // statsDiv:
+    // {
+    //     width: '100%',
+    // },
+
+    statsTitle:
+    {
+        textAlign: 'center',
+        verticalAlign: 'middle',
+        textDecoration: 'underline'
+    },
+
+    statsAvi: 
+    {
+        color: theme.palette.getContrastText(amber[600]),
+        backgroundColor: amber[600],
+        border: '1px solid black',
+        margin: 'auto'
+        // borderRadius: '4px'
+    },
+
+    roleAvi: 
+    {
+        color: theme.palette.getContrastText(amber[600]),
+        backgroundColor: amber[600],
+
+        // For the avatar that uses this color. Can be changed to another div if needed
+        width: '10vh',
+        // paddingTop: '10px'
+        marginTop: '5%',
+        marginLeft: '15%',
+        border: '1px solid black',
+        borderRadius: '8px',
+    },
+
+    roleStatContent:
+    {
+        // verticalAlign: 'middle',
+        // margin: 'auto',
+        width: '100%'
+        // backgroundColor: 'cyan'
+    },
+
+    roleText:
+    {
+        width: '100%',
+        textAlign: 'center'
+
+    },
+    
+    roleGrid:
+    {
+        justifyContent: 'center'
+    },
+
+    statText:
+    {
+        width: '100%',
+        textAlign: 'center'
+    },
+
     search: {
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
@@ -38,6 +156,16 @@ const useStyles = makeStyles((theme) => ({
     },
     searchIcon: {
         padding: theme.spacing(0, 2),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    searchIcon2: {
+        padding: theme.spacing(0, 5),
         height: '100%',
         position: 'absolute',
         pointerEvents: 'none',
@@ -65,8 +193,7 @@ const useStyles = makeStyles((theme) => ({
     },
     horizontalCenteringLogo: {
         position: 'absolute',
-
-        left: '50%',
+        left: '66%',
         top: '50%',
         transform: 'translate(-50%, -50%)'
     },
@@ -99,7 +226,7 @@ const useStyles = makeStyles((theme) => ({
     },
     toolbar: {
         display: 'flex',
-        alignItems: 'center',
+        // alignItems: 'center',
         justifyContent: 'flex-end',
         padding: theme.spacing(0, 1),
         // necessary for content to be below app bar
@@ -125,13 +252,70 @@ const useStyles = makeStyles((theme) => ({
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
+    // iconbutton:{
+    //     position:'relative',
+    //     paddingLeft:theme.spacing(0,2)
+    // }
 }))
 
 
-export default function TopNavBar({ search, hideComponents }) {
+export default function TopNavBar(props) {
+
 
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [user, setUser] = useState({})
+    const [firstName, setFirstName] = useState('')
+    const [lastName, setLastName] = useState('')
+    const [email, setEmail] = useState('')
+    const [roleInfo, setRoleInfo] = useState(-1)
+    const [numUsers, setNumUsers] = useState(0)
+    const [numCourses, setNumCourses] = useState(0)
+
+    let roles = ['Student', 'Creator', 'Admin']
+
+    // TODO: Consider a better way to handle this, as it will be making an api call every time the user
+    // opens their profile page. 
+    
+    const handleClickOpen = async () => {
+    
+        // Retrieve token, then feed topNavBar with information about the current user
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(config.server_url + config.paths.getUserInfo, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                "token": token
+            })
+        })
+
+        const data = await res.json()
+
+        setUser(data.user)
+        setFirstName(data.user.first_name)
+        setLastName(data.user.last_name)
+        setEmail(data.user.email)
+        setRoleInfo(data.user.roleID)
+
+        if(data.user.roleID === 2)
+        {
+            setNumUsers(data.numUsers)
+            setNumCourses(data.numCourses)
+        }
+        // setData(data.storageData)
+        // alert(data.storageData.numUsers)
+        setOpenDialog(true)
+
+
+    }
+
+    const handleClose = () => {
+        setOpenDialog(false);
+    };
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -139,6 +323,10 @@ export default function TopNavBar({ search, hideComponents }) {
 
     const handleDrawerClose = () => {
         setOpen(false);
+    };
+
+    const test = (val) => {
+        props.history.push(`/dashboard`);
     };
 
     return (
@@ -151,7 +339,7 @@ export default function TopNavBar({ search, hideComponents }) {
                 })}
             >
                 <Toolbar>
-                    {hideComponents !== true ?
+                    {props.hideComponents !== true ?
                         <>
                             <IconButton
                                 color="inherit"
@@ -164,20 +352,31 @@ export default function TopNavBar({ search, hideComponents }) {
                             >
                                 <MenuIcon style={{ color: "white" }}></MenuIcon>
                             </IconButton>
-                            <div className={classes.search}>
-                                <div className={classes.searchIcon}>
-                                    <SearchIcon></SearchIcon>
+                            {window.location.pathname === "/dashboard" ||
+                                window.location.pathname === "/MyCourses" ||
+                                window.location.pathname === "/ManageMyCourses" ?
+                                <div className={classes.search}>
+                                    <div className={classes.searchIcon}>
+                                        <SearchIcon></SearchIcon>
+                                    </div>
+
+                                    < InputBase
+                                        placeholder="Search..."
+                                        classes={{
+                                            root: classes.inputRoot,
+                                            input: classes.inputInput,
+                                        }}
+                                        inputProps={{ 'aria-label': 'search' }}
+                                        onChange={e => props.search(e.target.value)}
+                                    />
                                 </div>
-                                <InputBase
-                                    placeholder="Search..."
-                                    classes={{
-                                        root: classes.inputRoot,
-                                        input: classes.inputInput,
-                                    }}
-                                    inputProps={{ 'aria-label': 'search' }}
-                                    onChange={e => search(e.target.value)}
-                                />
-                            </div>
+                                :
+                                <Link href="/dashboard" underline='none' color="inherit">
+                                    {/* <div className={classes.searchIcon2}> */}
+                                    <SearchIcon></SearchIcon>
+                                    {/* </div> */}
+                                </Link>
+                            }
                         </>
                         : null}
                     <div className={classes.horizontalCenteringLogo}>
@@ -194,23 +393,369 @@ export default function TopNavBar({ search, hideComponents }) {
                         {/* <NotificationsIcon /> */}
                         {/* </Badge> */}
                         {/* </IconButton> */}
-                        {hideComponents !== true ?
-                            <IconButton
-                                edge="end"
-                                aria-label="account of current user"
-                                //aria-controls={menuId}
-                                aria-haspopup="true"
-                                //onClick={handleProfileMenuOpen}
-                                color="inherit"
-                            >
-                                <AccountCircle />
-                            </IconButton>
+                        {props.hideComponents !== true ?
+                            <Tooltip title="My Profile" >
+                                <IconButton
+                                    edge="end"
+                                    aria-label="account of current user"
+                                    //aria-controls={menuId}
+                                    aria-haspopup="true"
+                                    onClick={handleClickOpen}
+                                    color="inherit"
+                                    className={classes.iconbutton}
+                                >
+                                    <AccountCircle />
+                                </IconButton>
+                            </Tooltip>
+
+                            : null}
+                        
+
+                        {openDialog === true ?
+
+                            <div className={classes.dialog}>
+                                <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={openDialog}>
+                                    <div className={classes.dialogTitleDiv}>
+                                        <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleClose}>
+                                            <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar>
+                                            {/* Your Profile */}
+                                        </DialogTitle>
+                                    </div>
+                                    <DialogContent className={classes.dialogContent}>
+                                        {roleInfo === 0 ?
+                                            <form autoComplete="off">
+                                                {/* <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar> */}
+                                                <div className={classes.TextBox} alignItems="center">
+                                                    <TextField color='primary'
+                                                        alignContent="center"
+                                                        size='small'
+                                                        variant="outlined"
+                                                        label='First Name'
+                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                                                        type="text"
+                                                        defaultValue={user.first_name}
+                                                        // onChange={e => setFirstName(e.target.value)}
+                                                        margin="normal"
+                                                        required={false}
+                                                        fullWidth
+                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                                                    />
+                                                    <br />
+                                                    <TextField color='primary'
+                                                        size='small'
+                                                        variant="outlined"
+                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                                                        label='Last Name'
+                                                        type="text"
+                                                        defaultValue={user.last_name}
+                                                        // onChange={e => setLastName(e.target.value)}
+                                                        margin="normal"
+                                                        required={false}
+                                                        fullWidth
+                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                                                    />
+                                                    <br />
+                                                    <TextField color='primary'
+                                                        size='small'
+                                                        variant="outlined"
+                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                                                        label='Email'
+                                                        type="text"
+                                                        defaultValue={user.email}
+                                                        // onChange={e => setEmail(e.target.value)}
+                                                        margin="normal"
+                                                        required={false}
+                                                        fullWidth
+                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                                                    />
+                                                    <Grid container direction="row" className={classes.roleGrid}>
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <div className={classes.roleStatContent}>
+                                                                <div className={classes.roleText}>
+                                                                    <h3>User Role</h3>
+                                                                </div>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <Avatar variant="rounded" className={classes.roleAvi}>{roles[user.roleID]}</Avatar>
+                                                        </Grid>
+                                                    </Grid>
+
+                                                    <Grid item xs={12}>
+                                                        <Divider variant='fullWidth' className={classes.divider} />
+                                                    </Grid>
+                                                    <div className={classes.statsTitle}>
+                                                        <h1>Stats</h1>
+                                                    </div>
+
+                                                    <Grid container direction="row" >
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Enrolled Courses</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Completed Courses</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{user.completedCourses.length}</Avatar>
+                                                            </div>
+                                                        </Grid>
+                                                        {/* <Grid item xs={6} sm={6} lg={4} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Courses Created</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{user.createdCourses.length}</Avatar>
+                                                            </div>
+                                                        </Grid> */}
+                                                    </Grid>
+                                                </div>
+                                            </form>
+                                            : null}
+
+                                        {roleInfo === 1 ?
+                                            <form autoComplete="off">
+                                                {/* <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar> */}
+                                                <div className={classes.TextBox} alignItems="center">
+                                                    <TextField color='primary'
+                                                        alignContent="center"
+                                                        size='small'
+                                                        variant="outlined"
+                                                        label='First Name'
+                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                                                        type="text"
+                                                        defaultValue={user.first_name}
+                                                        // onChange={e => setFirstName(e.target.value)}
+                                                        margin="normal"
+                                                        required={false}
+                                                        fullWidth
+                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                                                    />
+                                                    <br />
+                                                    <TextField color='primary'
+                                                        size='small'
+                                                        variant="outlined"
+                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                                                        label='Last Name'
+                                                        type="text"
+                                                        defaultValue={user.last_name}
+                                                        // onChange={e => setLastName(e.target.value)}
+                                                        margin="normal"
+                                                        required={false}
+                                                        fullWidth
+                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                                                    />
+                                                    <br />
+                                                    <TextField color='primary'
+                                                        size='small'
+                                                        variant="outlined"
+                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                                                        label='Email'
+                                                        type="text"
+                                                        defaultValue={user.email}
+                                                        // onChange={e => setEmail(e.target.value)}
+                                                        margin="normal"
+                                                        required={false}
+                                                        fullWidth
+                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                                                    />
+                                                    <Grid container direction="row" className={classes.roleGrid}>
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <div className={classes.roleStatContent}>
+                                                                <div className={classes.roleText}>
+                                                                    <h3>User Role</h3>
+                                                                </div>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <Avatar variant="rounded" className={classes.roleAvi}>{roles[user.roleID]}</Avatar>
+                                                        </Grid>
+                                                    </Grid>
+
+                                                    <Grid item xs={12}>
+                                                        <Divider variant='fullWidth' className={classes.divider} />
+                                                    </Grid>
+                                                    <div className={classes.statsTitle}>
+                                                        <h1>Stats</h1>
+                                                    </div>
+
+                                                    <Grid container direction="row" >
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Enrolled Courses</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Created Courses</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{user.createdCourses.length}</Avatar>
+                                                            </div>
+                                                        </Grid>
+                                                        {/* <Grid item xs={6} sm={6} lg={4} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Courses Created</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{user.createdCourses.length}</Avatar>
+                                                            </div>
+                                                        </Grid> */}
+                                                    </Grid>
+                                                </div>
+                                            </form>
+                                            : null}
+
+                                        {roleInfo === 2 ?
+                                            <form autoComplete="off">
+                                                {/* <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar> */}
+                                                <div className={classes.TextBox} alignItems="center">
+                                                    <TextField color='primary'
+                                                        alignContent="center"
+                                                        size='small'
+                                                        variant="outlined"
+                                                        label='First Name'
+                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                                                        type="text"
+                                                        defaultValue={user.first_name}
+                                                        // onChange={e => setFirstName(e.target.value)}
+                                                        margin="normal"
+                                                        required={false}
+                                                        fullWidth
+                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                                                    />
+                                                    <br />
+                                                    <TextField color='primary'
+                                                        size='small'
+                                                        variant="outlined"
+                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                                                        label='Last Name'
+                                                        type="text"
+                                                        defaultValue={user.last_name}
+                                                        // onChange={e => setLastName(e.target.value)}
+                                                        margin="normal"
+                                                        required={false}
+                                                        fullWidth
+                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                                                    />
+                                                    <br />
+                                                    <TextField color='primary'
+                                                        size='small'
+                                                        variant="outlined"
+                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                                                        label='Email'
+                                                        type="text"
+                                                        defaultValue={user.email}
+                                                        // onChange={e => setEmail(e.target.value)}
+                                                        margin="normal"
+                                                        required={false}
+                                                        fullWidth
+                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+                                                    />
+                                                    <Grid container direction="row" className={classes.roleGrid}>
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <div className={classes.roleStatContent}>
+                                                                <div className={classes.roleText}>
+                                                                    <h3>User Role</h3>
+                                                                </div>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <Avatar variant="rounded" className={classes.roleAvi}>{roles[user.roleID]}</Avatar>
+                                                        </Grid>
+                                                    </Grid>
+
+                                                    <Grid item xs={12}>
+                                                        <Divider variant='fullWidth' className={classes.divider} />
+                                                    </Grid>
+                                                    <div className={classes.statsTitle}>
+                                                        <h1>Stats</h1>
+                                                    </div>
+
+                                                    <Grid container direction="row" >
+                                                        <Grid item xs={4} sm={4} lg={4} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Courses Enrolled</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
+                                                            </div>
+                                                        </Grid>
+
+                                                        <Grid item xs={4} sm={4} lg={4} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Users in System</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{numUsers}</Avatar>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid item xs={4} sm={4} lg={4} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Courses Overseen</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{numCourses}</Avatar>
+                                                            </div>
+                                                        </Grid>
+                                                        {/* <Grid item xs={6} sm={6} lg={4} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Courses Created</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{user.createdCourses.length}</Avatar>
+                                                            </div>
+                                                        </Grid> */}
+                                                    </Grid>
+                                                </div>
+                                            </form>
+                                            : null}
+
+
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Button autoFocus onClick={handleClose} color="primary">
+                                            Close Page
+                                        </Button>
+                                    </DialogActions>
+                                </Dialog>
+                            </div>
+
+                            : null}
+
+                            {window.location.pathname !== "/" && 
+                            window.location.pathname !== "/registration" && 
+                            window.location.pathname !== "/forgot" &&
+                            window.location.pathname !== "/reset/" + props.tokenProp &&
+                            window.location.pathname !== "/reset/" &&
+                            window.location.pathname !== "/login" ?
+                            <Link href="/dashboard" underline='none' color="inherit">
+                                <Tooltip title="Home Screen" >
+                                    <IconButton
+                                        edge="end"
+                                        aria-label="homescreen"
+                                        aria-haspopup="true"
+                                        color="inherit"
+                                    >
+                                        <HomeIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </Link>
+
                             : null}
                     </div>
                 </Toolbar>
             </AppBar>
 
-            {hideComponents !== true ?
+            {props.hideComponents !== true ?
                 <Drawer
                     variant="permanent"
                     className={clsx(classes.drawer, {
@@ -231,33 +776,51 @@ export default function TopNavBar({ search, hideComponents }) {
                     </div>
                     <Divider />
                     <List>
-                        <Tooltip title="Create Course" enterDelay={500}>
-                            <ListItem button>
-                                <ListItemIcon><PostAddIcon /></ListItemIcon>
-                                <ListItemText primary="Create Course" />
-                            </ListItem>
+                        <Link href="/newCourse" underline='none' color="inherit">
+                            <Tooltip title="Create Course" enterDelay={500}>
+                                <ListItem button>
+                                    <ListItemIcon><PostAddIcon /></ListItemIcon>
+                                    <ListItemText primary="Create Course" />
+                                </ListItem>
+                            </Tooltip>
+                        </Link>
+
+                        <Link href="/MyCourses" underline='none' color="inherit">
+                            <Tooltip title="My Courses" enterDelay={500}>
+                                <ListItem button>
+                                    <ListItemIcon><MenuBookIcon /></ListItemIcon>
+                                    <ListItemText primary="My Courses" />
+                                </ListItem>
+                            </Tooltip>
+                        </Link>
+
+                        <Link href="/MyFiles" underline='none' color="inherit">
+                            <Tooltip title="My Files" enterDelay={500}>
+                                <ListItem button>
+                                    <ListItemIcon><DescriptionIcon /></ListItemIcon>
+                                    <ListItemText primary="My Files" />
+                                </ListItem>
+                            </Tooltip>
+                        </Link>
+
+                        <Tooltip title="Admin Dashboard" enterDelay={500}>
+                            <Link href="/admindashboard" underline='none' color="inherit">
+                                <ListItem button>
+                                    <ListItemIcon><VerifiedUserIcon /></ListItemIcon>
+                                    <ListItemText primary="Admin Dashboard" />
+                                </ListItem>
+                            </Link>
                         </Tooltip>
 
-                        <Tooltip title="My Courses" enterDelay={500}>
-                            <ListItem button>
-                                <ListItemIcon><MenuBookIcon /></ListItemIcon>
-                                <ListItemText primary="My Courses" />
-                            </ListItem>
-                        </Tooltip>
-
-                        <Tooltip title="My Files" enterDelay={500}>
-                            <ListItem button>
-                                <ListItemIcon><DescriptionIcon /></ListItemIcon>
-                                <ListItemText primary="My Files" />
-                            </ListItem>
-                        </Tooltip>
-
-                        <Tooltip title="Calendar" enterDelay={500}>
-                            <ListItem button>
-                                <ListItemIcon><CalendarTodayIcon /></ListItemIcon>
-                                <ListItemText primary="Calendar" />
-                            </ListItem>
-                        </Tooltip>
+                        {/* <Tooltip title="Calendar" enterDelay={500}>*/}
+                        <Link href="/ManageMyCourses" underline='none' color="inherit">
+                            <Tooltip title="My Created Courses" enterDelay={500}>
+                                <ListItem button>
+                                    <ListItemIcon><BookOutlinedIcon /></ListItemIcon>
+                                    <ListItemText primary="My Created Courses" />
+                                </ListItem>
+                            </Tooltip>
+                        </Link>
                     </List>
                 </Drawer>
                 : null}

@@ -15,6 +15,7 @@ const Dashboard = (props) => {
     
     let skip = 1
 
+    // const [cardAmount, setCardAmount] = useState()
     const [coursesPerPage, setCoursesPerPage] = useState(5)
     // const [searchQuery, setSearchQuery] = useState(undefined)
 
@@ -97,7 +98,7 @@ const Dashboard = (props) => {
                     <Grid container spacing={3}>
                         {courses.map((course) => (
 
-                            <Grid item key={course.name} xs={12} sm={4} md={3}>
+                            <Grid item key={course._id} xs={12} sm={4} md={3}>
                                 <Card
                                     className={classes.card}
                                     onClick={() => onCourse(course)}
@@ -112,7 +113,7 @@ const Dashboard = (props) => {
                                             {course.name}
                                         </Typography>
                                         <Typography gutterBottom>
-                                            {course.description.length < 100 ? course.description : course.description.substr(0, 100) + ' ...'}
+                                            {course.description.length < 100 ? course.description : course.description.substr(0, 100) + '...'}
                                         </Typography>
                                         <CardActions>
                                         </CardActions>

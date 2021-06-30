@@ -4,13 +4,14 @@ const loginStyles = makeStyles((theme) => ({
 
     Title:
     {
-        fontWeight: "bold"
+        fontWeight: "bold",
+        textAlign: "center"
     },
 
     container: {
         height: "100vh",
         width: "100vw",
-        backgroundColor: "rgba(0,0,0,0.5)",
+        backgroundColor: "rgba(0,0,0,0.9)",
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'
@@ -43,6 +44,20 @@ const loginStyles = makeStyles((theme) => ({
             color: 'black'
         }
     },
+
+    resetPassButton:
+    {
+        // paddingBottom: '2px',
+        marginTop: theme.spacing(2),
+        textAlign: "center",
+        // marginBottom: theme.spacing(2),
+        backgroundColor: 'black',
+        color: 'white',
+        "&:hover": {
+            color: 'black'
+        }
+    },
+
     button2:
     {
         fontSize: 10,
