@@ -263,9 +263,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TopNavBar(props) {
 
-
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [user, setUser] = useState({})
   const [firstName, setFirstName] = useState('')
@@ -327,12 +326,9 @@ export default function TopNavBar(props) {
     setOpen(false);
   };
 
-  const test = (val) => {
-    props.history.push(`/dashboard`);
-  };
-
   const logout = () => {
-
+    // alert("you are now signing out")
+    // props.history.push(`/login`)
     localStorage.clear()
     sessionStorage.clear()
   }
@@ -792,7 +788,7 @@ export default function TopNavBar(props) {
           </div>
           <Divider />
           <List>
-            <Link href='/' underline='none' color="inherit" onClick={logout}>
+            <Link onClick={handleOpenDialog} underline='none' color="inherit" >
               <Tooltip title="Log out" enterDelay={500}>
                 <ListItem button>
                   <ListItemIcon><ExitToAppIcon /></ListItemIcon>
@@ -800,25 +796,23 @@ export default function TopNavBar(props) {
                 </ListItem>
               </Tooltip>
             </Link>
-            {/* {loggingout === true ?
-              <div className={classes.dialog}>
-                <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" open={openDialog}>
-                  <div className={classes.dialogTitleDiv}>
-                    <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleCloseDialog}>
-                      Are you sure you wish to log out of your account?
-                    </DialogTitle>
-                  </div>
-                  <DialogContent className={classes.dialogContent}>
-                    <Button type='submit' size="small" color="inherit" variant="contained" onClick={() => logout}>
-                      Yes
-                    </Button>
-                    <Button type='submit' size="small" color="inherit" variant="contained" >
-                      No
-                    </Button>
-                  </DialogContent>
-                </Dialog>
-              </div>
-              : null} */}
+            <div className={classes.dialog}>
+              <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" open={loggingout}>
+                <div className={classes.dialogTitleDiv}>
+                  <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleCloseDialog}>
+                    Are you sure you wish to log out of your account?
+                  </DialogTitle>
+                </div>
+                <DialogContent className={classes.dialogContent}>
+                  <Button href='\' type='submit' size="small" color="inherit" variant="contained" onClick={logout}>
+                    Yes
+                  </Button>
+                  <Button type='submit' size="small" color="inherit" variant="contained" onClick={handleCloseDialog}>
+                    No
+                  </Button>
+                </DialogContent>
+              </Dialog>
+            </div>
             <Link href="/newCourse" underline='none' color="inherit">
               <Tooltip title="Create Course" enterDelay={500}>
                 <ListItem button>
