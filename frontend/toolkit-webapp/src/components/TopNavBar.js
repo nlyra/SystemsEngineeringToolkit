@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { fade, makeStyles, IconButton, AppBar, Paper, TextField, Typography } from "@material-ui/core";
 import { Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
-import {Avatar, Dialog, DialogTitle, DialogActions, DialogContent, Grid} from "@material-ui/core";
+import { Avatar, Dialog, DialogTitle, DialogActions, DialogContent, Grid } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu'
-import {deepPurple, grey, amber } from '@material-ui/core/colors';
+import { deepPurple, grey, amber } from '@material-ui/core/colors';
 import config from '../config.json'
 import SearchIcon from '@material-ui/icons/Search'
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -14,6 +14,8 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import DescriptionIcon from '@material-ui/icons/Description';
 import BookOutlinedIcon from '@material-ui/icons/BookOutlined';
 import HomeIcon from '@material-ui/icons/Home';
+// import LogoutIcon from '@material-ui/icons/Logout';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 
 import clsx from 'clsx';
@@ -88,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
         textDecoration: 'underline'
     },
 
-    statsAvi: 
+    statsAvi:
     {
         color: theme.palette.getContrastText(amber[600]),
         backgroundColor: amber[600],
@@ -97,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
         // borderRadius: '4px'
     },
 
-    roleAvi: 
+    roleAvi:
     {
         color: theme.palette.getContrastText(amber[600]),
         backgroundColor: amber[600],
@@ -125,7 +127,7 @@ const useStyles = makeStyles((theme) => ({
         textAlign: 'center'
 
     },
-    
+
     roleGrid:
     {
         justifyContent: 'center'
@@ -277,9 +279,9 @@ export default function TopNavBar(props) {
 
     // TODO: Consider a better way to handle this, as it will be making an api call every time the user
     // opens their profile page. 
-    
+
     const handleClickOpen = async () => {
-    
+
         // Retrieve token, then feed topNavBar with information about the current user
         const token = localStorage.getItem("token");
 
@@ -301,8 +303,7 @@ export default function TopNavBar(props) {
         setEmail(data.user.email)
         setRoleInfo(data.user.roleID)
 
-        if(data.user.roleID === 2)
-        {
+        if (data.user.roleID === 2) {
             setNumUsers(data.numUsers)
             setNumCourses(data.numCourses)
         }
@@ -328,6 +329,12 @@ export default function TopNavBar(props) {
     const test = (val) => {
         props.history.push(`/dashboard`);
     };
+
+    const logout = () => {
+        
+        localStorage.clear()
+        sessionStorage.clear()
+    }
 
     return (
         <div className={classes.root}>
@@ -409,7 +416,7 @@ export default function TopNavBar(props) {
                             </Tooltip>
 
                             : null}
-                        
+
 
                         {openDialog === true ?
 
@@ -731,8 +738,8 @@ export default function TopNavBar(props) {
 
                             : null}
 
-                            {window.location.pathname !== "/" && 
-                            window.location.pathname !== "/registration" && 
+                        {window.location.pathname !== "/" &&
+                            window.location.pathname !== "/registration" &&
                             window.location.pathname !== "/forgot" &&
                             window.location.pathname !== "/reset/" + props.tokenProp &&
                             window.location.pathname !== "/reset/" &&
@@ -776,6 +783,14 @@ export default function TopNavBar(props) {
                     </div>
                     <Divider />
                     <List>
+                        <Link href="/" underline='none' color="inherit" onClick={logout}>
+                            <Tooltip title="Log out" enterDelay={500}>
+                                <ListItem button>
+                                    <ListItemIcon><ExitToAppIcon /></ListItemIcon>
+                                    <ListItemText primary="Log out" />
+                                </ListItem>
+                            </Tooltip>
+                        </Link>
                         <Link href="/newCourse" underline='none' color="inherit">
                             <Tooltip title="Create Course" enterDelay={500}>
                                 <ListItem button>
