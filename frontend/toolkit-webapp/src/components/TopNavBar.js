@@ -3,7 +3,7 @@ import { fade, makeStyles, IconButton, AppBar, Paper, TextField, Typography } fr
 import { Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
 import { Avatar, Dialog, DialogTitle, DialogActions, DialogContent, Grid } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu'
-import { deepPurple, grey, amber } from '@material-ui/core/colors';
+import { white, deepPurple, grey, amber } from '@material-ui/core/colors';
 import config from '../config.json'
 import SearchIcon from '@material-ui/icons/Search'
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -254,6 +254,13 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
+
+  logoutDialogTitle: {
+    textAlign: 'center',
+    verticalAlign: 'middle',
+    backgroundColor: grey[50],
+    border: '2px solid white'
+  }
   // iconbutton:{
   //     position:'relative',
   //     paddingLeft:theme.spacing(0,2)
@@ -799,7 +806,7 @@ export default function TopNavBar(props) {
             <div className={classes.dialog}>
               <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" open={loggingout}>
                 <div className={classes.dialogTitleDiv}>
-                  <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleCloseDialog}>
+                  <DialogTitle id="customized-dialog-title" className={classes.logoutDialogTitle} onClose={handleCloseDialog}>
                     Are you sure you wish to log out of your account?
                   </DialogTitle>
                 </div>
