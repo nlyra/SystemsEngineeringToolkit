@@ -184,7 +184,51 @@ router.post('/resetPassApproved', async (req, res) => {
 
 })
 
+async function getRole(req, res, next) {
+
+    const role = await User.findOne({ _id: req.body.userID }, 'roleID')
+    req.body.roleID = role.roleID;
+
+    next();
+
+}
+
+router.post('/isadmin', verifyToken, getRole, async (req, res) => {
+
+    try {
+
+        if (req.body.roleID == 2)
+            res.json({ message: "yes" })
+        else
+            res.json({ message: "no" })
+
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+
+})
+
+router.post('/iscreator', verifyToken, getRole, async (req, res) => {
+
+    try {
+
+        if (req.body.roleID == 1)
+            res.json({ message: "yes" })
+        else
+            res.json({ message: "no" })
+
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+
+})
+
+
+
 module.exports = {
     router,
-    verifyToken
+    verifyToken,
+    getRole
 };

@@ -16,7 +16,7 @@ function NewCourse(props) {
     const [categories, setCategories] = useState([])
     const [description, setDescription] = useState('')
     const [image, setImage] = useState()
-    const [dialogData, setDialogData] = React.useState([]);
+    const [dialogData, setDialogData] = useState([]);
     const filter = createFilterOptions();
 
     let validImageTypes = ["PNG", "JPEG", "GIF", "TIF", "RAW", "JPG"]
@@ -93,19 +93,27 @@ function NewCourse(props) {
                         "label": newTag.label
                     }),
                 })
+                const data = await res.json()
+
+                if (data.message === "unauthorized") {
+                    props.history.push('dashboard');
+                }
             }
 
             const data = await res.json()
 
-            if (data.message === undefined) {
+            if (data.message === "unauthorized") {
+                props.history.push('dashboard');
+            } else if (data.message === undefined) {
                 const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + data._id + "&imageName=" + image.name, {
                     method: 'POST',
                     body: imageData
                 })
                 const data2 = await res.json()
-                console.log(data2)
 
-                if (data2.status === 'Success') {
+                if (data2.message === "unauthorized") {
+                    props.history.push('dashboard');
+                } else if (data2.status === 'Success') {
                     alert("Successfully created course!")
                     props.history.push('/dashboard')// needs to be changed to course manager
                 } //else need to do something, not sure what rn
@@ -129,6 +137,11 @@ function NewCourse(props) {
                         "label": newTag.label
                     }),
                 })
+                const data = await res.json()
+
+                if (data.message === "unauthorized") {
+                    props.history.push('dashboard');
+                }
             }
 
             const res2 = await fetch(config.server_url + config.paths.createCourse, {
@@ -147,7 +160,10 @@ function NewCourse(props) {
             }
             )
             const data = await res2.json()
-            if (data.message === undefined) {
+
+            if (data.message === "unauthorized") {
+                props.history.push('dashboard');
+            } else if (data.message === undefined) {
                 alert("Successfully created course!")
                 props.history.push('/dashboard')// needs to be changed to course manager
             } else { // this is to check if there are errors not being addressed already
@@ -164,6 +180,7 @@ function NewCourse(props) {
     // useEffect() hook will make it so it only gets rendered once, once the page loads,
     // as opposed to after every time the form is rendered (as long as the array at the end remains empty).
     useEffect(() => {
+        getAuthorization();
 
         const categoriesCollection = async () => {
             const token = localStorage.getItem("token");
@@ -178,11 +195,36 @@ function NewCourse(props) {
             })
 
             const fetchedCategories = await res.json()
-            setDialogData(fetchedCategories.categories)
+            if (fetchedCategories.message === "unauthorized") {
+                console.log(fetchedCategories.message)
+                props.history.push('dashboard');
+            } else
+                setDialogData(fetchedCategories.categories)
         }
         categoriesCollection()
 
     }, []);
+
+    const getAuthorization = async () => {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(config.server_url + config.paths.getIsCreator, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                "token": token
+            })
+        })
+
+        const data = await res.json()
+        // console.log(data.message)
+        if (data.message !== "yes") {
+            props.history.push('/dashboard');
+        }
+
+    }
 
     return (
         <div>
@@ -265,7 +307,7 @@ function NewCourse(props) {
                             <input type="file" name="picture" accept="image/*" onChange={e => setImage(e.target.files[0])} />
                             <Button type='submit' className={classes.button4} size="medium" variant="contained" startIcon={<ArrowForwardIcon />} onClick={onSubmit}>
                                 Submit
-                        </Button>
+                            </Button>
                         </Paper>
                     </form>
                 </div>
