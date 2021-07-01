@@ -249,6 +249,8 @@ router.post('/create', VerifyToken, GetRole, async (req, res) => {
     const savedCourse = await course.save();
 
     findCourse = await Course.findOne({ "name": req.body.name, "description": req.body.description }, '_id')
+
+    
     // console.log(findCourse._id)
     const updateUser = await User.updateOne(
       { _id: req.body.userID },
@@ -289,7 +291,7 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
       { _id: req.body.courseID },
       {
         $pull: { studentsEnrolled: req.body.userID },
-        // $inc: { currStudents: -1 }
+        $inc: { currStudents: -1 }
       })
 
     res.json({ 'status': 'success' })
@@ -309,14 +311,20 @@ router.post('/removeFile', VerifyToken, GetRole, async (req, res) => {
   }
 
 
-  const pathname = req.body.imageName.split('/')
-  const imageName = pathname[pathname.length - 1]
-  console.log(imageName)
-  const path = 'public/' + req.body.courseID + '/' + imageName
-
   try {
-    fs.unlinkSync(path)
-    res.json({ 'status': 'module added' });
+
+    course = await Course.findOne({ _id: req.body.courseID }, 'urlImage')
+
+    if(course !== undefined)
+    {
+      const pathname = course.urlImage.split('/')
+      const imageName = pathname[pathname.length - 1]
+
+      const path = 'public/' + req.body.courseID + '/' + imageName
+
+      fs.unlinkSync(path)
+      res.json({ 'status': 'module added' });
+    }
 
   } catch (err) {
     console.error(err)

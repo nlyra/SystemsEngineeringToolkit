@@ -30,8 +30,7 @@ const Course = (props) => {
   const [isOwner, setIsOwner] = useState(false);
 
 
-  let validImageTypes = ["png", "PNG", "jpeg", "jpg"]
-
+  let validImageTypes = ["PNG", "JPEG", "GIF", "TIF", "RAW", "JPG"]
   const classes = courseStyles()
 
   const onEditCourseTitle = (e) => {
@@ -135,40 +134,45 @@ const Course = (props) => {
       if (currCourseImage.name === undefined)
         window.location.reload();
 
-
-      // We have a new image being passed in so delete old file
-      if ((oldCourseImage !== null) && (oldCourseImage.name !== currCourseImage.name)) {
-
-        const res = await fetch(config.server_url + config.paths.removeFile, {
-          method: 'POST',
-          headers: {
-            'Content-type': 'application/json'
-          },
-          body: JSON.stringify({
-            'token': token,
-            'courseID': courseID,
-            'imageName': oldCourseImage
-          })
-        })
-      }
+    // We have a new image being passed in so delete old file
+    const res2 = await fetch(config.server_url + config.paths.removeFile, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        'token': token,
+        'courseID': courseID
+      })
+    })
 
 
       const imageData = new FormData();
       imageData.append('file', currCourseImage)
 
+    // Checking to see if the file inputted is not an actual image
+    const imageTypePath = currCourseImage.name.split('.')
+    const imageType = imageTypePath[imageTypePath.length - 1]
+    const validInput = validImageTypes.includes(imageType.toUpperCase());
 
-      // Checking to see if the file inputted is not an actual image
-      const imageTypePath = currCourseImage.name.split('.')
-      const imageType = imageTypePath[imageTypePath.length - 1]
-      const validInput = validImageTypes.includes(imageType);
+    // If it isn't, return and allow user to input valid image
+    if (!validInput) {
+      alert('Invalid file type. Please upload an image with a proper image extension')
+      return
+    }
 
-      // If it isn't, return and allow user to input valid image
-      if (!validInput) {
-        alert('Invalid file type. Please upload an image with the extension .jpg or .png')
-        return
-      }
+    // Check that the input given is alphanumeric to avoid the possibility of commands being 
+    // passed in to the backend
+    var val = imageTypePath[imageTypePath.length - 2];
+    var RegEx = /[^0-9a-z]/i;
+    var isValid = !(RegEx.test(val));
 
-      if (currCourseImage.name !== oldCourseImage.name) {
+    if (isValid === false) {
+      alert('Invalid file type. Please upload an image for which name is alphanumeric.')
+      return
+    }
+    
+    if (currCourseImage.name !== oldCourseImage.name) {
 
         if (data.message === undefined) {
           const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + currCourseImage.name, {
