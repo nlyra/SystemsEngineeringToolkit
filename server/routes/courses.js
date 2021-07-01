@@ -137,7 +137,7 @@ router.post('/course/updateImage', VerifyToken, async (req, res) => {
 router.post('/info', VerifyToken, async (req, res) => {
   try {
     let courses = []
-
+    console.log(req.body.skip)
     if (req.body.search_query != undefined) {
       const query = req.body.search_query;
       courses = await Course.find({

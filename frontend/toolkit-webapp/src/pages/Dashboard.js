@@ -2,54 +2,58 @@ import React, { useState, useEffect } from 'react'
 import { Button, Card, CardActions, Container, CssBaseline, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
+import { Waypoint } from "react-waypoint";
 // import Pagination from '@material-ui/lab/Pagination'
 import dashStyles from '../styles/dashboardStyle'
 
 const Dashboard = (props) => {
     const [courses, setCourses] = useState([])
-    const [page, setPage] = useState(1)
-    const [cardAmount, setCardAmount] = useState(5)
-    const [hasMore, setHasMore] = useState(false)
-    const [loading, setLoading] = useState(true)
-    
-    let skip = 1
-
-    // const [cardAmount, setCardAmount] = useState()
-    const [coursesPerPage, setCoursesPerPage] = useState(5)
-    // const [searchQuery, setSearchQuery] = useState(undefined)
+    const [next, setHasNext] = useState(1)
+    const [hasNextPage, setHasNextPage] = useState(true);
+    const cardAmount = 2
 
     const classes = dashStyles()
 
-    // function that will run when page is loaded
+    //function that will run when page is loaded
     useEffect(() => {
-        loadCourses();
+        setHasNext(1)
+        loadCourses(undefined, next);
     }, []);
 
-    const handlePage = (event, value) => {
-        setPage(value)
-        loadCourses(undefined, value)
+    // const handlePage = (event, value) => {
+    //     setPage(value)
+    //     loadCourses(undefined, value)
+    // }
+
+    // const handleScroll = (e) => {
+    //     let element = e.target
+    //     console.log('scrollHeight: ' + element.scrollHeight)
+    //     console.log('scrollTop: ' + element.scrollTop)
+    //     console.log('clientHeight: ' + element.clientHeight)
+
+    //     if (element.scrollHeight - parseInt(Math.ceil(element.scrollTop)) == element.clientHeight) {
+    //             // skip = skip + 1
+    //             <h1>Hello</h1>
+    //           loadCourses(undefined, s)
+
+    //     }
+    // }
+
+    const testing = () => {
+        alert('s in waypoint is ' + next)
+        loadCourses(undefined, next)
+        setHasNext(next + 1)
     }
-
-    const handleScroll = (e) => {
-        let element = e.target
-        console.log('scrollHeight: ' + element.scrollHeight)
-        console.log('scrollTop: ' + element.scrollTop)
-        console.log('clientHeight: ' + element.clientHeight)
-
-        if (element.scrollHeight - parseInt(Math.ceil(element.scrollTop)) == element.clientHeight) {
-                // skip = skip + 1
-                <h1>Hello</h1>
-              loadCourses(undefined, skip)
-
-        }
-    }
-
 
     // function to get the courses 
-    const loadCourses = async (query, s) => {
+    const loadCourses = async (query, next) => {
+
         const token = localStorage.getItem("token");
         let res = undefined
-        let skip = (s - 1) * cardAmount
+        alert('next is ' + next)
+        let skip = (next - 1) * cardAmount
+        alert('skip is ' + skip)
+        setHasNext(next + 1)
 
         res = await fetch(config.server_url + config.paths.dashboardCourses, {
             method: 'POST',
@@ -86,16 +90,16 @@ const Dashboard = (props) => {
 
 
     return (
-        <div className={classes.div} onScroll={handleScroll}>
+        <div className={classes.div} >
             <TopNavBar
                 search={loadCourses}
-                page={page}
+                // page={page}
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container} >
                 <div className='courses' >
                     <Grid container spacing={3}>
-                        {courses.map((course) => (
+                        {courses.map((course, i) => (
 
                             <Grid item key={course._id} xs={12} sm={4} md={3}>
                                 <Card
@@ -118,6 +122,9 @@ const Dashboard = (props) => {
                                         </CardActions>
                                     </CardContent>
                                 </Card>
+                
+                                {courses.length < 5 && (<Waypoint onEnter={testing}/>)}
+                    
                             </Grid>
 
                         ))}

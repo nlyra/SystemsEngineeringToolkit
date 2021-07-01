@@ -4,7 +4,7 @@ const dashStyles = makeStyles((theme) => ({
 
     div: {
         display: 'flex',
-        overflowY: 'scroll'
+        overflowY: 'hidden'
     },
 
     container:
