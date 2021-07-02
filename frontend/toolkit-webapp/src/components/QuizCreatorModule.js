@@ -93,6 +93,7 @@ const QuizCreator = (props) => {
 
                 sessionStorage.setItem('quiz', JSON.stringify(quiz))
                 i = i - 1
+                setSelected([])
             }
         }
     }
@@ -112,6 +113,7 @@ const QuizCreator = (props) => {
                     quiz.splice(i - 1, 0, questions);
 
                     sessionStorage.setItem('quiz', JSON.stringify(quiz))
+                    setSelected([])
                 }
             }
         }
@@ -132,6 +134,8 @@ const QuizCreator = (props) => {
                     quiz.splice(i + 1, 0, questions);
 
                     sessionStorage.setItem('quiz', JSON.stringify(quiz))
+                    i=quiz.length
+                    setSelected([])
                 }
             }
         }
