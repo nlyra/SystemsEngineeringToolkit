@@ -107,6 +107,8 @@ const useStyles = makeStyles((theme) => ({
         // paddingTop: '10px'
         marginTop: '5%',
         marginLeft: '15%',
+        fontSize: '15px',
+        fontWeight: 'bold',
         border: '1px solid black',
         borderRadius: '8px',
     },
@@ -268,7 +270,7 @@ export default function TopNavBar(props) {
     const [user, setUser] = useState({})
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
-    const [email, setEmail] = useState('')
+    const [newEmail, setNewEmail] = useState('')
     const [isAdmin, setIsAdmin] = useState(false);
     const [isCreator, setIsCreator] = useState(false);
     const [roleInfo, setRoleInfo] = useState(-1)
@@ -345,7 +347,7 @@ export default function TopNavBar(props) {
         setUser(data.user)
         setFirstName(data.user.first_name)
         setLastName(data.user.last_name)
-        setEmail(data.user.email)
+        setNewEmail(data.user.email)
         setRoleInfo(data.user.roleID)
 
         if(data.user.roleID === 2)
@@ -364,6 +366,35 @@ export default function TopNavBar(props) {
         setOpenDialog(false);
     };
 
+    const handleChanges = async () => {
+
+        if(user.email !== newEmail)
+        {
+            if(!window.confirm("Would you like to save your changes?")){
+                console.log('here still?')
+                setOpenDialog(false);
+                return
+            }
+
+            const token = localStorage.getItem("token");
+            
+            const res = await fetch(config.server_url + config.paths.updateUserInfo, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "token": token,
+                    "email": newEmail
+                })
+            })
+            
+            const data = await res.json()
+            
+        }
+        setOpenDialog(false);
+    }
+
     const handleDrawerOpen = () => {
         setOpen(true);
     };
@@ -376,50 +407,7 @@ export default function TopNavBar(props) {
         props.history.push(`/dashboard`);
     };
 
-    // const onSubmit = (e) => {
-
-    //     e.preventDefault()
-    //     if (firstName === user.first_name && lastName === user.last_name) {
-    //         alert('No update made!')
-    //         return
-    //     }
-
-    //     updateUserInfo({ firstName, lastName})
-    //     // setFirstName('')
-    //     // setLastName('')
-    //     // setEmail('')
-    //     // setPassword('')
-    //     // setPasswordCopy('')
-    // }
-
-    // const updateUserInfo = async (creds) => {
-
-    //     const res = await fetch(config.server_url + config.paths.updateUserInfo, {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-type': 'application/json'
-    //         },
-    //         body: JSON.stringify({ 
-    //         "first_name": creds.firstName, 
-    //         "last_name": creds.lastName, 
-    //         "email": creds.email, 
-    //         "password": creds.password, 
-    //         "password_copy": creds.passwordCopy,
-    //         "classesEnrolled": [] })
-    //     })
-
-    //     const data = await res.json()
-
-    //     if (data.message == "added user") {
-    //         alert("Success, user Created!!");
-    //         props.history.push('login')
-
-    //     } else if (data.message === "email already connected to an account") {
-    //         alert("email already connected to an account, please try again.");
-    //     } else { // this is to check if there are errors not being addressed already
-    //         console.log(data)
-    //     }
-    // }
+   
     return (
         <div className={classes.root}>
             <AppBar
@@ -474,16 +462,7 @@ export default function TopNavBar(props) {
                         <img src={logo_url} alt="logo" className={classes.logoStyle} />
                     </div>
                     <div>
-                        {/* <IconButton aria-label="show 4 new mails" color="inherit"> */}
-                        {/* <Badge badgeContent={4} color="secondary"> */}
-                        {/* <MailIcon /> */}
-                        {/* </Badge> */}
-                        {/* </IconButton> */}
-                        {/* <IconButton aria-label="show 17 new notifications" color="inherit"> */}
-                        {/* <Badge badgeContent={17} color="secondary"> */}
-                        {/* <NotificationsIcon /> */}
-                        {/* </Badge> */}
-                        {/* </IconButton> */}
+                       
                         {props.hideComponents !== true ?
                             <Tooltip title="My Profile" >
                                 <IconButton
@@ -525,11 +504,9 @@ export default function TopNavBar(props) {
                                                         inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
                                                         type="text"
                                                         defaultValue={user.first_name}
-                                                        // onChange={e => setFirstName(e.target.value)}
                                                         margin="normal"
                                                         required={false}
                                                         fullWidth
-                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                                                     />
                                                     <br />
                                                     <TextField color='primary'
@@ -539,25 +516,22 @@ export default function TopNavBar(props) {
                                                         label='Last Name'
                                                         type="text"
                                                         defaultValue={user.last_name}
-                                                        // onChange={e => setLastName(e.target.value)}
                                                         margin="normal"
                                                         required={false}
                                                         fullWidth
-                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                                                     />
                                                     <br />
                                                     <TextField color='primary'
                                                         size='small'
                                                         variant="outlined"
-                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                                                        inputProps={{ min: 0,  style: { textAlign: 'center' } }}
                                                         label='Email'
                                                         type="text"
                                                         defaultValue={user.email}
-                                                        // onChange={e => setEmail(e.target.value)}
+                                                        onChange={e => setNewEmail(e.target.value)}
                                                         margin="normal"
                                                         required={false}
                                                         fullWidth
-                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                                                     />
                                                     <Grid container direction="row" className={classes.roleGrid}>
                                                         <Grid item xs={6} sm={6} lg={6} >
@@ -596,14 +570,6 @@ export default function TopNavBar(props) {
                                                                 <Avatar className={classes.statsAvi}>{user.completedCourses.length}</Avatar>
                                                             </div>
                                                         </Grid>
-                                                        {/* <Grid item xs={6} sm={6} lg={4} >
-                                                            <div className={classes.statContent}>
-                                                                <div className={classes.statText}>
-                                                                    <h5>Courses Created</h5>
-                                                                </div>
-                                                                <Avatar className={classes.statsAvi}>{user.createdCourses.length}</Avatar>
-                                                            </div>
-                                                        </Grid> */}
                                                     </Grid>
                                                 </div>
                                             </form>
@@ -611,7 +577,6 @@ export default function TopNavBar(props) {
 
                                         {roleInfo === 1 ?
                                             <form autoComplete="off">
-                                                {/* <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar> */}
                                                 <div className={classes.TextBox} alignItems="center">
                                                     <TextField color='primary'
                                                         alignContent="center"
@@ -621,11 +586,9 @@ export default function TopNavBar(props) {
                                                         inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
                                                         type="text"
                                                         defaultValue={user.first_name}
-                                                        // onChange={e => setFirstName(e.target.value)}
                                                         margin="normal"
                                                         required={false}
                                                         fullWidth
-                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                                                     />
                                                     <br />
                                                     <TextField color='primary'
@@ -635,25 +598,22 @@ export default function TopNavBar(props) {
                                                         label='Last Name'
                                                         type="text"
                                                         defaultValue={user.last_name}
-                                                        // onChange={e => setLastName(e.target.value)}
                                                         margin="normal"
                                                         required={false}
                                                         fullWidth
-                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                                                     />
                                                     <br />
                                                     <TextField color='primary'
                                                         size='small'
                                                         variant="outlined"
-                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                                                        inputProps={{ min: 0, style: { textAlign: 'center' } }}
                                                         label='Email'
                                                         type="text"
                                                         defaultValue={user.email}
-                                                        // onChange={e => setEmail(e.target.value)}
+                                                        onChange={e => setNewEmail(e.target.value)}
                                                         margin="normal"
                                                         required={false}
                                                         fullWidth
-                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                                                     />
                                                     <Grid container direction="row" className={classes.roleGrid}>
                                                         <Grid item xs={6} sm={6} lg={6} >
@@ -676,30 +636,30 @@ export default function TopNavBar(props) {
                                                     </div>
 
                                                     <Grid container direction="row" >
-                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                        <Grid item xs={4} sm={4} lg={4} >
                                                             <div className={classes.statContent}>
                                                                 <div className={classes.statText}>
-                                                                    <h5>Enrolled Courses</h5>
+                                                                    <h5>Courses Enrolled In</h5>
                                                                 </div>
                                                                 <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
                                                             </div>
                                                         </Grid>
-                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                        <Grid item xs={4} sm={4} lg={4} >
                                                             <div className={classes.statContent}>
                                                                 <div className={classes.statText}>
-                                                                    <h5>Created Courses</h5>
+                                                                    <h5>Courses Completed</h5>
                                                                 </div>
-                                                                <Avatar className={classes.statsAvi}>{user.createdCourses.length}</Avatar>
+                                                                <Avatar className={classes.statsAvi}>{user.completedCourses.length}</Avatar>
                                                             </div>
                                                         </Grid>
-                                                        {/* <Grid item xs={6} sm={6} lg={4} >
+                                                        <Grid item xs={4} sm={4} lg={4} >
                                                             <div className={classes.statContent}>
                                                                 <div className={classes.statText}>
                                                                     <h5>Courses Created</h5>
                                                                 </div>
                                                                 <Avatar className={classes.statsAvi}>{user.createdCourses.length}</Avatar>
                                                             </div>
-                                                        </Grid> */}
+                                                        </Grid>
                                                     </Grid>
                                                 </div>
                                             </form>
@@ -707,7 +667,6 @@ export default function TopNavBar(props) {
 
                                         {roleInfo === 2 ?
                                             <form autoComplete="off">
-                                                {/* <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar> */}
                                                 <div className={classes.TextBox} alignItems="center">
                                                     <TextField color='primary'
                                                         alignContent="center"
@@ -717,11 +676,9 @@ export default function TopNavBar(props) {
                                                         inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
                                                         type="text"
                                                         defaultValue={user.first_name}
-                                                        // onChange={e => setFirstName(e.target.value)}
                                                         margin="normal"
                                                         required={false}
                                                         fullWidth
-                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                                                     />
                                                     <br />
                                                     <TextField color='primary'
@@ -731,25 +688,22 @@ export default function TopNavBar(props) {
                                                         label='Last Name'
                                                         type="text"
                                                         defaultValue={user.last_name}
-                                                        // onChange={e => setLastName(e.target.value)}
                                                         margin="normal"
                                                         required={false}
                                                         fullWidth
-                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                                                     />
                                                     <br />
                                                     <TextField color='primary'
                                                         size='small'
                                                         variant="outlined"
-                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                                                        inputProps={{ min: 0, style: { textAlign: 'center' } }}
                                                         label='Email'
                                                         type="text"
                                                         defaultValue={user.email}
-                                                        // onChange={e => setEmail(e.target.value)}
+                                                        onChange={e => setNewEmail(e.target.value)}
                                                         margin="normal"
                                                         required={false}
                                                         fullWidth
-                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                                                     />
                                                     <Grid container direction="row" className={classes.roleGrid}>
                                                         <Grid item xs={6} sm={6} lg={6} >
@@ -768,43 +722,50 @@ export default function TopNavBar(props) {
                                                         <Divider variant='fullWidth' className={classes.divider} />
                                                     </Grid>
                                                     <div className={classes.statsTitle}>
-                                                        <h1>Stats</h1>
+                                                        <h2>Database Info</h2>
                                                     </div>
-
                                                     <Grid container direction="row" >
-                                                        <Grid item xs={4} sm={4} lg={4} >
+                                                    <Grid item xs={6} sm={6} lg={6} >
                                                             <div className={classes.statContent}>
                                                                 <div className={classes.statText}>
-                                                                    <h5>Courses Enrolled</h5>
-                                                                </div>
-                                                                <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
-                                                            </div>
-                                                        </Grid>
-
-                                                        <Grid item xs={4} sm={4} lg={4} >
-                                                            <div className={classes.statContent}>
-                                                                <div className={classes.statText}>
-                                                                    <h5>Users in System</h5>
+                                                                    <h5>Users In System</h5>
                                                                 </div>
                                                                 <Avatar className={classes.statsAvi}>{numUsers}</Avatar>
                                                             </div>
                                                         </Grid>
-                                                        <Grid item xs={4} sm={4} lg={4} >
+                                                        <Grid item xs={6} sm={6} lg={6} >
                                                             <div className={classes.statContent}>
                                                                 <div className={classes.statText}>
-                                                                    <h5>Courses Overseen</h5>
+                                                                    <h5>Total Courses</h5>
                                                                 </div>
                                                                 <Avatar className={classes.statsAvi}>{numCourses}</Avatar>
                                                             </div>
                                                         </Grid>
-                                                        {/* <Grid item xs={6} sm={6} lg={4} >
+                                                    </Grid>
+                                                    <br/>
+                                                        <Grid item xs={12}>
+                                                        <Divider variant='fullWidth' className={classes.divider} />
+                                                    </Grid>
+                                                    <div className={classes.statsTitle}>
+                                                        <h2>My Stats</h2>
+                                                    </div>
+                                                    <Grid container direction="row" >
+                                                        <Grid item xs={6} sm={6} lg={6} >
                                                             <div className={classes.statContent}>
                                                                 <div className={classes.statText}>
-                                                                    <h5>Courses Created</h5>
+                                                                    <h5>Courses Enrolled In</h5>
                                                                 </div>
-                                                                <Avatar className={classes.statsAvi}>{user.createdCourses.length}</Avatar>
+                                                                <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
                                                             </div>
-                                                        </Grid> */}
+                                                        </Grid>
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Courses Completed</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{user.completedCourses.length}</Avatar>
+                                                            </div>
+                                                        </Grid>
                                                     </Grid>
                                                 </div>
                                             </form>
@@ -813,7 +774,7 @@ export default function TopNavBar(props) {
 
                                     </DialogContent>
                                     <DialogActions>
-                                        <Button autoFocus onClick={handleClose} color="primary">
+                                        <Button autoFocus color="primary" onClick={handleChanges}>
                                             Close Page
                                         </Button>
                                     </DialogActions>
