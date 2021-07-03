@@ -34,6 +34,13 @@ const dashStyles = makeStyles((theme) => ({
     {
         flexGrow: 1
     },
+
+    scrollListener:
+    {
+        offset: 200,
+        debounce: 1000,
+        triggerOnNoScroll: false
+    }
 }))
 
 export default dashStyles;

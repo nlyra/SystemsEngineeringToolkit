@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { Button, Card, CardActions, Container, CssBaseline, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
@@ -6,54 +6,37 @@ import { Waypoint } from "react-waypoint";
 // import Pagination from '@material-ui/lab/Pagination'
 import dashStyles from '../styles/dashboardStyle'
 
+import { useBottomScrollListener } from 'react-bottom-scroll-listener';
+
 const Dashboard = (props) => {
     const [courses, setCourses] = useState([])
-    const [next, setHasNext] = useState(1)
+    const [next, setHasNext] = useState(0)
     const [hasNextPage, setHasNextPage] = useState(true);
-    const cardAmount = 2
+    const [totalCourses, setTotalCourses] = useState(0)
+    const cardAmount = 8
 
     const classes = dashStyles()
 
-    //function that will run when page is loaded
+    // function that will run when page is loaded
     useEffect(() => {
-        setHasNext(1)
-        loadCourses(undefined, next);
+        loadCourses(undefined, next+1);
     }, []);
 
-    // const handlePage = (event, value) => {
-    //     setPage(value)
-    //     loadCourses(undefined, value)
-    // }
 
-    // const handleScroll = (e) => {
-    //     let element = e.target
-    //     console.log('scrollHeight: ' + element.scrollHeight)
-    //     console.log('scrollTop: ' + element.scrollTop)
-    //     console.log('clientHeight: ' + element.clientHeight)
+    const loadMoreCourses = useCallback(() => {
 
-    //     if (element.scrollHeight - parseInt(Math.ceil(element.scrollTop)) == element.clientHeight) {
-    //             // skip = skip + 1
-    //             <h1>Hello</h1>
-    //           loadCourses(undefined, s)
-
-    //     }
-    // }
-
-    const testing = () => {
-        alert('s in waypoint is ' + next)
-        loadCourses(undefined, next)
-        setHasNext(next + 1)
-    }
+        if ((totalCourses === courses.length))
+            return 
+            
+        loadCourses(undefined, next+1)
+      })
 
     // function to get the courses 
     const loadCourses = async (query, next) => {
-
+        
         const token = localStorage.getItem("token");
         let res = undefined
-        alert('next is ' + next)
         let skip = (next - 1) * cardAmount
-        alert('skip is ' + skip)
-        setHasNext(next + 1)
 
         res = await fetch(config.server_url + config.paths.dashboardCourses, {
             method: 'POST',
@@ -62,20 +45,22 @@ const Dashboard = (props) => {
             },
             body: JSON.stringify({ "token": token, "search_query": query, "skip": skip, "cardAmount": cardAmount })
         })
-        // }
-
 
         const data = await res.json()
-        if (data.message === undefined) {
-
-            // console.log(data.courses);
-            // localStorage.setItem("token", data.token);
-
-            // This line of code had setCourses(data.courses) before            
+        if (data.status === "loading") {
+           
             setCourses(courses.concat(data.courses));
+            setTotalCourses(data.totalCourses)
+            setHasNext(next)
 
+        } 
+        else if (data.status === "search")
+        {
+            setCourses(data.courses);
+            setTotalCourses(data.totalCourses)
+        }
 
-        } else if (data.message === "wrong token") {
+        if (data.message === "wrong token") {
             localStorage.removeItem('token');
             props.history.push('login');
             // probably alert the user
@@ -88,6 +73,7 @@ const Dashboard = (props) => {
         props.history.push(`course/${course._id}`);
     }
 
+    useBottomScrollListener(loadMoreCourses);
 
     return (
         <div className={classes.div} >
@@ -123,8 +109,7 @@ const Dashboard = (props) => {
                                     </CardContent>
                                 </Card>
                 
-                                {courses.length < 5 && (<Waypoint onEnter={testing}/>)}
-                    
+                                {/* {courses.length < 5 && (<Waypoint onEnter={testing}/>)} */}
                             </Grid>
 
                         ))}
