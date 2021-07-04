@@ -370,6 +370,11 @@ export default function TopNavBar(props) {
 
         if(user.email !== newEmail)
         {
+            if(newEmail.indexOf('@') == -1)
+            {
+                alert('Please input a valid email format.')
+                return
+            }
             if(!window.confirm("Would you like to save your changes?")){
                 console.log('here still?')
                 setOpenDialog(false);
@@ -525,12 +530,12 @@ export default function TopNavBar(props) {
                                                         size='small'
                                                         variant="outlined"
                                                         inputProps={{ min: 0,  style: { textAlign: 'center' } }}
-                                                        label='Email'
-                                                        type="text"
+                                                        label= "Email"
+                                                        type= "email"
                                                         defaultValue={user.email}
                                                         onChange={e => setNewEmail(e.target.value)}
                                                         margin="normal"
-                                                        required={false}
+                                                        required={true}
                                                         fullWidth
                                                     />
                                                     <Grid container direction="row" className={classes.roleGrid}>
@@ -608,11 +613,11 @@ export default function TopNavBar(props) {
                                                         variant="outlined"
                                                         inputProps={{ min: 0, style: { textAlign: 'center' } }}
                                                         label='Email'
-                                                        type="text"
+                                                        type= "email"
                                                         defaultValue={user.email}
                                                         onChange={e => setNewEmail(e.target.value)}
                                                         margin="normal"
-                                                        required={false}
+                                                        required={true}
                                                         fullWidth
                                                     />
                                                     <Grid container direction="row" className={classes.roleGrid}>
@@ -698,11 +703,11 @@ export default function TopNavBar(props) {
                                                         variant="outlined"
                                                         inputProps={{ min: 0, style: { textAlign: 'center' } }}
                                                         label='Email'
-                                                        type="text"
+                                                        type= "email"
                                                         defaultValue={user.email}
                                                         onChange={e => setNewEmail(e.target.value)}
                                                         margin="normal"
-                                                        required={false}
+                                                        required={true}
                                                         fullWidth
                                                     />
                                                     <Grid container direction="row" className={classes.roleGrid}>
