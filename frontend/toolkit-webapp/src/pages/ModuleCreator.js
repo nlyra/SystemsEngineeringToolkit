@@ -147,7 +147,7 @@ function ModuleCreator(props) {
 
                 // Input contains non-alphanumeric values so we must alert the user to rename the file 
                 if (isValid === false) {
-                    alert('Invalid file type. Please upload an image for which name is alphanumeric and has no spaces.')
+                    alert('Invalid file type. Please upload a PDF for which name is alphanumeric and has no spaces.')
                     return
                 }
 
@@ -195,7 +195,7 @@ function ModuleCreator(props) {
 
                 // Input contains non-alphanumeric values so we must alert the user to rename the file 
                 if (isValid === false) {
-                    alert('Invalid file type. Please upload an image for which name is alphanumeric and has no spaces.')
+                    alert('Invalid file type. Please upload a file for which name is alphanumeric and has no spaces.')
                     return
                 }
 
@@ -244,7 +244,7 @@ function ModuleCreator(props) {
 
                 // Input contains non-alphanumeric values so we must alert the user to rename the file 
                 if (isValid === false) {
-                    alert('Invalid file type. Please upload an image for which name is alphanumeric and has no spaces.')
+                    alert('Invalid file type. Please upload a video for which name is alphanumeric and has no spaces.')
                     return
                 }
 
