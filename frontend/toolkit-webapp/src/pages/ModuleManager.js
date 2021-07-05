@@ -92,7 +92,7 @@ const Dashboard = (props) => {
         })
 
         const data = await res.json()
-
+        
         if (data.message === undefined) {
             setCourse(data.course);
             setCourseID(id);

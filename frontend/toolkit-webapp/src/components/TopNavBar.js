@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { fade, makeStyles, IconButton, AppBar, Paper, TextField, Typography } from "@material-ui/core";
 import { Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
-import {Avatar, Dialog, DialogTitle, DialogActions, DialogContent, Grid} from "@material-ui/core";
+import { Avatar, Dialog, DialogTitle, DialogActions, DialogContent, Grid } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu'
-import {deepPurple, grey, amber } from '@material-ui/core/colors';
+import { deepPurple, grey, amber } from '@material-ui/core/colors';
 import config from '../config.json'
 import SearchIcon from '@material-ui/icons/Search'
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
         textDecoration: 'underline'
     },
 
-    statsAvi: 
+    statsAvi:
     {
         color: theme.palette.getContrastText(amber[600]),
         backgroundColor: amber[600],
@@ -97,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
         // borderRadius: '4px'
     },
 
-    roleAvi: 
+    roleAvi:
     {
         color: theme.palette.getContrastText(amber[600]),
         backgroundColor: amber[600],
@@ -269,15 +269,62 @@ export default function TopNavBar(props) {
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [isCreator, setIsCreator] = useState(false);
     const [roleInfo, setRoleInfo] = useState(-1)
     const [numUsers, setNumUsers] = useState(0)
     const [numCourses, setNumCourses] = useState(0)
 
     let roles = ['Student', 'Creator', 'Admin']
 
+    // function that will run when page is loaded
+    useEffect(() => {
+        getAuthorization();
+    }, []);
+
+    const getAuthorization = async () => {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(config.server_url + config.paths.getIsAdmin, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                "token": token
+            })
+        })
+
+        const data = await res.json()
+
+        if (data.message === "yes")
+            setIsAdmin(true);
+        else
+            setIsAdmin(false);
+
+        const res2 = await fetch(config.server_url + config.paths.getIsCreator, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                "token": token
+            })
+        })
+
+        const data2 = await res2.json()
+
+        if (data2.message === "yes")
+            setIsCreator(true);
+        else
+            setIsCreator(false);
+
+    }
+
+
     // TODO: Consider a better way to handle this, as it will be making an api call every time the user
     // opens their profile page. 
-    
+
     const handleClickOpen = async () => {
     
         // Retrieve token, then feed topNavBar with information about the current user
@@ -329,6 +376,50 @@ export default function TopNavBar(props) {
         props.history.push(`/dashboard`);
     };
 
+    // const onSubmit = (e) => {
+
+    //     e.preventDefault()
+    //     if (firstName === user.first_name && lastName === user.last_name) {
+    //         alert('No update made!')
+    //         return
+    //     }
+
+    //     updateUserInfo({ firstName, lastName})
+    //     // setFirstName('')
+    //     // setLastName('')
+    //     // setEmail('')
+    //     // setPassword('')
+    //     // setPasswordCopy('')
+    // }
+
+    // const updateUserInfo = async (creds) => {
+
+    //     const res = await fetch(config.server_url + config.paths.updateUserInfo, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-type': 'application/json'
+    //         },
+    //         body: JSON.stringify({ 
+    //         "first_name": creds.firstName, 
+    //         "last_name": creds.lastName, 
+    //         "email": creds.email, 
+    //         "password": creds.password, 
+    //         "password_copy": creds.passwordCopy,
+    //         "classesEnrolled": [] })
+    //     })
+
+    //     const data = await res.json()
+
+    //     if (data.message == "added user") {
+    //         alert("Success, user Created!!");
+    //         props.history.push('login')
+
+    //     } else if (data.message === "email already connected to an account") {
+    //         alert("email already connected to an account, please try again.");
+    //     } else { // this is to check if there are errors not being addressed already
+    //         console.log(data)
+    //     }
+    // }
     return (
         <div className={classes.root}>
             <AppBar
@@ -409,7 +500,7 @@ export default function TopNavBar(props) {
                             </Tooltip>
 
                             : null}
-                        
+
 
                         {openDialog === true ?
 
@@ -731,8 +822,8 @@ export default function TopNavBar(props) {
 
                             : null}
 
-                            {window.location.pathname !== "/" && 
-                            window.location.pathname !== "/registration" && 
+                        {window.location.pathname !== "/" &&
+                            window.location.pathname !== "/registration" &&
                             window.location.pathname !== "/forgot" &&
                             window.location.pathname !== "/reset/" + props.tokenProp &&
                             window.location.pathname !== "/reset/" &&
@@ -776,7 +867,8 @@ export default function TopNavBar(props) {
                     </div>
                     <Divider />
                     <List>
-                        <Link href="/newCourse" underline='none' color="inherit">
+                        {isCreator &&
+                            <Link href="/newCourse" underline='none' color="inherit">
                             <Tooltip title="Create Course" enterDelay={500}>
                                 <ListItem button>
                                     <ListItemIcon><PostAddIcon /></ListItemIcon>
@@ -784,6 +876,7 @@ export default function TopNavBar(props) {
                                 </ListItem>
                             </Tooltip>
                         </Link>
+                        }
 
                         <Link href="/MyCourses" underline='none' color="inherit">
                             <Tooltip title="My Courses" enterDelay={500}>
@@ -803,16 +896,19 @@ export default function TopNavBar(props) {
                             </Tooltip>
                         </Link>
 
-                        <Tooltip title="Admin Dashboard" enterDelay={500}>
-                            <Link href="/admindashboard" underline='none' color="inherit">
-                                <ListItem button>
-                                    <ListItemIcon><VerifiedUserIcon /></ListItemIcon>
-                                    <ListItemText primary="Admin Dashboard" />
-                                </ListItem>
-                            </Link>
-                        </Tooltip>
+                        {isAdmin &&
+                            <Tooltip title="Admin Dashboard" enterDelay={500}>
+                                <Link href="/admindashboard" underline='none' color="inherit">
+                                    <ListItem button>
+                                        <ListItemIcon><VerifiedUserIcon /></ListItemIcon>
+                                        <ListItemText primary="Admin Dashboard" />
+                                    </ListItem>
+                                </Link>
+                            </Tooltip>
+                        }
 
                         {/* <Tooltip title="Calendar" enterDelay={500}>*/}
+                        {isCreator && 
                         <Link href="/ManageMyCourses" underline='none' color="inherit">
                             <Tooltip title="My Created Courses" enterDelay={500}>
                                 <ListItem button>
@@ -821,6 +917,7 @@ export default function TopNavBar(props) {
                                 </ListItem>
                             </Tooltip>
                         </Link>
+                        }
                     </List>
                 </Drawer>
                 : null}

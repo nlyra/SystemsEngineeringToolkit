@@ -37,7 +37,10 @@ const ManageMyCourses = (props) => {
 
 
         const data = await res.json()
-        if (data.message === undefined) {
+        
+        if (data.message === "unauthorized") {
+            props.history.push('dashboard');
+        } else if (data.message === undefined) {
 
             setCourses(data.courses);
 
@@ -65,7 +68,10 @@ const ManageMyCourses = (props) => {
         })
 
         const data = await res.json()
-
+        
+        if (data.message === "unauthorized") {
+            props.history.push('dashboard');
+        } 
         // This splits the array correctly and updates courses array with courses the user is still enrolled in
         // const newVal = courses.filter((courses) => courses._id !== id);
         // setCourses(newVal)
