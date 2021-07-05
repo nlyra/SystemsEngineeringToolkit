@@ -4,11 +4,23 @@ const moduleStyles = makeStyles((theme) => ({
 
     Title:
     {
-        fontWeight: "bold"
+        fontWeight: "bold",
+        alignItems: 'center'
+    },
+    h5: 
+    {
+        align: 'center'
     },
 
     container: {
         height: "100%",
+        
+        // Added these two fields 
+        paddingTop: '5%',
+        marginLeft: '10%'
+
+        // paddingRight: '10%'
+        // whiteSpace: 'nowrap'
     },
 
     paper:
