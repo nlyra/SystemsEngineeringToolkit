@@ -22,16 +22,17 @@ const upload = multer({ storage: fileStorageEngine })
 
 router.post('/single', VerifyToken, GetRole, upload.single('file'), async (req, res) => {
 
-  // if (req.body.roleID != 1) {
-  //   res.json({ message: "unauthorized" })
-  //   return
-  // }
+  // req.body.roleID is undefined in the scope of this function, so we must use the query data
+  if (req.query.roleID != 1) {
+    res.json({ message: "unauthorized" })
+    return
+  }
 
   try {
-    
+
     // validating image types in case someone attempts to access route without using frontend
     let validImageTypes = ["PNG", "JPEG", "GIF", "TIF", "RAW", "JPG"]
-    
+
     // Checking to see if the extension is one of the valid types
     const imageTypePath = req.query.imageName.split('.')
     const imageType = imageTypePath[imageTypePath.length - 1]

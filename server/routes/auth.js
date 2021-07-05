@@ -139,8 +139,9 @@ function verifyToken(req, res, next) {
             console.log(err.message)
             res.sendStatus(403)
         }
-        // console.log(decoded)
+
         req.body.userID = decoded.id;
+
     });
     next();
 
@@ -185,9 +186,13 @@ router.post('/resetPassApproved', async (req, res) => {
 })
 
 async function getRole(req, res, next) {
-
+    
     const role = await User.findOne({ _id: req.body.userID }, 'roleID')
     req.body.roleID = role.roleID;
+
+     // fileMulter api call does not allow anything else in the body, so this first
+    // line is needed to check roles on fileMulter 'single' route
+    req.query.roleID = role.roleID
 
     next();
 
