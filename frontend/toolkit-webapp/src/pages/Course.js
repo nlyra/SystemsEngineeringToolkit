@@ -26,6 +26,9 @@ const Course = (props) => {
   const [courseDescription, setCourseDescription] = useState('')
   const [editCourseInfo, setEditCourseInfo] = useState(false)
   const [courseID, setCourseID] = useState('')
+  const [isCreator, setIsCreator] = useState(false);
+  const [isOwner, setIsOwner] = useState(false);
+
 
   let validImageTypes = ["PNG", "JPEG", "GIF", "TIF", "RAW", "JPG"]
   const classes = courseStyles()
@@ -39,7 +42,31 @@ const Course = (props) => {
     const pathname = window.location.pathname.split('/') //returns the current path
     const id = pathname[pathname.length - 1]
     getCourse(id)
+    getAuthorization();
+
   }, []);
+
+  const getAuthorization = async () => {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(config.server_url + config.paths.getIsCreator, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        "token": token
+      })
+    })
+
+    const data = await res.json()
+
+    if (data.message === "yes") {
+      setIsCreator(true);
+    } else
+      setIsCreator(false);
+
+  }
 
   const addModule = () => {
     sessionStorage.clear()
@@ -68,6 +95,8 @@ const Course = (props) => {
       setCourseTitle(data.course.name);
       setCourseDescription(data.course.description);
       setModules(data.course.modules);
+      if (data.course.author === "yes")
+        setIsOwner(true);
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
@@ -97,10 +126,13 @@ const Course = (props) => {
 
     const data = await res.json()
 
-    // No new image assigned to course so only refresh to show other updates
-    if (currCourseImage.name === undefined)
-      window.location.reload();
+    if (data.message === "unauthorized")
+      props.history.push('/dashboard');
+    else {
 
+      // No new image assigned to course so only refresh to show other updates
+      if (currCourseImage.name === undefined)
+        window.location.reload();
 
     // We have a new image being passed in so delete old file
     const res2 = await fetch(config.server_url + config.paths.removeFile, {
@@ -115,8 +147,8 @@ const Course = (props) => {
     })
 
 
-    const imageData = new FormData();
-    imageData.append('file', currCourseImage)
+      const imageData = new FormData();
+      imageData.append('file', currCourseImage)
 
     // Checking to see if the file inputted is not an actual image
     const imageTypePath = currCourseImage.name.split('.')
@@ -142,33 +174,34 @@ const Course = (props) => {
     
     if (currCourseImage.name !== oldCourseImage.name) {
 
-      if (data.message === undefined) {
-        const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + currCourseImage.name, {
+        if (data.message === undefined) {
+          const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + currCourseImage.name, {
+            method: 'POST',
+            body: imageData
+          })
+          const data2 = await res.json()
+
+        }
+        else { // this is to check if there are errors not being addressed already
+          console.log(data)
+        }
+      }
+      else {
+        const res = await fetch(config.server_url + config.paths.updateCourseImage, {
           method: 'POST',
-          body: imageData
+          headers: {
+            'Content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            'token': token,
+            'courseID': courseID,
+            "imageLink": currCourseImage,
+          })
         })
-        const data2 = await res.json()
-
       }
-      else { // this is to check if there are errors not being addressed already
-        console.log(data)
-      }
-    }
-    else {
-      const res = await fetch(config.server_url + config.paths.updateCourseImage, {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json'
-        },
-        body: JSON.stringify({
-          'token': token,
-          'courseID': courseID,
-          "imageLink": currCourseImage,
-        })
-      })
-    }
 
-    window.location.reload();
+      window.location.reload();
+    }
   }
 
   const deleteModule = async (module) => {
@@ -189,7 +222,10 @@ const Course = (props) => {
 
     const data = await res.json()
 
-    window.location.reload();
+    if (data.message === "unauthorized")
+      props.history.push('/dashboard');
+    else
+      window.location.reload();
   }
 
   const enroll = async (module) => {
@@ -273,12 +309,14 @@ const Course = (props) => {
                     className={classes.title}>{course.name}
                   </h1>
                 </Grid>
-                <Grid item xs={1} sm={1} lg={2}>
-                  <CourseInfoEditButton
-                    hideComponent={false}
-                    edit={onEditCourseTitle}
-                  />
-                </Grid>
+                {(isCreator && isOwner) &&
+                  <Grid item xs={1} sm={1} lg={2}>
+                    <CourseInfoEditButton
+                      hideComponent={false}
+                      edit={onEditCourseTitle}
+                    />
+                  </Grid>
+                }
               </Grid>
             </Grid>
             <Grid item xs={12} >
@@ -335,9 +373,10 @@ const Course = (props) => {
         <Grid item xs={12}>
           <Divider className={classes.divider} />
         </Grid>
-        <Grid item xs={12} lg={3}>
-          {//<Link href={`/newModule/${courseID}`} underline={'none'}>
-          }
+        {(isCreator && isOwner) &&
+          <Grid item xs={12} lg={3}>
+            {//<Link href={`/newModule/${courseID}`} underline={'none'}>
+            }
             <Button
               variant="contained"
               color="primary"
@@ -347,14 +386,15 @@ const Course = (props) => {
             >
               Add Module
             </Button>
-          {//</Link>
-          }
-        </Grid>
+            {//</Link>
+            }
+          </Grid>
+        }
         <Grid item xs={12} className={classes.accordion}>
           {/* modules starts here */}
           {modules.map((module) => (
             <div>
-              {isDisabled(modules.indexOf(module)) ?
+              {((!isCreator || !isOwner) && isDisabled(modules.indexOf(module))) ?
                 <Accordion key={modules.indexOf(module)} disabled >
 
                   <AccordionSummary
@@ -362,28 +402,7 @@ const Course = (props) => {
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                   >
-                    <FormControlLabel
-                      aria-label="Acknowledge"
-                      onClick={(event) => event.stopPropagation()}
-                      onFocus={(event) => event.stopPropagation()}
-                      control={<ModuleInfoEditButton moduleIndex={modules.indexOf(module)} courseID={courseID} module={module} hideComponent={false} />}
-                    />
-                    <FormControlLabel
-                      aria-label="Acknowledge"
-                      onClick={(event) => event.stopPropagation()}
-                      onFocus={(event) => event.stopPropagation()}
-                      control={
-                        <IconButton
-                          type='submit'
-                          className={classes.deleteButton}
-                          variant="contained"
-                          color="secondary"
-                          onClick={() => window.confirm('Are you sure you wish to delete this module: ' + (modules.indexOf(module) + 1) + '?') && deleteModule(module)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      }
-                    />
+
                     <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
                   </AccordionSummary>
                 </Accordion>
@@ -394,28 +413,32 @@ const Course = (props) => {
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                   >
-                    <FormControlLabel
-                      aria-label="Acknowledge"
-                      onClick={(event) => event.stopPropagation()}
-                      onFocus={(event) => event.stopPropagation()}
-                      control={<ModuleInfoEditButton moduleIndex={modules.indexOf(module)} courseID={courseID} module={module} hideComponent={false} />}
-                    />
-                    <FormControlLabel
-                      aria-label="Acknowledge"
-                      onClick={(event) => event.stopPropagation()}
-                      onFocus={(event) => event.stopPropagation()}
-                      control={
-                        <IconButton
-                          type='submit'
-                          className={classes.deleteButton}
-                          variant="contained"
-                          color="secondary"
-                          onClick={() => window.confirm('Are you sure you wish to delete this module: ' + (modules.indexOf(module) + 1) + '?') && deleteModule(module)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      }
-                    />
+                    {(isCreator && isOwner) &&
+                      <div>
+                        <FormControlLabel
+                          aria-label="Acknowledge"
+                          onClick={(event) => event.stopPropagation()}
+                          onFocus={(event) => event.stopPropagation()}
+                          control={<ModuleInfoEditButton moduleIndex={modules.indexOf(module)} courseID={courseID} module={module} hideComponent={false} />}
+                        />
+                        <FormControlLabel
+                          aria-label="Acknowledge"
+                          onClick={(event) => event.stopPropagation()}
+                          onFocus={(event) => event.stopPropagation()}
+                          control={
+                            <IconButton
+                              type='submit'
+                              className={classes.deleteButton}
+                              variant="contained"
+                              color="secondary"
+                              onClick={() => window.confirm('Are you sure you wish to delete this module: ' + (modules.indexOf(module) + 1) + '?') && deleteModule(module)}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          }
+                        />
+                      </div>
+                    }
                     <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
                   </AccordionSummary>
                   <AccordionDetails className={classes.accordionDetails}>

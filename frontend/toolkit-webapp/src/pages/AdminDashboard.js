@@ -46,6 +46,10 @@ const AdminDashboard = (props) => {
 
   const classes = adminStyles()
 
+  const isUnauthorized = async () => {
+    props.history.push('dashboard');
+  }
+
 
   return (
     <div className={classes.div}>
@@ -76,9 +80,9 @@ const AdminDashboard = (props) => {
           </Grid>
           <Grid item xs={12}>
             <div className={classes.innerDiv}>
-              {currTab === 0 && <AdminUsersTab setCurrTab={setCurrTab} />}
-              {currTab === 1 && <AdminCoursesTab setCurrTab={setCurrTab} />}
-              {currTab === 2 && <AdminCategoriesTab setCurrTab={setCurrTab} />}
+              {currTab === 0 && <AdminUsersTab setCurrTab={setCurrTab} isUnauthorized={isUnauthorized} />}
+              {currTab === 1 && <AdminCoursesTab setCurrTab={setCurrTab} isUnauthorized={isUnauthorized} />}
+              {currTab === 2 && <AdminCategoriesTab setCurrTab={setCurrTab} isUnauthorized={isUnauthorized} />}
             </div>
           </Grid>
 

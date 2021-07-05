@@ -1,6 +1,7 @@
 const multer = require('multer');
 const express = require('express');
 const VerifyToken = require('./auth').verifyToken;
+const GetRole = require('./auth').getRole;
 const config = require('../config.json');
 const Course = require('../models/course');
 const fs = require("fs");
@@ -19,7 +20,12 @@ const fileStorageEngine = multer.diskStorage({
 });
 const upload = multer({ storage: fileStorageEngine })
 
-router.post('/single', VerifyToken, upload.single('file'), async (req, res) => {
+router.post('/single', VerifyToken, GetRole, upload.single('file'), async (req, res) => {
+
+  // if (req.body.roleID != 1) {
+  //   res.json({ message: "unauthorized" })
+  //   return
+  // }
 
   try {
     

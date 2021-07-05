@@ -81,14 +81,14 @@ const AdminCoursesTab = (props) => {
     })
 
     const data = await res.json()
-    if (data.message === undefined) {
+    if (data.message === "unauthorized") {
+      props.isUnauthorized()
+    } else if (data.message === undefined) {
       setCourses(data.courses)
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
       // probably alert the user
-    } else if (data.message === "unauthorized") {
-      // eventually do something
     } else { // this is to check if there are errors not being addressed already
       console.log(data)
     }
@@ -109,14 +109,14 @@ const AdminCoursesTab = (props) => {
     })
 
     const data = await res.json()
-    if (data.message === undefined) {
+    if (data.message === "unauthorized") {
+      props.isUnauthorized()
+    } else if (data.message === undefined) {
       setCourses(data.courses)
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
       // probably alert the user
-    } else if (data.message === "unauthorized") {
-      // eventually do something
     } else { // this is to check if there are errors not being addressed already
       console.log(data)
     }
@@ -135,14 +135,14 @@ const AdminCoursesTab = (props) => {
 
     const data = await res.json()
     // console.log(data)
-    if (data.message === undefined) {
+    if (data.message === "unauthorized") {
+      props.isUnauthorized()
+    } else if (data.message === undefined) {
       // localStorage.setItem("tab", 1);
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
       // probably alert the user
-    } else if (data.message === "unauthorized") {
-      // eventually do something
     } else { // this is to check if there are errors not being addressed already
       console.log(data)
     }
