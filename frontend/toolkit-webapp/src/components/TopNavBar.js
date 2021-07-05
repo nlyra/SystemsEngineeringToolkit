@@ -375,11 +375,9 @@ export default function TopNavBar(props) {
                 alert('Please input a valid email format.')
                 return
             }
-            if(!window.confirm("Would you like to save your changes?")){
-                console.log('here still?')
-                setOpenDialog(false);
-                return
-            }
+            
+        if(!window.confirm("Are you sure you would like to save your changes?"))
+            setOpenDialog(false)
 
             const token = localStorage.getItem("token");
             
@@ -780,7 +778,7 @@ export default function TopNavBar(props) {
                                     </DialogContent>
                                     <DialogActions>
                                         <Button autoFocus color="primary" onClick={handleChanges}>
-                                            Close Page
+                                            Close & Save Changes
                                         </Button>
                                     </DialogActions>
                                 </Dialog>
