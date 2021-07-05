@@ -152,6 +152,7 @@ router.post('/info', VerifyToken, async (req, res) => {
 
   try {
     let courses = []
+    let totalCourses = await Course.find().countDocuments()
 
     if (req.body.search_query != undefined) {
       const query = req.body.search_query;
@@ -160,12 +161,13 @@ router.post('/info', VerifyToken, async (req, res) => {
           { "categories.label": { "$regex": query, $options: 'i' } },
           { "name": { "$regex": query, $options: 'i' } },
         ]
-      }, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
+      }, '_id name description urlImage categories');
+      res.json({ "status": "search", "courses": courses, "totalCourses": totalCourses });
     } else {
-      courses = await Course.find({}, '_id name description urlImage categories', { limit: req.body.cardAmount }).sort({ totalStudents: -1 }).skip(req.body.skip);
+      courses = await Course.find({}, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
+      res.json({ "status": "loading", "courses": courses, "totalCourses": totalCourses });
     }
 
-    res.json({ "courses": courses });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
