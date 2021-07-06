@@ -26,23 +26,23 @@ function ModuleEditor(props) {
     const [video, setVideo] = useState()
     const [pdf, setPDF] = useState()
 
-    function getExtention(filename){
+    function getExtention(filename) {
         var parts = filename.split('.');
-        return parts[parts.length-1]
+        return parts[parts.length - 1]
     }
 
-    function isPDF(filename){
+    function isPDF(filename) {
         var ext = getExtention(filename)
-        switch(ext.toLowerCase()){
+        switch (ext.toLowerCase()) {
             case 'pdf':
                 return true;
             default:
         }
         return false
     }
-    function isVideo(filename){
+    function isVideo(filename) {
         var ext = getExtention(filename)
-        switch(ext.toLowerCase()){
+        switch (ext.toLowerCase()) {
             case 'webm':
             case 'mpg':
             case 'mp2':
@@ -135,9 +135,14 @@ function ModuleEditor(props) {
                     },
                     body: JSON.stringify({ 'token': token, 'moduleID': props.location.moduleIndex, 'courseID': courseID, 'title': module.title, 'description': module.description, 'type': module.type, 'quiz': module.quiz, 'gradeToPass': module.gradeToPass })
                 })
+                const data = await res.json()
 
-                alert("Successfully Edited Quiz module")
-                props.history.push('/course/'+courseID)
+                if (data.message === "unauthorized") {
+                    props.history.push('dashboard');
+                } else {
+                    alert("Successfully Edited Quiz module")
+                    props.history.push('/course/' + courseID)
+                }
 
             }else if(module.type === "PDF" && (typeof(module.pdf) !== 'undefined')){
                
@@ -173,17 +178,20 @@ function ModuleEditor(props) {
                     })
                 })
                 const data = await res.json()
-                if (data.message === undefined) {
+                if (data.message === "unauthorized") {
+                    props.history.push('dashboard');
+                } else if (data.message === undefined) {
                     const res = await fetch(config.server_url + config.paths.moduleFileUpload +"?token=" + token + "&courseID=" + courseID + "&imageName=" + module.pdf.name, {
                     method: 'POST',
                     body: newFile
                     })
                     const data2 = await res.json()
-                    console.log(data2)
 
-                    if (data2.status === 'Success') {
+                    if (data2.message === "unauthorized") {
+                        props.history.push('dashboard');
+                    } else if (data2.status === 'Success') {
                         alert("Successfully Edited PDF module")
-                        props.history.push('/course/'+courseID)
+                        props.history.push('/course/' + courseID)
                     } //else need to do something, not sure what rn
                 } else { // this is to check if there are errors not being addressed already
                     console.log(data)
@@ -222,17 +230,20 @@ function ModuleEditor(props) {
                     })
                 })
                 const data = await res.json()
-                if (data.message === undefined) {
+                if (data.message === "unauthorized") {
+                    props.history.push('dashboard');
+                } else if (data.message === undefined) {
                     const res = await fetch(config.server_url + config.paths.moduleFileUpload +"?token=" + token + "&courseID=" + courseID + "&imageName=" + module.file.name, {
                     method: 'POST',
                     body: newFile
                     })
                     const data2 = await res.json()
-                    console.log(data2)
-
-                    if (data2.status === 'Success') {
+                    
+                    if (data2.message === "unauthorized") {
+                        props.history.push('dashboard');
+                    } else if (data2.status === 'Success') {
                         alert("Successfully Edited File module")
-                        props.history.push('/course/'+courseID)
+                        props.history.push('/course/' + courseID)
                     } //else need to do something, not sure what rn
                 } else { // this is to check if there are errors not being addressed already
                     console.log(data)
@@ -267,26 +278,29 @@ function ModuleEditor(props) {
                         'type': module.type,
                         "urlVideo": `http://localhost:4000/`+courseID+`/moduleData/${module.video.name}`,
                     })
-                    
+
                 })
 
                 const data = await res.json()
-                if (data.message === undefined) {
+                if (data.message === "unauthorized") {
+                    props.history.push('dashboard');
+                } else if (data.message === undefined) {
                     const res = await fetch(config.server_url + config.paths.moduleFileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.video.name, {
                     method: 'POST',
                     body: newVideo
                     })
                     const data2 = await res.json()
-                    console.log(data2)
 
-                    if (data2.status === 'Success') {
+                    if (data2.message === "unauthorized") {
+                        props.history.push('dashboard');
+                    } else if (data2.status === 'Success') {
                         alert("Successfully Edited video module")
-                        props.history.push('/course/'+courseID)
+                        props.history.push('/course/' + courseID)
                     } //else need to do something, not sure what rn
                 } else { // this is to check if there are errors not being addressed already
                     console.log(data)
                 }
-            }else {
+            } else {
                 res = await fetch(config.server_url + config.paths.editModule, {
 
                     method: 'POST',
@@ -298,14 +312,16 @@ function ModuleEditor(props) {
 
                 const data = await res.json()
 
-                if (data.message === undefined) {
+                if (data.message === "unauthorized") {
+                    props.history.push('dashboard');
+                } else if (data.message === undefined) {
                     alert('worked')
-                    props.history.push('/course/'+courseID)
+                    props.history.push('/course/' + courseID)
                 }
                 else { // this is to check if there are errors not being addressed already
                     console.log(data)
                 }
-            } 
+            }
         }
     }
 
@@ -368,10 +384,10 @@ function ModuleEditor(props) {
                                     <FormHelperText>Required</FormHelperText>
                                 </FormControl>
 
-                                {type === 'PDF' && <PDFCreator setPDF={setPDF} pdf={pdf}/>}
-                                {type === 'Video' && <VideoCreator setVideo={setVideo} video = {video}/>}
-                                {type === 'File' && <FileCreator setFile={setFile} file = {file}/>}
-                                {type == 'Quiz' && <QuizCreator gradeToPass={gradeToPass} setGradeToPass={setGradeToPass}/>}
+                                {type === 'PDF' && <PDFCreator setPDF={setPDF} pdf={pdf} />}
+                                {type === 'Video' && <VideoCreator setVideo={setVideo} video={video} />}
+                                {type === 'File' && <FileCreator setFile={setFile} file={file} />}
+                                {type == 'Quiz' && <QuizCreator gradeToPass={gradeToPass} setGradeToPass={setGradeToPass} />}
 
                             </div>
                             <Container className={classes.buttonGroup}>
