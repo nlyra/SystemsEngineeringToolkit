@@ -161,6 +161,9 @@ function NewCourse(props) {
                     "name": creds.courseTitle,
                     "categories": creds.categories,
                     "description": creds.description,
+                    "skillLevel": skillLevel,
+                    "intendedAudience": intendedAudience,
+                    "prerequisite": prerequisite,
                     "urlImage": `http://localhost:4000/misc_files/logo.jpg`
                 })
             }

@@ -16,7 +16,7 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import courseStyles from '../styles/courseStyle';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import { green } from '@material-ui/core/colors';
+import { green, grey } from '@material-ui/core/colors';
 
 
 const Course = (props) => {
@@ -98,6 +98,9 @@ const Course = (props) => {
       setCurrCourseImage(data.course.urlImage);
       setCourseTitle(data.course.name);
       setCourseDescription(data.course.description);
+      setSkillLevel(data.course.skillLevel);
+      setIntendedAudience(data.course.intendedAudience);
+      setPrerequisite(data.course.prerequisite);
       setModules(data.course.modules);
       if (data.course.author === "yes")
         setIsOwner(true);
@@ -114,7 +117,6 @@ const Course = (props) => {
     // e.preventDefault()
     setEditCourseInfo(false);
     const token = localStorage.getItem("token");
-
     const res = await fetch(config.server_url + config.paths.updateCourseInfo, {
       method: 'POST',
       headers: {
@@ -457,6 +459,14 @@ const Course = (props) => {
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                   >
+                    {module.completed !== 1 &&
+                      <CheckCircleIcon
+                        style={{
+                          color: grey[500],
+                          marginRight: '20px'
+                        }}
+                      />
+                    }
 
                     <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
                   </AccordionSummary>
@@ -472,6 +482,14 @@ const Course = (props) => {
                       <CheckCircleIcon
                         style={{
                           color: green[500],
+                          marginRight: '20px'
+                        }}
+                      />
+                    }
+                    {module.completed !== 1 &&
+                      <CheckCircleIcon
+                        style={{
+                          color: grey[500],
                           marginRight: '20px'
                         }}
                       />
