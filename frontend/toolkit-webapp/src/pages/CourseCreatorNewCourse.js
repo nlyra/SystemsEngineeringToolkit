@@ -115,7 +115,7 @@ function NewCourse(props) {
                     props.history.push('dashboard');
                 } else if (data2.status === 'Success') {
                     alert("Successfully created course!")
-                    props.history.push('/dashboard')// needs to be changed to course manager
+                    props.history.push('/course/' + data._id)// needs to be changed to course manager
                 } //else need to do something, not sure what rn
             }
             else { // this is to check if there are errors not being addressed already
@@ -160,12 +160,11 @@ function NewCourse(props) {
             }
             )
             const data = await res2.json()
-
             if (data.message === "unauthorized") {
                 props.history.push('dashboard');
             } else if (data.message === undefined) {
                 alert("Successfully created course!")
-                props.history.push('/dashboard')// needs to be changed to course manager
+                props.history.push('/course/' + data._id)// needs to be changed to course manager
             } else { // this is to check if there are errors not being addressed already
                 console.log(data)
             }
