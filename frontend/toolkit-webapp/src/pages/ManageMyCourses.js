@@ -123,10 +123,6 @@ const ManageMyCourses = (props) => {
                                     </CardContent>
                                     <Grid container spacing={3}>
                                     </Grid>
-                                </Card>
-
-                             {/* TODO: Figure out a way to reload the page without simply linking back to the same page.  */}
-
                                 <Link href="/ManageMyCourses" underline='none' color="inherit"> 
                                 <div className={classes.buttonDiv}>
                                     <Button type='submit' className={classes.removeButton} size= "small" color="inherit" variant="contained" onClick={() => {if (window.confirm('Are you sure you wish to delete this course permanently?'))  deleteCourse(course._id) }}>
@@ -134,6 +130,10 @@ const ManageMyCourses = (props) => {
                                     </Button>
                                     </div>
                                 </Link> 
+                                </Card>
+
+                             {/* TODO: Figure out a way to reload the page without simply linking back to the same page.  */}
+
                                 
                             </Grid>
 

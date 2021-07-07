@@ -22,7 +22,7 @@ const myCoursesStyle = makeStyles((theme) => ({
 
     container:
     {
-        marginTop: theme.spacing(10)
+        marginTop: theme.spacing(15)
     },
 
     card:
@@ -50,7 +50,8 @@ const myCoursesStyle = makeStyles((theme) => ({
     
     removeButton:
     {
-        width: "100%"
+        width: "100%",
+        marginTop: '10px'
     },
 
     // buttonDiv:
