@@ -11,7 +11,6 @@ import Button from '@material-ui/core/Button';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
-import DescriptionIcon from '@material-ui/icons/Description';
 import BookOutlinedIcon from '@material-ui/icons/BookOutlined';
 import HomeIcon from '@material-ui/icons/Home';
 // import LogoutIcon from '@material-ui/icons/Logout';
@@ -995,15 +994,6 @@ export default function TopNavBar(props) {
                                 <ListItem button>
                                     <ListItemIcon><MenuBookIcon /></ListItemIcon>
                                     <ListItemText primary="My Courses" />
-                                </ListItem>
-                            </Tooltip>
-                        </Link>
-
-                        <Link href="/MyFiles" underline='none' color="inherit">
-                            <Tooltip title="My Files" enterDelay={500}>
-                                <ListItem button>
-                                    <ListItemIcon><DescriptionIcon /></ListItemIcon>
-                                    <ListItemText primary="My Files" />
                                 </ListItem>
                             </Tooltip>
                         </Link>
