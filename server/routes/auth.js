@@ -103,7 +103,7 @@ router.post('/login', async (req, res) => {
                 // everything is correct
 
                 // token handling  (we might discuss what will be the secret key)
-                const token = jwt.sign({ id: user._id, email: req.body.email }, config.key, { expiresIn: '2h' });
+                const token = jwt.sign({ id: user._id, email: req.body.email }, config.key, { expiresIn: '1min' });
 
                 // set payload and return response
                 res.json({ token: token });
@@ -136,8 +136,7 @@ function verifyToken(req, res, next) {
 
     jwt.verify(token, config.key, function (err, decoded) {
         if (err) {
-            console.log(err.message)
-            res.sendStatus(403)
+            res.json({ 'message': 'wrong token' });
         }
 
         req.body.userID = decoded.id;
