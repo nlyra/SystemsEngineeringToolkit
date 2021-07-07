@@ -11,9 +11,8 @@ import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 const Dashboard = (props) => {
     const [courses, setCourses] = useState([])
     const [next, setHasNext] = useState(0)
-    const [hasNextPage, setHasNextPage] = useState(true);
     const [totalCourses, setTotalCourses] = useState(0)
-    const cardAmount = 20
+    const cardAmount = 8
 
     const classes = dashStyles()
 
@@ -25,6 +24,7 @@ const Dashboard = (props) => {
 
     const loadMoreCourses = useCallback(() => {
 
+        console.log('triggered')
         if ((totalCourses === courses.length))
             return 
             
@@ -32,12 +32,15 @@ const Dashboard = (props) => {
       })
 
     // function to get the courses 
-    const loadCourses = async (query, next) => {
-        
+    const loadCourses = async (query, currNext) => {
+        // console.log('hello')
         const token = localStorage.getItem("token");
         let res = undefined
-        let skip = (next - 1) * cardAmount
 
+        // console.log('currNext= ' + currNext)
+        let skip = (currNext - 1) * cardAmount
+        // console.log(skip)
+  
         res = await fetch(config.server_url + config.paths.dashboardCourses, {
             method: 'POST',
             headers: {
@@ -47,11 +50,17 @@ const Dashboard = (props) => {
         })
 
         const data = await res.json()
+        console.log(data)
         if (data.status === "loading") {
            
-            setCourses(courses.concat(data.courses));
+            if(skip = 0)
+                setCourses(data.courses)
+            else
+                setCourses(courses.concat(data.courses));
+
             setTotalCourses(data.totalCourses)
-            setHasNext(next)
+            console.log(currNext)
+            setHasNext(currNext)
 
         } 
         else if (data.status === "search")

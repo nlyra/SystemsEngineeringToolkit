@@ -561,7 +561,7 @@ export default function TopNavBar(props) {
                       input: classes.inputInput,
                     }}
                     inputProps={{ 'aria-label': 'search' }}
-                    onChange={e => props.search(e.target.value)}
+                    onChange={e => props.search(e.target.value, 1)}
                   />
                 </div>
                 :
