@@ -17,6 +17,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import courseStyles from '../styles/courseStyle';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { green, grey } from '@material-ui/core/colors';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 
 
 const Course = (props) => {
@@ -460,7 +461,7 @@ const Course = (props) => {
                     id="panel1a-header"
                   >
                     {module.completed !== 1 &&
-                      <CheckCircleIcon
+                      <RadioButtonUncheckedIcon
                         style={{
                           color: grey[500],
                           marginRight: '20px'
@@ -487,7 +488,7 @@ const Course = (props) => {
                       />
                     }
                     {module.completed !== 1 &&
-                      <CheckCircleIcon
+                      <RadioButtonUncheckedIcon
                         style={{
                           color: grey[500],
                           marginRight: '20px'
