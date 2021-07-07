@@ -546,6 +546,7 @@ router.post('/module/update', VerifyToken, GetRole, async (req, res) => {
           }
         });
     } else if (req.body.type === "PDF") {
+      
       const update = await Course.updateOne(
         { _id: req.body.courseID }, // query parameter
         {
