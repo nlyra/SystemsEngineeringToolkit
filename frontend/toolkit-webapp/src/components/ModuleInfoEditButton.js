@@ -17,9 +17,12 @@ export default function ModuleInfoEditButton(props) {
     const classes = useStyles();
 
     const sendModule = () => {
+        sessionStorage.clear()
         localStorage.setItem("module", JSON.stringify(props.module))
+        if(props.module.type === "Quiz"){
+            sessionStorage.setItem("quiz", JSON.stringify(props.module.quiz))
+        }
     }
-
     return (
         <div>
             { props.hideComponent !== true ?

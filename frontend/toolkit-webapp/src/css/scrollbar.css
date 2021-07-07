@@ -1,0 +1,10 @@
+
+/* This css hides the web browser scrollbar as well as ALL scrollbars in code */
+
+html {
+    overflow: scroll;
+  }
+  ::-webkit-scrollbar  {
+      width: 0px;
+     background: transparent;  
+  }
