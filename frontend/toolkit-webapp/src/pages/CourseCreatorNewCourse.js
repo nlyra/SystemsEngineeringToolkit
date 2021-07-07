@@ -262,6 +262,7 @@ function NewCourse(props) {
                                 <Autocomplete
                                     multiple
                                     limitTags={3}
+                                    fullWidth
                                     className={classes.categoryContainer}
                                     id="multiple-limit-tags"
                                     options={dialogData}
