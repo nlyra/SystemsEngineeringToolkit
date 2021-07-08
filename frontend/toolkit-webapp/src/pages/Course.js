@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import { IconButton, Link, FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
+import { IconButton, Chip, InputLabel, Select, MenuItem, FormControl, Link, FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
 import VideoModule from '../components/VideoModule'
 import PdfModule from '../components/PdfModule'
 import QuizModule from '../components/QuizModule'
@@ -15,6 +15,9 @@ import ModuleInfoEditButton from '../components/ModuleInfoEditButton';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import courseStyles from '../styles/courseStyle';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import { green, grey } from '@material-ui/core/colors';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 
 
 const Course = (props) => {
@@ -24,6 +27,9 @@ const Course = (props) => {
   const [currCourseImage, setCurrCourseImage] = useState('')
   const [courseTitle, setCourseTitle] = useState('')
   const [courseDescription, setCourseDescription] = useState('')
+  const [intendedAudience, setIntendedAudience] = useState('')
+  const [prerequisite, setPrerequisite] = useState('')
+  const [skillLevel, setSkillLevel] = useState('')
   const [editCourseInfo, setEditCourseInfo] = useState(false)
   const [courseID, setCourseID] = useState('')
   const [isCreator, setIsCreator] = useState(false);
@@ -86,7 +92,6 @@ const Course = (props) => {
     })
 
     const data = await res.json()
-
     if (data.message === undefined) {
       setCourse(data.course);
       setCourseID(id);
@@ -94,6 +99,9 @@ const Course = (props) => {
       setCurrCourseImage(data.course.urlImage);
       setCourseTitle(data.course.name);
       setCourseDescription(data.course.description);
+      setSkillLevel(data.course.skillLevel);
+      setIntendedAudience(data.course.intendedAudience);
+      setPrerequisite(data.course.prerequisite);
       setModules(data.course.modules);
       if (data.course.author === "yes")
         setIsOwner(true);
@@ -110,7 +118,6 @@ const Course = (props) => {
     // e.preventDefault()
     setEditCourseInfo(false);
     const token = localStorage.getItem("token");
-
     const res = await fetch(config.server_url + config.paths.updateCourseInfo, {
       method: 'POST',
       headers: {
@@ -121,6 +128,9 @@ const Course = (props) => {
         'courseID': courseID,
         "name": courseTitle,
         "description": courseDescription,
+        "skillLevel": skillLevel,
+        "intendedAudience": intendedAudience,
+        "prerequisite": prerequisite,
       })
     })
 
@@ -297,7 +307,7 @@ const Course = (props) => {
       <TopNavBar >
       </TopNavBar>
       <Grid container direction="column" className={classes.div}>
-        {editCourseInfo !== true ?
+        {editCourseInfo !== true ? // student view
           <div maxWidth>
             <Grid item alignItems="center" xs={12}>
               <Grid container className={classes.topItem}>
@@ -323,14 +333,14 @@ const Course = (props) => {
               <Typography className={classes.description}>{course.description}</Typography>
             </Grid>
           </div>
-          :
+          : // creator view
           <div maxWidth>
             <Grid item xs={12} >
               <Grid container className={classes.topItem}>
                 <Grid item xs={3} sm={2} lg={1}>
                   <img src={course.urlImage} className={classes.currCourseImageStyle} />
                 </Grid>
-                <Grid item xs={9} sm={10} lg={11} align={"center"}>
+                <Grid item xs={9} sm={10} lg={11} align={"center"} style={{ marginTop: '2vh' }}>
                   <TextField
                     color='primary'
                     size='medium'
@@ -341,14 +351,12 @@ const Course = (props) => {
                     defaultValue={course.name}
                     onChange={e => setCourseTitle(e.target.value)}
                     margin="normal"
-                  //fullWidth
-                  //style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                   />
                 </Grid>
-                <input type="file" name="picture" accept="image/*" className={classes.currCourseImageStyle} onChange={e => setCurrCourseImage(e.target.files[0])} />
+                <input style={{ marginLeft: '4vw' }} type="file" name="picture" accept="image/*" className={classes.currCourseImageStyle} onChange={e => setCurrCourseImage(e.target.files[0])} />
               </Grid>
             </Grid>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} lg={6} align={"center"} style={{ marginLeft: '4vw', marginRight: '4vw' }}>
               <TextField
                 color='primary'
                 size='medium'
@@ -365,11 +373,61 @@ const Course = (props) => {
                 rowsMax={10}
               />
             </Grid>
-            <Button variant="contained" onClick={onEditSubmit}>Submit</Button>
+            <Grid item xs={12} lg={6} style={{ marginLeft: '4vw', marginRight: '4vw' }}>
+              <TextField
+                color='primary'
+                size='medium'
+                variant='filled'
+                label='Intended Audience'
+                type="text"
+                defaultValue={course.intendedAudience}
+                onChange={e => setIntendedAudience(e.target.value)}
+                margin="normal"
+                required={true}
+                fullWidth
+              />
+              <TextField
+                color='primary'
+                size='medium'
+                variant='filled'
+                label='Pre Requisite'
+                type="text"
+                defaultValue={course.prerequisite}
+                onChange={e => setPrerequisite(e.target.value)}
+                margin="normal"
+                required={true}
+                fullWidth
+              />
+              <FormControl variant="outlined" className={classes.skillSelector}>
+                <InputLabel htmlFor="grouped-native-select">Skill Level</InputLabel>
+                <Select
+                  labelId="demo-simple-select-outlined-label"
+                  id="demo-simple-select-outlined"
+                  defaultValue={course.skillLevel}
+                  onChange={(e) => setSkillLevel(e.target.value)}
+                  label="Skill Label"
+                // className={classes.select}
+                >
+                  <MenuItem value={"Easy"}>Easy</MenuItem>
+                  <MenuItem value={"Medium"}>Medium</MenuItem>
+                  <MenuItem value={"Hard"}>Hard</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Button variant="contained" onClick={onEditSubmit} style={{ marginLeft: '4vw' }} >Submit</Button>
           </div>
         }
 
         <br></br>
+        {editCourseInfo !== true &&
+          <Grid item xs={12}>
+            <div className={classes.statsDiv}>
+              <Chip label={"Skill Level: " + course.skillLevel} variant="outlined" />
+              <Chip label={"Audience: " + course.intendedAudience} variant="outlined" />
+              <Chip label={"Pre Requisite: " + course.prerequisite} variant="outlined" />
+            </div>
+          </Grid>
+        }
         <Grid item xs={12}>
           <Divider className={classes.divider} />
         </Grid>
@@ -402,6 +460,14 @@ const Course = (props) => {
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                   >
+                    {module.completed !== 1 &&
+                      <RadioButtonUncheckedIcon
+                        style={{
+                          color: grey[500],
+                          marginRight: '20px'
+                        }}
+                      />
+                    }
 
                     <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
                   </AccordionSummary>
@@ -413,6 +479,22 @@ const Course = (props) => {
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                   >
+                    {module.completed === 1 &&
+                      <CheckCircleIcon
+                        style={{
+                          color: green[500],
+                          marginRight: '20px'
+                        }}
+                      />
+                    }
+                    {module.completed !== 1 &&
+                      <RadioButtonUncheckedIcon
+                        style={{
+                          color: grey[500],
+                          marginRight: '20px'
+                        }}
+                      />
+                    }
                     {(isCreator && isOwner) &&
                       <div>
                         <FormControlLabel

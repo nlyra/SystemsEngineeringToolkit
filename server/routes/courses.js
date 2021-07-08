@@ -14,7 +14,7 @@ router.post('/course', VerifyToken, async (req, res) => {
 
     // get course info
     let course = {}
-    course = await Course.findOne({ "_id": req.body.id }, '_id name description urlImage modules author');
+    course = await Course.findOne({ "_id": req.body.id }, '_id name description urlImage modules skillLevel intendedAudience prerequisite author');
 
     for (let i = 0; i < course.modules.length; i++) {
       if (course.modules[i].type == "Quiz") {
@@ -68,7 +68,9 @@ router.post('/course/update', VerifyToken, GetRole, async (req, res) => {
         $set: {
           name: req.body.name,
           description: req.body.description,
-          // urlImage: req.body.courseImage
+          skillLevel: req.body.skillLevel,
+          intendedAudience: req.body.intendedAudience,
+          prerequisite: req.body.prerequisite,
         }
       })
 
@@ -245,6 +247,9 @@ router.post('/create', VerifyToken, GetRole, async (req, res) => {
       description: req.body.description,
       urlImage: req.body.urlImage,
       categories: req.body.categories,
+      skillLevel: req.body.skillLevel,
+      intendedAudience: req.body.intendedAudience,
+      prerequisite: req.body.prerequisite,
       author: req.body.userID
     })
 
@@ -252,7 +257,7 @@ router.post('/create', VerifyToken, GetRole, async (req, res) => {
 
     findCourse = await Course.findOne({ "name": req.body.name, "description": req.body.description }, '_id')
 
-    
+
     // console.log(findCourse._id)
     const updateUser = await User.updateOne(
       { _id: req.body.userID },
@@ -317,14 +322,12 @@ router.post('/removeFile', VerifyToken, GetRole, async (req, res) => {
 
     course = await Course.findOne({ _id: req.body.courseID }, 'urlImage')
 
-    if(course !== undefined)
-    {
+    if (course !== undefined) {
       const pathname = course.urlImage.split('/')
       const imageName = pathname[pathname.length - 1]
 
       // Special case for when first cover image change involves original PEO STRI logo
-      if(pathname[pathname.length - 2] !== 'misc_files')
-      {
+      if (pathname[pathname.length - 2] !== 'misc_files') {
         const path = 'public/' + req.body.courseID + '/' + imageName
 
         fs.unlinkSync(path)
@@ -489,6 +492,36 @@ router.post('/module/score', VerifyToken, async (req, res) => {
           coursesData: courses
         }
       });
+
+    // If the user completed the first module, do the checks for enrollment. Otherwise, proceed as usual
+    if (req.body.moduleID == 0) {
+      let studentExists = {}
+      studentExists = await Course.findOne({ "_id": req.body.courseID, "studentsEnrolled": req.body.userID }, '_id studentsEnrolled')
+      if (studentExists === null) {
+        console.log('here')
+
+        const updateCourse = await Course.updateOne(
+          { _id: req.body.courseID },
+          {
+            $push: {
+              studentsEnrolled:
+                req.body.userID
+            },
+            $inc: { totalStudents: 1, currStudents: 1 }
+          });
+
+        const updateUser = await User.updateOne(
+          { _id: req.body.userID },
+          {
+            $push: {
+              enrolledClasses:
+                req.body.courseID
+            }
+
+          });
+
+      }
+    }
 
 
     res.json({ 'status': 'grade saved' });

@@ -18,7 +18,7 @@ const dashStyles = makeStyles((theme) => ({
   },
 
   currCourseImageStyle: {
-   marginTop: '3vh',
+    marginTop: '3vh',
     maxWidth: '35vh',
     maxHeight: '35vh',
     // marginRight: "10%"
@@ -60,13 +60,13 @@ const dashStyles = makeStyles((theme) => ({
   deleteButton: {
     height: 0.5,
   },
-  
+
   fileDiv: {
     width: '100%',
     display: 'flex',
     justifyContent: 'center'
   },
-  
+
   accordionDiv: {
     width: '100%'
   },
@@ -74,7 +74,22 @@ const dashStyles = makeStyles((theme) => ({
   completeDiv: {
     display: 'flex',
     justifyContent: 'flex-end'
+  },
+
+  statsDiv: {
+    display: 'flex',
+    justifyContent: 'center',
+    '& > *': {
+      margin: theme.spacing(0.5),
+    },
+  },
+
+  skillSelector: {
+    width: '130px',
+    marginTop: "1.5vh",
+    marginBottom: '20px'
   }
+
 }))
 
 export default dashStyles;
