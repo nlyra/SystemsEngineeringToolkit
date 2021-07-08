@@ -29,8 +29,8 @@ const myCoursesStyle = makeStyles((theme) => ({
     {
         height: '100%',
         display: 'flex',
-        flexDirection: 'column'
-        // marginBottom: '0px'
+        flexDirection: 'column',
+        // marginBottom: '50px'
     },
 
     cardMedia:
@@ -101,13 +101,15 @@ const myCoursesStyle = makeStyles((theme) => ({
     
     removeButton:
     {
-        width: "100%"
+        width: "100%",
+        // marginBottom: '50px'
     },
 
     // buttonDiv:
     // {
-    //     // paddingLeft: "30%"
+    //     marginBottom: '50px'
     // }
+
 }))
 
 export default myCoursesStyle;
