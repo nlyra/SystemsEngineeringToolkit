@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Container, TextField, Typography, Box, Paper } from '@material-ui/core'
+import { Button, Container, TextField, Typography, Box, Paper, Select, MenuItem, FormControl, InputLabel } from '@material-ui/core'
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import Chip from '@material-ui/core/Chip';
@@ -15,6 +15,9 @@ function NewCourse(props) {
     const [courseTitle, setCourseTitle] = useState('')
     const [categories, setCategories] = useState([])
     const [description, setDescription] = useState('')
+    const [skillLevel, setSkillLevel] = useState('Easy')
+    const [intendedAudience, setIntendedAudience] = useState('')
+    const [prerequisite, setPrerequisite] = useState('')
     const [image, setImage] = useState()
     const [dialogData, setDialogData] = useState([]);
     const filter = createFilterOptions();
@@ -23,11 +26,11 @@ function NewCourse(props) {
 
     const onSubmit = (e) => {
         e.preventDefault()
-        if (!courseTitle || !categories || !description) {
+        if (!courseTitle || !categories || !description || !intendedAudience || !prerequisite) {
             alert('Please enter all required fields')
             return
         }
-        console.log("categories on submit: " + categories)
+        // console.log("categories on submit: " + categories)
         onFinish({ courseTitle, categories, description })
     }
 
@@ -75,6 +78,9 @@ function NewCourse(props) {
                     "name": creds.courseTitle,
                     "categories": creds.categories,
                     "description": creds.description,
+                    "skillLevel": skillLevel,
+                    "intendedAudience": intendedAudience,
+                    "prerequisite": prerequisite,
                     "urlImage": `http://localhost:4000/${image.name}`
                 })
             })
@@ -155,6 +161,9 @@ function NewCourse(props) {
                     "name": creds.courseTitle,
                     "categories": creds.categories,
                     "description": creds.description,
+                    "skillLevel": skillLevel,
+                    "intendedAudience": intendedAudience,
+                    "prerequisite": prerequisite,
                     "urlImage": `http://localhost:4000/misc_files/logo.jpg`
                 })
             }
@@ -252,6 +261,7 @@ function NewCourse(props) {
                                 <Autocomplete
                                     multiple
                                     limitTags={3}
+                                    fullWidth
                                     className={classes.categoryContainer}
                                     id="multiple-limit-tags"
                                     options={dialogData}
@@ -302,6 +312,46 @@ function NewCourse(props) {
                                     required={true}
                                     fullWidth
                                 />
+
+                                <TextField
+                                    size='small'
+                                    variant="filled"
+                                    label='Intended Audience'
+                                    type="intendedAudience"
+                                    value={intendedAudience}
+                                    onChange={e => setIntendedAudience(e.target.value)}
+                                    margin="normal"
+                                    required={true}
+                                    fullWidth
+                                />
+
+                                <TextField
+                                    size='small'
+                                    variant="filled"
+                                    label='Pre Requisite'
+                                    type="prerequisite"
+                                    value={prerequisite}
+                                    onChange={e => setPrerequisite(e.target.value)}
+                                    margin="normal"
+                                    required={true}
+                                    fullWidth
+                                />
+
+                                <FormControl variant="outlined" className={classes.skillSelector}>
+                                    <InputLabel htmlFor="grouped-native-select">Skill Level</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-outlined-label"
+                                        id="demo-simple-select-outlined"
+                                        defaultValue={skillLevel}
+                                        onChange={(e) => setSkillLevel(e.target.value)}
+                                        label="Skill Label"
+                                    // className={classes.select}
+                                    >
+                                        <MenuItem value={"Easy"}>Easy</MenuItem>
+                                        <MenuItem value={"Medium"}>Medium</MenuItem>
+                                        <MenuItem value={"Hard"}>Hard</MenuItem>
+                                    </Select>
+                                </FormControl>
                             </div>
                             <input type="file" name="picture" accept="image/*" onChange={e => setImage(e.target.files[0])} />
                             <Button type='submit' className={classes.button4} size="medium" variant="contained" startIcon={<ArrowForwardIcon />} onClick={onSubmit}>

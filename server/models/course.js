@@ -49,6 +49,18 @@ const CourseSchema = mongoose.Schema({
   isEnabled: {
     type: Boolean,
     default: false
+  },
+  
+  skillLevel: {
+    type: String
+  },
+  
+  intendedAudience: {
+    type: String
+  },
+
+  prerequisite: {
+    type: String
   }
 
 })

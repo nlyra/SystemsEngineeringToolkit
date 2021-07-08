@@ -76,7 +76,9 @@ router.post('/course/update', VerifyToken, GetRole, async (req, res) => {
         $set: {
           name: req.body.name,
           description: req.body.description,
-          // urlImage: req.body.courseImage
+          skillLevel: req.body.skillLevel,
+          intendedAudience: req.body.intendedAudience,
+          prerequisite: req.body.prerequisite,
         }
       })
 
@@ -255,6 +257,9 @@ router.post('/create', VerifyToken, GetRole, async (req, res) => {
       description: req.body.description,
       urlImage: req.body.urlImage,
       categories: req.body.categories,
+      skillLevel: req.body.skillLevel,
+      intendedAudience: req.body.intendedAudience,
+      prerequisite: req.body.prerequisite,
       author: req.body.userID
     })
 
@@ -497,6 +502,36 @@ router.post('/module/score', VerifyToken, async (req, res) => {
           coursesData: courses
         }
       });
+
+    // If the user completed the first module, do the checks for enrollment. Otherwise, proceed as usual
+    if (req.body.moduleID == 0) {
+      let studentExists = {}
+      studentExists = await Course.findOne({ "_id": req.body.courseID, "studentsEnrolled": req.body.userID }, '_id studentsEnrolled')
+      if (studentExists === null) {
+        console.log('here')
+
+        const updateCourse = await Course.updateOne(
+          { _id: req.body.courseID },
+          {
+            $push: {
+              studentsEnrolled:
+                req.body.userID
+            },
+            $inc: { totalStudents: 1, currStudents: 1 }
+          });
+
+        const updateUser = await User.updateOne(
+          { _id: req.body.userID },
+          {
+            $push: {
+              enrolledClasses:
+                req.body.courseID
+            }
+
+          });
+
+      }
+    }
 
 
     res.json({ 'status': 'grade saved' });
