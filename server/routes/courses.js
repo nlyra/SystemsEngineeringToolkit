@@ -152,6 +152,7 @@ router.post('/info', VerifyToken, async (req, res) => {
 
   try {
     let courses = []
+    let totalCourses = await Course.find().countDocuments()
 
     if (req.body.search_query != undefined) {
       const query = req.body.search_query;
@@ -160,12 +161,13 @@ router.post('/info', VerifyToken, async (req, res) => {
           { "categories.label": { "$regex": query, $options: 'i' } },
           { "name": { "$regex": query, $options: 'i' } },
         ]
-      }, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
+      }, '_id name description urlImage categories');
+      res.json({ "status": "search", "courses": courses, "totalCourses": totalCourses });
     } else {
-      courses = await Course.find({}, '_id name description urlImage categories', { limit: req.body.cardAmount }).sort({ totalStudents: -1 }).skip(req.body.skip);
+      courses = await Course.find({}, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
+      res.json({ "status": "loading", "courses": courses, "totalCourses": totalCourses });
     }
 
-    res.json({ "courses": courses });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -174,12 +176,12 @@ router.post('/info', VerifyToken, async (req, res) => {
 })
 
 router.post('/myCreatedCoursesInfo', VerifyToken, GetRole, async (req, res) => {
+
   try {
     if (req.body.roleID != 1) {
       res.json({ message: "unauthorized" })
       return
     }
-
 
     let courses = []
     const user = await User.findOne({ _id: req.body.userID })
@@ -320,10 +322,14 @@ router.post('/removeFile', VerifyToken, GetRole, async (req, res) => {
       const pathname = course.urlImage.split('/')
       const imageName = pathname[pathname.length - 1]
 
-      const path = 'public/' + req.body.courseID + '/' + imageName
+      // Special case for when first cover image change involves original PEO STRI logo
+      if(pathname[pathname.length - 2] !== 'misc_files')
+      {
+        const path = 'public/' + req.body.courseID + '/' + imageName
 
-      fs.unlinkSync(path)
-      res.json({ 'status': 'module added' });
+        fs.unlinkSync(path)
+      }
+      res.json({ 'status': 'file removed' });
     }
 
   } catch (err) {
@@ -540,6 +546,7 @@ router.post('/module/update', VerifyToken, GetRole, async (req, res) => {
           }
         });
     } else if (req.body.type === "PDF") {
+      
       const update = await Course.updateOne(
         { _id: req.body.courseID }, // query parameter
         {

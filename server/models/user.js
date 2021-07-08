@@ -18,7 +18,6 @@ const UserSchema = mongoose.Schema({
         required: true
     },
 
-
     resetPassToken: {
         type: String,
         required: false
@@ -31,9 +30,12 @@ const UserSchema = mongoose.Schema({
 
     enrolledClasses: [],
 
+    completedCourses: [],
+    
     createdCourses: [],
 
     coursesData: [],
+
 
     roleID: {
         type: Number,
