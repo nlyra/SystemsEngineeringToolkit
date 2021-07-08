@@ -38,7 +38,7 @@ const dashStyles = makeStyles((theme) => ({
   },
 
   accordion: {
-    padding: '3%',
+    padding: '2vw',
   },
 
   heading: {
@@ -76,12 +76,26 @@ const dashStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end'
   },
 
+  enableButton:{
+    display: 'flex',
+    justifyContent: 'flex-end',
+    paddingBottom: '1vh',
+    paddingRight: '3vw',
+    '& > *': {
+      margin: theme.spacing(0.5),
+    },
+  },
+
   statsDiv: {
     display: 'flex',
     justifyContent: 'center',
     '& > *': {
       margin: theme.spacing(0.5),
     },
+  },
+
+  addButton:{
+    marginLeft: '2vw'
   },
 
   skillSelector: {

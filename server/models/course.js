@@ -46,6 +46,11 @@ const CourseSchema = mongoose.Schema({
     type: String
   },
 
+  isEnabled: {
+    type: Boolean,
+    default: false
+  },
+  
   skillLevel: {
     type: String
   },
