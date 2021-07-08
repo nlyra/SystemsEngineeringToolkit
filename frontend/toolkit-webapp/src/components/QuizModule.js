@@ -53,6 +53,10 @@ const QuizModule = (props) => {
     })
 
     const data = await res.json()
+    
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
     if (data.message === undefined) {
       window.location.reload();
       //maybe do something in the future

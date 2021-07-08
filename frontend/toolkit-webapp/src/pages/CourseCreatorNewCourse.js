@@ -102,6 +102,11 @@ function NewCourse(props) {
 
             const data = await res.json()
 
+
+            if (data.newToken != undefined)
+                localStorage.setItem("token", data.newToken)
+
+
             if (data.message === "unauthorized") {
                 props.history.push('dashboard');
             } else if (data.message === undefined) {
@@ -161,6 +166,13 @@ function NewCourse(props) {
             )
             const data = await res2.json()
 
+            if(data.newToken != undefined)
+            localStorage.setItem("token", data.newToken)
+            
+            if (data.newToken != undefined)
+                localStorage.setItem("token", data.newToken)
+
+
             if (data.message === "unauthorized") {
                 props.history.push('dashboard');
             } else if (data.message === undefined) {
@@ -219,6 +231,10 @@ function NewCourse(props) {
         })
 
         const data = await res.json()
+
+        if (data.newToken != undefined)
+            localStorage.setItem("token", data.newToken)
+
         // console.log(data.message)
         if (data.message !== "yes") {
             props.history.push('/dashboard');

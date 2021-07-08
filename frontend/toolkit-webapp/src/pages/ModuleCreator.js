@@ -90,6 +90,9 @@ function ModuleCreator(props) {
 
         const data = await res.json()
 
+        if (data.newToken != undefined)
+            localStorage.setItem("token", data.newToken)
+
         if (data.message !== "yes") {
             props.history.push('/dashboard');
         }
@@ -110,19 +113,19 @@ function ModuleCreator(props) {
             quiz = JSON.parse(sessionStorage.getItem("quiz"))
             sessionStorage.clear()
             onFinish({ title, type, description, quiz })
-        } else if(type === 'PDF' && pdf !== null && typeof(pdf) !== 'undefined'){
-            if(isPDF(pdf.name) === false){
+        } else if (type === 'PDF' && pdf !== null && typeof (pdf) !== 'undefined') {
+            if (isPDF(pdf.name) === false) {
                 alert("File must be a PDF")
             } else {
                 console.log('works for PDF')
                 onFinish({ title, type, description, pdf })
             }
-        } else if(type === 'File' && file !== null && typeof(file) !== 'undefined'){
+        } else if (type === 'File' && file !== null && typeof (file) !== 'undefined') {
             console.log('works for File')
             onFinish({ title, type, description, file })
-            
-        } else if(type === 'Video' && video !== null && typeof(video) !== 'undefined'){
-            if(isVideo(video.name) === false){
+
+        } else if (type === 'Video' && video !== null && typeof (video) !== 'undefined') {
+            if (isVideo(video.name) === false) {
                 alert("File must be a video")
             } else {
                 console.log('works for Video')
@@ -158,7 +161,11 @@ function ModuleCreator(props) {
 
                 const data = await res.json();
 
-            }else if(module.type === "PDF"){
+                if (data.newToken != undefined)
+                    localStorage.setItem("token", data.newToken)
+
+
+            } else if (module.type === "PDF") {
 
                 const pdfTypePath = module.pdf.name.split('.')
 
@@ -194,16 +201,20 @@ function ModuleCreator(props) {
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "urlFile": `http://localhost:4000/`+courseID+`/moduleData/${module.pdf.name}`
+                        "urlFile": `http://localhost:4000/` + courseID + `/moduleData/${module.pdf.name}`
                     })
                 })
                 const data = await res.json()
+
+                if (data.newToken != undefined)
+                    localStorage.setItem("token", data.newToken)
+
                 if (data.message === "unauthorized") {
                     props.history.push('dashboard');
                 } else if (data.message === undefined) {
-                    const res = await fetch(config.server_url + config.paths.moduleFileUpload +"?token=" + token + "&courseID=" + courseID + "&imageName=" + module.pdf.name, {
-                    method: 'POST',
-                    body: newFile
+                    const res = await fetch(config.server_url + config.paths.moduleFileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.pdf.name, {
+                        method: 'POST',
+                        body: newFile
                     })
                     const data2 = await res.json()
 
@@ -216,7 +227,7 @@ function ModuleCreator(props) {
                 } else { // this is to check if there are errors not being addressed already
                     console.log(data)
                 }
-            } else if(module.type === "File"){
+            } else if (module.type === "File") {
 
                 const fileTypePath = module.file.name.split('.')
 
@@ -245,16 +256,20 @@ function ModuleCreator(props) {
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "urlFile": `http://localhost:4000/`+courseID+`/moduleData/${module.file.name}`
+                        "urlFile": `http://localhost:4000/` + courseID + `/moduleData/${module.file.name}`
                     })
                 })
                 const data = await res.json()
+
+                if (data.newToken != undefined)
+                    localStorage.setItem("token", data.newToken)
+
                 if (data.message === "unauthorized") {
                     props.history.push('dashboard');
                 } else if (data.message === undefined) {
-                    const res = await fetch(config.server_url + config.paths.moduleFileUpload +"?token=" + token + "&courseID=" + courseID + "&imageName=" + module.file.name, {
-                    method: 'POST',
-                    body: newFile
+                    const res = await fetch(config.server_url + config.paths.moduleFileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.file.name, {
+                        method: 'POST',
+                        body: newFile
                     })
                     const data2 = await res.json()
 
@@ -296,18 +311,22 @@ function ModuleCreator(props) {
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "urlVideo": `http://localhost:4000/`+courseID+`/moduleData/${module.video.name}`,
+                        "urlVideo": `http://localhost:4000/` + courseID + `/moduleData/${module.video.name}`,
                     })
 
                 })
 
                 const data = await res.json()
+
+                if (data.newToken != undefined)
+                    localStorage.setItem("token", data.newToken)
+
                 if (data.message === "unauthorized") {
                     props.history.push('dashboard');
                 } else if (data.message === undefined) {
                     const res = await fetch(config.server_url + config.paths.moduleFileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.video.name, {
-                    method: 'POST',
-                    body: newVideo
+                        method: 'POST',
+                        body: newVideo
                     })
                     const data2 = await res.json()
 
@@ -331,6 +350,10 @@ function ModuleCreator(props) {
                 })
 
                 const data = await res.json()
+
+                if (data.newToken != undefined)
+                    localStorage.setItem("token", data.newToken)
+
 
                 if (data.message === "unauthorized") {
                     props.history.push('dashboard');

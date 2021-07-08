@@ -103,7 +103,7 @@ router.post('/login', async (req, res) => {
                 // everything is correct
 
                 // token handling  (we might discuss what will be the secret key)
-                const token = jwt.sign({ id: user._id, email: req.body.email }, config.key, { expiresIn: '1min' });
+                const token = jwt.sign({ id: user._id, email: req.body.email }, config.key, { expiresIn: '16min' });
 
                 // set payload and return response
                 res.json({ token: token });
@@ -140,8 +140,15 @@ function verifyToken(req, res, next) {
         }
 
         req.body.userID = decoded.id;
+        const timestamp = Math.floor(Date.now() / 1000); // get unix time in seconds
+        if (decoded.exp - timestamp < 900) {
+            req.body.newToken = jwt.sign({ id: decoded._id, email: decoded.email }, config.key, { expiresIn: '2h' });
+        }
 
     });
+
+    // res.body.newToken = "token";
+
     next();
 
 }
@@ -185,11 +192,11 @@ router.post('/resetPassApproved', async (req, res) => {
 })
 
 async function getRole(req, res, next) {
-    
+
     const role = await User.findOne({ _id: req.body.userID }, 'roleID')
     req.body.roleID = role.roleID;
 
-     // fileMulter api call does not allow anything else in the body, so this first
+    // fileMulter api call does not allow anything else in the body, so this first
     // line is needed to check roles on fileMulter 'single' route
     req.query.roleID = role.roleID
 
@@ -201,10 +208,17 @@ router.post('/isadmin', verifyToken, getRole, async (req, res) => {
 
     try {
 
-        if (req.body.roleID == 2)
-            res.json({ message: "yes" })
-        else
-            res.json({ message: "no" })
+        let payload = {}
+        if (req.body.newToken != undefined)
+            payload["newToken"] = req.body.newToken;
+
+        if (req.body.roleID == 2) {
+            payload["message"] = "yes"
+            res.json(payload)
+        } else {
+            payload["message"] = "no"
+            res.json(payload)
+        }
 
     } catch (e) {
         console.log(e);
@@ -217,10 +231,17 @@ router.post('/iscreator', verifyToken, getRole, async (req, res) => {
 
     try {
 
-        if (req.body.roleID == 1)
-            res.json({ message: "yes" })
-        else
-            res.json({ message: "no" })
+        let payload = {}
+        if (req.body.newToken != undefined)
+            payload["newToken"] = req.body.newToken;
+
+        if (req.body.roleID == 1) {
+            payload["message"] = "yes"
+            res.json(payload)
+        } else {
+            payload["message"] = "no"
+            res.json(payload)
+        }
 
     } catch (e) {
         console.log(e);
