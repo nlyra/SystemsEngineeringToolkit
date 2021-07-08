@@ -204,7 +204,7 @@ const AdminCoursesTab = (props) => {
                             <Link
                               className={classes.deleteButton}
                               href="/admindashboard?tab=1"
-                              onClick={() => { window.confirm(`Are you sure you wish to Delete user: ${row.name}`) && handleDelete(row._id, row.author) }}
+                              onClick={() => { window.confirm(`Are you sure you wish to Delete the Course: ${row.name}`) && handleDelete(row._id, row.author) }}
                             >
                               <DeleteIcon color="secondary" />
                             </Link>

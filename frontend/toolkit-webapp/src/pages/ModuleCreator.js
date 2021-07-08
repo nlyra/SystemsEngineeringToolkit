@@ -157,6 +157,12 @@ function ModuleCreator(props) {
                 })
 
                 const data = await res.json();
+                if (data.message === "unauthorized") {
+                    props.history.push('dashboard');
+                } else {
+                    alert("Successfully added Quiz module")
+                    props.history.push('/course/' + courseID)
+                }
 
             }else if(module.type === "PDF"){
 
@@ -176,7 +182,7 @@ function ModuleCreator(props) {
                 if (data.message === "unauthorized") {
                     props.history.push('dashboard');
                 } else {
-                    alert("Successfully added Quiz module")
+                    alert("Successfully added PDF module")
                     props.history.push('/course/' + courseID)
                 }
 

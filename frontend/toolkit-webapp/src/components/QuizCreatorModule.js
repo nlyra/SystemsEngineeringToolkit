@@ -39,28 +39,31 @@ const QuizCreator = (props) => {
     const isSelected = (question) => selected.indexOf(question) !== -1
 
     function addQuestion() {
-        questions = JSON.parse(sessionStorage.getItem('question'))
-        var dup = 0
-        for (var i = 0; i < quiz.length; i++) {
-            if (questions.question === quiz[i].question) {
-                dup = 1
-                i = quiz.length
-            }
-        }
-
-        if (type === '') {
+        if(type === ''){
             alert("Select a question type")
-        } else if (questions.question === '' || questions.answers[0].answerText === '') {
-            alert("Requires a question and an answer.")
-        } else if (dup === 1) {
-            alert("No Duplicate questions")
-        } else {
-            quiz.push(questions)
+        } else{
+            questions = JSON.parse(sessionStorage.getItem('question'))
+            var dup = 0
+            for (var i = 0; i < quiz.length; i++) {
+                if (questions.question === quiz[i].question) {
+                    dup = 1
+                    i = quiz.length
+                }
+            }
 
-            sessionStorage.setItem('quiz', JSON.stringify(quiz))
+            
+            if (questions.question === '' || questions.answers[0].answerText === '') {
+                alert("Requires a question and an answer.")
+            } else if (dup === 1) {
+                alert("No Duplicate questions")
+            } else {
+             quiz.push(questions)
 
-            setType('')
-            sessionStorage.removeItem('question')
+                sessionStorage.setItem('quiz', JSON.stringify(quiz))
+
+                setType('')
+                sessionStorage.removeItem('question')
+            }
         }
     }
 

@@ -973,14 +973,14 @@ export default function TopNavBar(props) {
                             </Tooltip>
                         </Link>
 
-                        <Link href="/MyFiles" underline='none' color="inherit">
+                        {/*<Link href="/MyFiles" underline='none' color="inherit">
                             <Tooltip title="My Files" enterDelay={500}>
                                 <ListItem button>
                                     <ListItemIcon><DescriptionIcon /></ListItemIcon>
                                     <ListItemText primary="My Files" />
                                 </ListItem>
                             </Tooltip>
-                        </Link>
+                        </Link>*/}
 
                         {isAdmin &&
                             <Tooltip title="Admin Dashboard" enterDelay={500}>
