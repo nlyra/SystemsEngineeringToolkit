@@ -13,6 +13,7 @@
     "enrollment": "/v0/courses/course/enrollment",
     "myCourses": "/v0/courses/myCoursesInfo",
     "fileUpload": "/v0/upload/single",
+    "moduleFileUpload": "/v0/upload/singleModuleFile",
     "removeFile": "/v0/courses/removeFile",
     "updateCourseInfo": "/v0/courses/course/update",
     "sendScore": "/v0/courses/module/score",
