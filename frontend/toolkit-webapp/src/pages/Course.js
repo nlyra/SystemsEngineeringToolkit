@@ -144,8 +144,8 @@ const Course = (props) => {
       if (currCourseImage.name === undefined)
         window.location.reload();
 
-    // We have a new image being passed in so delete old file
-    const res2 = await fetch(config.server_url + config.paths.removeFile, {
+      // We have a new image being passed in so delete old file
+      const res2 = await fetch(config.server_url + config.paths.removeFile, {
       method: 'POST',
       headers: {
         'Content-type': 'application/json'
