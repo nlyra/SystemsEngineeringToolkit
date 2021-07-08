@@ -63,16 +63,14 @@ router.post('/course/update', VerifyToken, GetRole, async (req, res) => {
     }
 
     const update = await Course.updateOne(
-      { _id: req.body.courseID }, // query parameter
+      { _id: req.body.courseID }, 
       {
         $set: {
           name: req.body.name,
-          description: req.body.description,
-          // urlImage: req.body.courseImage
+          description: req.body.description
         }
       })
 
-    // console.log('here')
     res.json({ 'status': 'course updated' });
   } catch (e) {
     console.log(e);

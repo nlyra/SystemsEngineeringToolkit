@@ -95,6 +95,7 @@ const Course = (props) => {
       setCourseTitle(data.course.name);
       setCourseDescription(data.course.description);
       setModules(data.course.modules);
+
       if (data.course.author === "yes")
         setIsOwner(true);
     } else if (data.message === "wrong token") {
@@ -120,7 +121,7 @@ const Course = (props) => {
         'token': token,
         'courseID': courseID,
         "name": courseTitle,
-        "description": courseDescription,
+        "description": courseDescription
       })
     })
 
@@ -132,8 +133,11 @@ const Course = (props) => {
 
       // No new image assigned to course so only refresh to show other updates
       if (currCourseImage.name === undefined)
+      {
         window.location.reload();
-
+        return
+      }
+  
     // We have a new image being passed in so delete old file
     const res2 = await fetch(config.server_url + config.paths.removeFile, {
       method: 'POST',
