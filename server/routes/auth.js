@@ -142,7 +142,7 @@ function verifyToken(req, res, next) {
         req.body.userID = decoded.id;
         const timestamp = Math.floor(Date.now() / 1000); // get unix time in seconds
         if (decoded.exp - timestamp < 900) {
-            req.body.newToken = jwt.sign({ id: decoded._id, email: decoded.email }, config.key, { expiresIn: '2h' });
+            req.body.newToken = jwt.sign({ id: decoded.id, email: decoded.email }, config.key, { expiresIn: '2h' });
         }
 
     });
