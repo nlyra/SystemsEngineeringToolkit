@@ -11,15 +11,16 @@ const config = require('../config.json');
 
 router.post('/course', VerifyToken, GetRole, async (req, res) => {
   try {
-
     // get course info
     let course = {}
 
-    if (req.body.roleID == 1) // course for creator
-      course = await Course.findOne({ "_id": req.body.id, "author": req.body.userID }, '_id name description urlImage modules author isEnabled');
-
-    if (course == null || course == {}) // course for students (only enabled courses)
-      course = await Course.findOne({ "_id": req.body.id, "isEnabled": true }, '_id name description urlImage modules author');
+    if (req.body.roleID == 1) { // course for creator
+      course = await Course.findOne({ "_id": req.body.id, "author": req.body.userID }, '_id name description urlImage modules author isEnabled skillLevel intendedAudience prerequisite');
+      if (course == null || course == {}) // course for students (only enabled courses)
+        course = await Course.findOne({ "_id": req.body.id, "isEnabled": true }, '_id name description urlImage modules author skillLevel intendedAudience prerequisite');
+    } else
+      course = await Course.findOne({ "_id": req.body.id, "isEnabled": true }, '_id name description urlImage modules author skillLevel intendedAudience prerequisite');
+    console.log(course)
 
     if (course != {} && course != null) {
       for (let i = 0; i < course.modules.length; i++) {
@@ -589,7 +590,7 @@ router.post('/module/update', VerifyToken, GetRole, async (req, res) => {
           }
         });
     } else if (req.body.type === "PDF") {
-      
+
       const update = await Course.updateOne(
         { _id: req.body.courseID }, // query parameter
         {

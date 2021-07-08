@@ -81,6 +81,9 @@ const dashStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end',
     paddingBottom: '1vh',
     paddingRight: '3vw',
+    '& > *': {
+      margin: theme.spacing(0.5),
+    },
   },
 
   statsDiv: {
@@ -94,7 +97,7 @@ const dashStyles = makeStyles((theme) => ({
   addButton:{
     marginLeft: '2vw'
   },
-  
+
   skillSelector: {
     width: '130px',
     marginTop: "1.5vh",
