@@ -106,7 +106,7 @@ const ManageMyCourses = (props) => {
             <Grid container spacing={3}>
                 <div className={classes.header}>
                 <h1>
-                    Manage My Courses
+                    My Created Courses
                 </h1>
                 </div>
                 </Grid>

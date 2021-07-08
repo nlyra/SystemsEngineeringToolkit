@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Card, CardActions, Container, CssBaseline, Divider, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
 import { Dialog, DialogTitle, DialogActions, DialogContent } from '@material-ui/core'
-import '../css/dashboard.css'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 // import Pagination from '@material-ui/lab/Pagination'
@@ -143,19 +142,21 @@ const MyCourses = (props) => {
                                 {openDialog === true ?
 
                                     <div className={classes.dialog}>
-                                        <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" open={openDialog}>
+                                        <Dialog onClose={handleCloseDialog} classes={{paper: classes.dialogPaper}} BackdropProps={{ style: { backgroundColor: 'rgba(193, 193, 187, 0.2)' } }} aria-labelledby="customized-dialog-title" open={openDialog}>
                                             <div className={classes.dialogTitleDiv}>
                                                 <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleCloseDialog}>
                                                     Are you sure you wish to disenroll from this course? 
                                                 </DialogTitle>
                                             </div>
                                             <DialogContent className={classes.dialogContent}>
-                                                <Button type= 'submit' size="small" color="inherit" variant="contained" onClick={() => removeEnrollment(course._id)}>
+                                                
+                                                <Button className={classes.dialogButton1} size="small" variant="contained" type= 'submit' onClick={() => removeEnrollment(course._id)}>
                                                         Yes
                                                     </Button>
-                                                    <Button type='submit' size="small" color="inherit" variant="contained" >
+                                                    <Button className={classes.dialogButton2}  size="small" variant="contained" type='submit' onClick={handleCloseDialog} >
                                                         No
                                                     </Button>
+                                               
                                             </DialogContent>
                                         </Dialog>
                                     </div>
