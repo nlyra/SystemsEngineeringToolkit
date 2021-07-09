@@ -6,10 +6,12 @@ const dashStyles = makeStyles((theme) => ({
         display: 'flex',
         overflowY: 'hidden'
     },
-
+    
     container:
     {
+        // backgroundColor: 'grey',
         marginTop: theme.spacing(15),
+        marginBottom: theme.spacing(8),
 
     },
     

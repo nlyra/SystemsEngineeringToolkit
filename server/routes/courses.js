@@ -155,26 +155,28 @@ router.post('/info', VerifyToken, async (req, res) => {
     let totalCourses = await Course.find().countDocuments()
 
     console.log(req.body)
-
-    if(req.body.search_query === '')
-    {
+    // if(req.body.search_query.length > 0)
+    // {
+    //   const query = req.body.search_query;
+    //   courses = await Course.find({
+    //     $or: [
+    //       { "categories.label": { "$regex": query, $options: 'i' } },
+    //       { "name": { "$regex": query, $options: 'i' } },
+    //     ]
+    //   }, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
+    //   res.json({ "status": "search", "courses": courses, "totalCourses": totalCourses });
+    // }
+    // else 
+    if (req.body.search_query != undefined && req.body.search_query.length > 0) {
       const query = req.body.search_query;
       courses = await Course.find({
         $or: [
-          { "categories.label": { "$regex": query, $options: 'i' } },
-          { "name": { "$regex": query, $options: 'i' } },
-        ]
-      }, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
-      res.json({ "status": "search", "courses": courses, "totalCourses": totalCourses });
-    }
-    else if (req.body.search_query != undefined) {
-      const query = req.body.search_query;
-      courses = await Course.find({
-        $or: [
-          { "categories.label": { "$regex": query, $options: 'i' } },
+          // { "categories.label": { "$regex": query, $options: 'i' } },
           { "name": { "$regex": query, $options: 'i' } },
         ]
       }, '_id name description urlImage categories');
+      // }, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
+      // console.log(courses)
       res.json({ "status": "search", "courses": courses, "totalCourses": totalCourses });
 
     } else {
@@ -268,7 +270,7 @@ router.post('/create', VerifyToken, GetRole, async (req, res) => {
 
     findCourse = await Course.findOne({ "name": req.body.name, "description": req.body.description }, '_id')
 
-    
+
     // console.log(findCourse._id)
     const updateUser = await User.updateOne(
       { _id: req.body.userID },
@@ -333,14 +335,12 @@ router.post('/removeFile', VerifyToken, GetRole, async (req, res) => {
 
     course = await Course.findOne({ _id: req.body.courseID }, 'urlImage')
 
-    if(course !== undefined)
-    {
+    if (course !== undefined) {
       const pathname = course.urlImage.split('/')
       const imageName = pathname[pathname.length - 1]
 
       // Special case for when first cover image change involves original PEO STRI logo
-      if(pathname[pathname.length - 2] !== 'misc_files')
-      {
+      if (pathname[pathname.length - 2] !== 'misc_files') {
         const path = 'public/' + req.body.courseID + '/' + imageName
 
         fs.unlinkSync(path)

@@ -12,27 +12,44 @@ const Dashboard = (props) => {
     const [courses, setCourses] = useState([])
     const [next, setHasNext] = useState(0)
     const [totalCourses, setTotalCourses] = useState(0)
+    const [currQuery, setCurrQuery] = useState(undefined)
     const cardAmount = 8
 
     const classes = dashStyles()
 
     // function that will run when page is loaded
     useEffect(() => {
-        loadCourses(undefined, next+1);
+        loadCourses(undefined, next + 1);
     }, []);
 
 
     const loadMoreCourses = useCallback(() => {
+        // console.log(cur)
+        if (currQuery == undefined) {
+            if ((totalCourses === courses.length))
+                return
 
-        console.log('triggered')
-        if ((totalCourses === courses.length))
-            return 
-            
-        loadCourses(undefined, next+1)
-      })
+            loadCourses(undefined, next + 1)
+        }
+    })
 
     // function to get the courses 
     const loadCourses = async (query, currNext) => {
+
+        if (query != undefined && query.length > 0) {
+            setCurrQuery(query)
+
+        } else if (query == "") {
+            setCurrQuery(undefined)
+            setHasNext(1)
+        }
+
+        if (query != undefined) {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
         // console.log('hello')
         const token = localStorage.getItem("token");
         let res = undefined
@@ -40,7 +57,7 @@ const Dashboard = (props) => {
         // console.log('currNext= ' + currNext)
         let skip = (currNext - 1) * cardAmount
         // console.log(skip)
-  
+
         res = await fetch(config.server_url + config.paths.dashboardCourses, {
             method: 'POST',
             headers: {
@@ -52,19 +69,18 @@ const Dashboard = (props) => {
         const data = await res.json()
         console.log(data)
         if (data.status === "loading") {
-           
-            if(skip = 0)
+            // console.log(query)
+            if (query === "") {
                 setCourses(data.courses)
-            else
+            } else
                 setCourses(courses.concat(data.courses));
 
             setTotalCourses(data.totalCourses)
-            console.log(currNext)
+            // console.log(currNext)
             setHasNext(currNext)
 
-        } 
-        else if (data.status === "search")
-        {
+        }
+        else if (data.status === "search") {
             setCourses(data.courses);
             setTotalCourses(data.totalCourses)
         }
@@ -74,7 +90,7 @@ const Dashboard = (props) => {
             props.history.push('login');
             // probably alert the user
         } else { // this is to check if there are errors not being addressed already
-            console.log(data)
+            // console.log(data)
         }
     }
 
@@ -88,7 +104,7 @@ const Dashboard = (props) => {
         <div className={classes.div} >
             <TopNavBar
                 search={loadCourses}
-                // page={page}
+            // page={page}
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container} >
@@ -117,7 +133,7 @@ const Dashboard = (props) => {
                                         </CardActions>
                                     </CardContent>
                                 </Card>
-                
+
                                 {/* {courses.length < 5 && (<Waypoint onEnter={testing}/>)} */}
                             </Grid>
 
