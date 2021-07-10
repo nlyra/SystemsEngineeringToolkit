@@ -44,23 +44,6 @@ const CourseSchema = mongoose.Schema({
 
   author: {
     type: String
-  },
-
-  isEnabled: {
-    type: Boolean,
-    default: false
-  },
-  
-  skillLevel: {
-    type: String
-  },
-  
-  intendedAudience: {
-    type: String
-  },
-
-  prerequisite: {
-    type: String
   }
 
 })

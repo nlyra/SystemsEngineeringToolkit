@@ -83,6 +83,7 @@ router.post('/singleModuleFile', VerifyToken, upload.single('file'), async (req,
 
   // splitting file name so we can validate the input
   const fileTypePath = req.query.imageName.split('.')
+
   // Grabbing the actual filename minus its extension so that we can validate alphanumeric inputs
   var val = fileTypePath[fileTypePath.length - 2];
   var RegEx = /[^0-9a-z]/i;
@@ -108,15 +109,15 @@ router.post('/singleModuleFile', VerifyToken, upload.single('file'), async (req,
     }
   });
 
-  const update = await Course.updateOne(
-    { _id: req.body.courseID }, // query parameter
-    {
-      $set: {
-        [`modules.${req.body.moduleID}`]: {
-            urlFile: config.server_url + "/" + req.query.courseID + "/moduleData/" + req.query.imageName,
-        }
-      }
-    });
+  // const update = await Course.updateOne(
+  //   { _id: req.body.courseID }, // query parameter
+  //   {
+  //     $set: {
+  //       [`modules.${req.body.moduleID}`]: {
+  //           urlFile: config.server_url + "/" + req.query.courseID + "/moduleData/" + req.query.imageName,
+  //       }
+  //     }
+  //   });
 
   res.send({ "status": "Success" })
 })
