@@ -10,9 +10,10 @@ const courseStyles = makeStyles((theme) => ({
     container: {
         height: "100%",
     },
-
+    
     paper:
     {
+        maxWidth: '65vw',
         padding: '5px 40px 5px 40px',
         borderRadius: 15,
         marginTop: theme.spacing(15),
@@ -65,7 +66,7 @@ const courseStyles = makeStyles((theme) => ({
         zIndex: -1
     },
 
-    categoryContainer: 
+    categoryContainer:
     {
         display: 'flex',
         justifyContent: 'center',
@@ -73,9 +74,14 @@ const courseStyles = makeStyles((theme) => ({
         listStyle: 'none',
         padding: theme.spacing(0.5),
         margin: 0,
-        maxWidth: '550px',
+        // maxWidth: '550px',
         minHeight: "40px"
     },
+
+    skillSelector: {
+        width: '130px',
+        marginTop: "1.5vh"
+    }
 
 }))
 
