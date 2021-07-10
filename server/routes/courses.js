@@ -379,11 +379,11 @@ router.post('/deleteCreatedCourse', VerifyToken, GetRole, async (req, res) => {
 })
 
 router.post('/module/create', VerifyToken, GetRole, async (req, res) => {
+  if (req.body.roleID != 1) {
+    res.json({ message: "unauthorized" })
+    return
+  }
   try {
-    if (req.body.roleID != 1) {
-      res.json({ message: "unauthorized" })
-      return
-    }
 
     if (req.body.type === "Quiz") {
       const update = await Course.updateOne(
@@ -543,12 +543,14 @@ router.post('/module/score', VerifyToken, async (req, res) => {
 })
 
 router.post('/module/update', VerifyToken, GetRole, async (req, res) => {
-  try {
-    if (req.body.roleID != 1) {
-      res.json({ message: "unauthorized" })
-      return
-    }
+  
+  if (req.body.roleID != 1) {
+    res.json({ message: "unauthorized" })
+    return
+  }
 
+  try {
+    
     if (req.body.type === "Quiz") {
       const update = await Course.updateOne(
         { _id: req.body.courseID }, // query parameter
@@ -618,6 +620,7 @@ router.post('/module/update', VerifyToken, GetRole, async (req, res) => {
     }
 
     res.json({ 'status': 'module updated' });
+
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
