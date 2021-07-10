@@ -20,7 +20,7 @@ router.post('/course', VerifyToken, GetRole, async (req, res) => {
         course = await Course.findOne({ "_id": req.body.id, "isEnabled": true }, '_id name description urlImage modules author skillLevel intendedAudience prerequisite');
     } else
       course = await Course.findOne({ "_id": req.body.id, "isEnabled": true }, '_id name description urlImage modules author skillLevel intendedAudience prerequisite');
-    console.log(course)
+    // console.log(course)
 
     if (course != {} && course != null) {
       for (let i = 0; i < course.modules.length; i++) {
@@ -490,6 +490,13 @@ router.post('/module/score', VerifyToken, async (req, res) => {
             {
               $inc: { totalCompletedStudents: 1 }
             });
+
+            const updateUser = await User.updateOne(
+              { _id: req.body.userID },
+              {
+               $push: { completedCourses: req.body.courseID }
+              });
+
         }
         courses[req.body.courseID][req.body.moduleID]["status"] = 1
       }
@@ -505,11 +512,11 @@ router.post('/module/score', VerifyToken, async (req, res) => {
 
     // If the user completed the first module, do the checks for enrollment. Otherwise, proceed as usual
     if (req.body.moduleID == 0) {
+
       let studentExists = {}
       studentExists = await Course.findOne({ "_id": req.body.courseID, "studentsEnrolled": req.body.userID }, '_id studentsEnrolled')
       if (studentExists === null) {
-        console.log('here')
-
+    
         const updateCourse = await Course.updateOne(
           { _id: req.body.courseID },
           {
@@ -531,6 +538,8 @@ router.post('/module/score', VerifyToken, async (req, res) => {
           });
 
       }
+
+
     }
 
 
@@ -722,10 +731,17 @@ router.post('/module/completed', VerifyToken, async (req, res) => {
 
     let modules = await Course.findOne({ _id: req.body.courseID }, 'modules');
     if (modules.modules.length == req.body.moduleID + 1) {
+    
       const updateCourse = await Course.updateOne(
         { _id: req.body.courseID },
         {
           $inc: { totalCompletedStudents: 1 }
+        });
+
+      const updateUser = await User.updateOne(
+        { _id: req.body.userID },
+        {
+         $push: { completedCourses: req.body.courseID }
         });
     }
 
