@@ -154,47 +154,47 @@ const useStyles = makeStyles((theme) => ({
 
     dialog:
     {
-      position: 'absolute',
-      minWidth: '30%'
+        position: 'absolute',
+        minWidth: '30%'
 
     },
 
     dialogContent:
     {
-      width: '40vh'
+        width: '40vh'
     },
 
     divider:
     {
-      border: '1px solid grey',
-      borderRadius: '10px',
-      backgroundColor: 'grey'
+        border: '1px solid grey',
+        borderRadius: '10px',
+        backgroundColor: 'grey'
     },
 
     dialogTitle:
     {
-      textAlign: 'center',
-      verticalAlign: 'middle',
-      backgroundColor: grey[900],
-      border: '2px solid white'
+        textAlign: 'center',
+        verticalAlign: 'middle',
+        backgroundColor: grey[900],
+        border: '2px solid white'
     },
 
     avatar:
     {
-      color: theme.palette.getContrastText(deepPurple[500]),
-      backgroundColor: deepPurple[500],
-      height: '6vh',
-      width: '6vh',
-      margin: 'auto'
+        color: theme.palette.getContrastText(deepPurple[500]),
+        backgroundColor: deepPurple[500],
+        height: '6vh',
+        width: '6vh',
+        margin: 'auto'
     },
 
 
     statContent:
     {
-      verticalAlign: 'right',
-      margin: 'auto',
-      width: '100%',
-      alignSelf: 'center'
+        verticalAlign: 'right',
+        margin: 'auto',
+        width: '100%',
+        alignSelf: 'center'
     },
 
     // statsDiv:
@@ -204,18 +204,18 @@ const useStyles = makeStyles((theme) => ({
 
     statsTitle:
     {
-      textAlign: 'center',
-      verticalAlign: 'middle',
-      textDecoration: 'underline'
+        textAlign: 'center',
+        verticalAlign: 'middle',
+        textDecoration: 'underline'
     },
 
     statsAvi:
     {
-      color: theme.palette.getContrastText(amber[600]),
-      backgroundColor: amber[600],
-      border: '1px solid black',
-      margin: 'auto'
-      // borderRadius: '4px'
+        color: theme.palette.getContrastText(amber[600]),
+        backgroundColor: amber[600],
+        border: '1px solid black',
+        margin: 'auto'
+        // borderRadius: '4px'
     },
 
     roleAvi:
@@ -236,135 +236,247 @@ const useStyles = makeStyles((theme) => ({
 
     roleStatContent:
     {
-      // verticalAlign: 'middle',
-      // margin: 'auto',
-      width: '100%'
-      // backgroundColor: 'cyan'
+        // verticalAlign: 'middle',
+        // margin: 'auto',
+        width: '100%'
+        // backgroundColor: 'cyan'
     },
 
     roleText:
     {
-      width: '100%',
-      textAlign: 'center'
+        width: '100%',
+        textAlign: 'center'
 
     },
 
     roleGrid:
     {
-      justifyContent: 'center'
+        justifyContent: 'center'
     },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
 
-  searchIcon2: {
-    padding: theme.spacing(0, 5),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputRoot: {
-    color: 'inherit',
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
+    statText:
+    {
+        width: '100%',
+        textAlign: 'center'
     },
-  },
-  logoStyle: {
-    maxWidth: '10%',
-    textAlign: 'center',
-    margin: 'auto'
-  },
-  horizontalCenteringLogo: {
-    position: 'absolute',
-    left: '66%',
-    top: '50%',
-    transform: 'translate(-50%, -50%)'
-  },
-  test: {
-    display: 'flex',
-    alignItems: 'space-between'
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-  },
-  drawerOpen: {
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerClose: {
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: 'hidden',
-    width: theme.spacing(7) + 1,
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9) + 1,
-    }
-  },
-  toolbar: {
-    display: 'flex',
-    // alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
-  appBar: {
-    background: 'black',
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
 
-  logoutDialogTitle: {
-    textAlign: 'center',
-    verticalAlign: 'middle',
-    backgroundColor: grey[50],
-    border: '2px solid white'
-  },
+    search: {
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        '&:hover': {
+            backgroundColor: fade(theme.palette.common.white, 0.25),
+        },
 
-  // iconbutton:{
-  //     position:'relative',
-  //     paddingLeft:theme.spacing(0,2)
-  // }
-}))
+        dialog:
+        {
+            position: 'absolute',
+            minWidth: '30%'
+
+        },
+
+        dialogContent:
+        {
+            width: '40vh'
+        },
+
+        divider:
+        {
+            border: '1px solid grey',
+            borderRadius: '10px',
+            backgroundColor: 'grey'
+        },
+
+        dialogTitle:
+        {
+            textAlign: 'center',
+            verticalAlign: 'middle',
+            backgroundColor: grey[900],
+            border: '2px solid white'
+        },
+
+        avatar:
+        {
+            color: theme.palette.getContrastText(deepPurple[500]),
+            backgroundColor: deepPurple[500],
+            height: '6vh',
+            width: '6vh',
+            margin: 'auto'
+        },
+
+
+        statContent:
+        {
+            verticalAlign: 'right',
+            margin: 'auto',
+            width: '100%',
+            alignSelf: 'center'
+        },
+
+        // statsDiv:
+        // {
+        //     width: '100%',
+        // },
+
+        statsTitle:
+        {
+            textAlign: 'center',
+            verticalAlign: 'middle',
+            textDecoration: 'underline'
+        },
+
+        statsAvi:
+        {
+            color: theme.palette.getContrastText(amber[600]),
+            backgroundColor: amber[600],
+            border: '1px solid black',
+            margin: 'auto'
+            // borderRadius: '4px'
+        },
+
+        roleAvi:
+        {
+            color: theme.palette.getContrastText(amber[600]),
+            backgroundColor: amber[600],
+
+            // For the avatar that uses this color. Can be changed to another div if needed
+            width: '10vh',
+            // paddingTop: '10px'
+            marginTop: '5%',
+            marginLeft: '15%',
+            fontSize: '15px',
+            fontWeight: 'bold',
+            border: '1px solid black',
+            borderRadius: '8px',
+        },
+
+        roleStatContent:
+        {
+            // verticalAlign: 'middle',
+            // margin: 'auto',
+            width: '100%'
+            // backgroundColor: 'cyan'
+        },
+
+        roleText:
+        {
+            width: '100%',
+            textAlign: 'center'
+
+        },
+
+        roleGrid:
+        {
+            justifyContent: 'center'
+        },
+    },
+    searchIcon: {
+        padding: theme.spacing(0, 2),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    searchIcon2: {
+        padding: theme.spacing(0, 5),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    inputRoot: {
+        color: 'inherit',
+    },
+    inputInput: {
+        padding: theme.spacing(1, 1, 1, 0),
+        // vertical padding + font size from searchIcon
+        paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('md')]: {
+            width: '20ch',
+        },
+    },
+    logoStyle: {
+        maxWidth: '10%',
+        textAlign: 'center',
+        margin: 'auto'
+    },
+    horizontalCenteringLogo: {
+        position: 'absolute',
+        left: '66%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)'
+    },
+    test: {
+        display: 'flex',
+        alignItems: 'space-between'
+    },
+    drawer: {
+        width: drawerWidth,
+        flexShrink: 0,
+        whiteSpace: 'nowrap',
+    },
+    drawerOpen: {
+        width: drawerWidth,
+        transition: theme.transitions.create('width', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    },
+    drawerClose: {
+        transition: theme.transitions.create('width', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        overflowX: 'hidden',
+        width: theme.spacing(7) + 1,
+        [theme.breakpoints.up('sm')]: {
+            width: theme.spacing(9) + 1,
+        }
+    },
+    toolbar: {
+        display: 'flex',
+        // alignItems: 'center',
+        justifyContent: 'flex-end',
+        padding: theme.spacing(0, 1),
+        // necessary for content to be below app bar
+        ...theme.mixins.toolbar,
+    },
+    content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
+    },
+    appBar: {
+        background: 'black',
+        zIndex: theme.zIndex.drawer + 1,
+        transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+    },
+    appBarShift: {
+        marginLeft: drawerWidth,
+        width: `calc(100% - ${drawerWidth}px)`,
+        transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    },
+
+    logoutDialogTitle: {
+        textAlign: 'center',
+        verticalAlign: 'middle',
+        backgroundColor: grey[50],
+        border: '2px solid white'
+    },
+
+}}))
 
 
 export default function TopNavBar(props) {
@@ -480,8 +592,7 @@ export default function TopNavBar(props) {
                 return
             }
 
-            if (!window.confirm("Are you sure you would like to save your changes?"))
-            {
+            if (!window.confirm("Are you sure you would like to save your changes?")) {
                 setOpenDialog(false)
                 return
             }
@@ -531,83 +642,83 @@ export default function TopNavBar(props) {
     return (
         <div className={classes.root}>
             <AppBar
-        // variant="permanent"
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-      >
-        <Toolbar>
-          {props.hideComponents !== true ?
-            <>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={handleDrawerOpen}
-                edge="start"
-                className={clsx(classes.menuButton, {
-                  [classes.hide]: open,
+                // variant="permanent"
+                position="fixed"
+                className={clsx(classes.appBar, {
+                    [classes.appBarShift]: open,
                 })}
-              >
-                <MenuIcon style={{ color: "white" }}></MenuIcon>
-              </IconButton>
-              {window.location.pathname === "/dashboard" ||
-                window.location.pathname === "/MyCourses" ||
-                window.location.pathname === "/ManageMyCourses" ?
-                <div className={classes.search}>
-                  <div className={classes.searchIcon}>
-                    <SearchIcon></SearchIcon>
-                  </div>
+            >
+                <Toolbar>
+                    {props.hideComponents !== true ?
+                        <>
+                            <IconButton
+                                color="inherit"
+                                aria-label="open drawer"
+                                onClick={handleDrawerOpen}
+                                edge="start"
+                                className={clsx(classes.menuButton, {
+                                    [classes.hide]: open,
+                                })}
+                            >
+                                <MenuIcon style={{ color: "white" }}></MenuIcon>
+                            </IconButton>
+                            {window.location.pathname === "/dashboard" ||
+                                window.location.pathname === "/MyCourses" ||
+                                window.location.pathname === "/ManageMyCourses" ?
+                                <div className={classes.search}>
+                                    <div className={classes.searchIcon}>
+                                        <SearchIcon></SearchIcon>
+                                    </div>
 
-                  < InputBase
-                    placeholder="Search..."
-                    classes={{
-                      root: classes.inputRoot,
-                      input: classes.inputInput,
-                    }}
-                    inputProps={{ 'aria-label': 'search' }}
-                    onChange={e => props.search(e.target.value)}
-                  />
-                </div>
-                :
-                <Link href="/dashboard" underline='none' color="inherit">
-                  {/* <div className={classes.searchIcon2}> */}
-                  <SearchIcon></SearchIcon>
-                  {/* </div> */}
-                </Link>
-              }
-            </>
-            : null}
-          <div className={classes.horizontalCenteringLogo}>
-            <img src={logo_url} alt="logo" className={classes.logoStyle} />
-          </div>
-          <div>
-            {/* <IconButton aria-label="show 4 new mails" color="inherit"> */}
-            {/* <Badge badgeContent={4} color="secondary"> */}
-            {/* <MailIcon /> */}
-            {/* </Badge> */}
-            {/* </IconButton> */}
-            {/* <IconButton aria-label="show 17 new notifications" color="inherit"> */}
-            {/* <Badge badgeContent={17} color="secondary"> */}
-            {/* <NotificationsIcon /> */}
-            {/* </Badge> */}
-            {/* </IconButton> */}
-            {props.hideComponents !== true ?
-              <Tooltip title="My Profile" >
-                <IconButton
-                  edge="end"
-                  aria-label="account of current user"
-                  //aria-controls={menuId}
-                  aria-haspopup="true"
-                  onClick={handleClickOpen}
-                  color="inherit"
-                  className={classes.iconbutton}
-                >
-                  <AccountCircle />
-                </IconButton>
-              </Tooltip>
+                                    < InputBase
+                                        placeholder="Search..."
+                                        classes={{
+                                            root: classes.inputRoot,
+                                            input: classes.inputInput,
+                                        }}
+                                        inputProps={{ 'aria-label': 'search' }}
+                                        onChange={e => props.search(e.target.value)}
+                                    />
+                                </div>
+                                :
+                                <Link href="/dashboard" underline='none' color="inherit">
+                                    {/* <div className={classes.searchIcon2}> */}
+                                    <SearchIcon></SearchIcon>
+                                    {/* </div> */}
+                                </Link>
+                            }
+                        </>
+                        : null}
+                    <div className={classes.horizontalCenteringLogo}>
+                        <img src={logo_url} alt="logo" className={classes.logoStyle} />
+                    </div>
+                    <div>
+                        {/* <IconButton aria-label="show 4 new mails" color="inherit"> */}
+                        {/* <Badge badgeContent={4} color="secondary"> */}
+                        {/* <MailIcon /> */}
+                        {/* </Badge> */}
+                        {/* </IconButton> */}
+                        {/* <IconButton aria-label="show 17 new notifications" color="inherit"> */}
+                        {/* <Badge badgeContent={17} color="secondary"> */}
+                        {/* <NotificationsIcon /> */}
+                        {/* </Badge> */}
+                        {/* </IconButton> */}
+                        {props.hideComponents !== true ?
+                            <Tooltip title="My Profile" >
+                                <IconButton
+                                    edge="end"
+                                    aria-label="account of current user"
+                                    //aria-controls={menuId}
+                                    aria-haspopup="true"
+                                    onClick={handleClickOpen}
+                                    color="inherit"
+                                    className={classes.iconbutton}
+                                >
+                                    <AccountCircle />
+                                </IconButton>
+                            </Tooltip>
 
-              : null}
+                            : null}
 
 
 
@@ -654,9 +765,9 @@ export default function TopNavBar(props) {
                                                     <TextField color='primary'
                                                         size='small'
                                                         variant="outlined"
-                                                        inputProps={{ min: 0,  style: { textAlign: 'center' } }}
-                                                        label= "Email"
-                                                        type= "email"
+                                                        inputProps={{ min: 0, style: { textAlign: 'center' } }}
+                                                        label="Email"
+                                                        type="email"
                                                         defaultValue={user.email}
                                                         onChange={e => setNewEmail(e.target.value)}
                                                         margin="normal"
@@ -752,7 +863,7 @@ export default function TopNavBar(props) {
                                                         variant="outlined"
                                                         inputProps={{ min: 0, style: { textAlign: 'center' } }}
                                                         label='Email'
-                                                        type= "email"
+                                                        type="email"
                                                         defaultValue={user.email}
                                                         onChange={e => setNewEmail(e.target.value)}
                                                         margin="normal"
@@ -860,7 +971,7 @@ export default function TopNavBar(props) {
                                                         variant="outlined"
                                                         inputProps={{ min: 0, style: { textAlign: 'center' } }}
                                                         label='Email'
-                                                        type= "email"
+                                                        type="email"
                                                         defaultValue={user.email}
                                                         onChange={e => setNewEmail(e.target.value)}
                                                         margin="normal"
@@ -902,7 +1013,7 @@ export default function TopNavBar(props) {
                                                         <h2>Database Info</h2>
                                                     </div>
                                                     <Grid container direction="row" >
-                                                    <Grid item xs={6} sm={6} lg={6} >
+                                                        <Grid item xs={6} sm={6} lg={6} >
                                                             <div className={classes.statContent}>
                                                                 <div className={classes.statText}>
                                                                     <h5>Users In System</h5>
@@ -919,8 +1030,8 @@ export default function TopNavBar(props) {
                                                             </div>
                                                         </Grid>
                                                     </Grid>
-                                                    <br/>
-                                                        <Grid item xs={12}>
+                                                    <br />
+                                                    <Grid item xs={12}>
                                                         <Divider variant='fullWidth' className={classes.divider} />
                                                     </Grid>
                                                     <div className={classes.statsTitle}>
@@ -1005,41 +1116,16 @@ export default function TopNavBar(props) {
                     </div>
                     <Divider />
                     <List>
-                    <Link onClick={handleOpenDialog} underline='none' color="inherit" >
-              <Tooltip title="Log out" enterDelay={500}>
-                <ListItem button>
-                  <ListItemIcon><ExitToAppIcon /></ListItemIcon>
-                  <ListItemText primary="Log out" />
-                </ListItem>
-              </Tooltip>
-            </Link>
-            <div className={classes.dialog}>
-              <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" open={loggingout}>
-                <div className={classes.dialogTitleDiv}>
-                  <DialogTitle id="customized-dialog-title" className={classes.logoutDialogTitle} onClose={handleCloseDialog}>
-                    Are you sure you wish to log out of your account?
-                  </DialogTitle>
-                </div>
-                <DialogContent className={classes.dialogContent}>
-                  <Button href='\' type='submit' size="small" color="inherit" variant="contained" onClick={logout}>
-                    Yes
-                  </Button>
-                  <Button type='submit' size="small" color="inherit" variant="contained" onClick={handleCloseDialog}>
-                    No
-                  </Button>
-                </DialogContent>
-              </Dialog>
-            </div>
 
                         {isCreator &&
                             <Link href="/newCourse" underline='none' color="inherit">
-                            <Tooltip title="Create Course" enterDelay={500}>
-                                <ListItem button>
-                                    <ListItemIcon><PostAddIcon /></ListItemIcon>
-                                    <ListItemText primary="Create Course" />
-                                </ListItem>
-                            </Tooltip>
-                        </Link>
+                                <Tooltip title="Create Course" enterDelay={500}>
+                                    <ListItem button>
+                                        <ListItemIcon><PostAddIcon /></ListItemIcon>
+                                        <ListItemText primary="Create Course" />
+                                    </ListItem>
+                                </Tooltip>
+                            </Link>
                         }
 
                         <Link href="/MyCourses" underline='none' color="inherit">
@@ -1072,25 +1158,50 @@ export default function TopNavBar(props) {
                         }
 
                         {/* <Tooltip title="Calendar" enterDelay={500}>*/}
-                        {isCreator && 
-                        <Link href="/ManageMyCourses" underline='none' color="inherit">
-                            <Tooltip title="My Created Courses" enterDelay={500}>
+                        {isCreator &&
+                            <Link href="/ManageMyCourses" underline='none' color="inherit">
+                                <Tooltip title="My Created Courses" enterDelay={500}>
+                                    <ListItem button>
+                                        <ListItemIcon><BookOutlinedIcon /></ListItemIcon>
+                                        <ListItemText primary="My Created Courses" />
+                                    </ListItem>
+                                </Tooltip>
+                            </Link>
+                        }
+                        <Link onClick={handleOpenDialog} underline='none' color="inherit" >
+                            <Tooltip title="Log out" enterDelay={500}>
                                 <ListItem button>
-                                    <ListItemIcon><BookOutlinedIcon /></ListItemIcon>
-                                    <ListItemText primary="My Created Courses" />
+                                    <ListItemIcon><ExitToAppIcon /></ListItemIcon>
+                                    <ListItemText primary="Log out" />
                                 </ListItem>
                             </Tooltip>
                         </Link>
-                        }
+                        <div className={classes.dialog}>
+                            <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" open={loggingout}>
+                                <div className={classes.dialogTitleDiv}>
+                                    <DialogTitle id="customized-dialog-title" className={classes.logoutDialogTitle} onClose={handleCloseDialog}>
+                                        Are you sure you wish to log out of your account?
+                                    </DialogTitle>
+                                </div>
+                                <DialogContent className={classes.dialogContent}>
+                                    <Button href='\' type='submit' size="small" color="inherit" variant="contained" onClick={logout}>
+                                        Yes
+                                    </Button>
+                                    <Button type='submit' size="small" color="inherit" variant="contained" onClick={handleCloseDialog}>
+                                        No
+                                    </Button>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
                     </List>
                 </Drawer>
                 : null}
         </div>
-    
-            
 
-          
-  )
+
+
+
+    )
 
 }
 
