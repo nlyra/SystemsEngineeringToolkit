@@ -9,8 +9,6 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Course from './pages/Course'
 import ModuleCreator from './pages/ModuleCreator'
 import ModuleEditor from './pages/ModuleEditor'
-// import background from "./img/image0.png";
-import videoSource from "./img/PEOSTRI.mp4"
 import VideoModule from "./components/VideoModule" 
 import ManageMyCourses from './pages/ManageMyCourses'
 import MyCourses from './pages/MyCourses'

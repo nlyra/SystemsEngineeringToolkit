@@ -67,34 +67,34 @@ const AdminCoursesTab = (props) => {
 
   // function that will run when page is loaded
   useEffect(() => {
-    getCourses()
-  }, []);
-
-  const getCourses = async () => {
-    const token = localStorage.getItem("token");
-
-    const res = await fetch(config.server_url + config.paths.getCourses, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({ "token": token })
-    })
-
-    const data = await res.json()
-    console.log(data)
-    if (data.message === "unauthorized") {
-      props.isUnauthorized()
-    } else if (data.message === undefined) {
-      setCourses(data.courses)
-    } else if (data.message === "wrong token") {
-      localStorage.removeItem('token');
-      props.history.push('login');
-      // probably alert the user
-    } else { // this is to check if there are errors not being addressed already
+    const getCourses = async () => {
+      const token = localStorage.getItem("token");
+  
+      const res = await fetch(config.server_url + config.paths.getCourses, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({ "token": token })
+      })
+  
+      const data = await res.json()
       console.log(data)
+      if (data.message === "unauthorized") {
+        props.isUnauthorized()
+      } else if (data.message === undefined) {
+        setCourses(data.courses)
+      } else if (data.message === "wrong token") {
+        localStorage.removeItem('token');
+        props.history.push('login');
+        // probably alert the user
+      } else { // this is to check if there are errors not being addressed already
+        console.log(data)
+      }
     }
-  }
+    getCourses()
+  }, [props]);
+
 
 
   const getSearch = async (query) => {
@@ -193,7 +193,6 @@ const AdminCoursesTab = (props) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
                     {columns.map((column) => {
-                      const value = row[column.id];
                       return (
                         <TableCell key={column.id}>
                           {(column.id === '_id' ||

@@ -64,33 +64,33 @@ const AdminUsersTab = (props) => {
 
   // function that will run when page is loaded
   useEffect(() => {
-    getUsers()
-  }, []);
-
-  const getUsers = async () => {
-    const token = localStorage.getItem("token");
-
-    const res = await fetch(config.server_url + config.paths.getUsers, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({ "token": token })
-    })
-
-    const data = await res.json()
-    if (data.message === "unauthorized") {
-      props.isUnauthorized()
-    } else if (data.message === undefined) {
-      setUsers(data.users)
-    } else if (data.message === "wrong token") {
-      localStorage.removeItem('token');
-      props.history.push('login');
-      // probably alert the user
-    } else { // this is to check if there are errors not being addressed already
-      console.log(data)
+    const getUsers = async () => {
+      const token = localStorage.getItem("token");
+  
+      const res = await fetch(config.server_url + config.paths.getUsers, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({ "token": token })
+      })
+  
+      const data = await res.json()
+      if (data.message === "unauthorized") {
+        props.isUnauthorized()
+      } else if (data.message === undefined) {
+        setUsers(data.users)
+      } else if (data.message === "wrong token") {
+        localStorage.removeItem('token');
+        props.history.push('login');
+        // probably alert the user
+      } else { // this is to check if there are errors not being addressed already
+        console.log(data)
+      }
     }
-  }
+    getUsers()
+  }, [props]);
+
 
   const getSearch = async (query) => {
     setSearch(query)
@@ -214,7 +214,6 @@ const AdminUsersTab = (props) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
                     {columns.map((column) => {
-                      const value = row[column.id];
                       return (
                         <TableCell key={column.id}>
                           {(column.id === '_id' || column.id === 'email') && row[column.id]}

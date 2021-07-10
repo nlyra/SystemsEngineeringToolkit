@@ -63,35 +63,35 @@ const AdminCategoriesTab = (props) => {
 
   // function that will run when page is loaded
   useEffect(() => {
-    getCategories()
-  }, []);
+    const getCategories = async () => {
+      const token = localStorage.getItem("token");
 
-  const getCategories = async () => {
-    const token = localStorage.getItem("token");
+      // console.log(typeof(new URLSearchParams(window.location.search).get('tab')))
 
-    // console.log(typeof(new URLSearchParams(window.location.search).get('tab')))
+      const res = await fetch(config.server_url + config.paths.getCategories, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({ "token": token })
+      })
 
-    const res = await fetch(config.server_url + config.paths.getCategories, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({ "token": token })
-    })
-
-    const data = await res.json()
-    if (data.message === "unauthorized") {
-      props.isUnauthorized()
-    } else if (data.message === undefined) {
-      setCategories(data.categories)
-    } else if (data.message === "wrong token") {
-      localStorage.removeItem('token');
-      props.history.push('login');
-      // probably alert the user
-    } else { // this is to check if there are errors not being addressed already
-      console.log(data)
+      const data = await res.json()
+      if (data.message === "unauthorized") {
+        props.isUnauthorized()
+      } else if (data.message === undefined) {
+        setCategories(data.categories)
+      } else if (data.message === "wrong token") {
+        localStorage.removeItem('token');
+        props.history.push('login');
+        // probably alert the user
+      } else { // this is to check if there are errors not being addressed already
+        console.log(data)
+      }
     }
-  }
+    getCategories()
+  }, [props]);
+
 
   const getSearch = async (query) => {
     setSearch(query)
@@ -189,7 +189,6 @@ const AdminCategoriesTab = (props) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
                     {columns.map((column) => {
-                      const value = row[column.id];
                       return (
                         <TableCell key={column.id}>
                           {(column.id === '_id' ||

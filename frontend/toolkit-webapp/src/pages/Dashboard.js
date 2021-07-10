@@ -13,7 +13,7 @@ const Dashboard = (props) => {
     const [next, setHasNext] = useState(0)
     const [totalCourses, setTotalCourses] = useState(0)
     const [currQuery, setCurrQuery] = useState(undefined)
-    const cardAmount = 8
+    const cardAmount = 20
 
     const classes = dashStyles()
 
@@ -24,7 +24,7 @@ const Dashboard = (props) => {
 
 
     const loadMoreCourses = useCallback(() => {
-        // console.log(cur)
+        // console.log("here")
         if (currQuery == undefined) {
             if ((totalCourses === courses.length))
                 return
