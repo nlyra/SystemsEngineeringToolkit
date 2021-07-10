@@ -148,17 +148,20 @@ const Course = (props) => {
 
       // No new image assigned to course so only refresh to show other updates
       if (currCourseImage.name === undefined)
+      {
         window.location.reload();
-
-      // We have a new image being passed in so delete old file
-      const res2 = await fetch(config.server_url + config.paths.removeFile, {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json'
-        },
-        body: JSON.stringify({
-          'token': token,
-          'courseID': courseID
+        return
+      }
+  
+    // We have a new image being passed in so delete old file
+    const res2 = await fetch(config.server_url + config.paths.removeFile, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        'token': token,
+        'courseID': courseID
         })
       })
 
