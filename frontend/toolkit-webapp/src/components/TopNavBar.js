@@ -14,8 +14,8 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import DescriptionIcon from '@material-ui/icons/Description';
 import BookOutlinedIcon from '@material-ui/icons/BookOutlined';
 import HomeIcon from '@material-ui/icons/Home';
+// import LogoutIcon from '@material-ui/icons/Logout';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import HelpIcon from '@material-ui/icons/Help';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 
 import clsx from 'clsx';
@@ -27,129 +27,10 @@ const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
 
-  root:
-  {
-    // display: 'flex',
-    // height: '5vh',
-  },
-  
-  RoleToolTipTitle:
-  {
-
-  },
-
-  dialog:
-  {
-    position: 'absolute',
-    minWidth: '30%'
-
-  },
-
-  dialogContent:
-  {
-    width: '40vh'
-  },
-
-  divider:
-  {
-    border: '1px solid grey',
-    borderRadius: '10px',
-    backgroundColor: 'grey'
-  },
-
-  dialogTitle:
-  {
-    textAlign: 'center',
-    verticalAlign: 'middle',
-    backgroundColor: grey[900],
-    border: '2px solid white'
-  },
-
-  avatar:
-  {
-    color: theme.palette.getContrastText(deepPurple[500]),
-    backgroundColor: deepPurple[500],
-    height: '6vh',
-    width: '6vh',
-    margin: 'auto'
-  },
-
-
-  statContent:
-  {
-    verticalAlign: 'right',
-    margin: 'auto',
-    width: '100%',
-    alignSelf: 'center'
-  },
-
-  // statsDiv:
-  // {
-  //     width: '100%',
-  // },
-
-  statsTitle:
-  {
-    textAlign: 'center',
-    verticalAlign: 'middle',
-    textDecoration: 'underline'
-  },
-
-  statsAvi:
-  {
-    color: theme.palette.getContrastText(amber[600]),
-    backgroundColor: amber[600],
-    border: '1px solid black',
-    margin: 'auto'
-    // borderRadius: '4px'
-  },
-
-  roleAvi:
-  {
-    color: theme.palette.getContrastText(amber[600]),
-    backgroundColor: amber[600],
-
-    // For the avatar that uses this color. Can be changed to another div if needed
-    width: '12vh',
-    // paddingTop: '10px'
-    marginTop: '5%',
-    marginLeft: '15%',
-    border: '1px solid black',
-    borderRadius: '8px',
-  },
-
-  roleStatContent:
-  {
-    // verticalAlign: 'middle',
-    // margin: 'auto',
-    width: '100%'
-    // backgroundColor: 'cyan'
-  },
-
-  roleText:
-  {
-    width: '100%',
-    textAlign: 'center'
-
-  },
-
-  roleGrid:
-  {
-    justifyContent: 'center'
-  },
-
-  statText:
-  {
-    width: '100%',
-    textAlign: 'center'
-  },
-
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
+    root:
+    {
+        // display: 'flex',
+        // height: '5vh',
     },
 
     dialog:
@@ -227,9 +108,7 @@ const useStyles = makeStyles((theme) => ({
         width: '10vh',
         // paddingTop: '10px'
         marginTop: '5%',
-        marginLeft: '10%',
-        fontSize: '15px',
-        fontWeight: 'bold',
+        marginLeft: '15%',
         border: '1px solid black',
         borderRadius: '8px',
     },
@@ -476,7 +355,11 @@ const useStyles = makeStyles((theme) => ({
         border: '2px solid white'
     },
 
-}}))
+    // iconbutton:{
+    //     position:'relative',
+    //     paddingLeft:theme.spacing(0,2)
+    // }
+}))
 
 
 export default function TopNavBar(props) {
@@ -783,24 +666,10 @@ export default function TopNavBar(props) {
                                                             </div>
                                                         </Grid>
                                                         <Grid item xs={6} sm={6} lg={6} >
-                                                            <Avatar variant="rounded" className={classes.roleAvi}>
-                                                              {roles[user.roleID]}
-                                                              <Tooltip 
-                                                                title={
-                                                                  <React.Fragment>
-                                                                    <Typography align="center" color="inherit">User Role Information</Typography>
-                                                                    {"The student role allows the user to take courses but does not given them access to course or module creation"}
-                                                                  </React.Fragment>
-                                                                } 
-                                                                placement="top"
-                                                                leaveDelay={200} 
-                                                                arrow
-                                                              >
-                                                                  <IconButton size='small'><HelpIcon/></IconButton>
-                                                              </Tooltip>
-                                                            </Avatar>
+                                                            <Avatar variant="rounded" className={classes.roleAvi}>{roles[user.roleID]}</Avatar>
                                                         </Grid>
                                                     </Grid>
+
                                                     <Grid item xs={12}>
                                                         <Divider variant='fullWidth' className={classes.divider} />
                                                     </Grid>
@@ -879,26 +748,8 @@ export default function TopNavBar(props) {
                                                             </div>
                                                         </Grid>
                                                         <Grid item xs={6} sm={6} lg={6} >
-                                                            <Avatar variant="rounded" className={classes.roleAvi}>
-                                                              {roles[user.roleID]}
-                                                              <Tooltip 
-                                                                title={
-                                                                  <React.Fragment>
-                                                                    <Typography align="center" color="inherit">User Role Information</Typography>
-                                                                    {"The creator role allows the user to create and manage courses. This role also allows the user to create and manage modules within courses they have made. The following options are available for management of both courses and modules: Add, Edit, and Delete. Creators can also take courses as a student would"}
-                                                                  </React.Fragment>
-                                                                } 
-                                                                placement="top"
-                                                                leaveDelay={200} 
-                                                                arrow
-                                                              >
-                                                                  <IconButton size='small'><HelpIcon/></IconButton>
-                                                              </Tooltip>
-                                                            </Avatar>
+                                                            <Avatar variant="rounded" className={classes.roleAvi}>{roles[user.roleID]}</Avatar>
                                                         </Grid>
-                                                        {/* <Grid item xs={1} sm={1} lg={1} >
-                                                          <IconButton><HelpIcon/></IconButton>
-                                                        </Grid> */}
                                                     </Grid>
 
                                                     <Grid item xs={12}>
@@ -987,22 +838,7 @@ export default function TopNavBar(props) {
                                                             </div>
                                                         </Grid>
                                                         <Grid item xs={6} sm={6} lg={6} >
-                                                            <Avatar variant="rounded" className={classes.roleAvi}>
-                                                              {roles[user.roleID]}
-                                                              <Tooltip 
-                                                                title={
-                                                                  <React.Fragment>
-                                                                    <Typography align="center" color="inherit">User Role Information</Typography>
-                                                                    {"The Admin role allows the user to have full access to the application. The Admin can access the admin dashboard which gives them the access to: edit user roles, delete users, delete courses, delete categories, and see a whole host of statistics. The Admin is also able to create courses and take courses as a creator and student would respectively"}
-                                                                  </React.Fragment>
-                                                                } 
-                                                                placement="top"
-                                                                leaveDelay={200} 
-                                                                arrow
-                                                              >
-                                                                  <IconButton size='small'><HelpIcon/></IconButton>
-                                                              </Tooltip>
-                                                            </Avatar>
+                                                            <Avatar variant="rounded" className={classes.roleAvi}>{roles[user.roleID]}</Avatar>
                                                         </Grid>
                                                     </Grid>
 
@@ -1137,14 +973,14 @@ export default function TopNavBar(props) {
                             </Tooltip>
                         </Link>
 
-                        {/* <Link href="/MyFiles" underline='none' color="inherit">
+                        <Link href="/MyFiles" underline='none' color="inherit">
                             <Tooltip title="My Files" enterDelay={500}>
                                 <ListItem button>
                                     <ListItemIcon><DescriptionIcon /></ListItemIcon>
                                     <ListItemText primary="My Files" />
                                 </ListItem>
                             </Tooltip>
-                        </Link> */}
+                        </Link>
 
                         {isAdmin &&
                             <Tooltip title="Admin Dashboard" enterDelay={500}>
