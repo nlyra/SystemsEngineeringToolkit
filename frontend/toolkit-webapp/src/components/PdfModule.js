@@ -14,7 +14,6 @@ const PdfModule = ({ fileUrl }) => {
   return (
     <div className={classes.div}>
       <iframe
-        title={fileUrl}
         src={fileUrl}
         width="100%"
         height="800px"

@@ -1,4 +1,4 @@
-import { Button, Typography } from '@material-ui/core';
+import { Button, Typography, Link } from '@material-ui/core';
 import React, { useState, } from 'react';
 import quizStyles from '../styles/quizModuleStyle'
 import config from '../config.json'
@@ -12,7 +12,8 @@ const QuizModule = (props) => {
   const classes = quizStyles()
 
   const [state, setState] = useState(props.grade !== undefined ? 2 : 0);  // 0 == start button, 1 == quiz, 2 == score and again
-  const [questions] = useState(props.quiz);
+  const [questions, setQuestions] = useState(props.quiz);
+  const [score, setScore] = useState(0);
   const [answers, setAnswers] = useState({});
   const [value, setValue] = React.useState({});
 
@@ -23,12 +24,14 @@ const QuizModule = (props) => {
         temp += 1
       }
     }
+    setScore(temp);
     saveScore(temp);
     setState(2)
   }
 
 
   const handleAgain = () => {
+    setScore(0)
     setAnswers({})
     setValue({})
     setState(1)
@@ -121,6 +124,7 @@ const QuizModule = (props) => {
       {state === 2 &&
         <div className={classes.afterSubmitDiv}>
           <div >
+            {/* <Typography>Your score is: {score}/{questions.length}</Typography> */}
             <br />
             <Button variant="contained" onClick={() => window.confirm('Are you sure you wish to try again?') && handleAgain()}>Try again?</Button>
             <Button variant="contained" onClick={() => window.confirm('Are you sure you wish to show answers?') && setState(3)}>Show answers</Button>

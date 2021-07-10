@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import { IconButton, Chip, InputLabel, Select, MenuItem, FormControl, FormControlLabel, Divider, Grid, Typography, TextField, Button } from '@material-ui/core'
+import { IconButton, Chip, InputLabel, Select, MenuItem, FormControl, Link, FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
 import VideoModule from '../components/VideoModule'
 import PdfModule from '../components/PdfModule'
 import QuizModule from '../components/QuizModule'
@@ -48,79 +48,77 @@ const Course = (props) => {
   useEffect(() => {
     const pathname = window.location.pathname.split('/') //returns the current path
     const id = pathname[pathname.length - 1]
-    const getAuthorization = async () => {
-      const token = localStorage.getItem("token");
-
-      const res = await fetch(config.server_url + config.paths.getIsCreator, {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json'
-        },
-        body: JSON.stringify({
-          "token": token
-        })
-      })
-
-      const data = await res.json()
-
-      if (data.message === "yes") {
-        setIsCreator(true);
-      } else
-        setIsCreator(false);
-    }
-
-
-    const getCourse = async (id) => {
-      const token = localStorage.getItem("token");
-      let res = undefined
-
-      res = await fetch(config.server_url + config.paths.course, {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json'
-        },
-        body: JSON.stringify({ "token": token, "id": id })
-      })
-
-      const data = await res.json()
-
-      if (data.message === undefined) {
-        setCourse(data.course);
-        setCourseID(id);
-        setOldCourseImage(data.course.urlImage);
-        setCurrCourseImage(data.course.urlImage);
-        setCourseTitle(data.course.name);
-        setCourseDescription(data.course.description);
-        setSkillLevel(data.course.skillLevel);
-        setIntendedAudience(data.course.intendedAudience);
-        setPrerequisite(data.course.prerequisite);
-        setModules(data.course.modules);
-        setIsEnabled(data.course.isEnabled);
-        if (data.course.author === "yes")
-          setIsOwner(true);
-      } else if (data.message === "wrong token") {
-        localStorage.removeItem('token');
-        props.history.push('login');
-        // probably alert the user
-      } else if (data.message === "course not available") {
-        props.history.push('/dashboard');
-        // probably alert the user
-      } else { // this is to check if there are errors not being addressed already
-        console.log(data)
-      }
-    }
-
     getCourse(id)
     getAuthorization();
 
-  }, [props]);
+  }, []);
 
+  const getAuthorization = async () => {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(config.server_url + config.paths.getIsCreator, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        "token": token
+      })
+    })
+
+    const data = await res.json()
+
+    if (data.message === "yes") {
+      setIsCreator(true);
+    } else
+      setIsCreator(false);
+
+  }
 
   const addModule = () => {
     sessionStorage.clear()
     props.history.push(`/newModule/${courseID}`)
   }
 
+  const getCourse = async (id) => {
+    const token = localStorage.getItem("token");
+    let res = undefined
+
+    res = await fetch(config.server_url + config.paths.course, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({ "token": token, "id": id })
+    })
+
+    const data = await res.json()
+    
+    if (data.message === undefined) {
+      setCourse(data.course);
+      setCourseID(id);
+      setOldCourseImage(data.course.urlImage);
+      setCurrCourseImage(data.course.urlImage);
+      setCourseTitle(data.course.name);
+      setCourseDescription(data.course.description);
+      setSkillLevel(data.course.skillLevel);
+      setIntendedAudience(data.course.intendedAudience);
+      setPrerequisite(data.course.prerequisite);
+      setModules(data.course.modules);
+      setIsEnabled(data.course.isEnabled);
+      if (data.course.author === "yes")
+        setIsOwner(true);
+    } else if (data.message === "wrong token") {
+      localStorage.removeItem('token');
+      props.history.push('login');
+      // probably alert the user
+    } else if (data.message === "course not available") {
+      props.history.push('/dashboard');
+      // probably alert the user
+    } else { // this is to check if there are errors not being addressed already
+      console.log(data)
+    }
+  }
 
   const onEditSubmit = async (e) => {
     // e.preventDefault()
@@ -246,25 +244,25 @@ const Course = (props) => {
       window.location.reload();
   }
 
-  // const enroll = async (module) => {
+  const enroll = async (module) => {
 
-  //   if (modules.indexOf(module) === 0) {
+    if (modules.indexOf(module) === 0) {
 
-  //     const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token");
 
-  //     const res = await fetch(config.server_url + config.paths.enrollment, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-type': 'application/json'
-  //       },
-  //       body: JSON.stringify({
-  //         "courseID": course._id,
-  //         "token": token
-  //       })
-  //     })
-  //   }
+      const res = await fetch(config.server_url + config.paths.enrollment, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          "courseID": course._id,
+          "token": token
+        })
+      })
+    }
 
-  // }
+  }
 
   const isDisabled = (index) => {
     if (index >= 3) {
@@ -278,7 +276,7 @@ const Course = (props) => {
 
   const enableCourse = async (val) => {
 
-
+    
     // send change to backend
     const token = localStorage.getItem("token");
     const res = await fetch(config.server_url + config.paths.changeEnabled, {
@@ -292,11 +290,11 @@ const Course = (props) => {
         "isEnabled": val
       })
     })
-
+    
     const data = await res.json()
-
+    
     if (data.message === "unauthorized")
-      props.history.push('/dashboard');
+    props.history.push('/dashboard');
     else if (data.message === undefined) {
       setIsEnabled(val);
     } else if (data.message === "wrong token") {

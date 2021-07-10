@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { IconButton, AppBar, TextField } from "@material-ui/core";
+import { fade, makeStyles, IconButton, AppBar, Paper, TextField, Typography } from "@material-ui/core";
 import { Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
 import { Avatar, Dialog, DialogTitle, DialogActions, DialogContent, Grid } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu'
+import { white, deepPurple, grey, amber } from '@material-ui/core/colors';
 import config from '../config.json'
 import SearchIcon from '@material-ui/icons/Search'
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -13,18 +14,358 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import DescriptionIcon from '@material-ui/icons/Description';
 import BookOutlinedIcon from '@material-ui/icons/BookOutlined';
 import HomeIcon from '@material-ui/icons/Home';
+// import LogoutIcon from '@material-ui/icons/Logout';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
-import styles from '../styles/topNavBarStyle'
+
 import clsx from 'clsx';
 import { Link } from '@material-ui/core';
+
 const logo_url = "http://localhost:4000/misc_files/logo.jpg"
 
+const drawerWidth = 240;
+
+const useStyles = makeStyles((theme) => ({
+
+    root:
+    {
+        // display: 'flex',
+        // height: '5vh',
+    },
+
+    dialog:
+    {
+        position: 'absolute',
+        minWidth: '30%'
+
+    },
+
+    dialogContent:
+    {
+        width: '40vh'
+    },
+
+    divider:
+    {
+        border: '1px solid grey',
+        borderRadius: '10px',
+        backgroundColor: 'grey'
+    },
+
+    dialogTitle:
+    {
+        textAlign: 'center',
+        verticalAlign: 'middle',
+        backgroundColor: grey[900],
+        border: '2px solid white'
+    },
+
+    avatar:
+    {
+        color: theme.palette.getContrastText(deepPurple[500]),
+        backgroundColor: deepPurple[500],
+        height: '6vh',
+        width: '6vh',
+        margin: 'auto'
+    },
+
+
+    statContent:
+    {
+        verticalAlign: 'right',
+        margin: 'auto',
+        width: '100%',
+        alignSelf: 'center'
+    },
+
+    // statsDiv:
+    // {
+    //     width: '100%',
+    // },
+
+    statsTitle:
+    {
+        textAlign: 'center',
+        verticalAlign: 'middle',
+        textDecoration: 'underline'
+    },
+
+    statsAvi:
+    {
+        color: theme.palette.getContrastText(amber[600]),
+        backgroundColor: amber[600],
+        border: '1px solid black',
+        margin: 'auto'
+        // borderRadius: '4px'
+    },
+
+    roleAvi:
+    {
+        color: theme.palette.getContrastText(amber[600]),
+        backgroundColor: amber[600],
+
+        // For the avatar that uses this color. Can be changed to another div if needed
+        width: '10vh',
+        // paddingTop: '10px'
+        marginTop: '5%',
+        marginLeft: '15%',
+        border: '1px solid black',
+        borderRadius: '8px',
+    },
+
+    roleStatContent:
+    {
+        // verticalAlign: 'middle',
+        // margin: 'auto',
+        width: '100%'
+        // backgroundColor: 'cyan'
+    },
+
+    roleText:
+    {
+        width: '100%',
+        textAlign: 'center'
+
+    },
+
+    roleGrid:
+    {
+        justifyContent: 'center'
+    },
+
+    statText:
+    {
+        width: '100%',
+        textAlign: 'center'
+    },
+
+    search: {
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        '&:hover': {
+            backgroundColor: fade(theme.palette.common.white, 0.25),
+        },
+
+        dialog:
+        {
+            position: 'absolute',
+            minWidth: '30%'
+
+        },
+
+        dialogContent:
+        {
+            width: '40vh'
+        },
+
+        divider:
+        {
+            border: '1px solid grey',
+            borderRadius: '10px',
+            backgroundColor: 'grey'
+        },
+
+        dialogTitle:
+        {
+            textAlign: 'center',
+            verticalAlign: 'middle',
+            backgroundColor: grey[900],
+            border: '2px solid white'
+        },
+
+        avatar:
+        {
+            color: theme.palette.getContrastText(deepPurple[500]),
+            backgroundColor: deepPurple[500],
+            height: '6vh',
+            width: '6vh',
+            margin: 'auto'
+        },
+
+
+        statContent:
+        {
+            verticalAlign: 'right',
+            margin: 'auto',
+            width: '100%',
+            alignSelf: 'center'
+        },
+
+        // statsDiv:
+        // {
+        //     width: '100%',
+        // },
+
+        statsTitle:
+        {
+            textAlign: 'center',
+            verticalAlign: 'middle',
+            textDecoration: 'underline'
+        },
+
+        statsAvi:
+        {
+            color: theme.palette.getContrastText(amber[600]),
+            backgroundColor: amber[600],
+            border: '1px solid black',
+            margin: 'auto'
+            // borderRadius: '4px'
+        },
+
+        roleAvi:
+        {
+            color: theme.palette.getContrastText(amber[600]),
+            backgroundColor: amber[600],
+
+            // For the avatar that uses this color. Can be changed to another div if needed
+            width: '10vh',
+            // paddingTop: '10px'
+            marginTop: '5%',
+            marginLeft: '15%',
+            fontSize: '15px',
+            fontWeight: 'bold',
+            border: '1px solid black',
+            borderRadius: '8px',
+        },
+
+        roleStatContent:
+        {
+            // verticalAlign: 'middle',
+            // margin: 'auto',
+            width: '100%'
+            // backgroundColor: 'cyan'
+        },
+
+        roleText:
+        {
+            width: '100%',
+            textAlign: 'center'
+
+        },
+
+        roleGrid:
+        {
+            justifyContent: 'center'
+        },
+    },
+    searchIcon: {
+        padding: theme.spacing(0, 2),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    searchIcon2: {
+        padding: theme.spacing(0, 5),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    inputRoot: {
+        color: 'inherit',
+    },
+    inputInput: {
+        padding: theme.spacing(1, 1, 1, 0),
+        // vertical padding + font size from searchIcon
+        paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('md')]: {
+            width: '20ch',
+        },
+    },
+    logoStyle: {
+        maxWidth: '10%',
+        textAlign: 'center',
+        margin: 'auto'
+    },
+    horizontalCenteringLogo: {
+        position: 'absolute',
+        left: '66%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)'
+    },
+    test: {
+        display: 'flex',
+        alignItems: 'space-between'
+    },
+    drawer: {
+        width: drawerWidth,
+        flexShrink: 0,
+        whiteSpace: 'nowrap',
+    },
+    drawerOpen: {
+        width: drawerWidth,
+        transition: theme.transitions.create('width', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    },
+    drawerClose: {
+        transition: theme.transitions.create('width', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        overflowX: 'hidden',
+        width: theme.spacing(7) + 1,
+        [theme.breakpoints.up('sm')]: {
+            width: theme.spacing(9) + 1,
+        }
+    },
+    toolbar: {
+        display: 'flex',
+        // alignItems: 'center',
+        justifyContent: 'flex-end',
+        padding: theme.spacing(0, 1),
+        // necessary for content to be below app bar
+        ...theme.mixins.toolbar,
+    },
+    content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
+    },
+    appBar: {
+        background: 'black',
+        zIndex: theme.zIndex.drawer + 1,
+        transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+    },
+    appBarShift: {
+        marginLeft: drawerWidth,
+        width: `calc(100% - ${drawerWidth}px)`,
+        transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    },
+
+    logoutDialogTitle: {
+        textAlign: 'center',
+        verticalAlign: 'middle',
+        backgroundColor: grey[50],
+        border: '2px solid white'
+    },
+
+    // iconbutton:{
+    //     position:'relative',
+    //     paddingLeft:theme.spacing(0,2)
+    // }
+}))
 
 
 export default function TopNavBar(props) {
-    
-    const classes = styles()
+
+
+    const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [openDialog, setOpenDialog] = useState(false);
     const [user, setUser] = useState({})
@@ -129,7 +470,7 @@ export default function TopNavBar(props) {
     const handleChanges = async () => {
 
         if (user.email !== newEmail) {
-            if (newEmail.indexOf('@') === -1) {
+            if (newEmail.indexOf('@') == -1) {
                 alert('Please input a valid email format.')
                 return
             }
@@ -153,8 +494,6 @@ export default function TopNavBar(props) {
             })
 
             const data = await res.json()
-
-
 
         }
         setOpenDialog(false);
