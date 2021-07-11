@@ -577,7 +577,8 @@ export default function TopNavBar(props) {
                                                                         </React.Fragment>
                                                                     }
                                                                     placement="top"
-                                                                    leaveDelay={200}
+                                                                    enterDelay={200}
+                                                                    // leaveDelay={200}
                                                                     arrow
                                                                 >
                                                                     <IconButton size='small'><HelpIcon /></IconButton>
@@ -674,7 +675,8 @@ export default function TopNavBar(props) {
                                                                         </React.Fragment>
                                                                     }
                                                                     placement="top"
-                                                                    leaveDelay={200}
+                                                                    enterDelay={200}
+                                                                    // leaveDelay={200}
                                                                     arrow
                                                                 >
                                                                     <IconButton size='small'><HelpIcon /></IconButton>
@@ -778,7 +780,8 @@ export default function TopNavBar(props) {
                                                                         </React.Fragment>
                                                                     }
                                                                     placement="top"
-                                                                    leaveDelay={200}
+                                                                    enterDelay={200}
+                                                                    // leaveDelay={200}
                                                                     arrow
                                                                 >
                                                                     <IconButton size='small'><HelpIcon /></IconButton>
