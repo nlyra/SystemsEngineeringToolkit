@@ -162,7 +162,7 @@ router.post('/info', VerifyToken, async (req, res) => {
 
   try {
     let courses = []
-    let totalCourses = await Course.find().countDocuments()
+    let totalCourses = await Course.find({isEnabled: true}).countDocuments()
 
     if (req.body.search_query != undefined) {
       const query = req.body.search_query;

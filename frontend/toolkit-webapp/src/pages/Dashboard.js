@@ -1,7 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { Button, Card, CardActions, Container, CssBaseline, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
+import { Button, Card, CardActions, Container, CssBaseline, IconButton, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Waypoint } from "react-waypoint";
 // import Pagination from '@material-ui/lab/Pagination'
 import dashStyles from '../styles/dashboardStyle'
@@ -13,7 +14,7 @@ const Dashboard = (props) => {
     const [next, setHasNext] = useState(0)
     const [hasNextPage, setHasNextPage] = useState(true);
     const [totalCourses, setTotalCourses] = useState(0)
-    const cardAmount = 20
+    const cardAmount = 10
 
     const classes = dashStyles()
 
@@ -117,7 +118,13 @@ const Dashboard = (props) => {
 
                     </Grid>
                 </div>
-                {/* <Pagination count={6} page={page} onChange={handlePage} variant="outlined" shape="rounded" /> */}
+                
+                {totalCourses !== courses.length &&
+                    
+                    <div className={classes.expandMoreIcon}>
+                    <IconButton disableRipple size='large' style={{ backgroundColor: 'transparent' }}>{totalCourses} {courses.length}<ExpandMoreIcon /></IconButton>
+                    </div>
+                }
             </Container>
         </div>
     )

@@ -35,6 +35,15 @@ const dashStyles = makeStyles((theme) => ({
         flexGrow: 1
     },
 
+    expandMoreIcon:
+    {
+        width: '100%',
+        textAlign: 'center',
+        marginTop: '2vh',
+        marginBottom: '4vh',
+        fontSize: 'default'
+    },
+
     scrollListener:
     {
         offset: 200,

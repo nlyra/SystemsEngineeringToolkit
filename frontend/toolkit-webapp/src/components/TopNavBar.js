@@ -97,29 +97,22 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: amber[600],
         border: '1px solid black',
         margin: 'auto'
-        // borderRadius: '4px'
     },
 
-    roleAvi:
+    roleDescription:
     {
-        color: theme.palette.getContrastText(amber[600]),
-        backgroundColor: amber[600],
 
-        // For the avatar that uses this color. Can be changed to another div if needed
         width: '100%',
-        // paddingTop: '10px'
-        marginTop: '5%',
-        // marginLeft: '5%',
-        border: '1px solid black',
-        borderRadius: '8px',
+        color: 'black',
+        fontSize: '2.4vh',
+        fontWeight: '500',
+        marginTop: '13%',
+
     },
 
     roleStatContent:
     {
-        // verticalAlign: 'middle',
-        // margin: 'auto',
         width: '100%'
-        // backgroundColor: 'cyan'
     },
 
     roleText:
@@ -138,6 +131,11 @@ const useStyles = makeStyles((theme) => ({
     {
         width: '100%',
         textAlign: 'center'
+    },
+
+    closeButton:
+    {
+        marginRight: '20%'
     },
 
     search: {
@@ -567,7 +565,7 @@ export default function TopNavBar(props) {
                                                             </div>
                                                         </Grid>
                                                         <Grid item xs={6} sm={6} lg={6} >
-                                                            <Avatar variant="rounded" className={classes.roleAvi}>
+                                                            <Typography className={classes.roleDescription}>
                                                                 {roles[user.roleID]}
                                                                 <Tooltip
                                                                     title={
@@ -582,7 +580,7 @@ export default function TopNavBar(props) {
                                                                 >
                                                                     <IconButton size='small'><HelpIcon /></IconButton>
                                                                 </Tooltip>
-                                                            </Avatar>
+                                                            </Typography>
                                                         </Grid>
                                                     </Grid>
 
@@ -664,7 +662,7 @@ export default function TopNavBar(props) {
                                                             </div>
                                                         </Grid>
                                                         <Grid item xs={6} sm={6} lg={6} >
-                                                            <Avatar variant="rounded" className={classes.roleAvi}>
+                                                            <Typography className={classes.roleDescription}>
                                                                 {roles[user.roleID]}
                                                                 <Tooltip
                                                                     title={
@@ -679,7 +677,7 @@ export default function TopNavBar(props) {
                                                                 >
                                                                     <IconButton size='small'><HelpIcon /></IconButton>
                                                                 </Tooltip>
-                                                            </Avatar>
+                                                            </Typography>
                                                         </Grid>
                                                     </Grid>
 
@@ -769,8 +767,7 @@ export default function TopNavBar(props) {
                                                             </div>
                                                         </Grid>
                                                         <Grid item xs={6} sm={6} lg={6} >
-                                                            <Avatar variant="rounded" className={classes.roleAvi}>
-                                                                {roles[user.roleID]}
+                                                            <Typography className={classes.roleDescription}>                                                                {roles[user.roleID]}
                                                                 <Tooltip
                                                                     title={
                                                                         <React.Fragment>
@@ -784,7 +781,7 @@ export default function TopNavBar(props) {
                                                                 >
                                                                     <IconButton size='small'><HelpIcon /></IconButton>
                                                                 </Tooltip>
-                                                            </Avatar>
+                                                            </Typography>
                                                         </Grid>
                                                     </Grid>
 
@@ -820,7 +817,7 @@ export default function TopNavBar(props) {
                                                         <h2>My Stats</h2>
                                                     </div>
                                                     <Grid container direction="row" >
-                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                        <Grid item xs={4} sm={4} lg={4} >
                                                             <div className={classes.statContent}>
                                                                 <div className={classes.statText}>
                                                                     <h5>Courses Enrolled In</h5>
@@ -828,12 +825,20 @@ export default function TopNavBar(props) {
                                                                 <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
                                                             </div>
                                                         </Grid>
-                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                        <Grid item xs={4} sm={4} lg={4} >
                                                             <div className={classes.statContent}>
                                                                 <div className={classes.statText}>
                                                                     <h5>Courses Completed</h5>
                                                                 </div>
                                                                 <Avatar className={classes.statsAvi}>{user.completedCourses.length}</Avatar>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid item xs={4} sm={4} lg={4} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Courses Created</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{user.createdCourses.length}</Avatar>
                                                             </div>
                                                         </Grid>
                                                     </Grid>
@@ -844,8 +849,11 @@ export default function TopNavBar(props) {
 
                                     </DialogContent>
                                     <DialogActions>
+                                    <Button className={classes.closeButton} color="primary" onClick={handleClose}>
+                                            Close
+                                        </Button>
                                         <Button autoFocus color="primary" onClick={handleChanges}>
-                                            Close & Save Changes
+                                            Save Changes
                                         </Button>
                                     </DialogActions>
                                 </Dialog>
