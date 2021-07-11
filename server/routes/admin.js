@@ -4,10 +4,16 @@ const Course = require('../models/course');
 const Category = require('../models/categories');
 const router = express.Router();
 const VerifyToken = require('./auth').verifyToken;
+const GetRole = require('./auth').getRole;
 const fs = require('fs')
 
-router.post('/users', VerifyToken, async (req, res) => {
+router.post('/users', VerifyToken, GetRole, async (req, res) => {
   try {
+    if (req.body.roleID != 2) {
+      res.json({ message: "unauthorized" })
+      return
+    }
+
     const users = await User.find({}, '_id first_name last_name email roleID');
     res.json({ 'users': users });
   } catch (e) {
@@ -16,9 +22,14 @@ router.post('/users', VerifyToken, async (req, res) => {
   }
 });
 
-router.post('/courses', VerifyToken, async (req, res) => {
+router.post('/courses', VerifyToken, GetRole, async (req, res) => {
   try {
-    const courses = await Course.find({}, '_id name totalStudents author totalCompletedStudents currStudents');
+    if (req.body.roleID != 2) {
+      res.json({ message: "unauthorized" })
+      return
+    }
+
+    const courses = await Course.find({}, '_id name totalStudents author totalCompletedStudents currStudents isEnabled');
     res.json({ 'courses': courses });
   } catch (e) {
     console.log(e);
@@ -26,8 +37,13 @@ router.post('/courses', VerifyToken, async (req, res) => {
   }
 });
 
-router.post('/categories', VerifyToken, async (req, res) => {
+router.post('/categories', VerifyToken, GetRole, async (req, res) => {
   try {
+    if (req.body.roleID != 2) {
+      res.json({ message: "unauthorized" })
+      return
+    }
+
     const categories = await Category.find({});
     res.json({ 'categories': categories });
   } catch (e) {
@@ -36,8 +52,12 @@ router.post('/categories', VerifyToken, async (req, res) => {
   }
 });
 
-router.delete('/user', VerifyToken, async (req, res) => {
+router.delete('/user', VerifyToken, GetRole, async (req, res) => {
   try {
+    if (req.body.roleID != 2) {
+      res.json({ message: "unauthorized" })
+      return
+    }
     const user = await User.deleteOne({ _id: req.body.deleteID })
     res.json({ 'status': "success" });
   } catch (e) {
@@ -46,8 +66,13 @@ router.delete('/user', VerifyToken, async (req, res) => {
   }
 });
 
-router.post('/userRole', VerifyToken, async (req, res) => {
+router.post('/userRole', VerifyToken, GetRole, async (req, res) => {
   try {
+    if (req.body.roleID != 2) {
+      res.json({ message: "unauthorized" })
+      return
+    }
+
     const update = await User.updateOne({ _id: req.body.updateID },
       {
         $set: { roleID: req.body.updateValue }
@@ -59,8 +84,13 @@ router.post('/userRole', VerifyToken, async (req, res) => {
   }
 });
 
-router.delete('/course', VerifyToken, async (req, res) => {
+router.delete('/course', VerifyToken, GetRole, async (req, res) => {
   try {
+    if (req.body.roleID != 2) {
+      res.json({ message: "unauthorized" })
+      return
+    }
+
     const update = await User.updateOne(
       { _id: req.body.author },
       { $pull: { createdCourses: req.body.deleteID } }
@@ -76,8 +106,13 @@ router.delete('/course', VerifyToken, async (req, res) => {
   }
 })
 
-router.delete('/category', VerifyToken, async (req, res) => {
+router.delete('/category', VerifyToken, GetRole, async (req, res) => {
   try {
+    if (req.body.roleID != 2) {
+      res.json({ message: "unauthorized" })
+      return
+    }
+
     const category = await Category.deleteOne({ _id: req.body.deleteID })
     res.json({ 'status': "success" });
   } catch (e) {
@@ -86,8 +121,13 @@ router.delete('/category', VerifyToken, async (req, res) => {
   }
 });
 
-router.post('/users/search', VerifyToken, async (req, res) => {
+router.post('/users/search', VerifyToken, GetRole, async (req, res) => {
   try {
+    if (req.body.roleID != 2) {
+      res.json({ message: "unauthorized" })
+      return
+    }
+
     const query = req.body.query;
     const users = await User.find({
       $or: [
@@ -105,8 +145,13 @@ router.post('/users/search', VerifyToken, async (req, res) => {
   }
 });
 
-router.post('/courses/search', VerifyToken, async (req, res) => {
+router.post('/courses/search', VerifyToken, GetRole, async (req, res) => {
   try {
+    if (req.body.roleID != 2) {
+      res.json({ message: "unauthorized" })
+      return
+    }
+
     const query = req.body.query;
     const courses = await Course.find({
       $or: [
@@ -114,8 +159,9 @@ router.post('/courses/search', VerifyToken, async (req, res) => {
         // { "_id": { "$regex": ObjectID(query), $options: 'i' } },
         { "name": { "$regex": query, $options: 'i' } },
         { "author": { "$regex": query, $options: 'i' } },
+
       ]
-    }, '_id name totalStudents author totalCompletedStudents currStudents');
+    }, '_id name totalStudents author totalCompletedStudents currStudents isEnabled');
     res.json({ 'courses': courses });
   } catch (e) {
     console.log(e);
@@ -123,8 +169,13 @@ router.post('/courses/search', VerifyToken, async (req, res) => {
   }
 });
 
-router.post('/categories/search', VerifyToken, async (req, res) => {
+router.post('/categories/search', VerifyToken, GetRole, async (req, res) => {
   try {
+    if (req.body.roleID != 2) {
+      res.json({ message: "unauthorized" })
+      return
+    }
+
     const query = req.body.query;
     const categories = await Category.find({
       $or: [

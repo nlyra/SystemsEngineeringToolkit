@@ -37,12 +37,29 @@ const CourseSchema = mongoose.Schema({
 
   urlImage: {
     type: String,
-    required: true
+    required: false
   },
 
   modules: [],
 
   author: {
+    type: String
+  },
+
+  isEnabled: {
+    type: Boolean,
+    default: false
+  },
+  
+  skillLevel: {
+    type: String
+  },
+  
+  intendedAudience: {
+    type: String
+  },
+
+  prerequisite: {
     type: String
   }
 

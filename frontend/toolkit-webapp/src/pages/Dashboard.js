@@ -1,47 +1,42 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { Button, Card, CardActions, Container, CssBaseline, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
-import '../css/dashboard.css'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import Pagination from '@material-ui/lab/Pagination'
+import { Waypoint } from "react-waypoint";
+// import Pagination from '@material-ui/lab/Pagination'
 import dashStyles from '../styles/dashboardStyle'
 
-const changeParams = (start, finish) => {
-    start = start + 1
-    finish = finish + 1
-    console.log("start " + start)
-
-}
+import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 
 const Dashboard = (props) => {
     const [courses, setCourses] = useState([])
-    const [page, setPage] = useState(1)
-    const [cardAmount, setCardAmount] = useState()
-    const [coursesPerPage, setCoursesPerPage] = useState(5)
-    // const [searchQuery, setSearchQuery] = useState(undefined)
+    const [next, setHasNext] = useState(0)
+    const [hasNextPage, setHasNextPage] = useState(true);
+    const [totalCourses, setTotalCourses] = useState(0)
+    const cardAmount = 20
 
     const classes = dashStyles()
 
     // function that will run when page is loaded
     useEffect(() => {
-        loadCourses();
+        loadCourses(undefined, next+1);
     }, []);
 
-    const handlePage = (event, value) => {
-        setPage(value)
-        loadCourses(undefined, value)
-    }
+
+    const loadMoreCourses = useCallback(() => {
+
+        if ((totalCourses === courses.length))
+            return 
+            
+        loadCourses(undefined, next+1)
+      })
 
     // function to get the courses 
-    const loadCourses = async (query, s = 1) => {
+    const loadCourses = async (query, next) => {
+        
         const token = localStorage.getItem("token");
         let res = undefined
-        let skip = (s - 1) * cardAmount
-        // if (query == ""){
-        //     setSearchQuery(undefined)
-        // }else{
-        //     setSearchQuery(query)
-        // }
+        let skip = (next - 1) * cardAmount
 
         res = await fetch(config.server_url + config.paths.dashboardCourses, {
             method: 'POST',
@@ -50,18 +45,22 @@ const Dashboard = (props) => {
             },
             body: JSON.stringify({ "token": token, "search_query": query, "skip": skip, "cardAmount": cardAmount })
         })
-        // }
-
 
         const data = await res.json()
-        if (data.message === undefined) {
+        if (data.status === "loading") {
+           
+            setCourses(courses.concat(data.courses));
+            setTotalCourses(data.totalCourses)
+            setHasNext(next)
 
-            // console.log(data.courses);
-            // localStorage.setItem("token", data.token);
+        } 
+        else if (data.status === "search")
+        {
             setCourses(data.courses);
+            setTotalCourses(data.totalCourses)
+        }
 
-
-        } else if (data.message === "wrong token") {
+        if (data.message === "wrong token") {
             localStorage.removeItem('token');
             props.history.push('login');
             // probably alert the user
@@ -74,18 +73,19 @@ const Dashboard = (props) => {
         props.history.push(`course/${course._id}`);
     }
 
+    useBottomScrollListener(loadMoreCourses);
 
     return (
-        <div className={classes.div}>
+        <div className={classes.div} >
             <TopNavBar
                 search={loadCourses}
-                page={page}
+                // page={page}
             ></TopNavBar>
             <CssBaseline />
-            <Container maxWidth="lg" className={classes.container}>
-                <div className='modules'>
+            <Container maxWidth="lg" className={classes.container} >
+                <div className='courses' >
                     <Grid container spacing={3}>
-                        {courses.map((course) => (
+                        {courses.map((course, i) => (
 
                             <Grid item key={course._id} xs={12} sm={4} md={3}>
                                 <Card
@@ -102,12 +102,14 @@ const Dashboard = (props) => {
                                             {course.name}
                                         </Typography>
                                         <Typography gutterBottom>
-                                            {course.description.length < 100 ? course.description : course.description.substr(0, 100) + ' ...'}
+                                            {course.description.length < 100 ? course.description : course.description.substr(0, 100) + '...'}
                                         </Typography>
                                         <CardActions>
                                         </CardActions>
                                     </CardContent>
                                 </Card>
+                
+                                {/* {courses.length < 5 && (<Waypoint onEnter={testing}/>)} */}
                             </Grid>
 
                         ))}

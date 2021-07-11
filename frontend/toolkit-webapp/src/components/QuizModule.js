@@ -163,5 +163,4 @@ const QuizModule = (props) => {
     </div>
   );
 }
-
 export default QuizModule

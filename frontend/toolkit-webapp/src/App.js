@@ -11,8 +11,7 @@ import ModuleCreator from './pages/ModuleCreator'
 import ModuleEditor from './pages/ModuleEditor'
 // import background from "./img/image0.png";
 import videoSource from "./img/PEOSTRI.mp4"
-import VideoModule from "./components/VideoModule"
-import MyFiles from './pages/MyFiles'
+import VideoModule from "./components/VideoModule" 
 import ManageMyCourses from './pages/ManageMyCourses'
 import MyCourses from './pages/MyCourses'
 import AdminDashboard from './pages/AdminDashboard'
@@ -32,7 +31,6 @@ function App() {
       <Route path='/editModule' component={ModuleEditor} />
       <Route path='/course' component={Course} />
       <Route path= '/ManageMyCourses' component={ManageMyCourses} />
-      <Route path='/MyFiles' component={MyFiles} />
       <Route path='/MyCourses' component={MyCourses} />
       <Route path='/VideoModule' component={VideoModule} />
       <Route path='/admindashboard' component={AdminDashboard} />

@@ -29,7 +29,6 @@ const adminStyles = makeStyles((theme) => ({
 
   button: {
     fontWeight: 'bold',
-
   },
 
   innerGrid: {
@@ -46,6 +45,10 @@ const AdminDashboard = (props) => {
   const [currTab, setCurrTab] = useState(Number(new URLSearchParams(props.location.search).get('tab')) || 0)
 
   const classes = adminStyles()
+
+  const isUnauthorized = async () => {
+    props.history.push('dashboard');
+  }
 
 
   return (
@@ -77,9 +80,9 @@ const AdminDashboard = (props) => {
           </Grid>
           <Grid item xs={12}>
             <div className={classes.innerDiv}>
-              {currTab === 0 && <AdminUsersTab setCurrTab={setCurrTab} />}
-              {currTab === 1 && <AdminCoursesTab setCurrTab={setCurrTab} />}
-              {currTab === 2 && <AdminCategoriesTab setCurrTab={setCurrTab} />}
+              {currTab === 0 && <AdminUsersTab setCurrTab={setCurrTab} isUnauthorized={isUnauthorized} />}
+              {currTab === 1 && <AdminCoursesTab setCurrTab={setCurrTab} isUnauthorized={isUnauthorized} />}
+              {currTab === 2 && <AdminCategoriesTab setCurrTab={setCurrTab} isUnauthorized={isUnauthorized} />}
             </div>
           </Grid>
 

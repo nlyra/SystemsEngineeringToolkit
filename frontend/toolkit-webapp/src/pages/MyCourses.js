@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Card, CardActions, Container, CssBaseline, Divider, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
-import '../css/dashboard.css'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 // import Pagination from '@material-ui/lab/Pagination'
@@ -115,7 +114,7 @@ const MyCourses = (props) => {
                                             {course.name}
                                         </Typography>
                                         <Typography gutterBottom>
-                                            {course.description.length < 100 ? course.description : course.description.substr(0, 100) + ' ...'}
+                                            {course.description.length < 100 ? course.description : course.description.substr(0, 100) + '...'}
                                         </Typography>
                                         {/* <CardActions>
                                         </CardActions> */}

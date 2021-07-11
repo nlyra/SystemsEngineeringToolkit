@@ -1,0 +1,42 @@
+auth -> VerifyRole middleware using userID
+req.body.userId
+01 - student
+02 - creator
+99 - admin
+
+req.body.role == role
+next() -> pass to next part
+
+login -> send user role
+
+        "quiz": [{
+            "question": "What is the color of the sky  jfvbaljsfvnkf v,nds fv fknl vsdjfv lsdnf vjnd fvjsn dfvmns dv,ns dfvn sd,nfm vs,dmvf ",
+            "type": "Multiple Choice",
+            "answers": [{
+                "answerText": "Blue  jfvbaljsfvnkf v,nds fv fknl vsdjfv lsdnf vjnd fvjsn dfvmns dv,ns dfvn sd,nfm vs,dmvf ",
+                "isCorrect": true
+            }, {
+                "answerText": "Red",
+                "isCorrect": false
+            }, {
+                "answerText": "Green",
+                "isCorrect": false
+            }, {
+                "answerText": "Purple",
+                "isCorrect": false
+            }]
+
+let quiz =[]
+
+frontend/toolkit-webapp/src/components/QuizCreatorModule.js
+
+{
+    "db_url": "mongodb+srv://Collyn:se_toolkit3@cluster0.g65gk.mongodb.net/se_toolkit",
+    "server_url": "http://localhost:4000",
+    "key": "veryhardkey",
+    "emailInfo": {
+        "service": "gmail",
+        "emailUsername": "toolkitse8@gmail.com",
+        "emailPassword": "seToolkit12!"
+    }
+}

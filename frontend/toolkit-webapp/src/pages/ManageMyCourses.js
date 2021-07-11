@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Card, CardActions, Container, CssBaseline, Divider, makeStyles, TextField, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
-import '../css/dashboard.css'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 // import Pagination from '@material-ui/lab/Pagination'
@@ -38,7 +37,10 @@ const ManageMyCourses = (props) => {
 
 
         const data = await res.json()
-        if (data.message === undefined) {
+        
+        if (data.message === "unauthorized") {
+            props.history.push('dashboard');
+        } else if (data.message === undefined) {
 
             setCourses(data.courses);
 
@@ -66,7 +68,10 @@ const ManageMyCourses = (props) => {
         })
 
         const data = await res.json()
-
+        
+        if (data.message === "unauthorized") {
+            props.history.push('dashboard');
+        } 
         // This splits the array correctly and updates courses array with courses the user is still enrolled in
         // const newVal = courses.filter((courses) => courses._id !== id);
         // setCourses(newVal)
@@ -92,7 +97,7 @@ const ManageMyCourses = (props) => {
             <Grid container spacing={3}>
                 <div className={classes.header}>
                 <h1>
-                    Manage Your Courses
+                    Manage My Courses
                 </h1>
                 </div>
                 </Grid>
@@ -116,7 +121,7 @@ const ManageMyCourses = (props) => {
                                             {course.name}
                                         </Typography>
                                         <Typography gutterBottom>
-                                            {course.description.length < 100 ? course.description : course.description.substr(0, 100) + ' ...'}
+                                            {course.description.length < 100 ? course.description : course.description.substr(0, 100) + '...'}
                                         </Typography>
                                         {/* <CardActions>
                                         </CardActions> */}

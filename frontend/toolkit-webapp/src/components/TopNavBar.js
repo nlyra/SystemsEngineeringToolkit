@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { fade, makeStyles, IconButton, AppBar, Paper, TextField, Typography } from "@material-ui/core";
 import { Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
-import {Avatar, Dialog, DialogTitle, DialogActions, DialogContent, Grid} from "@material-ui/core";
+import { Avatar, Dialog, DialogTitle, DialogActions, DialogContent, Grid } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu'
-import {deepPurple, grey, amber } from '@material-ui/core/colors';
+import { white, deepPurple, grey, amber } from '@material-ui/core/colors';
 import config from '../config.json'
 import SearchIcon from '@material-ui/icons/Search'
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -14,6 +14,9 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import DescriptionIcon from '@material-ui/icons/Description';
 import BookOutlinedIcon from '@material-ui/icons/BookOutlined';
 import HomeIcon from '@material-ui/icons/Home';
+import HelpIcon from '@material-ui/icons/Help';
+
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 
 import clsx from 'clsx';
@@ -70,10 +73,10 @@ const useStyles = makeStyles((theme) => ({
 
     statContent:
     {
-        verticalAlign: 'middle',
+        verticalAlign: 'right',
         margin: 'auto',
-        width: '50%',
-        textAlign: 'center'
+        width: '100%',
+        alignSelf: 'center'
     },
 
     // statsDiv:
@@ -88,29 +91,35 @@ const useStyles = makeStyles((theme) => ({
         textDecoration: 'underline'
     },
 
-    statsAvi: 
+    statsAvi:
     {
         color: theme.palette.getContrastText(amber[600]),
         backgroundColor: amber[600],
+        border: '1px solid black',
+        margin: 'auto'
+        // borderRadius: '4px'
     },
 
-    roleAvi: 
+    roleAvi:
     {
         color: theme.palette.getContrastText(amber[600]),
         backgroundColor: amber[600],
 
         // For the avatar that uses this color. Can be changed to another div if needed
-        width: '10vh',
+        width: '100%',
         // paddingTop: '10px'
-        marginTop: '34px',
-        marginLeft: '5px'
+        marginTop: '5%',
+        // marginLeft: '5%',
+        border: '1px solid black',
+        borderRadius: '8px',
     },
 
     roleStatContent:
     {
-        verticalAlign: 'middle',
-        margin: 'auto',
-        width: '60%',
+        // verticalAlign: 'middle',
+        // margin: 'auto',
+        width: '100%'
+        // backgroundColor: 'cyan'
     },
 
     roleText:
@@ -118,6 +127,11 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         textAlign: 'center'
 
+    },
+
+    roleGrid:
+    {
+        justifyContent: 'center'
     },
 
     statText:
@@ -133,16 +147,9 @@ const useStyles = makeStyles((theme) => ({
         '&:hover': {
             backgroundColor: fade(theme.palette.common.white, 0.25),
         },
-        // backgroundColor: 'white',
-        // color: 'white',
-        marginRight: theme.spacing(2),
-        marginLeft: 0,
-        width: '100%',
-        [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing(3),
-            width: 'auto',
-        },
+
     },
+
     searchIcon: {
         padding: theme.spacing(0, 2),
         height: '100%',
@@ -241,6 +248,14 @@ const useStyles = makeStyles((theme) => ({
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
+
+    logoutDialogTitle: {
+        textAlign: 'center',
+        verticalAlign: 'middle',
+        backgroundColor: grey[50],
+        border: '2px solid white'
+    },
+
     // iconbutton:{
     //     position:'relative',
     //     paddingLeft:theme.spacing(0,2)
@@ -257,13 +272,64 @@ export default function TopNavBar(props) {
     const [user, setUser] = useState({})
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
-    const [email, setEmail] = useState('')
+    const [newEmail, setNewEmail] = useState('')
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [isCreator, setIsCreator] = useState(false);
+    const [roleInfo, setRoleInfo] = useState(-1)
+    const [numUsers, setNumUsers] = useState(0)
+    const [numCourses, setNumCourses] = useState(0)
+    const [loggingout, setLoggingout] = useState(false)
 
     let roles = ['Student', 'Creator', 'Admin']
 
+    // function that will run when page is loaded
+    useEffect(() => {
+        getAuthorization();
+    }, []);
+
+    const getAuthorization = async () => {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(config.server_url + config.paths.getIsAdmin, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                "token": token
+            })
+        })
+
+        const data = await res.json()
+
+        if (data.message === "yes")
+            setIsAdmin(true);
+        else
+            setIsAdmin(false);
+
+        const res2 = await fetch(config.server_url + config.paths.getIsCreator, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                "token": token
+            })
+        })
+
+        const data2 = await res2.json()
+
+        if (data2.message === "yes")
+            setIsCreator(true);
+        else
+            setIsCreator(false);
+
+    }
+
+
     // TODO: Consider a better way to handle this, as it will be making an api call every time the user
     // opens their profile page. 
-    
+
     const handleClickOpen = async () => {
 
         // Retrieve token, then feed topNavBar with information about the current user
@@ -284,7 +350,15 @@ export default function TopNavBar(props) {
         setUser(data.user)
         setFirstName(data.user.first_name)
         setLastName(data.user.last_name)
-        setEmail(data.user.email)
+        setNewEmail(data.user.email)
+        setRoleInfo(data.user.roleID)
+
+        if (data.user.roleID === 2) {
+            setNumUsers(data.numUsers)
+            setNumCourses(data.numCourses)
+        }
+        // setData(data.storageData)
+        // alert(data.storageData.numUsers)
         setOpenDialog(true)
 
 
@@ -294,6 +368,38 @@ export default function TopNavBar(props) {
         setOpenDialog(false);
     };
 
+    const handleChanges = async () => {
+
+        if (user.email !== newEmail) {
+            if (newEmail.indexOf('@') == -1) {
+                alert('Please input a valid email format.')
+                return
+            }
+
+            if (!window.confirm("Are you sure you would like to save your changes?")) {
+                setOpenDialog(false)
+                return
+            }
+
+            const token = localStorage.getItem("token");
+
+            const res = await fetch(config.server_url + config.paths.updateUserInfo, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "token": token,
+                    "email": newEmail
+                })
+            })
+
+            const data = await res.json()
+
+        }
+        setOpenDialog(false);
+    }
+
     const handleDrawerOpen = () => {
         setOpen(true);
     };
@@ -302,54 +408,21 @@ export default function TopNavBar(props) {
         setOpen(false);
     };
 
-    const test = (val) => {
-        props.history.push(`/dashboard`);
+    const logout = () => {
+        // alert("you are now signing out")
+        // props.history.push(`/login`)
+        localStorage.clear()
+        sessionStorage.clear()
+    }
+
+    const handleOpenDialog = () => {
+        setLoggingout(true);
+    }
+
+    const handleCloseDialog = () => {
+        setLoggingout(false);
     };
 
-    // const onSubmit = (e) => {
-        
-    //     e.preventDefault()
-    //     if (firstName === user.first_name && lastName === user.last_name) {
-    //         alert('No update made!')
-    //         return
-    //     }
-
-    //     updateUserInfo({ firstName, lastName})
-    //     // setFirstName('')
-    //     // setLastName('')
-    //     // setEmail('')
-    //     // setPassword('')
-    //     // setPasswordCopy('')
-    // }
-
-    // const updateUserInfo = async (creds) => {
-
-    //     const res = await fetch(config.server_url + config.paths.updateUserInfo, {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-type': 'application/json'
-    //         },
-    //         body: JSON.stringify({ 
-    //         "first_name": creds.firstName, 
-    //         "last_name": creds.lastName, 
-    //         "email": creds.email, 
-    //         "password": creds.password, 
-    //         "password_copy": creds.passwordCopy,
-    //         "classesEnrolled": [] })
-    //     })
-
-    //     const data = await res.json()
-
-    //     if (data.message == "added user") {
-    //         alert("Success, user Created!!");
-    //         props.history.push('login')
-
-    //     } else if (data.message === "email already connected to an account") {
-    //         alert("email already connected to an account, please try again.");
-    //     } else { // this is to check if there are errors not being addressed already
-    //         console.log(data)
-    //     }
-    // }
     return (
         <div className={classes.root}>
             <AppBar
@@ -430,7 +503,8 @@ export default function TopNavBar(props) {
                             </Tooltip>
 
                             : null}
-                        
+
+
 
                         {openDialog === true ?
 
@@ -438,96 +512,340 @@ export default function TopNavBar(props) {
                                 <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={openDialog}>
                                     <div className={classes.dialogTitleDiv}>
                                         <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleClose}>
-                                            <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar> 
-                                                {/* Your Profile */}
+                                            <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar>
+                                            {/* Your Profile */}
                                         </DialogTitle>
                                     </div>
                                     <DialogContent className={classes.dialogContent}>
-                                        <form autoComplete="off">
-                                            {/* <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar> */}
-                                            <div className={classes.TextBox} alignItems="center">
-                                                <TextField color='primary'
-                                                    alignContent="center"
-                                                    size='small'
-                                                    variant="outlined"
-                                                    label='First Name'
-                                                    inputProps={{min: 0, readOnly: true, style: { textAlign: 'center' }}}
-                                                    type="text"
-                                                    defaultValue={user.first_name}
-                                                    // onChange={e => setFirstName(e.target.value)}
-                                                    margin="normal"
-                                                    required={false}
-                                                    fullWidth
-                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
-                                                />
-                                                <br/>
-                                                <TextField color='primary'
-                                                    size='small'
-                                                    variant="outlined"
-                                                    inputProps={{min: 0, readOnly: true, style: { textAlign: 'center' }}}
-                                                    label='Last Name'
-                                                    type="text"
-                                                    defaultValue={user.last_name}
-                                                    // onChange={e => setLastName(e.target.value)}
-                                                    margin="normal"
-                                                    required={false}
-                                                    fullWidth
-                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
-                                                />
-                                                <br/>
-                                                <TextField color='primary'
-                                                    size='small'
-                                                    variant="outlined"
-                                                    inputProps={{min: 0, readOnly: true, style: { textAlign: 'center' }}}
-                                                    label='Email'
-                                                    type="text"
-                                                    defaultValue={user.email}
-                                                    // onChange={e => setEmail(e.target.value)}
-                                                    margin="normal"
-                                                    required={false}
-                                                    fullWidth
-                                                    // style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
-                                                />
-                                                <br/><br/>
-                                                <Grid item xs={12}>
-                                                    <Divider variant= 'fullWidth' className={classes.divider} />
-                                                </Grid>
-                                                <div className={classes.statsTitle}>
-                                                    <h1>Stats</h1>
-                                                </div>
-                            
-                                                <Grid container direction="row" >
-                                                    <Grid item xs={6} sm={6} lg={3} >
-                                                        <div className={classes.statContent}>
-                                                            <div className={classes.statText}>
-                                                                <h5>Enrolled Courses </h5>
+                                        {roleInfo === 0 ?
+                                            <form autoComplete="off">
+                                                {/* <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar> */}
+                                                <div className={classes.TextBox} alignItems="center">
+                                                    <TextField color='primary'
+                                                        alignContent="center"
+                                                        size='small'
+                                                        variant="outlined"
+                                                        label='First Name'
+                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                                                        type="text"
+                                                        defaultValue={user.first_name}
+                                                        margin="normal"
+                                                        required={false}
+                                                        fullWidth
+                                                    />
+                                                    <br />
+                                                    <TextField color='primary'
+                                                        size='small'
+                                                        variant="outlined"
+                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                                                        label='Last Name'
+                                                        type="text"
+                                                        defaultValue={user.last_name}
+                                                        margin="normal"
+                                                        required={false}
+                                                        fullWidth
+                                                    />
+                                                    <br />
+                                                    <TextField color='primary'
+                                                        size='small'
+                                                        variant="outlined"
+                                                        inputProps={{ min: 0, style: { textAlign: 'center' } }}
+                                                        label="Email"
+                                                        type="email"
+                                                        defaultValue={user.email}
+                                                        onChange={e => setNewEmail(e.target.value)}
+                                                        margin="normal"
+                                                        required={true}
+                                                        fullWidth
+                                                    />
+                                                    <Grid container direction="row" className={classes.roleGrid}>
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <div className={classes.roleStatContent}>
+                                                                <div className={classes.roleText}>
+                                                                    <h3>User Role</h3>
+                                                                </div>
                                                             </div>
-                                                            <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
-                                                        </div>
+                                                        </Grid>
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <Avatar variant="rounded" className={classes.roleAvi}>
+                                                                {roles[user.roleID]}
+                                                                <Tooltip
+                                                                    title={
+                                                                        <React.Fragment>
+                                                                            <Typography align="center" color="inherit">User Role Information</Typography>
+                                                                            {"The student role allows the user to take courses but does not given them access to course or module creation"}
+                                                                        </React.Fragment>
+                                                                    }
+                                                                    placement="top"
+                                                                    leaveDelay={200}
+                                                                    arrow
+                                                                >
+                                                                    <IconButton size='small'><HelpIcon /></IconButton>
+                                                                </Tooltip>
+                                                            </Avatar>
+                                                        </Grid>
                                                     </Grid>
-                                                    <Grid item xs={6} sm={6} lg={3} >
-                                                        <div className={classes.statContent}>
-                                                            <div className={classes.statText}>
-                                                                <h5>Courses Created</h5>
+
+                                                    <Grid item xs={12}>
+                                                        <Divider variant='fullWidth' className={classes.divider} />
+                                                    </Grid>
+                                                    <div className={classes.statsTitle}>
+                                                        <h1>Stats</h1>
+                                                    </div>
+
+                                                    <Grid container direction="row" >
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Enrolled Courses</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
                                                             </div>
-                                                            <Avatar className={classes.statsAvi}>{user.createdCourses.length}</Avatar>
-                                                        </div>
-                                                    </Grid>
-                                                    <Grid item xs={6} sm={6} lg={6} >
-                                                        <div className={classes.roleStatContent}>
-                                                            <div className={classes.roleText}>
-                                                                <h5>Role</h5>
+                                                        </Grid>
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Completed Courses</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{user.completedCourses.length}</Avatar>
                                                             </div>
-                                                            <Avatar variant="rounded" className={classes.roleAvi}>{roles[user.roleID]}</Avatar>
-                                                        </div>
+                                                        </Grid>
                                                     </Grid>
-                                                </Grid>
                                                 </div>
                                             </form>
+                                            : null}
+
+                                        {roleInfo === 1 ?
+                                            <form autoComplete="off">
+                                                <div className={classes.TextBox} alignItems="center">
+                                                    <TextField color='primary'
+                                                        alignContent="center"
+                                                        size='small'
+                                                        variant="outlined"
+                                                        label='First Name'
+                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                                                        type="text"
+                                                        defaultValue={user.first_name}
+                                                        margin="normal"
+                                                        required={false}
+                                                        fullWidth
+                                                    />
+                                                    <br />
+                                                    <TextField color='primary'
+                                                        size='small'
+                                                        variant="outlined"
+                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                                                        label='Last Name'
+                                                        type="text"
+                                                        defaultValue={user.last_name}
+                                                        margin="normal"
+                                                        required={false}
+                                                        fullWidth
+                                                    />
+                                                    <br />
+                                                    <TextField color='primary'
+                                                        size='small'
+                                                        variant="outlined"
+                                                        inputProps={{ min: 0, style: { textAlign: 'center' } }}
+                                                        label='Email'
+                                                        type="email"
+                                                        defaultValue={user.email}
+                                                        onChange={e => setNewEmail(e.target.value)}
+                                                        margin="normal"
+                                                        required={true}
+                                                        fullWidth
+                                                    />
+                                                    <Grid container direction="row" className={classes.roleGrid}>
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <div className={classes.roleStatContent}>
+                                                                <div className={classes.roleText}>
+                                                                    <h3>User Role</h3>
+                                                                </div>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <Avatar variant="rounded" className={classes.roleAvi}>
+                                                                {roles[user.roleID]}
+                                                                <Tooltip
+                                                                    title={
+                                                                        <React.Fragment>
+                                                                            <Typography align="center" color="inherit">User Role Information</Typography>
+                                                                            {"The creator role allows the user to create and manage courses. This role also allows the user to create and manage modules within courses they have made. The following options are available for management of both courses and modules: Add, Edit, and Delete. Creators can also take courses as a student would"}
+                                                                        </React.Fragment>
+                                                                    }
+                                                                    placement="top"
+                                                                    leaveDelay={200}
+                                                                    arrow
+                                                                >
+                                                                    <IconButton size='small'><HelpIcon /></IconButton>
+                                                                </Tooltip>
+                                                            </Avatar>
+                                                        </Grid>
+                                                    </Grid>
+
+                                                    <Grid item xs={12}>
+                                                        <Divider variant='fullWidth' className={classes.divider} />
+                                                    </Grid>
+                                                    <div className={classes.statsTitle}>
+                                                        <h1>Stats</h1>
+                                                    </div>
+
+                                                    <Grid container direction="row" >
+                                                        <Grid item xs={4} sm={4} lg={4} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Courses Enrolled In</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid item xs={4} sm={4} lg={4} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Courses Completed</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{user.completedCourses.length}</Avatar>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid item xs={4} sm={4} lg={4} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Courses Created</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{user.createdCourses.length}</Avatar>
+                                                            </div>
+                                                        </Grid>
+                                                    </Grid>
+                                                </div>
+                                            </form>
+                                            : null}
+
+                                        {roleInfo === 2 ?
+                                            <form autoComplete="off">
+                                                <div className={classes.TextBox} alignItems="center">
+                                                    <TextField color='primary'
+                                                        alignContent="center"
+                                                        size='small'
+                                                        variant="outlined"
+                                                        label='First Name'
+                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                                                        type="text"
+                                                        defaultValue={user.first_name}
+                                                        margin="normal"
+                                                        required={false}
+                                                        fullWidth
+                                                    />
+                                                    <br />
+                                                    <TextField color='primary'
+                                                        size='small'
+                                                        variant="outlined"
+                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                                                        label='Last Name'
+                                                        type="text"
+                                                        defaultValue={user.last_name}
+                                                        margin="normal"
+                                                        required={false}
+                                                        fullWidth
+                                                    />
+                                                    <br />
+                                                    <TextField color='primary'
+                                                        size='small'
+                                                        variant="outlined"
+                                                        inputProps={{ min: 0, style: { textAlign: 'center' } }}
+                                                        label='Email'
+                                                        type="email"
+                                                        defaultValue={user.email}
+                                                        onChange={e => setNewEmail(e.target.value)}
+                                                        margin="normal"
+                                                        required={true}
+                                                        fullWidth
+                                                    />
+                                                    <Grid container direction="row" className={classes.roleGrid}>
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <div className={classes.roleStatContent}>
+                                                                <div className={classes.roleText}>
+                                                                    <h3>User Role</h3>
+                                                                </div>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <Avatar variant="rounded" className={classes.roleAvi}>
+                                                                {roles[user.roleID]}
+                                                                <Tooltip
+                                                                    title={
+                                                                        <React.Fragment>
+                                                                            <Typography align="center" color="inherit">User Role Information</Typography>
+                                                                            {"The Admin role allows the user to have full access to the application. The Admin can access the admin dashboard which gives them the access to: edit user roles, delete users, delete courses, delete categories, and see a whole host of statistics. The Admin is also able to create courses and take courses as a creator and student would respectively"}
+                                                                        </React.Fragment>
+                                                                    }
+                                                                    placement="top"
+                                                                    leaveDelay={200}
+                                                                    arrow
+                                                                >
+                                                                    <IconButton size='small'><HelpIcon /></IconButton>
+                                                                </Tooltip>
+                                                            </Avatar>
+                                                        </Grid>
+                                                    </Grid>
+
+                                                    <Grid item xs={12}>
+                                                        <Divider variant='fullWidth' className={classes.divider} />
+                                                    </Grid>
+                                                    <div className={classes.statsTitle}>
+                                                        <h2>Database Info</h2>
+                                                    </div>
+                                                    <Grid container direction="row" >
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Users In System</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{numUsers}</Avatar>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Total Courses</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{numCourses}</Avatar>
+                                                            </div>
+                                                        </Grid>
+                                                    </Grid>
+                                                    <br />
+                                                    <Grid item xs={12}>
+                                                        <Divider variant='fullWidth' className={classes.divider} />
+                                                    </Grid>
+                                                    <div className={classes.statsTitle}>
+                                                        <h2>My Stats</h2>
+                                                    </div>
+                                                    <Grid container direction="row" >
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Courses Enrolled In</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid item xs={6} sm={6} lg={6} >
+                                                            <div className={classes.statContent}>
+                                                                <div className={classes.statText}>
+                                                                    <h5>Courses Completed</h5>
+                                                                </div>
+                                                                <Avatar className={classes.statsAvi}>{user.completedCourses.length}</Avatar>
+                                                            </div>
+                                                        </Grid>
+                                                    </Grid>
+                                                </div>
+                                            </form>
+                                            : null}
+
+
                                     </DialogContent>
                                     <DialogActions>
-                                        <Button autoFocus onClick={handleClose} color="primary">
-                                            Close Page
+                                        <Button autoFocus color="primary" onClick={handleChanges}>
+                                            Close & Save Changes
                                         </Button>
                                     </DialogActions>
                                 </Dialog>
@@ -535,8 +853,8 @@ export default function TopNavBar(props) {
 
                             : null}
 
-                            {window.location.pathname !== "/" && 
-                            window.location.pathname !== "/registration" && 
+                        {window.location.pathname !== "/" &&
+                            window.location.pathname !== "/registration" &&
                             window.location.pathname !== "/forgot" &&
                             window.location.pathname !== "/reset/" + props.tokenProp &&
                             window.location.pathname !== "/reset/" &&
@@ -580,14 +898,17 @@ export default function TopNavBar(props) {
                     </div>
                     <Divider />
                     <List>
-                        <Link href="/newCourse" underline='none' color="inherit">
-                            <Tooltip title="Create Course" enterDelay={500}>
-                                <ListItem button>
-                                    <ListItemIcon><PostAddIcon /></ListItemIcon>
-                                    <ListItemText primary="Create Course" />
-                                </ListItem>
-                            </Tooltip>
-                        </Link>
+
+                        {isCreator &&
+                            <Link href="/newCourse" underline='none' color="inherit">
+                                <Tooltip title="Create Course" enterDelay={500}>
+                                    <ListItem button>
+                                        <ListItemIcon><PostAddIcon /></ListItemIcon>
+                                        <ListItemText primary="Create Course" />
+                                    </ListItem>
+                                </Tooltip>
+                            </Link>
+                        }
 
                         <Link href="/MyCourses" underline='none' color="inherit">
                             <Tooltip title="My Courses" enterDelay={500}>
@@ -607,28 +928,62 @@ export default function TopNavBar(props) {
                             </Tooltip>
                         </Link>
 
-                        <Tooltip title="Admin Dashboard" enterDelay={500}>
-                            <Link href="/admindashboard" underline='none' color="inherit">
-                                <ListItem button>
-                                    <ListItemIcon><VerifiedUserIcon /></ListItemIcon>
-                                    <ListItemText primary="Admin Dashboard" />
-                                </ListItem>
-                            </Link>
-                        </Tooltip>
+                        {isAdmin &&
+                            <Tooltip title="Admin Dashboard" enterDelay={500}>
+                                <Link href="/admindashboard" underline='none' color="inherit">
+                                    <ListItem button>
+                                        <ListItemIcon><VerifiedUserIcon /></ListItemIcon>
+                                        <ListItemText primary="Admin Dashboard" />
+                                    </ListItem>
+                                </Link>
+                            </Tooltip>
+                        }
 
                         {/* <Tooltip title="Calendar" enterDelay={500}>*/}
-                        <Link href="/ManageMyCourses" underline='none' color="inherit">
-                            <Tooltip title="My Created Courses" enterDelay={500}>
+                        {isCreator &&
+                            <Link href="/ManageMyCourses" underline='none' color="inherit">
+                                <Tooltip title="My Created Courses" enterDelay={500}>
+                                    <ListItem button>
+                                        <ListItemIcon><BookOutlinedIcon /></ListItemIcon>
+                                        <ListItemText primary="My Created Courses" />
+                                    </ListItem>
+                                </Tooltip>
+                            </Link>
+                        }
+                        <Link onClick={handleOpenDialog} underline='none' color="inherit" >
+                            <Tooltip title="Log out" enterDelay={500}>
                                 <ListItem button>
-                                    <ListItemIcon><BookOutlinedIcon /></ListItemIcon>
-                                    <ListItemText primary="My Created Courses" />
+                                    <ListItemIcon><ExitToAppIcon /></ListItemIcon>
+                                    <ListItemText primary="Log out" />
                                 </ListItem>
                             </Tooltip>
                         </Link>
+                        <div className={classes.dialog}>
+                            <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" open={loggingout}>
+                                <div className={classes.dialogTitleDiv}>
+                                    <DialogTitle id="customized-dialog-title" className={classes.logoutDialogTitle} onClose={handleCloseDialog}>
+                                        Are you sure you wish to log out of your account?
+                                    </DialogTitle>
+                                </div>
+                                <DialogContent className={classes.dialogContent}>
+                                    <Button href='\' type='submit' size="small" color="inherit" variant="contained" onClick={logout}>
+                                        Yes
+                                    </Button>
+                                    <Button type='submit' size="small" color="inherit" variant="contained" onClick={handleCloseDialog}>
+                                        No
+                                    </Button>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
                     </List>
                 </Drawer>
                 : null}
         </div>
+
+
+
+
     )
 
 }
+
