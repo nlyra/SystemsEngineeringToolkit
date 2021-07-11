@@ -118,11 +118,11 @@ const Dashboard = (props) => {
 
                     </Grid>
                 </div>
-                
+
                 {totalCourses !== courses.length &&
                     
                     <div className={classes.expandMoreIcon}>
-                    <IconButton disableRipple size='large' style={{ backgroundColor: 'transparent' }}>{totalCourses} {courses.length}<ExpandMoreIcon /></IconButton>
+                    <IconButton disableRipple size='large' style={{ backgroundColor: 'transparent' }}><ExpandMoreIcon /></IconButton>
                     </div>
                 }
             </Container>
