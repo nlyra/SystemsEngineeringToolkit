@@ -122,7 +122,7 @@ const Dashboard = (props) => {
                 {totalCourses !== courses.length &&
                     
                     <div className={classes.expandMoreIcon}>
-                    <IconButton disableRipple size='large' style={{ backgroundColor: 'transparent' }}><ExpandMoreIcon /></IconButton>
+                    <IconButton disableRipple size='large' style={{ backgroundColor: 'transparent' }}>Scroll for More<ExpandMoreIcon /></IconButton>
                     </div>
                 }
             </Container>

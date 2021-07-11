@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
         color: 'black',
         fontSize: '2.4vh',
         fontWeight: '500',
-        marginTop: '13%',
+        marginTop: '2.2vh',
 
     },
 

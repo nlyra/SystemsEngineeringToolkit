@@ -39,8 +39,8 @@ const dashStyles = makeStyles((theme) => ({
     {
         width: '100%',
         textAlign: 'center',
-        marginTop: '2vh',
-        marginBottom: '4vh',
+        marginTop: '3vh',
+        marginBottom: '12vh',
         fontSize: 'default'
     },
 
