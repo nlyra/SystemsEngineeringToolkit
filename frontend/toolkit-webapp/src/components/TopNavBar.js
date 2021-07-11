@@ -106,7 +106,9 @@ const useStyles = makeStyles((theme) => ({
         color: 'black',
         fontSize: '2.4vh',
         fontWeight: '500',
-        marginTop: '2.2vh',
+        // marginTop: '1vh',
+        // alignContent: "center",
+
 
     },
 
@@ -556,7 +558,7 @@ export default function TopNavBar(props) {
                                                         required={true}
                                                         fullWidth
                                                     />
-                                                    <Grid container direction="row" className={classes.roleGrid}>
+                                                    <Grid container direction="row" alignItems='center' className={classes.roleGrid}>
                                                         <Grid item xs={6} sm={6} lg={6} >
                                                             <div className={classes.roleStatContent}>
                                                                 <div className={classes.roleText}>
@@ -653,7 +655,7 @@ export default function TopNavBar(props) {
                                                         required={true}
                                                         fullWidth
                                                     />
-                                                    <Grid container direction="row" className={classes.roleGrid}>
+                                                    <Grid container direction="row" alignItems='center' className={classes.roleGrid}>
                                                         <Grid item xs={6} sm={6} lg={6} >
                                                             <div className={classes.roleStatContent}>
                                                                 <div className={classes.roleText}>
@@ -758,7 +760,7 @@ export default function TopNavBar(props) {
                                                         required={true}
                                                         fullWidth
                                                     />
-                                                    <Grid container direction="row" className={classes.roleGrid}>
+                                                    <Grid container direction="row" alignItems='center' className={classes.roleGrid}>
                                                         <Grid item xs={6} sm={6} lg={6} >
                                                             <div className={classes.roleStatContent}>
                                                                 <div className={classes.roleText}>
