@@ -456,8 +456,6 @@ export default function TopNavBar(props) {
             setNumUsers(data.numUsers)
             setNumCourses(data.numCourses)
         }
-        // setData(data.storageData)
-        // alert(data.storageData.numUsers)
         setOpenDialog(true)
 
 

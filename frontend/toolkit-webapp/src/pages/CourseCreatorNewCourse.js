@@ -6,25 +6,39 @@ import Chip from '@material-ui/core/Chip';
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 import courseStyles from '../styles/courseCreatorStyle'
+import dialogStyles from '../styles/dialogStyle'
+import DialogComponent from '../components/DialogComponent'
 import '../css/Login.css';
 
 function NewCourse(props) {
 
     const classes = courseStyles()
+    const dialogClasses = dialogStyles()
 
     const [courseTitle, setCourseTitle] = useState('')
     const [categories, setCategories] = useState([])
     const [description, setDescription] = useState('')
     const [image, setImage] = useState()
     const [dialogData, setDialogData] = useState([]);
+    const [dialogText, setDialogText] = useState('')
+    const [openDialog, setOpenDialog] = useState(false);
     const filter = createFilterOptions();
 
     let validImageTypes = ["PNG", "JPEG", "GIF", "TIF", "RAW", "JPG"]
 
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    }
+
     const onSubmit = (e) => {
         e.preventDefault()
         if (!courseTitle || !categories || !description) {
-            alert('Please enter all required fields')
+            setDialogText("Please enter all required fields.")
+            handleOpenDialog()
+            //alert('Please enter all required fields')
             return
         }
         console.log("categories on submit: " + categories)
@@ -45,7 +59,9 @@ function NewCourse(props) {
 
             // If it isn't, return and allow user to input valid image
             if (!validInput) {
-                alert('Invalid file type. Please upload an image with a proper image extension')
+                setDialogText("Invalid file type. Please upload an image with the proper file extension.")
+                handleOpenDialog()
+                //alert('Invalid file type. Please upload an image with a proper image extension')
                 return
             }
 
@@ -56,7 +72,9 @@ function NewCourse(props) {
 
             // Input contains non-alphanumeric values so we must alert the user to rename the file 
             if (isValid === false) {
-                alert('Invalid file type. Please upload an image for which name is alphanumeric.')
+                setDialogText("Invalid file type. Please upload an image for which the name is alphanumeric.")
+                handleOpenDialog()
+                //alert('Invalid file type. Please upload an image for which name is alphanumeric.')
                 return
             }
 
@@ -312,6 +330,14 @@ function NewCourse(props) {
                     </form>
                 </div>
             </Container>
+            <DialogComponent
+                open={openDialog}
+                text={dialogText}
+                onClose={handleCloseDialog}
+                buttons={[
+                    { text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog }
+                ]}
+            />
         </div>
     )
 }

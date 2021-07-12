@@ -5,6 +5,7 @@ import TopNavBar from '../components/TopNavBar'
 // import Pagination from '@material-ui/lab/Pagination'
 import { Dialog, DialogTitle, DialogActions, DialogContent } from '@material-ui/core'
 import myCoursesStyles from '../styles/myCoursesStyle'
+import dialogStyles from '../styles/dialogStyle'
 import DialogComponent from '../components/DialogComponent'
 import jwt_decode from "jwt-decode";
 import { Link } from '@material-ui/core';
@@ -15,6 +16,7 @@ const ManageMyCourses = (props) => {
     const [openDialog, setOpenDialog] = useState(false);
 
     const classes = myCoursesStyles()
+    const dialogClasses = dialogStyles()
 
     // function that will run when page is loaded
     useEffect(() => {
@@ -152,9 +154,9 @@ const ManageMyCourses = (props) => {
                                     text={"Are you sure you wish to delete this course permanently?"}
                                     onClose={handleCloseDialog}
                                     buttons={[
-                                                {text: "Yes", style: classes.dialogButton1, onClick: () => deleteCourse(course._id)}, 
-                                                {text: "No", style: classes.dialogButton2, onClick: handleCloseDialog}
-                                            ]}
+                                        {text: "Yes", style: dialogClasses.dialogButton1, onClick: () => deleteCourse(course._id)}, 
+                                        {text: "No", style: dialogClasses.dialogButton2, onClick: handleCloseDialog}
+                                    ]}
                                 />
 
                                 {/* {openDialog === true ?

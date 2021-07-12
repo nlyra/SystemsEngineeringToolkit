@@ -1,18 +1,18 @@
 import { Dialog, DialogTitle, DialogActions, DialogContent, Button } from '@material-ui/core'
-import myCoursesStyles from '../styles/myCoursesStyle'
+import dialogStyles from '../styles/dialogStyle'
 
 export default function DialogComponent(props) {
 
-    const classes = myCoursesStyles()
+    const classes = dialogStyles()
 
     return (
         <>
         { props.open === true ?
 
-            <div className={classes.dialog}>
+            <div>
                 <Dialog onClose={props.onClose} aria-labelledby="customized-dialog-title" classes={{ paper: classes.dialogPaper }} BackdropProps={{ style: { backgroundColor: 'rgba(193, 193, 187, 0.2)' } }} open={props.open}>
-                    <div className={classes.dialogTitleDiv}>
-                        <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={props.onClose}>
+                    <div>
+                        <DialogTitle id="customized-dialog-title" onClose={props.onClose}>
                             {props.text}
                         </DialogTitle>
                     </div>

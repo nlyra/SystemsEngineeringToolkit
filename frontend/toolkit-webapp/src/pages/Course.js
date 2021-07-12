@@ -15,6 +15,8 @@ import ModuleInfoEditButton from '../components/ModuleInfoEditButton';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import courseStyles from '../styles/courseStyle';
+import dialogStyles from '../styles/dialogStyle'
+import DialogComponent from '../components/DialogComponent'
 
 
 const Course = (props) => {
@@ -28,10 +30,13 @@ const Course = (props) => {
   const [courseID, setCourseID] = useState('')
   const [isCreator, setIsCreator] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
+  const [dialogText, setDialogText] = useState('')
+  const [openDialog, setOpenDialog] = useState(false);
 
+  const classes = courseStyles()
+  const dialogClasses = dialogStyles()
 
   let validImageTypes = ["PNG", "JPEG", "GIF", "TIF", "RAW", "JPG"]
-  const classes = courseStyles()
 
   const onEditCourseTitle = (e) => {
     setEditCourseInfo(true);
@@ -45,6 +50,13 @@ const Course = (props) => {
     getAuthorization();
 
   }, []);
+
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    }
 
   const getAuthorization = async () => {
     const token = localStorage.getItem("token");
@@ -157,8 +169,10 @@ const Course = (props) => {
 
     // If it isn't, return and allow user to input valid image
     if (!validInput) {
-      alert('Invalid file type. Please upload an image with a proper image extension')
-      return
+        setDialogText("Invalid file type. Please upload an image with a proper image extension.")
+        handleOpenDialog()
+        //alert('Invalid file type. Please upload an image with a proper image extension')
+        return
     }
 
     // Check that the input given is alphanumeric to avoid the possibility of commands being 
@@ -168,8 +182,10 @@ const Course = (props) => {
     var isValid = !(RegEx.test(val));
 
     if (isValid === false) {
-      alert('Invalid file type. Please upload an image for which name is alphanumeric.')
-      return
+        setDialogText("Invalid file type. Please upload an image for which name is alphnumeric.")
+        handleOpenDialog()
+        //alert('Invalid file type. Please upload an image for which name is alphanumeric.')
+        return
     }
     
     if (currCourseImage.name !== oldCourseImage.name) {
@@ -486,6 +502,14 @@ const Course = (props) => {
           ))}
         </Grid>
       </Grid>
+      <DialogComponent
+        open={openDialog}
+        text={dialogText}
+        onClose={handleCloseDialog}
+        buttons={[
+            {text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog}
+        ]}
+      />
     </div >
   )
 }
