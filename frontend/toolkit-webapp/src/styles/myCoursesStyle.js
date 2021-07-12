@@ -33,8 +33,14 @@ const myCoursesStyle = makeStyles((theme) => ({
         // marginBottom: '0px'
     },
 
+    cardGrid:
+    {
+        marginBottom: '5vh'
+    },
+
     cardMedia:
     {
+        // marginTop: '100px',
         paddingTop: '56.25%',
         size: '30%'
     },
