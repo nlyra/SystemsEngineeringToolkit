@@ -5,6 +5,7 @@ import TopNavBar from '../components/TopNavBar'
 // import Pagination from '@material-ui/lab/Pagination'
 import { Dialog, DialogTitle, DialogActions, DialogContent } from '@material-ui/core'
 import myCoursesStyles from '../styles/myCoursesStyle'
+import DialogComponent from '../components/DialogComponent'
 import jwt_decode from "jwt-decode";
 import { Link } from '@material-ui/core';
 
@@ -146,7 +147,17 @@ const ManageMyCourses = (props) => {
                                     </Button>
                                 </div>
 
-                                {openDialog === true ?
+                                <DialogComponent 
+                                    open={openDialog} 
+                                    text={"Are you sure you wish to delete this course permanently?"}
+                                    onClose={handleCloseDialog}
+                                    buttons={[
+                                                {text: "Yes", style: classes.dialogButton1, onClick: () => deleteCourse(course._id)}, 
+                                                {text: "No", style: classes.dialogButton2, onClick: handleCloseDialog}
+                                            ]}
+                                />
+
+                                {/* {openDialog === true ?
 
                                     <div className={classes.dialog}>
                                         <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" classes={{paper: classes.dialogPaper}} BackdropProps={{ style: { backgroundColor: 'rgba(193, 193, 187, 0.2)' } }} open={openDialog}>
@@ -168,7 +179,7 @@ const ManageMyCourses = (props) => {
                                         </Dialog>
                                     </div>
 
-                                    : null}
+                                    : null} */}
                             </Grid>
 
                         ))}
