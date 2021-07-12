@@ -33,7 +33,7 @@ router.post('/courses', VerifyToken, GetRole, async (req, res) => {
       return
     }
 
-    const courses = await Course.find({}, '_id name totalStudents author totalCompletedStudents currStudents');
+    const courses = await Course.find({}, '_id name totalStudents author totalCompletedStudents currStudents isEnabled');
 
     if (req.body.newToken != undefined)
       res.json({ 'courses': courses, "newToken": req.body.newToken });
@@ -192,8 +192,9 @@ router.post('/courses/search', VerifyToken, GetRole, async (req, res) => {
         // { "_id": { "$regex": ObjectID(query), $options: 'i' } },
         { "name": { "$regex": query, $options: 'i' } },
         { "author": { "$regex": query, $options: 'i' } },
+
       ]
-    }, '_id name totalStudents author totalCompletedStudents currStudents');
+    }, '_id name totalStudents author totalCompletedStudents currStudents isEnabled');
 
     if (req.body.newToken != undefined)
       res.json({ 'courses': courses, "newToken": req.body.newToken });

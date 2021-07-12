@@ -14,7 +14,8 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import DescriptionIcon from '@material-ui/icons/Description';
 import BookOutlinedIcon from '@material-ui/icons/BookOutlined';
 import HomeIcon from '@material-ui/icons/Home';
-// import LogoutIcon from '@material-ui/icons/Logout';
+import HelpIcon from '@material-ui/icons/Help';
+
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 
@@ -105,10 +106,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: amber[600],
 
     // For the avatar that uses this color. Can be changed to another div if needed
-    width: '10vh',
+    width: '100%',
     // paddingTop: '10px'
     marginTop: '5%',
-    marginLeft: '15%',
+    // marginLeft: '5%',
     border: '1px solid black',
     borderRadius: '8px',
   },
@@ -147,108 +148,8 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: fade(theme.palette.common.white, 0.25),
     },
 
-    dialog:
-    {
-      position: 'absolute',
-      minWidth: '30%'
-
-    },
-
-    dialogContent:
-    {
-      width: '40vh'
-    },
-
-    divider:
-    {
-      border: '1px solid grey',
-      borderRadius: '10px',
-      backgroundColor: 'grey'
-    },
-
-    dialogTitle:
-    {
-      textAlign: 'center',
-      verticalAlign: 'middle',
-      backgroundColor: grey[900],
-      border: '2px solid white'
-    },
-
-    avatar:
-    {
-      color: theme.palette.getContrastText(deepPurple[500]),
-      backgroundColor: deepPurple[500],
-      height: '6vh',
-      width: '6vh',
-      margin: 'auto'
-    },
-
-
-    statContent:
-    {
-      verticalAlign: 'right',
-      margin: 'auto',
-      width: '100%',
-      alignSelf: 'center'
-    },
-
-    // statsDiv:
-    // {
-    //     width: '100%',
-    // },
-
-    statsTitle:
-    {
-      textAlign: 'center',
-      verticalAlign: 'middle',
-      textDecoration: 'underline'
-    },
-
-    statsAvi:
-    {
-      color: theme.palette.getContrastText(amber[600]),
-      backgroundColor: amber[600],
-      border: '1px solid black',
-      margin: 'auto'
-      // borderRadius: '4px'
-    },
-
-    roleAvi:
-    {
-      color: theme.palette.getContrastText(amber[600]),
-      backgroundColor: amber[600],
-
-      // For the avatar that uses this color. Can be changed to another div if needed
-      width: '10vh',
-      // paddingTop: '10px'
-      marginTop: '5%',
-      marginLeft: '15%',
-      fontSize: '15px',
-      fontWeight: 'bold',
-      border: '1px solid black',
-      borderRadius: '8px',
-    },
-
-    roleStatContent:
-    {
-      // verticalAlign: 'middle',
-      // margin: 'auto',
-      width: '100%'
-      // backgroundColor: 'cyan'
-    },
-
-    roleText:
-    {
-      width: '100%',
-      textAlign: 'center'
-
-    },
-
-    roleGrid:
-    {
-      justifyContent: 'center'
-    },
   },
+
   searchIcon: {
     padding: theme.spacing(0, 2),
     height: '100%',
@@ -401,9 +302,6 @@ export default function TopNavBar(props) {
 
     const data = await res.json()
 
-    if (data.newToken != undefined)
-      localStorage.setItem("token", data.newToken)
-
     if (data.message === "yes")
       setIsAdmin(true);
     else
@@ -420,10 +318,6 @@ export default function TopNavBar(props) {
     })
 
     const data2 = await res2.json()
-
-
-    if (data.newToken != undefined)
-      localStorage.setItem("token", data.newToken)
 
     if (data2.message === "yes")
       setIsCreator(true);
@@ -452,9 +346,6 @@ export default function TopNavBar(props) {
     })
 
     const data = await res.json()
-
-    if (data.newToken != undefined)
-      localStorage.setItem("token", data.newToken)
 
     setUser(data.user)
     setFirstName(data.user.first_name)
@@ -504,9 +395,6 @@ export default function TopNavBar(props) {
       })
 
       const data = await res.json()
-
-      if (data.newToken != undefined)
-        localStorage.setItem("token", data.newToken)
 
     }
     setOpenDialog(false);
@@ -679,7 +567,22 @@ export default function TopNavBar(props) {
                               </div>
                             </Grid>
                             <Grid item xs={6} sm={6} lg={6} >
-                              <Avatar variant="rounded" className={classes.roleAvi}>{roles[user.roleID]}</Avatar>
+                              <Avatar variant="rounded" className={classes.roleAvi}>
+                                {roles[user.roleID]}
+                                <Tooltip
+                                  title={
+                                    <React.Fragment>
+                                      <Typography align="center" color="inherit">User Role Information</Typography>
+                                      {"The student role allows the user to take courses but does not given them access to course or module creation"}
+                                    </React.Fragment>
+                                  }
+                                  placement="top"
+                                  leaveDelay={200}
+                                  arrow
+                                >
+                                  <IconButton size='small'><HelpIcon /></IconButton>
+                                </Tooltip>
+                              </Avatar>
                             </Grid>
                           </Grid>
 
@@ -761,7 +664,22 @@ export default function TopNavBar(props) {
                               </div>
                             </Grid>
                             <Grid item xs={6} sm={6} lg={6} >
-                              <Avatar variant="rounded" className={classes.roleAvi}>{roles[user.roleID]}</Avatar>
+                              <Avatar variant="rounded" className={classes.roleAvi}>
+                                {roles[user.roleID]}
+                                <Tooltip
+                                  title={
+                                    <React.Fragment>
+                                      <Typography align="center" color="inherit">User Role Information</Typography>
+                                      {"The creator role allows the user to create and manage courses. This role also allows the user to create and manage modules within courses they have made. The following options are available for management of both courses and modules: Add, Edit, and Delete. Creators can also take courses as a student would"}
+                                    </React.Fragment>
+                                  }
+                                  placement="top"
+                                  leaveDelay={200}
+                                  arrow
+                                >
+                                  <IconButton size='small'><HelpIcon /></IconButton>
+                                </Tooltip>
+                              </Avatar>
                             </Grid>
                           </Grid>
 
@@ -851,7 +769,22 @@ export default function TopNavBar(props) {
                               </div>
                             </Grid>
                             <Grid item xs={6} sm={6} lg={6} >
-                              <Avatar variant="rounded" className={classes.roleAvi}>{roles[user.roleID]}</Avatar>
+                              <Avatar variant="rounded" className={classes.roleAvi}>
+                                {roles[user.roleID]}
+                                <Tooltip
+                                  title={
+                                    <React.Fragment>
+                                      <Typography align="center" color="inherit">User Role Information</Typography>
+                                      {"The Admin role allows the user to have full access to the application. The Admin can access the admin dashboard which gives them the access to: edit user roles, delete users, delete courses, delete categories, and see a whole host of statistics. The Admin is also able to create courses and take courses as a creator and student would respectively"}
+                                    </React.Fragment>
+                                  }
+                                  placement="top"
+                                  leaveDelay={200}
+                                  arrow
+                                >
+                                  <IconButton size='small'><HelpIcon /></IconButton>
+                                </Tooltip>
+                              </Avatar>
                             </Grid>
                           </Grid>
 
@@ -965,31 +898,6 @@ export default function TopNavBar(props) {
           </div>
           <Divider />
           <List>
-            <Link onClick={handleOpenDialog} underline='none' color="inherit" >
-              <Tooltip title="Log out" enterDelay={500}>
-                <ListItem button>
-                  <ListItemIcon><ExitToAppIcon /></ListItemIcon>
-                  <ListItemText primary="Log out" />
-                </ListItem>
-              </Tooltip>
-            </Link>
-            <div className={classes.dialog}>
-              <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" open={loggingout}>
-                <div className={classes.dialogTitleDiv}>
-                  <DialogTitle id="customized-dialog-title" className={classes.logoutDialogTitle} onClose={handleCloseDialog}>
-                    Are you sure you wish to log out of your account?
-                  </DialogTitle>
-                </div>
-                <DialogContent className={classes.dialogContent}>
-                  <Button href='\' type='submit' size="small" color="inherit" variant="contained" onClick={logout}>
-                    Yes
-                  </Button>
-                  <Button type='submit' size="small" color="inherit" variant="contained" onClick={handleCloseDialog}>
-                    No
-                  </Button>
-                </DialogContent>
-              </Dialog>
-            </div>
 
             {isCreator &&
               <Link href="/newCourse" underline='none' color="inherit">
@@ -1042,6 +950,31 @@ export default function TopNavBar(props) {
                 </Tooltip>
               </Link>
             }
+            <Link onClick={handleOpenDialog} underline='none' color="inherit" >
+              <Tooltip title="Log out" enterDelay={500}>
+                <ListItem button>
+                  <ListItemIcon><ExitToAppIcon /></ListItemIcon>
+                  <ListItemText primary="Log out" />
+                </ListItem>
+              </Tooltip>
+            </Link>
+            <div className={classes.dialog}>
+              <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" open={loggingout}>
+                <div className={classes.dialogTitleDiv}>
+                  <DialogTitle id="customized-dialog-title" className={classes.logoutDialogTitle} onClose={handleCloseDialog}>
+                    Are you sure you wish to log out of your account?
+                  </DialogTitle>
+                </div>
+                <DialogContent className={classes.dialogContent}>
+                  <Button href='\' type='submit' size="small" color="inherit" variant="contained" onClick={logout}>
+                    Yes
+                  </Button>
+                  <Button type='submit' size="small" color="inherit" variant="contained" onClick={handleCloseDialog}>
+                    No
+                  </Button>
+                </DialogContent>
+              </Dialog>
+            </div>
           </List>
         </Drawer>
         : null}
@@ -1053,4 +986,3 @@ export default function TopNavBar(props) {
   )
 
 }
-
