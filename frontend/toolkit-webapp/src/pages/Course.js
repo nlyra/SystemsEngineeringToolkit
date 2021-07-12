@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 import { IconButton, Chip, InputLabel, Select, MenuItem, FormControl, Link, FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
+import { Link as ReactLink } from 'react-router-dom';
 import VideoModule from '../components/VideoModule'
 import PdfModule from '../components/PdfModule'
 import QuizModule from '../components/QuizModule'
@@ -93,7 +94,7 @@ const Course = (props) => {
     })
 
     const data = await res.json()
-    
+
     if (data.message === undefined) {
       setCourse(data.course);
       setCourseID(id);
@@ -147,21 +148,20 @@ const Course = (props) => {
     else {
 
       // No new image assigned to course so only refresh to show other updates
-      if (currCourseImage.name === undefined)
-      {
+      if (currCourseImage.name === undefined) {
         window.location.reload();
         return
       }
-  
-    // We have a new image being passed in so delete old file
-    const res2 = await fetch(config.server_url + config.paths.removeFile, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        'token': token,
-        'courseID': courseID
+
+      // We have a new image being passed in so delete old file
+      const res2 = await fetch(config.server_url + config.paths.removeFile, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          'token': token,
+          'courseID': courseID
         })
       })
 
@@ -279,7 +279,7 @@ const Course = (props) => {
 
   const enableCourse = async (val) => {
 
-    
+
     // send change to backend
     const token = localStorage.getItem("token");
     const res = await fetch(config.server_url + config.paths.changeEnabled, {
@@ -293,11 +293,11 @@ const Course = (props) => {
         "isEnabled": val
       })
     })
-    
+
     const data = await res.json()
-    
+
     if (data.message === "unauthorized")
-    props.history.push('/dashboard');
+      props.history.push('/dashboard');
     else if (data.message === undefined) {
       setIsEnabled(val);
     } else if (data.message === "wrong token") {
@@ -374,7 +374,7 @@ const Course = (props) => {
                   }
                 </div>
                 <div>
-                  <Button type='submit' variant="contained" color="primary" onClick={onEditCourseTitle}>
+                  <Button component={ReactLink} to={{ pathname: `/editCourse/${courseID}`, course: course }} type='submit' variant="contained" color="primary">
                     Edit course info
                   </Button>
                 </div>
