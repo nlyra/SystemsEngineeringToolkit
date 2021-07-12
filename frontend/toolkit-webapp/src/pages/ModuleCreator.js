@@ -179,6 +179,13 @@ function ModuleCreator(props) {
                     return
                 }
 
+                // if (data.message === "unauthorized") {
+                //     props.history.push('dashboard');
+                // } else {
+                //     alert("Successfully added PDF module")
+                //     props.history.push('/course/' + courseID)
+                // }
+
                 const newFile = new FormData();
                 newFile.append('file', module.pdf)
 

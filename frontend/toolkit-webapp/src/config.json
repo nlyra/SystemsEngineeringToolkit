@@ -38,6 +38,7 @@
     "getUserInfo": "/v0/settings/userInfo",
     "updateUserInfo": "/v0/settings/updateUserInfo",
     "getIsAdmin": "/v0/auth/isadmin",
-    "getIsCreator": "/v0/auth/iscreator"
+    "getIsCreator": "/v0/auth/iscreator",
+    "changeEnabled": "/v0/courses/isenabled"
   }
 }
