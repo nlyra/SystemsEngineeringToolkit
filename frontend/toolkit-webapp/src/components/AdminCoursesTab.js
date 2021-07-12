@@ -94,7 +94,10 @@ const AdminCoursesTab = (props) => {
     })
 
     const data = await res.json()
-    console.log(data)
+    
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
     if (data.message === "unauthorized") {
       props.isUnauthorized()
     } else if (data.message === undefined) {
@@ -126,6 +129,10 @@ const AdminCoursesTab = (props) => {
     })
 
     const data = await res.json()
+    
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
     if (data.message === "unauthorized") {
       props.isUnauthorized()
     } else if (data.message === undefined) {
@@ -153,7 +160,10 @@ const AdminCoursesTab = (props) => {
     })
 
     const data = await res.json()
-    // console.log(data)
+    
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
     if (data.message === "unauthorized") {
       props.isUnauthorized()
     } else if (data.message === undefined) {

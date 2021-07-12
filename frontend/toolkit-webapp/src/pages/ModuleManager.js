@@ -92,7 +92,11 @@ const Dashboard = (props) => {
         })
 
         const data = await res.json()
-        
+
+        if (data.newToken != undefined)
+            localStorage.setItem("token", data.newToken)
+
+
         if (data.message === undefined) {
             setCourse(data.course);
             setCourseID(id);

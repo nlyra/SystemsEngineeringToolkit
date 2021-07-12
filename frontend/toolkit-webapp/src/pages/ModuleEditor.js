@@ -185,6 +185,11 @@ function ModuleEditor(props) {
                 })
                 const data = await res.json()
 
+
+                if (data.newToken != undefined)
+                    localStorage.setItem("token", data.newToken)
+
+
                 if (data.message === "unauthorized") {
                     props.history.push('dashboard');
                 } else {
@@ -459,6 +464,10 @@ function ModuleEditor(props) {
                 })
 
                 const data = await res.json()
+
+                if (data.newToken != undefined)
+                    localStorage.setItem("token", data.newToken)
+
 
                 if (data.message === "unauthorized") {
                     props.history.push('dashboard');

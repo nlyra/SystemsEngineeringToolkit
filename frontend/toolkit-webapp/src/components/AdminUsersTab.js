@@ -91,6 +91,10 @@ const AdminUsersTab = (props) => {
     })
 
     const data = await res.json()
+    
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
     if (data.message === "unauthorized") {
       props.isUnauthorized()
     } else if (data.message === undefined) {
@@ -120,6 +124,10 @@ const AdminUsersTab = (props) => {
     })
 
     const data = await res.json()
+    
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
     if (data.message === "unauthorized") {
       props.isUnauthorized()
     } else if (data.message === undefined) {
@@ -148,6 +156,10 @@ const AdminUsersTab = (props) => {
     })
 
     const data = await res.json()
+    
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
     if (data.message === "unauthorized") {
       props.isUnauthorized()
     } else if (data.message === "success") {
@@ -175,7 +187,10 @@ const AdminUsersTab = (props) => {
     })
 
     const data = await res.json()
-    // console.log(data)
+    
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
     if (data.message === "unauthorized") {
       props.isUnauthorized()
     } else if (data.message === "success") {
@@ -186,7 +201,8 @@ const AdminUsersTab = (props) => {
       setDialogText("Unauthorized access. Please contact your system administrator.")
       handleOpenDialog()
       props.history.push('login');
-    }else { // this is to check if there are errors not being addressed already
+      // probably alert the user
+    } else { // this is to check if there are errors not being addressed already
       console.log(data)
     }
 

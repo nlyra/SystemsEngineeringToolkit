@@ -36,13 +36,16 @@ const ManageMyCourses = (props) => {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "search_query": query})
+            body: JSON.stringify({ "token": token, "search_query": query })
         })
         // }
 
 
         const data = await res.json()
-        
+
+        if (data.newToken != undefined)
+            localStorage.setItem("token", data.newToken)
+
         if (data.message === "unauthorized") {
             props.history.push('dashboard');
         } else if (data.message === undefined) {
@@ -76,20 +79,23 @@ const ManageMyCourses = (props) => {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "courseID": id})
+            body: JSON.stringify({ "token": token, "courseID": id })
         })
 
         const data = await res.json()
-        
+
+        if (data.newToken != undefined)
+            localStorage.setItem("token", data.newToken)
+
         if (data.message === "unauthorized") {
             props.history.push('dashboard');
-        } 
+        }
         // This splits the array correctly and updates courses array with courses the user is still enrolled in
         // const newVal = courses.filter((courses) => courses._id !== id);
         // setCourses(newVal)
-        
+
         window.location.reload()
-        
+
     }
 
 
@@ -102,16 +108,16 @@ const ManageMyCourses = (props) => {
         <div className={classes.div}>
             <TopNavBar
                 search={loadCourses}
-                // page={page}
+            // page={page}
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
-            <Grid container spacing={3}>
-                <div className={classes.header}>
-                <h1>
-                    My Created Courses
-                </h1>
-                </div>
+                <Grid container spacing={3}>
+                    <div className={classes.header}>
+                        <h1>
+                            Manage My Courses
+                        </h1>
+                    </div>
                 </Grid>
                 <Divider className={classes.divider} />
                 <div className='modules'>

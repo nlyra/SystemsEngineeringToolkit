@@ -33,11 +33,15 @@ const MyCourses = (props) => {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "search_query": query})
+            body: JSON.stringify({ "token": token, "search_query": query })
         })
 
 
         const data = await res.json()
+
+        if (data.newToken != undefined)
+            localStorage.setItem("token", data.newToken)
+
         if (data.message === undefined) {
 
             setCourses(data.courses);
@@ -70,17 +74,21 @@ const MyCourses = (props) => {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "courseID": id})
+            body: JSON.stringify({ "token": token, "courseID": id })
         })
 
         // This splits the array correctly and updates courses array with courses the user is still enrolled in
         // const newVal = courses.filter((courses) => courses._id !== id);
         // setCourses(newVal)
-        
+
         const data = await res.json()
+        
+        if(data.newToken != undefined)
+          localStorage.setItem("token", data.newToken)
+          
 
         window.location.reload()
-        
+
     }
 
 
@@ -93,16 +101,16 @@ const MyCourses = (props) => {
         <div className={classes.div}>
             <TopNavBar
                 search={loadCourses}
-                // page={page}
+            // page={page}
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
-            <Grid container spacing={3}>
-                <div className={classes.header}>
-                <h1>
-                    Enrolled Courses
-                </h1>
-                </div>
+                <Grid container spacing={3}>
+                    <div className={classes.header}>
+                        <h1>
+                            Enrolled Courses
+                        </h1>
+                    </div>
                 </Grid>
                 <Divider className={classes.divider} />
                 <div className='modules'>
@@ -134,7 +142,7 @@ const MyCourses = (props) => {
                                 </Card>
 
                                 <div className={classes.buttonDiv}>
-                                    <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick= {handleOpenDialog}>
+                                    <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick={() => { if (window.confirm('Are you sure you wish to disenroll? Your progress may be lost.')) removeEnrollment(course._id) }}>
                                         Disenroll Course
                                     </Button>
                                 </div>
