@@ -131,7 +131,7 @@ function ModuleEditor(props) {
                 alert("Please attach proper file corresponding to module type.")
             }
         }else if (type === 'Text') {
-            console.log('works')
+            console.log('Works for Text')
             onFinish({ title, type, description })
         }
         else {
@@ -244,9 +244,8 @@ function ModuleEditor(props) {
                         console.log(data)
                     }
                 }
-            } else if(module.type === "File" && (typeof(module.file) !== 'undefined')){
+            } else if(module.type === "File"){
                 if(typeof(module.file) === 'undefined'){
-                    alert(module.fileName)
                     const res = await fetch(config.server_url + config.paths.editModule, {
                         method: 'POST',
                         headers: {
@@ -325,7 +324,6 @@ function ModuleEditor(props) {
                     }
                 }
             }else if(module.type === "Video"){
-
                 if(typeof(module.video) === 'undefined'){
                     const res = await fetch(config.server_url + config.paths.editModule, {
                         method: 'POST',
@@ -419,7 +417,7 @@ function ModuleEditor(props) {
                 if (data.message === "unauthorized") {
                     props.history.push('dashboard');
                 } else if (data.message === undefined) {
-                    alert('worked')
+                    alert('Successfully Edited Text Module')
                     props.history.push('/course/' + courseID)
                 }
                 else { // this is to check if there are errors not being addressed already
@@ -481,8 +479,8 @@ function ModuleEditor(props) {
                                         <option aria-label="None" value="" />
                                         <option value={"Quiz"}>Quiz</option>
                                         <option value={"Video"}>Video</option>
-                                        <option value={"File"}>File</option>
                                         <option value={"PDF"}>PDF</option>
+                                        <option value={"File"}>File</option>
                                         <option value={"Text"}>Text</option>
                                     </Select>
                                     <FormHelperText>Required</FormHelperText>
