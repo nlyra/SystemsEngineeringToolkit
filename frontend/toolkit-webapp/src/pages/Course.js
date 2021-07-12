@@ -17,6 +17,8 @@ import courseStyles from '../styles/courseStyle';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { green, grey } from '@material-ui/core/colors';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import dialogStyles from '../styles/dialogStyle'
+import DialogComponent from '../components/DialogComponent'
 
 
 const Course = (props) => {
@@ -35,10 +37,13 @@ const Course = (props) => {
   const [isOwner, setIsOwner] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
 
+  const [dialogText, setDialogText] = useState('')
+  const [openDialog, setOpenDialog] = useState(false);
 
+  const classes = courseStyles()
+  const dialogClasses = dialogStyles()
 
   let validImageTypes = ["PNG", "JPEG", "GIF", "TIF", "RAW", "JPG"]
-  const classes = courseStyles()
 
   const onEditCourseTitle = (e) => {
     setEditCourseInfo(true);
@@ -52,6 +57,13 @@ const Course = (props) => {
     getAuthorization();
 
   }, []);
+
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    }
 
   const getAuthorization = async () => {
     const token = localStorage.getItem("token");
@@ -174,11 +186,13 @@ const Course = (props) => {
       const imageType = imageTypePath[imageTypePath.length - 1]
       const validInput = validImageTypes.includes(imageType.toUpperCase());
 
-      // If it isn't, return and allow user to input valid image
-      if (!validInput) {
-        alert('Invalid file type. Please upload an image with a proper image extension')
+    // If it isn't, return and allow user to input valid image
+    if (!validInput) {
+        setDialogText("Invalid file type. Please upload an image with a proper image extension.")
+        handleOpenDialog()
+        //alert('Invalid file type. Please upload an image with a proper image extension')
         return
-      }
+    }
 
       // Check that the input given is alphanumeric to avoid the possibility of commands being 
       // passed in to the backend
@@ -186,12 +200,14 @@ const Course = (props) => {
       var RegEx = /[^0-9a-z]/i;
       var isValid = !(RegEx.test(val));
 
-      if (isValid === false) {
-        alert('Invalid file type. Please upload an image for which name is alphanumeric.')
+    if (isValid === false) {
+        setDialogText("Invalid file type. Please upload an image for which name is alphnumeric.")
+        handleOpenDialog()
+        //alert('Invalid file type. Please upload an image for which name is alphanumeric.')
         return
-      }
-
-      if (currCourseImage.name !== oldCourseImage.name) {
+    }
+    
+    if (currCourseImage.name !== oldCourseImage.name) {
 
         if (data.message === undefined) {
           const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + currCourseImage.name, {
@@ -615,6 +631,14 @@ const Course = (props) => {
           ))}
         </Grid>
       </Grid>
+      <DialogComponent
+        open={openDialog}
+        text={dialogText}
+        onClose={handleCloseDialog}
+        buttons={[
+            {text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog}
+        ]}
+      />
     </div >
   )
 }

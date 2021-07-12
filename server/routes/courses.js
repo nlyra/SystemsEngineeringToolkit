@@ -369,7 +369,7 @@ router.post('/deleteCreatedCourse', VerifyToken, GetRole, async (req, res) => {
 
     fs.rmdirSync('public/' + req.body.courseID, { recursive: true });
 
-    res.sendStatus(400);
+    res.json({'status': 'success'})
 
   } catch (e) {
     console.log(e);
@@ -466,8 +466,8 @@ router.post('/module/score', VerifyToken, async (req, res) => {
 
     let courses = await User.findOne({ _id: req.body.userID }, 'coursesData');
 
-    if (courses.coursesData[0] == undefined)
-      courses.coursesData.append({})
+    // if (courses.coursesData[0] == undefined)
+    //   courses.coursesData.append({})
 
     courses = courses.coursesData[0];
     if (courses === undefined)

@@ -3,15 +3,20 @@ import { Button, Card, CardActions, Container, CssBaseline, Divider, makeStyles,
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 // import Pagination from '@material-ui/lab/Pagination'
+import { Dialog, DialogTitle, DialogActions, DialogContent } from '@material-ui/core'
 import myCoursesStyles from '../styles/myCoursesStyle'
+import dialogStyles from '../styles/dialogStyle'
+import DialogComponent from '../components/DialogComponent'
 import jwt_decode from "jwt-decode";
 import { Link } from '@material-ui/core';
 
 const ManageMyCourses = (props) => {
     const [courses, setCourses] = useState([])
     const [searchQuery, setSearchQuery] = useState('')
+    const [openDialog, setOpenDialog] = useState(false);
 
     const classes = myCoursesStyles()
+    const dialogClasses = dialogStyles()
 
     // function that will run when page is loaded
     useEffect(() => {
@@ -54,6 +59,13 @@ const ManageMyCourses = (props) => {
         }
     }
 
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
+
     const deleteCourse = async (id) => 
     {
         let res = undefined
@@ -76,7 +88,7 @@ const ManageMyCourses = (props) => {
         // const newVal = courses.filter((courses) => courses._id !== id);
         // setCourses(newVal)
         
-        // window.location.reload()
+        window.location.reload()
         
     }
 
@@ -97,7 +109,7 @@ const ManageMyCourses = (props) => {
             <Grid container spacing={3}>
                 <div className={classes.header}>
                 <h1>
-                    Manage My Courses
+                    My Created Courses
                 </h1>
                 </div>
                 </Grid>
@@ -130,16 +142,46 @@ const ManageMyCourses = (props) => {
                                     </Grid>
                                 </Card>
 
-                             {/* TODO: Figure out a way to reload the page without simply linking back to the same page.  */}
-
-                                <Link href="/ManageMyCourses" underline='none' color="inherit"> 
+                               
                                 <div className={classes.buttonDiv}>
-                                    <Button type='submit' className={classes.removeButton} size= "small" color="inherit" variant="contained" onClick={() => {if (window.confirm('Are you sure you wish to delete this course permanently?'))  deleteCourse(course._id) }}>
-                                    Remove Course
+                                    <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick={handleOpenDialog}>
+                                        Delete Course
                                     </Button>
+                                </div>
+
+                                <DialogComponent 
+                                    open={openDialog} 
+                                    text={"Are you sure you wish to delete this course permanently?"}
+                                    onClose={handleCloseDialog}
+                                    buttons={[
+                                        {text: "Yes", style: dialogClasses.dialogButton1, onClick: () => deleteCourse(course._id)}, 
+                                        {text: "No", style: dialogClasses.dialogButton2, onClick: handleCloseDialog}
+                                    ]}
+                                />
+
+                                {/* {openDialog === true ?
+
+                                    <div className={classes.dialog}>
+                                        <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" classes={{paper: classes.dialogPaper}} BackdropProps={{ style: { backgroundColor: 'rgba(193, 193, 187, 0.2)' } }} open={openDialog}>
+                                            <div className={classes.dialogTitleDiv}>
+                                                <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleCloseDialog}>
+                                                    Are you sure you wish to delete this course permanently?
+                                                </DialogTitle>
+                                            </div>
+                                            <DialogContent className={classes.dialogContent}>
+                                                
+                                                <Button className={classes.dialogButton1} size="small" variant="contained" type= 'submit' onClick={() => deleteCourse(course._id)}>
+                                                        Yes
+                                                    </Button>
+                                                    <Button className={classes.dialogButton2}  size="small" variant="contained" type='submit' onClick={handleCloseDialog} >
+                                                        No
+                                                    </Button>
+                                               
+                                            </DialogContent>
+                                        </Dialog>
                                     </div>
-                                </Link> 
-                                
+
+                                    : null} */}
                             </Grid>
 
                         ))}
