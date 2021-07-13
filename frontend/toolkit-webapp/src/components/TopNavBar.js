@@ -899,7 +899,7 @@ export default function TopNavBar(props) {
           <Divider />
           <List>
 
-            {isCreator &&
+            {(isCreator || isAdmin) &&
               <Link href="/newCourse" underline='none' color="inherit">
                 <Tooltip title="Create Course" enterDelay={500}>
                   <ListItem button>
@@ -940,7 +940,7 @@ export default function TopNavBar(props) {
             }
 
             {/* <Tooltip title="Calendar" enterDelay={500}>*/}
-            {isCreator &&
+            {(isCreator || isAdmin) &&
               <Link href="/ManageMyCourses" underline='none' color="inherit">
                 <Tooltip title="My Created Courses" enterDelay={500}>
                   <ListItem button>

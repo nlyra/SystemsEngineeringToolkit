@@ -52,7 +52,9 @@ const QuizCreator = (props) => {
 
     function addQuestion() {
         if(type === ''){
-            alert("Select a question type")
+            setDialogText("Select a question type")
+            handleOpenDialog()
+            //alert("Select a question type")
         } else{
             questions = JSON.parse(sessionStorage.getItem('question'))
             var dup = 0
@@ -265,7 +267,7 @@ const QuizCreator = (props) => {
                 size='small'
                 variant="filled"
                 type="number"
-                label='Grade to pass'
+                label='Correct answers to pass'
                 defaultValue=""
                 value={props.gradeToPass}
                 onChange={e => props.setGradeToPass(e.target.value)}

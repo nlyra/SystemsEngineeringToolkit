@@ -143,7 +143,9 @@ function NewCourse(props) {
                 if (data2.message === "unauthorized") {
                     props.history.push('dashboard');
                 } else if (data2.status === 'Success') {
-                    alert("Successfully created course!")
+                    setDialogText("Successfully created course!")
+                    handleOpenDialog()
+                    //alert("Successfully created course!")
                     props.history.push('/course/' + data._id)// needs to be changed to course manager
                 } //else need to do something, not sure what rn
             }
@@ -200,7 +202,9 @@ function NewCourse(props) {
             if (data.message === "unauthorized") {
                 props.history.push('dashboard');
             } else if (data.message === undefined) {
-                alert("Successfully created course!")
+                setDialogText("Successfully created course!")
+                    handleOpenDialog()
+                    //alert("Successfully created course!")
                 props.history.push('/course/' + data._id)// needs to be changed to course manager
             } else { // this is to check if there are errors not being addressed already
                 console.log(data)

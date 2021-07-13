@@ -82,6 +82,9 @@ const ManageMyCourses = (props) => {
             body: JSON.stringify({ "token": token, "courseID": id })
         })
 
+        handleCloseDialog()
+        window.location.reload()
+
         const data = await res.json()
 
         if (data.newToken != undefined)
@@ -93,9 +96,6 @@ const ManageMyCourses = (props) => {
         // This splits the array correctly and updates courses array with courses the user is still enrolled in
         // const newVal = courses.filter((courses) => courses._id !== id);
         // setCourses(newVal)
-
-        window.location.reload()
-
     }
 
 
