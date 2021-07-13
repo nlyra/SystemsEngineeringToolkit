@@ -13,6 +13,8 @@ import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
+import dialogStyles from '../styles/dialogStyle'
+import DialogComponent from '../components/DialogComponent'
 
 const columns = [
   { id: '_id', label: 'Id' },
@@ -62,13 +64,23 @@ const useStyles = makeStyles({
 
 const AdminCoursesTab = (props) => {
   const classes = useStyles();
+  const dialogClasses = dialogStyles()
   const [courses, setCourses] = useState([]);
   const [search, setSearch] = useState([]);
+  const [dialogText, setDialogText] = useState('')
+  const [openDialog, setOpenDialog] = useState(false);
 
   // function that will run when page is loaded
   useEffect(() => {
     getCourses()
   }, []);
+
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    }
 
   const getCourses = async () => {
     const token = localStorage.getItem("token");
@@ -93,7 +105,10 @@ const AdminCoursesTab = (props) => {
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
-      // probably alert the user
+
+      // alert the user
+      setDialogText("Unauthorized access. Please contact your system administrator.")
+      handleOpenDialog()
     } else { // this is to check if there are errors not being addressed already
       console.log(data)
     }
@@ -125,7 +140,9 @@ const AdminCoursesTab = (props) => {
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
-      // probably alert the user
+      // alert the user
+      setDialogText("Unauthorized access. Please contact your system administrator.")
+      handleOpenDialog()
     } else { // this is to check if there are errors not being addressed already
       console.log(data)
     }
@@ -154,7 +171,9 @@ const AdminCoursesTab = (props) => {
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
-      // probably alert the user
+      // alert the user
+      setDialogText("Unauthorized access. Please contact your system administrator.")
+      handleOpenDialog()
     } else { // this is to check if there are errors not being addressed already
       console.log(data)
     }
@@ -218,7 +237,7 @@ const AdminCoursesTab = (props) => {
                             <Link
                               className={classes.deleteButton}
                               href="/admindashboard?tab=1"
-                              onClick={() => { window.confirm(`Are you sure you wish to Delete user: ${row.name}`) && handleDelete(row._id, row.author) }}
+                              onClick={() => { window.confirm(`Are you sure you wish to Delete the Course: ${row.name}`) && handleDelete(row._id, row.author) }}
                             >
                               <DeleteIcon color="secondary" />
                             </Link>
@@ -233,6 +252,14 @@ const AdminCoursesTab = (props) => {
           </Table>
         </TableContainer>
       </Paper>
+      <DialogComponent
+        open={openDialog}
+        text={dialogText}
+        onClose={handleCloseDialog}
+        buttons={[
+            {text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog}
+        ]}
+      />
     </div>
   );
 }
