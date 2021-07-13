@@ -36,13 +36,16 @@ const ManageMyCourses = (props) => {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "search_query": query})
+            body: JSON.stringify({ "token": token, "search_query": query })
         })
         // }
 
 
         const data = await res.json()
-        
+
+        if (data.newToken != undefined)
+            localStorage.setItem("token", data.newToken)
+
         if (data.message === "unauthorized") {
             props.history.push('dashboard');
         } else if (data.message === undefined) {
@@ -76,20 +79,22 @@ const ManageMyCourses = (props) => {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "courseID": id})
+            body: JSON.stringify({ "token": token, "courseID": id })
         })
 
         const data = await res.json()
-        
+
+        if (data.newToken != undefined)
+            localStorage.setItem("token", data.newToken)
+
         if (data.message === "unauthorized") {
             props.history.push('dashboard');
-        } 
+        }
         // This splits the array correctly and updates courses array with courses the user is still enrolled in
         // const newVal = courses.filter((courses) => courses._id !== id);
         // setCourses(newVal)
         
         window.location.reload()
-        
     }
 
 
@@ -102,16 +107,16 @@ const ManageMyCourses = (props) => {
         <div className={classes.div}>
             <TopNavBar
                 search={loadCourses}
-                // page={page}
+            // page={page}
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
-            <Grid container spacing={3}>
-                <div className={classes.header}>
-                <h1>
-                    My Created Courses
-                </h1>
-                </div>
+                <Grid container spacing={3}>
+                    <div className={classes.header}>
+                        <h1>
+                            Manage My Courses
+                        </h1>
+                    </div>
                 </Grid>
                 <Divider className={classes.divider} />
                 <div className='modules'>
@@ -141,8 +146,6 @@ const ManageMyCourses = (props) => {
                                     <Grid container spacing={3}>
                                     </Grid>
                                 </Card>
-
-                               
                                 <div className={classes.buttonDiv}>
                                     <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick={handleOpenDialog}>
                                         Delete Course
@@ -158,30 +161,6 @@ const ManageMyCourses = (props) => {
                                         {text: "No", style: dialogClasses.dialogButton2, onClick: handleCloseDialog}
                                     ]}
                                 />
-
-                                {/* {openDialog === true ?
-
-                                    <div className={classes.dialog}>
-                                        <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" classes={{paper: classes.dialogPaper}} BackdropProps={{ style: { backgroundColor: 'rgba(193, 193, 187, 0.2)' } }} open={openDialog}>
-                                            <div className={classes.dialogTitleDiv}>
-                                                <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleCloseDialog}>
-                                                    Are you sure you wish to delete this course permanently?
-                                                </DialogTitle>
-                                            </div>
-                                            <DialogContent className={classes.dialogContent}>
-                                                
-                                                <Button className={classes.dialogButton1} size="small" variant="contained" type= 'submit' onClick={() => deleteCourse(course._id)}>
-                                                        Yes
-                                                    </Button>
-                                                    <Button className={classes.dialogButton2}  size="small" variant="contained" type='submit' onClick={handleCloseDialog} >
-                                                        No
-                                                    </Button>
-                                               
-                                            </DialogContent>
-                                        </Dialog>
-                                    </div>
-
-                                    : null} */}
                             </Grid>
 
                         ))}

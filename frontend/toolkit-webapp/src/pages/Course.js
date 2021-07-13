@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import { IconButton, Link, FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
+import { IconButton, Chip, InputLabel, Select, MenuItem, FormControl, Link, FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
 import VideoModule from '../components/VideoModule'
 import PdfModule from '../components/PdfModule'
 import QuizModule from '../components/QuizModule'
@@ -10,13 +10,15 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import CourseInfoEditButton from '../components/CourseInfoEditButton';
 import ModuleInfoEditButton from '../components/ModuleInfoEditButton';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import courseStyles from '../styles/courseStyle';
 import dialogStyles from '../styles/dialogStyle'
 import DialogComponent from '../components/DialogComponent'
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import { green, grey } from '@material-ui/core/colors';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 
 
 const Course = (props) => {
@@ -26,12 +28,16 @@ const Course = (props) => {
   const [currCourseImage, setCurrCourseImage] = useState('')
   const [courseTitle, setCourseTitle] = useState('')
   const [courseDescription, setCourseDescription] = useState('')
+  const [intendedAudience, setIntendedAudience] = useState('')
+  const [prerequisite, setPrerequisite] = useState('')
+  const [skillLevel, setSkillLevel] = useState('')
   const [editCourseInfo, setEditCourseInfo] = useState(false)
   const [courseID, setCourseID] = useState('')
   const [isCreator, setIsCreator] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
   const [dialogText, setDialogText] = useState('')
   const [openDialog, setOpenDialog] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(false);
 
   const classes = courseStyles()
   const dialogClasses = dialogStyles()
@@ -73,6 +79,9 @@ const Course = (props) => {
 
     const data = await res.json()
 
+    if (data.newToken != undefined)
+      localStorage.setItem("token", data.newToken)
+
     if (data.message === "yes") {
       setIsCreator(true);
     } else
@@ -99,6 +108,9 @@ const Course = (props) => {
 
     const data = await res.json()
 
+    if (data.newToken != undefined)
+      localStorage.setItem("token", data.newToken)
+
     if (data.message === undefined) {
       setCourse(data.course);
       setCourseID(id);
@@ -106,12 +118,19 @@ const Course = (props) => {
       setCurrCourseImage(data.course.urlImage);
       setCourseTitle(data.course.name);
       setCourseDescription(data.course.description);
+      setSkillLevel(data.course.skillLevel);
+      setIntendedAudience(data.course.intendedAudience);
+      setPrerequisite(data.course.prerequisite);
       setModules(data.course.modules);
+      setIsEnabled(data.course.isEnabled);
       if (data.course.author === "yes")
         setIsOwner(true);
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
+      // probably alert the user
+    } else if (data.message === "course not available") {
+      props.history.push('/dashboard');
       // probably alert the user
     } else { // this is to check if there are errors not being addressed already
       console.log(data)
@@ -122,7 +141,6 @@ const Course = (props) => {
     // e.preventDefault()
     setEditCourseInfo(false);
     const token = localStorage.getItem("token");
-
     const res = await fetch(config.server_url + config.paths.updateCourseInfo, {
       method: 'POST',
       headers: {
@@ -133,19 +151,28 @@ const Course = (props) => {
         'courseID': courseID,
         "name": courseTitle,
         "description": courseDescription,
+        "skillLevel": skillLevel,
+        "intendedAudience": intendedAudience,
+        "prerequisite": prerequisite,
       })
     })
 
     const data = await res.json()
 
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
     if (data.message === "unauthorized")
       props.history.push('/dashboard');
     else {
 
       // No new image assigned to course so only refresh to show other updates
       if (currCourseImage.name === undefined)
+      {
         window.location.reload();
-
+        return
+      }
+  
     // We have a new image being passed in so delete old file
     const res2 = await fetch(config.server_url + config.paths.removeFile, {
       method: 'POST',
@@ -155,17 +182,17 @@ const Course = (props) => {
       body: JSON.stringify({
         'token': token,
         'courseID': courseID
+        })
       })
-    })
 
 
       const imageData = new FormData();
       imageData.append('file', currCourseImage)
 
-    // Checking to see if the file inputted is not an actual image
-    const imageTypePath = currCourseImage.name.split('.')
-    const imageType = imageTypePath[imageTypePath.length - 1]
-    const validInput = validImageTypes.includes(imageType.toUpperCase());
+      // Checking to see if the file inputted is not an actual image
+      const imageTypePath = currCourseImage.name.split('.')
+      const imageType = imageTypePath[imageTypePath.length - 1]
+      const validInput = validImageTypes.includes(imageType.toUpperCase());
 
     // If it isn't, return and allow user to input valid image
     if (!validInput) {
@@ -175,11 +202,11 @@ const Course = (props) => {
         return
     }
 
-    // Check that the input given is alphanumeric to avoid the possibility of commands being 
-    // passed in to the backend
-    var val = imageTypePath[imageTypePath.length - 2];
-    var RegEx = /[^0-9a-z]/i;
-    var isValid = !(RegEx.test(val));
+      // Check that the input given is alphanumeric to avoid the possibility of commands being 
+      // passed in to the backend
+      var val = imageTypePath[imageTypePath.length - 2];
+      var RegEx = /[^0-9a-z]/i;
+      var isValid = !(RegEx.test(val));
 
     if (isValid === false) {
         setDialogText("Invalid file type. Please upload an image for which name is alphnumeric.")
@@ -197,6 +224,9 @@ const Course = (props) => {
           })
           const data2 = await res.json()
 
+          if(data2.newToken != undefined)
+          localStorage.setItem("token", data.newToken)
+          
         }
         else { // this is to check if there are errors not being addressed already
           console.log(data)
@@ -237,6 +267,10 @@ const Course = (props) => {
     })
 
     const data = await res.json()
+    
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
 
     if (data.message === "unauthorized")
       props.history.push('/dashboard');
@@ -274,6 +308,40 @@ const Course = (props) => {
     return false
   }
 
+  const enableCourse = async (val) => {
+
+    
+    // send change to backend
+    const token = localStorage.getItem("token");
+    const res = await fetch(config.server_url + config.paths.changeEnabled, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        "token": token,
+        "courseID": courseID,
+        "isEnabled": val
+      })
+    })
+    
+    const data = await res.json()
+    
+    if (data.message === "unauthorized")
+    props.history.push('/dashboard');
+    else if (data.message === undefined) {
+      setIsEnabled(val);
+    } else if (data.message === "wrong token") {
+      localStorage.removeItem('token');
+      props.history.push('login');
+      // probably alert the user
+
+    } else { // this is to check if there are errors not being addressed already
+      console.log(data)
+    }
+
+  }
+
   const handleComplete = async (index) => {
     // send the completed news to db
     const token = localStorage.getItem("token");
@@ -290,6 +358,10 @@ const Course = (props) => {
     })
 
     const data = await res.json()
+    
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
     if (data.message === undefined) {
       let temp = modules;
       temp[index]["completed"] = 1
@@ -313,7 +385,7 @@ const Course = (props) => {
       <TopNavBar >
       </TopNavBar>
       <Grid container direction="column" className={classes.div}>
-        {editCourseInfo !== true ?
+        {editCourseInfo !== true ? // student view
           <div maxWidth>
             <Grid item alignItems="center" xs={12}>
               <Grid container className={classes.topItem}>
@@ -325,28 +397,36 @@ const Course = (props) => {
                     className={classes.title}>{course.name}
                   </h1>
                 </Grid>
-                {(isCreator && isOwner) &&
-                  <Grid item xs={1} sm={1} lg={2}>
-                    <CourseInfoEditButton
-                      hideComponent={false}
-                      edit={onEditCourseTitle}
-                    />
-                  </Grid>
-                }
               </Grid>
             </Grid>
+            {(isCreator && isOwner) &&
+              <Grid item xs={12} className={classes.enableButton}>
+                <div>
+                  {isEnabled ?
+                    <Button variant="outlined" color="secondary" onClick={() => enableCourse(false)}>Disable</Button>
+                    :
+                    <Button variant="outlined" color="primary" onClick={() => enableCourse(true)}>Enable</Button>
+                  }
+                </div>
+                <div>
+                  <Button type='submit' variant="contained" color="primary" onClick={onEditCourseTitle}>
+                    Edit course info
+                  </Button>
+                </div>
+              </Grid>
+            }
             <Grid item xs={12} >
               <Typography className={classes.description}>{course.description}</Typography>
             </Grid>
           </div>
-          :
+          : // creator view
           <div maxWidth>
             <Grid item xs={12} >
               <Grid container className={classes.topItem}>
                 <Grid item xs={3} sm={2} lg={1}>
                   <img src={course.urlImage} className={classes.currCourseImageStyle} />
                 </Grid>
-                <Grid item xs={9} sm={10} lg={11} align={"center"}>
+                <Grid item xs={9} sm={10} lg={11} align={"center"} style={{ marginTop: '2vh' }}>
                   <TextField
                     color='primary'
                     size='medium'
@@ -357,14 +437,12 @@ const Course = (props) => {
                     defaultValue={course.name}
                     onChange={e => setCourseTitle(e.target.value)}
                     margin="normal"
-                  //fullWidth
-                  //style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                   />
                 </Grid>
-                <input type="file" name="picture" accept="image/*" className={classes.currCourseImageStyle} onChange={e => setCurrCourseImage(e.target.files[0])} />
+                <input style={{ marginLeft: '4vw' }} type="file" name="picture" accept="image/*" className={classes.currCourseImageStyle} onChange={e => setCurrCourseImage(e.target.files[0])} />
               </Grid>
             </Grid>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} lg={6} align={"center"} style={{ marginLeft: '4vw', marginRight: '4vw' }}>
               <TextField
                 color='primary'
                 size='medium'
@@ -381,29 +459,75 @@ const Course = (props) => {
                 rowsMax={10}
               />
             </Grid>
-            <Button variant="contained" onClick={onEditSubmit}>Submit</Button>
+            <Grid item xs={12} lg={6} style={{ marginLeft: '4vw', marginRight: '4vw' }}>
+              <TextField
+                color='primary'
+                size='medium'
+                variant='filled'
+                label='Intended Audience'
+                type="text"
+                defaultValue={course.intendedAudience}
+                onChange={e => setIntendedAudience(e.target.value)}
+                margin="normal"
+                required={true}
+                fullWidth
+              />
+              <TextField
+                color='primary'
+                size='medium'
+                variant='filled'
+                label='Pre Requisite'
+                type="text"
+                defaultValue={course.prerequisite}
+                onChange={e => setPrerequisite(e.target.value)}
+                margin="normal"
+                required={true}
+                fullWidth
+              />
+              <FormControl variant="outlined" className={classes.skillSelector}>
+                <InputLabel htmlFor="grouped-native-select">Skill Level</InputLabel>
+                <Select
+                  labelId="demo-simple-select-outlined-label"
+                  id="demo-simple-select-outlined"
+                  defaultValue={course.skillLevel}
+                  onChange={(e) => setSkillLevel(e.target.value)}
+                  label="Skill Label"
+                // className={classes.select}
+                >
+                  <MenuItem value={"Easy"}>Easy</MenuItem>
+                  <MenuItem value={"Medium"}>Medium</MenuItem>
+                  <MenuItem value={"Hard"}>Hard</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Button variant="contained" onClick={onEditSubmit} style={{ marginLeft: '4vw' }} >Submit</Button>
           </div>
         }
 
         <br></br>
+        {editCourseInfo !== true &&
+          <Grid item xs={12}>
+            <div className={classes.statsDiv}>
+              <Chip label={"Skill Level: " + course.skillLevel} variant="outlined" />
+              <Chip label={"Audience: " + course.intendedAudience} variant="outlined" />
+              <Chip label={"Pre Requisite: " + course.prerequisite} variant="outlined" />
+            </div>
+          </Grid>
+        }
         <Grid item xs={12}>
           <Divider className={classes.divider} />
         </Grid>
         {(isCreator && isOwner) &&
           <Grid item xs={12} lg={3}>
-            {//<Link href={`/newModule/${courseID}`} underline={'none'}>
-            }
             <Button
               variant="contained"
               color="primary"
-              className={classes.button}
+              className={classes.addButton}
               startIcon={<AddIcon />}
               onClick={addModule}
             >
               Add Module
             </Button>
-            {//</Link>
-            }
           </Grid>
         }
         <Grid item xs={12} className={classes.accordion}>
@@ -418,6 +542,14 @@ const Course = (props) => {
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                   >
+                    {module.completed !== 1 &&
+                      <RadioButtonUncheckedIcon
+                        style={{
+                          color: grey[500],
+                          marginRight: '20px'
+                        }}
+                      />
+                    }
 
                     <Typography className={classes.heading}>Module {modules.indexOf(module) + 1}: {module.title}</Typography>
                   </AccordionSummary>
@@ -429,6 +561,22 @@ const Course = (props) => {
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                   >
+                    {module.completed === 1 &&
+                      <CheckCircleIcon
+                        style={{
+                          color: green[500],
+                          marginRight: '20px'
+                        }}
+                      />
+                    }
+                    {module.completed !== 1 &&
+                      <RadioButtonUncheckedIcon
+                        style={{
+                          color: grey[500],
+                          marginRight: '20px'
+                        }}
+                      />
+                    }
                     {(isCreator && isOwner) &&
                       <div>
                         <FormControlLabel

@@ -23,6 +23,7 @@ const columns = [
   { id: 'currStudents', label: 'Current students' },
   { id: 'totalStudents', label: 'Started students' },
   { id: 'totalCompletedStudents', label: 'Completed students' },
+  { id: 'isEnabled', label: 'Enabled' },
   { id: 'delete', label: 'Delete' },
 ];
 
@@ -93,6 +94,10 @@ const AdminCoursesTab = (props) => {
     })
 
     const data = await res.json()
+    
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
     if (data.message === "unauthorized") {
       props.isUnauthorized()
     } else if (data.message === undefined) {
@@ -124,6 +129,10 @@ const AdminCoursesTab = (props) => {
     })
 
     const data = await res.json()
+    
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
     if (data.message === "unauthorized") {
       props.isUnauthorized()
     } else if (data.message === undefined) {
@@ -151,7 +160,10 @@ const AdminCoursesTab = (props) => {
     })
 
     const data = await res.json()
-    // console.log(data)
+    
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
     if (data.message === "unauthorized") {
       props.isUnauthorized()
     } else if (data.message === undefined) {
@@ -218,7 +230,9 @@ const AdminCoursesTab = (props) => {
                             column.id === 'author' ||
                             column.id === 'totalStudents' ||
                             column.id === 'totalCompletedStudents' ||
-                            column.id === 'currStudents') && row[column.id]}
+                            column.id === 'currStudents' ||
+                            column.id === 'isEnabled'
+                          ) && row[column.id].toString()}
                           {column.id === 'delete' &&
                             <Link
                               className={classes.deleteButton}

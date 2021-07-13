@@ -113,7 +113,7 @@ function ModuleEditor(props) {
                 console.log('works for PDF')
                 onFinish({ title, type, description, pdf })
             }
-        } else if(type === 'File' && file !== null && typeof(file) !== 'undefined'){
+        } else if (type === 'File' && file !== null && typeof (file) !== 'undefined') {
             console.log('works for File')
             onFinish({ title, type, description, file })
             
@@ -126,7 +126,7 @@ function ModuleEditor(props) {
                 console.log('works for Video')
                 onFinish({ title, type, description, video })
             }
-        }else if (type === 'Text') {
+        } else if (type === 'Text') {
             console.log('works')
             onFinish({ title, type, description })
         }
@@ -157,6 +157,11 @@ function ModuleEditor(props) {
                 })
                 const data = await res.json()
 
+
+                if (data.newToken != undefined)
+                    localStorage.setItem("token", data.newToken)
+
+
                 if (data.message === "unauthorized") {
                     props.history.push('dashboard');
                 } else {
@@ -164,8 +169,8 @@ function ModuleEditor(props) {
                     props.history.push('/course/' + courseID)
                 }
 
-            }else if(module.type === "PDF" && (typeof(module.pdf) !== 'undefined')){
-               
+            } else if (module.type === "PDF" && (typeof (module.pdf) !== 'undefined')) {
+
                 const pdfTypePath = module.pdf.name.split('.')
 
                 // Grabbing the actual filename minus extension so that we can validate alphanumeric inputs
@@ -196,16 +201,20 @@ function ModuleEditor(props) {
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "urlFile": `http://localhost:4000/`+courseID+`/moduleData/${module.pdf.name}`
+                        "urlFile": `http://localhost:4000/` + courseID + `/moduleData/${module.pdf.name}`
                     })
                 })
                 const data = await res.json()
+
+                if (data.newToken != undefined)
+                    localStorage.setItem("token", data.newToken)
+
                 if (data.message === "unauthorized") {
                     props.history.push('dashboard');
                 } else if (data.message === undefined) {
-                    const res = await fetch(config.server_url + config.paths.moduleFileUpload +"?token=" + token + "&courseID=" + courseID + "&imageName=" + module.pdf.name, {
-                    method: 'POST',
-                    body: newFile
+                    const res = await fetch(config.server_url + config.paths.moduleFileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.pdf.name, {
+                        method: 'POST',
+                        body: newFile
                     })
                     const data2 = await res.json()
 
@@ -218,7 +227,7 @@ function ModuleEditor(props) {
                 } else { // this is to check if there are errors not being addressed already
                     console.log(data)
                 }
-            } else if(module.type === "File" && (typeof(module.file) !== 'undefined')){
+            } else if (module.type === "File" && (typeof (module.file) !== 'undefined')) {
 
                 const fileTypePath = module.file.name.split('.')
 
@@ -250,19 +259,23 @@ function ModuleEditor(props) {
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "urlFile": `http://localhost:4000/`+courseID+`/moduleData/${module.file.name}`
+                        "urlFile": `http://localhost:4000/` + courseID + `/moduleData/${module.file.name}`
                     })
                 })
                 const data = await res.json()
+
+                if (data.newToken != undefined)
+                    localStorage.setItem("token", data.newToken)
+
                 if (data.message === "unauthorized") {
                     props.history.push('dashboard');
                 } else if (data.message === undefined) {
-                    const res = await fetch(config.server_url + config.paths.moduleFileUpload +"?token=" + token + "&courseID=" + courseID + "&imageName=" + module.file.name, {
-                    method: 'POST',
-                    body: newFile
+                    const res = await fetch(config.server_url + config.paths.moduleFileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.file.name, {
+                        method: 'POST',
+                        body: newFile
                     })
                     const data2 = await res.json()
-                    
+
                     if (data2.message === "unauthorized") {
                         props.history.push('dashboard');
                     } else if (data2.status === 'Success') {
@@ -272,7 +285,7 @@ function ModuleEditor(props) {
                 } else { // this is to check if there are errors not being addressed already
                     console.log(data)
                 }
-            }else if(module.type === "Video" && (typeof(module.video) !== 'undefined')){
+            } else if (module.type === "Video" && (typeof (module.video) !== 'undefined')) {
 
                 const videoTypePath = module.video.name.split('.')
                 var val = videoTypePath[videoTypePath.length - 2];
@@ -287,7 +300,7 @@ function ModuleEditor(props) {
                     //alert('Invalid file type. Please upload a video for which name is alphanumeric and has no spaces.')
                     return
                 }
-    
+
                 const newVideo = new FormData();
                 newVideo.append('file', module.video)
                 const res = await fetch(config.server_url + config.paths.editModule, {
@@ -302,18 +315,22 @@ function ModuleEditor(props) {
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "urlVideo": `http://localhost:4000/`+courseID+`/moduleData/${module.video.name}`,
+                        "urlVideo": `http://localhost:4000/` + courseID + `/moduleData/${module.video.name}`,
                     })
 
                 })
 
                 const data = await res.json()
+
+                if (data.newToken != undefined)
+                    localStorage.setItem("token", data.newToken)
+
                 if (data.message === "unauthorized") {
                     props.history.push('dashboard');
                 } else if (data.message === undefined) {
                     const res = await fetch(config.server_url + config.paths.moduleFileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.video.name, {
-                    method: 'POST',
-                    body: newVideo
+                        method: 'POST',
+                        body: newVideo
                     })
                     const data2 = await res.json()
 
@@ -337,6 +354,10 @@ function ModuleEditor(props) {
                 })
 
                 const data = await res.json()
+
+                if (data.newToken != undefined)
+                    localStorage.setItem("token", data.newToken)
+
 
                 if (data.message === "unauthorized") {
                     props.history.push('dashboard');

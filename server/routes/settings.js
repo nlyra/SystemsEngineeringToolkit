@@ -17,32 +17,44 @@ router.post('/userInfo', VerifyToken, GetRole, async (req, res) => {
       numUsers = await User.find().countDocuments()
       numCourses = await Course.find().countDocuments()
 
-      res.json({ "user": user, "numUsers": numUsers, "numCourses": numCourses })
+
+      if (req.body.newToken != undefined)
+        res.json({ "user": user, "numUsers": numUsers, "numCourses": numCourses, "newToken": req.body.newToken })
+      else
+        res.json({ "user": user, "numUsers": numUsers, "numCourses": numCourses })
     }
     else
-      res.json({ "user": user });
+
+      if (req.body.newToken != undefined)
+        res.json({ "user": user, "newToken": req.body.newToken });
+      else
+        res.json({ "user": user });
 
   } catch (e) {
-      console.log(e);
-      res.sendStatus(500);
-    }
-  
-  })
+    console.log(e);
+    res.sendStatus(500);
+  }
 
-  router.post('/updateUserInfo', VerifyToken, async (req, res) => {
-    try {
+})
 
-      const update = await User.updateOne(
-        { _id: req.body.userID },
-        { $set: { email: req.body.email } }
-      )
+router.post('/updateUserInfo', VerifyToken, async (req, res) => {
+  try {
 
-      res.json({ 'status': 'success' })
+    const update = await User.updateOne(
+      { _id: req.body.userID },
+      { $set: { email: req.body.email } }
+    )
 
-    } catch (e) {
-      console.log(e);
-      res.sendStatus(500);
-    }
-  
-  })
-  module.exports = router;
+    
+    if (req.body.newToken != undefined)
+    res.json({ 'status': 'success', "newToken": req.body.newToken })
+    else
+    res.json({ 'status': 'success' })
+
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+
+})
+module.exports = router;

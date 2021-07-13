@@ -33,11 +33,15 @@ const MyCourses = (props) => {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "search_query": query})
+            body: JSON.stringify({ "token": token, "search_query": query })
         })
 
 
         const data = await res.json()
+
+        if (data.newToken != undefined)
+            localStorage.setItem("token", data.newToken)
+
         if (data.message === undefined) {
 
             setCourses(data.courses);
@@ -70,17 +74,21 @@ const MyCourses = (props) => {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "courseID": id})
+            body: JSON.stringify({ "token": token, "courseID": id })
         })
 
         // This splits the array correctly and updates courses array with courses the user is still enrolled in
         // const newVal = courses.filter((courses) => courses._id !== id);
         // setCourses(newVal)
-        
+
         const data = await res.json()
+        
+        if(data.newToken != undefined)
+          localStorage.setItem("token", data.newToken)
+          
 
         window.location.reload()
-        
+
     }
 
 
@@ -93,16 +101,16 @@ const MyCourses = (props) => {
         <div className={classes.div}>
             <TopNavBar
                 search={loadCourses}
-                // page={page}
+            // page={page}
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
-            <Grid container spacing={3}>
-                <div className={classes.header}>
-                <h1>
-                    Enrolled Courses
-                </h1>
-                </div>
+                <Grid container spacing={3}>
+                    <div className={classes.header}>
+                        <h1>
+                            Enrolled Courses
+                        </h1>
+                    </div>
                 </Grid>
                 <Divider className={classes.divider} />
                 <div className='modules'>
@@ -145,7 +153,7 @@ const MyCourses = (props) => {
                                         <Dialog onClose={handleCloseDialog} classes={{paper: classes.dialogPaper}} BackdropProps={{ style: { backgroundColor: 'rgba(193, 193, 187, 0.2)' } }} aria-labelledby="customized-dialog-title" open={openDialog}>
                                             <div className={classes.dialogTitleDiv}>
                                                 <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleCloseDialog}>
-                                                    Are you sure you wish to disenroll from this course? 
+                                                    Are you sure you wish to disenroll from this course? Your progress may be lost.
                                                 </DialogTitle>
                                             </div>
                                             <DialogContent className={classes.dialogContent}>
