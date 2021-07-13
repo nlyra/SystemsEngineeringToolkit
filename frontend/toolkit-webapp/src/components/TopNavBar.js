@@ -40,9 +40,40 @@ const useStyles = makeStyles((theme) => ({
 
   },
 
+  dialogPaper:
+  {
+      border: '1.8px solid black',
+      borderRadius: '8px',
+      width: '380px',
+      boxShadow: 'none'
+  },
+
   dialogContent:
   {
-    width: '40vh'
+    width: '100%',
+    textAlign: 'center',
+  },
+
+  dialogButton1:
+  {
+      backgroundColor: 'black',
+      color: 'white',
+      "&:hover": {
+          backgroundColor: 'grey',
+          color: 'white'
+      },
+      marginRight: '10px'
+  },
+
+  dialogButton2:
+  {
+      backgroundColor: 'black',
+      color: 'white',
+      "&:hover": {
+          backgroundColor: 'grey',
+          color: 'white'
+      },
+      marginLeft: '10px'
   },
 
   divider:
@@ -960,17 +991,17 @@ export default function TopNavBar(props) {
               </Tooltip>
             </Link>
             <div className={classes.dialog}>
-              <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" open={loggingout}>
+              <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" open={loggingout} classes={{ paper: classes.dialogPaper }} BackdropProps={{ style: { backgroundColor: 'rgba(193, 193, 187, 0.2)' } }}>
                 <div className={classes.dialogTitleDiv}>
                   <DialogTitle id="customized-dialog-title" className={classes.logoutDialogTitle} onClose={handleCloseDialog}>
                     Are you sure you wish to log out of your account?
                   </DialogTitle>
                 </div>
                 <DialogContent className={classes.dialogContent}>
-                  <Button href='\' type='submit' size="small" color="inherit" variant="contained" onClick={logout}>
+                  <Button className={classes.dialogButton1} href='\' type='submit' size="small" color="inherit" variant="contained" onClick={logout}>
                     Yes
                   </Button>
-                  <Button type='submit' size="small" color="inherit" variant="contained" onClick={handleCloseDialog}>
+                  <Button className={classes.dialogButton2} type='submit' size="small" color="inherit" variant="contained" onClick={handleCloseDialog}>
                     No
                   </Button>
                 </DialogContent>
