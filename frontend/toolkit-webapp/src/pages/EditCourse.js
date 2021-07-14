@@ -9,21 +9,20 @@ import TopNavBar from '../components/TopNavBar'
 import courseStyles from '../styles/courseCreatorStyle'
 import '../css/Login.css';
 
+
 function EditCourse(props) {
 
     const classes = courseStyles()
 
     const [course, setCourse] = useState(props.location.course)
     const [courseTitle, setCourseTitle] = useState(props.location.course.name)
-    // const [categories, setCategories] = useState([props.location.course.categories])
     const [categories, setCategories] = useState([])
     const [description, setDescription] = useState(props.location.course.description)
     const [skillLevel, setSkillLevel] = useState(props.location.course.skillLevel)
     const [intendedAudience, setIntendedAudience] = useState(props.location.course.intendedAudience)
     const [prerequisite, setPrerequisite] = useState(props.location.course.prerequisite)
-    // const [image, setImage] = useState(props.location.course.urlImage)
     const [oldCourseImage, setOldCourseImage] = useState(props.location.course.urlImage)
-    const [currCourseImage, setCurrCourseImage] = useState(props.location.course.urlImage)
+    const [currCourseImage, setCurrCourseImage] = useState(undefined)
     const [dialogData, setDialogData] = useState([]);
     const filter = createFilterOptions();
 
@@ -33,7 +32,11 @@ function EditCourse(props) {
     // as opposed to after every time the form is rendered (as long as the array at the end remains empty).
     useEffect(() => {
         getAuthorization();
-        console.log(props.location.course.name)
+        
+        const getOldCats = () => {
+            setCategories(props.location.course.categories.map((cat) => (cat)))
+        }
+
         const categoriesCollection = async () => {
             const token = localStorage.getItem("token");
             const res = await fetch(config.server_url + config.paths.categories, {
@@ -53,6 +56,8 @@ function EditCourse(props) {
             } else
                 setDialogData(fetchedCategories.categories)
         }
+        getOldCats()
+        console.log(categories)
         categoriesCollection()
 
     }, []);
@@ -92,6 +97,7 @@ function EditCourse(props) {
     const onFinish = async (creds) => {
 
         // e.preventDefault()
+        // console.log("these are the final categories " + JSON.stringify(categories))
         const token = localStorage.getItem("token");
         const res = await fetch(config.server_url + config.paths.updateCourseInfo, {
             method: 'POST',
@@ -102,6 +108,7 @@ function EditCourse(props) {
                 'token': token,
                 'courseID': course._id,
                 "name": courseTitle,
+                "categories": categories,
                 "description": description,
                 "skillLevel": skillLevel,
                 "intendedAudience": intendedAudience,
@@ -116,8 +123,8 @@ function EditCourse(props) {
         else {
 
             // No new image assigned to course so only refresh to show other updates
-            if (currCourseImage.name === undefined) {
-                window.location.reload();
+            if (currCourseImage === undefined) {
+                props.history.push('/course/' + course._id)
                 return
             }
 
@@ -172,7 +179,7 @@ function EditCourse(props) {
                         props.history.push('dashboard');
                     } else if (data2.status === 'Success') {
                         alert("Successfully created course!")
-                        // needs to be changed to course manager
+                        props.history.push('/course/' + course._id) // needs to be changed to course manager
                     } //else need to do something, not sure what rn
                 }
                 else { // this is to check if there are errors not being addressed already
@@ -199,10 +206,10 @@ function EditCourse(props) {
                     props.history.push('dashboard');
                 } else if (data2.status === 'Success') {
                     alert("Successfully created course!")
-                    // props.history.push('/course/' + course._id)// needs to be changed to course manager
+                    props.history.push('/course/' + course._id)// needs to be changed to course manager
                 } //else need to do something, not sure what rn
             }
-            props.history.push('/course/' + course._id)
+            // props.history.push('/course/' + course._id)
             // window.location.reload();
         }
     }
@@ -248,6 +255,7 @@ function EditCourse(props) {
                                     id="multiple-limit-tags"
                                     options={dialogData}
                                     freeSolo
+                                    value={categories}
                                     onChange={onTagsChange}
                                     renderTags={(value, getTagProps) =>
                                         value.map((option, index) => (
