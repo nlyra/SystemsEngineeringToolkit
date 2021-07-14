@@ -401,13 +401,6 @@ export default function TopNavBar(props) {
 
   const handleChanges = async () => {
 
-    if (data.user.roleID === 2) {
-        setNumUsers(data.numUsers)
-        setNumCourses(data.numCourses)
-    }
-    
-    setOpenDialog(true)
-
     if (user.email !== newEmail) {
       if (newEmail.indexOf('@') == -1) {
         alert('Please input a valid email format.')
