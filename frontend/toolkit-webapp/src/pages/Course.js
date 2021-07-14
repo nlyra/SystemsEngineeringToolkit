@@ -69,6 +69,9 @@ const Course = (props) => {
 
     const data = await res.json()
 
+    if (data.newToken != undefined)
+      localStorage.setItem("token", data.newToken)
+
     if (data.message === "yes") {
       setIsCreator(true);
     } else
@@ -94,6 +97,9 @@ const Course = (props) => {
     })
 
     const data = await res.json()
+
+    if (data.newToken != undefined)
+      localStorage.setItem("token", data.newToken)
 
     if (data.message === undefined) {
       setCourse(data.course);
@@ -143,6 +149,9 @@ const Course = (props) => {
 
     const data = await res.json()
 
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
     if (data.message === "unauthorized")
       props.history.push('/dashboard');
     else {
@@ -200,6 +209,9 @@ const Course = (props) => {
           })
           const data2 = await res.json()
 
+          if(data2.newToken != undefined)
+          localStorage.setItem("token", data.newToken)
+          
         }
         else { // this is to check if there are errors not being addressed already
           console.log(data)
@@ -240,6 +252,10 @@ const Course = (props) => {
     })
 
     const data = await res.json()
+    
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
 
     if (data.message === "unauthorized")
       props.history.push('/dashboard');
@@ -327,6 +343,10 @@ const Course = (props) => {
     })
 
     const data = await res.json()
+    
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
     if (data.message === undefined) {
       let temp = modules;
       temp[index]["completed"] = 1

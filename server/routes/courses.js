@@ -54,6 +54,10 @@ router.post('/course', VerifyToken, GetRole, async (req, res) => {
       }
 
 
+
+    if (req.body.newToken != undefined)
+      res.json({ "course": course, "newToken": req.body.newToken });
+    else if (course != {})
       res.json({ "course": course });
     } else
       res.json({ "message": "course not available" });
@@ -84,7 +88,12 @@ router.post('/course/update', VerifyToken, GetRole, async (req, res) => {
         }
       })
 
-    res.json({ 'status': 'course updated' });
+    // console.log('here')
+
+    if (req.body.newToken != undefined)
+      res.json({ 'status': 'course updated', "newToken": req.body.newToken });
+    else
+      res.json({ 'status': 'course updated' });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -110,7 +119,11 @@ router.post('/course/updateImage', VerifyToken, GetRole, async (req, res) => {
         }
       })
 
-    res.json({ 'status': 'success' })
+
+    if (req.body.newToken != undefined)
+      res.json({ 'status': 'success', "newToken": req.body.newToken })
+    else
+      res.json({ 'status': 'success' })
 
   } catch (e) {
     console.log(e);
@@ -174,10 +187,18 @@ router.post('/info', VerifyToken, async (req, res) => {
           { "name": { "$regex": query, $options: 'i' } },
         ]
       }, '_id name description urlImage categories');
-      res.json({ "status": "search", "courses": courses, "totalCourses": totalCourses });
+
+      if (req.body.newToken != undefined)
+        res.json({ "status": "search", "courses": courses, "totalCourses": totalCourses, "newToken": req.body.newToken });
+      else
+        res.json({ "status": "search", "courses": courses, "totalCourses": totalCourses });
     } else {
-      courses = await Course.find({ isEnabled: true }, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
-      res.json({ "status": "loading", "courses": courses, "totalCourses": totalCourses });
+      courses = await Course.find({}, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
+
+      if (req.body.newToken != undefined)
+        res.json({ "status": "loading", "courses": courses, "totalCourses": totalCourses, "newToken": req.body.newToken });
+      else
+        res.json({ "status": "loading", "courses": courses, "totalCourses": totalCourses });
     }
 
   } catch (e) {
@@ -209,7 +230,11 @@ router.post('/myCreatedCoursesInfo', VerifyToken, GetRole, async (req, res) => {
     else {
       courses = await Course.find({ _id: user.createdCourses }, '_id name description urlImage categories')
     }
-    res.json({ "courses": courses });
+
+    if (req.body.newToken != undefined)
+      res.json({ "courses": courses, "newToken": req.body.newToken });
+    else
+      res.json({ "courses": courses });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -237,7 +262,11 @@ router.post('/myCoursesInfo', VerifyToken, async (req, res) => {
       courses = await Course.find({ _id: user.enrolledClasses, isEnabled: true, }, '_id name description urlImage categories')
     }
 
-    res.json({ "courses": courses });
+
+    if (req.body.newToken != undefined)
+      res.json({ "courses": courses, "newToken": req.body.newToken });
+    else
+      res.json({ "courses": courses });
 
   } catch (e) {
     console.log(e);
@@ -281,7 +310,11 @@ router.post('/create', VerifyToken, GetRole, async (req, res) => {
 
     // console.log('added course ', savedCourse._id);
 
-    res.json(savedCourse);
+
+    if (req.body.newToken != undefined)
+      res.json({ savedCourse, "newToken": req.body.newToken });
+    else
+      res.json(savedCourse);
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -312,7 +345,10 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
         $inc: { currStudents: -1 }
       })
 
-    res.json({ 'status': 'success' })
+    if (req.body.newToken != undefined)
+      res.json({ 'status': 'success', "newToken": req.body.newToken })
+    else
+      res.json({ 'status': 'success' })
 
   } catch (e) {
     console.log(e);
@@ -343,7 +379,11 @@ router.post('/removeFile', VerifyToken, GetRole, async (req, res) => {
 
         fs.unlinkSync(path)
       }
-      res.json({ 'status': 'file removed' });
+
+      if (req.body.newToken != undefined)
+        res.json({ 'status': 'file removed', "newToken": req.body.newToken });
+      else
+        res.json({ 'status': 'file removed' });
     }
 
   } catch (err) {
@@ -370,7 +410,11 @@ router.post('/deleteCreatedCourse', VerifyToken, GetRole, async (req, res) => {
 
     fs.rmdirSync('public/' + req.body.courseID, { recursive: true });
 
-    res.sendStatus(400);
+
+    if (req.body.newToken != undefined)
+      res.sendStatus(400).json({ "newToken": req.body.newToken });
+    else
+      res.sendStatus(400);
 
   } catch (e) {
     console.log(e);
@@ -452,7 +496,11 @@ router.post('/module/create', VerifyToken, GetRole, async (req, res) => {
         });
     }
 
-    res.json({ 'status': 'module added' });
+
+    if (req.body.newToken != undefined)
+      res.json({ 'status': 'module added', "newToken": req.body.newToken });
+    else
+      res.json({ 'status': 'module added' });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -544,7 +592,11 @@ router.post('/module/score', VerifyToken, async (req, res) => {
     }
 
 
-    res.json({ 'status': 'grade saved' });
+
+    if (req.body.newToken != undefined)
+      res.json({ 'status': 'grade saved', "newToken": req.body.newToken });
+    else
+      res.json({ 'status': 'grade saved' });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -628,8 +680,11 @@ router.post('/module/update', VerifyToken, GetRole, async (req, res) => {
         });
     }
 
-    res.json({ 'status': 'module updated' });
 
+    if (req.body.newToken != undefined)
+      res.json({ 'status': 'module updated', "newToken": req.body.newToken });
+    else
+      res.json({ 'status': 'module updated' });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -649,7 +704,11 @@ router.post('/module/delete', VerifyToken, GetRole, async (req, res) => {
       { $pull: { modules: { title: req.body.title, description: req.body.description } } }
     )
 
-    res.json({ 'status': 'success' })
+
+    if (req.body.newToken != undefined)
+      res.json({ 'status': 'success', "newToken": req.body.newToken })
+    else
+      res.json({ 'status': 'success' })
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -746,7 +805,11 @@ router.post('/module/completed', VerifyToken, async (req, res) => {
         });
     }
 
-    res.json({ 'status': 'saved' });
+
+    if (req.body.newToken != undefined)
+      res.json({ 'status': 'saved', "newToken": req.body.newToken });
+    else
+      res.json({ 'status': 'saved' });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);

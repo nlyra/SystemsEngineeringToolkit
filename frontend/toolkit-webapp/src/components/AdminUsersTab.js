@@ -79,6 +79,10 @@ const AdminUsersTab = (props) => {
     })
 
     const data = await res.json()
+    
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
     if (data.message === "unauthorized") {
       props.isUnauthorized()
     } else if (data.message === undefined) {
@@ -106,6 +110,10 @@ const AdminUsersTab = (props) => {
     })
 
     const data = await res.json()
+    
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
     if (data.message === "unauthorized") {
       props.isUnauthorized()
     } else if (data.message === undefined) {
@@ -132,6 +140,10 @@ const AdminUsersTab = (props) => {
     })
 
     const data = await res.json()
+    
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
     if (data.message === "unauthorized") {
       props.isUnauthorized()
     } else if (data.message === "success") {
@@ -157,7 +169,10 @@ const AdminUsersTab = (props) => {
     })
 
     const data = await res.json()
-    // console.log(data)
+    
+    if(data.newToken != undefined)
+    localStorage.setItem("token", data.newToken)
+    
     if (data.message === "unauthorized") {
       props.isUnauthorized()
     } else if (data.message === "success") {
@@ -166,7 +181,7 @@ const AdminUsersTab = (props) => {
       localStorage.removeItem('token');
       props.history.push('login');
       // probably alert the user
-    }else { // this is to check if there are errors not being addressed already
+    } else { // this is to check if there are errors not being addressed already
       console.log(data)
     }
 
