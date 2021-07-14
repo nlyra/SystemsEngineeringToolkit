@@ -20,21 +20,21 @@ const Dashboard = (props) => {
 
     // function that will run when page is loaded
     useEffect(() => {
-        loadCourses(undefined, next+1);
+        loadCourses(undefined, next + 1);
     }, []);
 
 
     const loadMoreCourses = useCallback(() => {
 
         if ((totalCourses === courses.length))
-            return 
-            
-        loadCourses(undefined, next+1)
-      })
+            return
+
+        loadCourses(undefined, next + 1)
+    })
 
     // function to get the courses 
     const loadCourses = async (query, next) => {
-        
+
         const token = localStorage.getItem("token");
         let res = undefined
         let skip = (next - 1) * cardAmount
@@ -48,15 +48,18 @@ const Dashboard = (props) => {
         })
 
         const data = await res.json()
+
+        if (data.newToken != undefined)
+            localStorage.setItem("token", data.newToken)
+
         if (data.status === "loading") {
-           
+
             setCourses(courses.concat(data.courses));
             setTotalCourses(data.totalCourses)
             setHasNext(next)
 
-        } 
-        else if (data.status === "search")
-        {
+        }
+        else if (data.status === "search") {
             setCourses(data.courses);
             setTotalCourses(data.totalCourses)
         }
@@ -80,7 +83,7 @@ const Dashboard = (props) => {
         <div className={classes.div} >
             <TopNavBar
                 search={loadCourses}
-                // page={page}
+            // page={page}
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container} >
@@ -109,7 +112,7 @@ const Dashboard = (props) => {
                                         </CardActions>
                                     </CardContent>
                                 </Card>
-                
+
                                 {/* {courses.length < 5 && (<Waypoint onEnter={testing}/>)} */}
                             </Grid>
 
@@ -118,11 +121,11 @@ const Dashboard = (props) => {
 
                     </Grid>
                 </div>
-
-                {totalCourses !== courses.length &&
+                
+                { totalCourses !== courses.length && (courses.length - totalCourses > cardAmount) && 
                     
                     <div className={classes.expandMoreIcon}>
-                    <IconButton disableRipple size='large' style={{ backgroundColor: 'transparent' }}>Scroll for More<ExpandMoreIcon /></IconButton>
+                    <IconButton disableRipple size='large' style={{ backgroundColor: 'transparent' }}>{totalCourses} {courses.length} Scroll for More<ExpandMoreIcon /></IconButton>
                     </div>
                 }
             </Container>

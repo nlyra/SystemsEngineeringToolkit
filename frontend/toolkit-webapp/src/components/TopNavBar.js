@@ -28,129 +28,129 @@ const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
 
-    root:
-    {
-        // display: 'flex',
-        // height: '5vh',
-    },
+  root:
+  {
+    // display: 'flex',
+    // height: '5vh',
+  },
 
-    dialog:
-    {
-        position: 'absolute',
-        minWidth: '30%'
-
-    },
-
-    dialogContent:
-    {
-        width: '40vh'
-    },
+  
+  dialog:
+  {
+    position: 'absolute',
+    minWidth: '30%'
+    
+  },
+  
+  dialogContent:
+  {
+    width: '40vh'
+  },
 
     divider:
     {
-        border: '1px solid grey',
-        borderRadius: '10px',
-        backgroundColor: 'grey'
+      border: '1px solid grey',
+      borderRadius: '10px',
+      backgroundColor: 'grey'
     },
-
+    
     dialogTitle:
     {
-        textAlign: 'center',
-        verticalAlign: 'middle',
-        backgroundColor: grey[900],
-        border: '2px solid white'
+      textAlign: 'center',
+      verticalAlign: 'middle',
+      backgroundColor: grey[900],
+      border: '2px solid white'
     },
-
+    
     avatar:
     {
-        color: theme.palette.getContrastText(deepPurple[500]),
-        backgroundColor: deepPurple[500],
-        height: '6vh',
-        width: '6vh',
-        margin: 'auto'
+      color: theme.palette.getContrastText(deepPurple[500]),
+      backgroundColor: deepPurple[500],
+      height: '6vh',
+      width: '6vh',
+      margin: 'auto'
     },
-
-
+    
+    
     statContent:
     {
-        verticalAlign: 'right',
-        margin: 'auto',
-        width: '100%',
-        alignSelf: 'center'
+      verticalAlign: 'right',
+      margin: 'auto',
+      width: '100%',
+      alignSelf: 'center'
     },
-
+    
     // statsDiv:
     // {
-    //     width: '100%',
-    // },
-
-    statsTitle:
-    {
+      //     width: '100%',
+      // },
+      
+      statsTitle:
+      {
         textAlign: 'center',
         verticalAlign: 'middle',
         textDecoration: 'underline'
-    },
+      },
 
-    statsAvi:
-    {
+      statsAvi:
+      {
         color: theme.palette.getContrastText(amber[600]),
         backgroundColor: amber[600],
         border: '1px solid black',
         margin: 'auto'
-    },
-
-    roleDescription:
-    {
-
+      },
+      
+      roleDescription:
+      {
+        
         width: '100%',
         color: 'black',
         fontSize: '2.4vh',
         fontWeight: '500',
         marginTop: '3%',
         // alignContent: "center",
-
-
-    },
-
-    roleStatContent:
-    {
+        
+        
+      },
+      
+      roleStatContent:
+      {
         width: '100%'
-    },
-
-    roleText:
-    {
+      },
+      
+      roleText:
+      {
         width: '100%',
         textAlign: 'center'
-
-    },
-
-    roleGrid:
-    {
+        
+      },
+      
+      roleGrid:
+      {
         justifyContent: 'center'
-    },
-
-    statText:
-    {
+      },
+      
+      statText:
+      {
         width: '100%',
         textAlign: 'center'
-    },
-
-    closeButton:
-    {
+      },
+      
+      closeButton:
+      {
         marginRight: '20%'
-    },
-
-    search: {
+      },
+      
+      search: {
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
         backgroundColor: fade(theme.palette.common.white, 0.15),
         '&:hover': {
-            backgroundColor: fade(theme.palette.common.white, 0.25),
+          backgroundColor: fade(theme.palette.common.white, 0.25),
         },
-
-    },
-
-    searchIcon: {
+      },
+      
+      searchIcon: {
         padding: theme.spacing(0, 2),
         height: '100%',
         position: 'absolute',
@@ -158,9 +158,9 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-    },
-
-    searchIcon2: {
+      },
+      
+      searchIcon2: {
         padding: theme.spacing(0, 5),
         height: '100%',
         position: 'absolute',
@@ -168,8 +168,8 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    inputRoot: {
+      },
+      inputRoot: {
         color: 'inherit',
     },
     inputInput: {
@@ -266,184 +266,185 @@ const useStyles = makeStyles((theme) => ({
 export default function TopNavBar(props) {
 
 
-    const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
-    const [openDialog, setOpenDialog] = useState(false);
-    const [user, setUser] = useState({})
-    const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
-    const [newEmail, setNewEmail] = useState('')
-    const [isAdmin, setIsAdmin] = useState(false);
-    const [isCreator, setIsCreator] = useState(false);
-    const [roleInfo, setRoleInfo] = useState(-1)
-    const [numUsers, setNumUsers] = useState(0)
-    const [numCourses, setNumCourses] = useState(0)
-    const [loggingout, setLoggingout] = useState(false)
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [user, setUser] = useState({})
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [newEmail, setNewEmail] = useState('')
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isCreator, setIsCreator] = useState(false);
+  const [roleInfo, setRoleInfo] = useState(-1)
+  const [numUsers, setNumUsers] = useState(0)
+  const [numCourses, setNumCourses] = useState(0)
+  const [loggingout, setLoggingout] = useState(false)
 
-    let roles = ['Student', 'Creator', 'Admin']
+  let roles = ['Student', 'Creator', 'Admin']
 
-    // function that will run when page is loaded
-    useEffect(() => {
-        getAuthorization();
-    }, []);
+  // function that will run when page is loaded
+  useEffect(() => {
+    getAuthorization();
+  }, []);
 
-    const getAuthorization = async () => {
-        const token = localStorage.getItem("token");
+  const getAuthorization = async () => {
+    const token = localStorage.getItem("token");
 
-        const res = await fetch(config.server_url + config.paths.getIsAdmin, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                "token": token
-            })
+    const res = await fetch(config.server_url + config.paths.getIsAdmin, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        "token": token
+      })
+    })
+
+    const data = await res.json()
+
+    if (data.message === "yes")
+      setIsAdmin(true);
+    else
+      setIsAdmin(false);
+
+    const res2 = await fetch(config.server_url + config.paths.getIsCreator, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        "token": token
+      })
+    })
+
+    const data2 = await res2.json()
+
+    if (data2.message === "yes")
+      setIsCreator(true);
+    else
+      setIsCreator(false);
+
+  }
+
+
+  // TODO: Consider a better way to handle this, as it will be making an api call every time the user
+  // opens their profile page. 
+
+  const handleClickOpen = async () => {
+
+    // Retrieve token, then feed topNavBar with information about the current user
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(config.server_url + config.paths.getUserInfo, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        "token": token
+      })
+    })
+
+    const data = await res.json()
+
+    setUser(data.user)
+    setFirstName(data.user.first_name)
+    setLastName(data.user.last_name)
+    setNewEmail(data.user.email)
+    setRoleInfo(data.user.roleID)
+
+    if (data.user.roleID === 2) {
+      setNumUsers(data.numUsers)
+      setNumCourses(data.numCourses)
+    }
+    // setData(data.storageData)
+    // alert(data.storageData.numUsers)
+    setOpenDialog(true)
+
+
+  }
+
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
+
+  const handleChanges = async () => {
+
+    if (user.email !== newEmail) {
+      if (newEmail.indexOf('@') == -1) {
+        alert('Please input a valid email format.')
+        return
+      }
+
+      if (!window.confirm("Are you sure you would like to save your changes?")) {
+        setOpenDialog(false)
+        return
+      }
+
+      const token = localStorage.getItem("token");
+
+      const res = await fetch(config.server_url + config.paths.updateUserInfo, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          "token": token,
+          "email": newEmail
         })
+      })
 
-        const data = await res.json()
-
-        if (data.message === "yes")
-            setIsAdmin(true);
-        else
-            setIsAdmin(false);
-
-        const res2 = await fetch(config.server_url + config.paths.getIsCreator, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                "token": token
-            })
-        })
-
-        const data2 = await res2.json()
-
-        if (data2.message === "yes")
-            setIsCreator(true);
-        else
-            setIsCreator(false);
+      const data = await res.json()
 
     }
+    setOpenDialog(false);
+  }
 
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
 
-    // TODO: Consider a better way to handle this, as it will be making an api call every time the user
-    // opens their profile page. 
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
 
-    const handleClickOpen = async () => {
+  const logout = () => {
+    // alert("you are now signing out")
+    // props.history.push(`/login`)
+    localStorage.clear()
+    sessionStorage.clear()
+  }
 
-        // Retrieve token, then feed topNavBar with information about the current user
-        const token = localStorage.getItem("token");
+  const handleOpenDialog = () => {
+    setLoggingout(true);
+  }
 
-        const res = await fetch(config.server_url + config.paths.getUserInfo, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                "token": token
-            })
-        })
+  const handleCloseDialog = () => {
+    setLoggingout(false);
+  };
 
-        const data = await res.json()
-
-        setUser(data.user)
-        setFirstName(data.user.first_name)
-        setLastName(data.user.last_name)
-        setNewEmail(data.user.email)
-        setRoleInfo(data.user.roleID)
-
-        if (data.user.roleID === 2) {
-            setNumUsers(data.numUsers)
-            setNumCourses(data.numCourses)
-        }
-        // setData(data.storageData)
-        // alert(data.storageData.numUsers)
-        setOpenDialog(true)
-
-
-    }
-
-    const handleClose = () => {
-        setOpenDialog(false);
-    };
-
-    const handleChanges = async () => {
-
-        if (user.email !== newEmail) {
-            if (newEmail.indexOf('@') == -1) {
-                alert('Please input a valid email format.')
-                return
-            }
-
-            if (!window.confirm("Are you sure you would like to save your changes?")) {
-                setOpenDialog(false)
-                return
-            }
-
-            const token = localStorage.getItem("token");
-
-            const res = await fetch(config.server_url + config.paths.updateUserInfo, {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "token": token,
-                    "email": newEmail
-                })
-            })
-
-            const data = await res.json()
-
-        }
-        setOpenDialog(false);
-    }
-
-    const handleDrawerOpen = () => {
-        setOpen(true);
-    };
-
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
-
-    const logout = () => {
-        // alert("you are now signing out")
-        // props.history.push(`/login`)
-        localStorage.clear()
-        sessionStorage.clear()
-    }
-
-    const handleOpenDialog = () => {
-        setLoggingout(true);
-    }
-
-    const handleCloseDialog = () => {
-        setLoggingout(false);
-    };
-
-    return (
-        <div className={classes.root}>
-            <AppBar
-                // variant="permanent"
-                position="fixed"
-                className={clsx(classes.appBar, {
-                    [classes.appBarShift]: open,
+  return (
+    <div className={classes.root}>
+      <AppBar
+        // variant="permanent"
+        position="fixed"
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: open,
+        })}
+      >
+        <Toolbar>
+          {props.hideComponents !== true ?
+            <>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+                className={clsx(classes.menuButton, {
+                  [classes.hide]: open,
                 })}
             >
-                <Toolbar>
-                    {props.hideComponents !== true ?
-                        <>
-                            <IconButton
-                                color="inherit"
-                                aria-label="open drawer"
-                                onClick={handleDrawerOpen}
-                                edge="start"
-                                className={clsx(classes.menuButton, {
-                                    [classes.hide]: open,
-                                })}
-                            >
+               
                                 <MenuIcon style={{ color: "white" }}></MenuIcon>
                             </IconButton>
                             {window.location.pathname === "/dashboard" ||
@@ -890,113 +891,111 @@ export default function TopNavBar(props) {
                 </Toolbar>
             </AppBar>
 
-            {props.hideComponents !== true ?
-                <Drawer
-                    variant="permanent"
-                    className={clsx(classes.drawer, {
-                        [classes.drawerOpen]: open,
-                        [classes.drawerClose]: !open,
-                    })}
-                    classes={{
-                        paper: clsx({
-                            [classes.drawerOpen]: open,
-                            [classes.drawerClose]: !open,
-                        }),
-                    }}
-                >
-                    <div className={classes.toolbar}>
-                        <IconButton onClick={handleDrawerClose}>
-                            <ChevronLeftIcon />
-                        </IconButton>
-                    </div>
-                    <Divider />
-                    <List>
+  
+      {props.hideComponents !== true ?
+        <Drawer
+          variant="permanent"
+          className={clsx(classes.drawer, {
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open,
+          })}
+          classes={{
+            paper: clsx({
+              [classes.drawerOpen]: open,
+              [classes.drawerClose]: !open,
+            }),
+          }}
+        >
+          <div className={classes.toolbar}>
+            <IconButton onClick={handleDrawerClose}>
+              <ChevronLeftIcon />
+            </IconButton>
+          </div>
+          <Divider />
+          <List>
 
-                        {isCreator &&
-                            <Link href="/newCourse" underline='none' color="inherit">
-                                <Tooltip title="Create Course" enterDelay={500}>
-                                    <ListItem button>
-                                        <ListItemIcon><PostAddIcon /></ListItemIcon>
-                                        <ListItemText primary="Create Course" />
-                                    </ListItem>
-                                </Tooltip>
-                            </Link>
-                        }
+            {isCreator &&
+              <Link href="/newCourse" underline='none' color="inherit">
+                <Tooltip title="Create Course" enterDelay={500}>
+                  <ListItem button>
+                    <ListItemIcon><PostAddIcon /></ListItemIcon>
+                    <ListItemText primary="Create Course" />
+                  </ListItem>
+                </Tooltip>
+              </Link>
+            }
 
-                        <Link href="/MyCourses" underline='none' color="inherit">
-                            <Tooltip title="My Courses" enterDelay={500}>
-                                <ListItem button>
-                                    <ListItemIcon><MenuBookIcon /></ListItemIcon>
-                                    <ListItemText primary="My Courses" />
-                                </ListItem>
-                            </Tooltip>
-                        </Link>
+            <Link href="/MyCourses" underline='none' color="inherit">
+              <Tooltip title="My Courses" enterDelay={500}>
+                <ListItem button>
+                  <ListItemIcon><MenuBookIcon /></ListItemIcon>
+                  <ListItemText primary="My Courses" />
+                </ListItem>
+              </Tooltip>
+            </Link>
 
-                        <Link href="/MyFiles" underline='none' color="inherit">
-                            <Tooltip title="My Files" enterDelay={500}>
-                                <ListItem button>
-                                    <ListItemIcon><DescriptionIcon /></ListItemIcon>
-                                    <ListItemText primary="My Files" />
-                                </ListItem>
-                            </Tooltip>
-                        </Link>
+            <Link href="/MyFiles" underline='none' color="inherit">
+              <Tooltip title="My Files" enterDelay={500}>
+                <ListItem button>
+                  <ListItemIcon><DescriptionIcon /></ListItemIcon>
+                  <ListItemText primary="My Files" />
+                </ListItem>
+              </Tooltip>
+            </Link>
 
-                        {isAdmin &&
-                            <Tooltip title="Admin Dashboard" enterDelay={500}>
-                                <Link href="/admindashboard" underline='none' color="inherit">
-                                    <ListItem button>
-                                        <ListItemIcon><VerifiedUserIcon /></ListItemIcon>
-                                        <ListItemText primary="Admin Dashboard" />
-                                    </ListItem>
-                                </Link>
-                            </Tooltip>
-                        }
+            {isAdmin &&
+              <Tooltip title="Admin Dashboard" enterDelay={500}>
+                <Link href="/admindashboard" underline='none' color="inherit">
+                  <ListItem button>
+                    <ListItemIcon><VerifiedUserIcon /></ListItemIcon>
+                    <ListItemText primary="Admin Dashboard" />
+                  </ListItem>
+                </Link>
+              </Tooltip>
+            }
 
-                        {/* <Tooltip title="Calendar" enterDelay={500}>*/}
-                        {isCreator &&
-                            <Link href="/ManageMyCourses" underline='none' color="inherit">
-                                <Tooltip title="My Created Courses" enterDelay={500}>
-                                    <ListItem button>
-                                        <ListItemIcon><BookOutlinedIcon /></ListItemIcon>
-                                        <ListItemText primary="My Created Courses" />
-                                    </ListItem>
-                                </Tooltip>
-                            </Link>
-                        }
-                        <Link onClick={handleOpenDialog} underline='none' color="inherit" >
-                            <Tooltip title="Log out" enterDelay={500}>
-                                <ListItem button>
-                                    <ListItemIcon><ExitToAppIcon /></ListItemIcon>
-                                    <ListItemText primary="Log out" />
-                                </ListItem>
-                            </Tooltip>
-                        </Link>
-                        <div className={classes.dialog}>
-                            <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" open={loggingout}>
-                                <div className={classes.dialogTitleDiv}>
-                                    <DialogTitle id="customized-dialog-title" className={classes.logoutDialogTitle} onClose={handleCloseDialog}>
-                                        Are you sure you wish to log out of your account?
-                                    </DialogTitle>
-                                </div>
-                                <DialogContent className={classes.dialogContent}>
-                                    <Button href='\' type='submit' size="small" color="inherit" variant="contained" onClick={logout}>
-                                        Yes
-                                    </Button>
-                                    <Button type='submit' size="small" color="inherit" variant="contained" onClick={handleCloseDialog}>
-                                        No
-                                    </Button>
-                                </DialogContent>
-                            </Dialog>
-                        </div>
-                    </List>
-                </Drawer>
-                : null}
-        </div>
-
-
+            {/* <Tooltip title="Calendar" enterDelay={500}>*/}
+            {isCreator &&
+              <Link href="/ManageMyCourses" underline='none' color="inherit">
+                <Tooltip title="My Created Courses" enterDelay={500}>
+                  <ListItem button>
+                    <ListItemIcon><BookOutlinedIcon /></ListItemIcon>
+                    <ListItemText primary="My Created Courses" />
+                  </ListItem>
+                </Tooltip>
+              </Link>
+            }
+            <Link onClick={handleOpenDialog} underline='none' color="inherit" >
+              <Tooltip title="Log out" enterDelay={500}>
+                <ListItem button>
+                  <ListItemIcon><ExitToAppIcon /></ListItemIcon>
+                  <ListItemText primary="Log out" />
+                </ListItem>
+              </Tooltip>
+            </Link>
+            <div className={classes.dialog}>
+              <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" open={loggingout}>
+                <div className={classes.dialogTitleDiv}>
+                  <DialogTitle id="customized-dialog-title" className={classes.logoutDialogTitle} onClose={handleCloseDialog}>
+                    Are you sure you wish to log out of your account?
+                  </DialogTitle>
+                </div>
+                <DialogContent className={classes.dialogContent}>
+                  <Button href='\' type='submit' size="small" color="inherit" variant="contained" onClick={logout}>
+                    Yes
+                  </Button>
+                  <Button type='submit' size="small" color="inherit" variant="contained" onClick={handleCloseDialog}>
+                    No
+                  </Button>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </List>
+        </Drawer>
+        : null}
+    </div>
 
 
-    )
+  )
 
 }
-
