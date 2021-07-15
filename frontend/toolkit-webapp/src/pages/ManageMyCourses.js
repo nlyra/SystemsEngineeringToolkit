@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Card, CardActions, Container, CssBaseline, Divider, makeStyles, TextField, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
-import '../css/dashboard.css'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 // import Pagination from '@material-ui/lab/Pagination'
@@ -32,13 +31,16 @@ const ManageMyCourses = (props) => {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "search_query": query})
+            body: JSON.stringify({ "token": token, "search_query": query })
         })
         // }
 
 
         const data = await res.json()
-        
+
+        if (data.newToken != undefined)
+            localStorage.setItem("token", data.newToken)
+
         if (data.message === "unauthorized") {
             props.history.push('dashboard');
         } else if (data.message === undefined) {
@@ -55,8 +57,7 @@ const ManageMyCourses = (props) => {
         }
     }
 
-    const deleteCourse = async (id) => 
-    {
+    const deleteCourse = async (id) => {
         let res = undefined
         const token = localStorage.getItem("token");
 
@@ -65,20 +66,23 @@ const ManageMyCourses = (props) => {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ "token": token, "courseID": id})
+            body: JSON.stringify({ "token": token, "courseID": id })
         })
 
         const data = await res.json()
-        
+
+        if (data.newToken != undefined)
+            localStorage.setItem("token", data.newToken)
+
         if (data.message === "unauthorized") {
             props.history.push('dashboard');
-        } 
+        }
         // This splits the array correctly and updates courses array with courses the user is still enrolled in
         // const newVal = courses.filter((courses) => courses._id !== id);
         // setCourses(newVal)
-        
+
         // window.location.reload()
-        
+
     }
 
 
@@ -91,16 +95,16 @@ const ManageMyCourses = (props) => {
         <div className={classes.div}>
             <TopNavBar
                 search={loadCourses}
-                // page={page}
+            // page={page}
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
-            <Grid container spacing={3}>
-                <div className={classes.header}>
-                <h1>
-                    Manage My Courses
-                </h1>
-                </div>
+                <Grid container spacing={3}>
+                    <div className={classes.header}>
+                        <h1>
+                            Manage My Courses
+                        </h1>
+                    </div>
                 </Grid>
                 <Divider className={classes.divider} />
                 <div className='modules'>
@@ -131,16 +135,16 @@ const ManageMyCourses = (props) => {
                                     </Grid>
                                 </Card>
 
-                             {/* TODO: Figure out a way to reload the page without simply linking back to the same page.  */}
+                                {/* TODO: Figure out a way to reload the page without simply linking back to the same page.  */}
 
-                                <Link href="/ManageMyCourses" underline='none' color="inherit"> 
-                                <div className={classes.buttonDiv}>
-                                    <Button type='submit' className={classes.removeButton} size= "small" color="inherit" variant="contained" onClick={() => {if (window.confirm('Are you sure you wish to delete this course permanently?'))  deleteCourse(course._id) }}>
-                                    Remove Course
-                                    </Button>
+                                <Link href="/ManageMyCourses" underline='none' color="inherit">
+                                    <div className={classes.buttonDiv}>
+                                        <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick={() => { if (window.confirm('Are you sure you wish to delete this course permanently?')) deleteCourse(course._id) }}>
+                                            Remove Course
+                                        </Button>
                                     </div>
-                                </Link> 
-                                
+                                </Link>
+
                             </Grid>
 
                         ))}

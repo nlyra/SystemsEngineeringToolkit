@@ -13,6 +13,7 @@
     "enrollment": "/v0/courses/course/enrollment",
     "myCourses": "/v0/courses/myCoursesInfo",
     "fileUpload": "/v0/upload/single",
+    "moduleFileUpload": "/v0/upload/singleModuleFile",
     "removeFile": "/v0/courses/removeFile",
     "updateCourseInfo": "/v0/courses/course/update",
     "sendScore": "/v0/courses/module/score",
@@ -35,7 +36,9 @@
     "getCoursesSearch": "/v0/admin/courses/search",
     "getCategoriesSearch": "/v0/admin/categories/search",
     "getUserInfo": "/v0/settings/userInfo",
+    "updateUserInfo": "/v0/settings/updateUserInfo",
     "getIsAdmin": "/v0/auth/isadmin",
-    "getIsCreator": "/v0/auth/iscreator"
+    "getIsCreator": "/v0/auth/iscreator",
+    "changeEnabled": "/v0/courses/isenabled"
   }
 }
