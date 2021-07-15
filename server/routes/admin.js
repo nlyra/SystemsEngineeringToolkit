@@ -15,7 +15,11 @@ router.post('/users', VerifyToken, GetRole, async (req, res) => {
     }
 
     const users = await User.find({}, '_id first_name last_name email roleID');
-    res.json({ 'users': users });
+
+    if (req.body.newToken != undefined)
+      res.json({ 'users': users, "newToken": req.body.newToken });
+    else
+      res.json({ 'users': users });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -30,7 +34,11 @@ router.post('/courses', VerifyToken, GetRole, async (req, res) => {
     }
 
     const courses = await Course.find({}, '_id name totalStudents author totalCompletedStudents currStudents isEnabled');
-    res.json({ 'courses': courses });
+
+    if (req.body.newToken != undefined)
+      res.json({ 'courses': courses, "newToken": req.body.newToken });
+    else
+      res.json({ 'courses': courses });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -45,7 +53,11 @@ router.post('/categories', VerifyToken, GetRole, async (req, res) => {
     }
 
     const categories = await Category.find({});
-    res.json({ 'categories': categories });
+
+    if (req.body.newToken != undefined)
+      res.json({ 'categories': categories, "newToken": req.body.newToken });
+    else
+      res.json({ 'categories': categories });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -59,7 +71,11 @@ router.delete('/user', VerifyToken, GetRole, async (req, res) => {
       return
     }
     const user = await User.deleteOne({ _id: req.body.deleteID })
-    res.json({ 'status': "success" });
+
+    if (req.body.newToken != undefined)
+      res.json({ 'status': "success", "newToken": req.body.newToken });
+    else
+      res.json({ 'status': "success" });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -77,7 +93,11 @@ router.post('/userRole', VerifyToken, GetRole, async (req, res) => {
       {
         $set: { roleID: req.body.updateValue }
       });
-    res.json({ 'status': "success" });
+
+    if (req.body.newToken != undefined)
+      res.json({ 'status': "success", "newToken": req.body.newToken });
+    else
+      res.json({ 'status': "success" });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -100,6 +120,11 @@ router.delete('/course', VerifyToken, GetRole, async (req, res) => {
 
     fs.rmdirSync('public/' + req.body.deleteID, { recursive: true });
 
+
+    if (req.body.newToken != undefined)
+      res.json({ 'status': "success", "newToken": req.body.newToken });
+    else
+      res.json({ 'status': "success" });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -114,7 +139,11 @@ router.delete('/category', VerifyToken, GetRole, async (req, res) => {
     }
 
     const category = await Category.deleteOne({ _id: req.body.deleteID })
-    res.json({ 'status': "success" });
+
+    if (req.body.newToken != undefined)
+      res.json({ 'status': "success", "newToken": req.body.newToken });
+    else
+      res.json({ 'status': "success" });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -138,7 +167,11 @@ router.post('/users/search', VerifyToken, GetRole, async (req, res) => {
         { "email": { "$regex": query, $options: 'i' } },
       ]
     }, '_id first_name last_name email roleID');
-    res.json({ 'users': users });
+
+    if (req.body.newToken != undefined)
+      res.json({ 'users': users, "newToken": req.body.newToken });
+    else
+      res.json({ 'users': users });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -162,7 +195,11 @@ router.post('/courses/search', VerifyToken, GetRole, async (req, res) => {
 
       ]
     }, '_id name totalStudents author totalCompletedStudents currStudents isEnabled');
-    res.json({ 'courses': courses });
+
+    if (req.body.newToken != undefined)
+      res.json({ 'courses': courses, "newToken": req.body.newToken });
+    else
+      res.json({ 'courses': courses });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -184,7 +221,11 @@ router.post('/categories/search', VerifyToken, GetRole, async (req, res) => {
         { "label": { "$regex": query, $options: 'i' } },
       ]
     });
-    res.json({ 'categories': categories });
+
+    if (req.body.newToken != undefined)
+      res.json({ 'categories': categories, "newToken": req.body.newToken });
+    else
+      res.json({ 'categories': categories });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
