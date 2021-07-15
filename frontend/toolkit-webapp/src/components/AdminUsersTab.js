@@ -16,6 +16,8 @@ import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
+import dialogStyles from '../styles/dialogStyle'
+import DialogComponent from '../components/DialogComponent'
 
 const columns = [
   { id: '_id', label: 'Id' },
@@ -59,13 +61,23 @@ const useStyles = makeStyles({
 
 const AdminUsersTab = (props) => {
   const classes = useStyles();
+  const dialogClasses = dialogStyles()
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState([]);
+  const [dialogText, setDialogText] = useState('')
+  const [openDialog, setOpenDialog] = useState(false);
 
   // function that will run when page is loaded
   useEffect(() => {
     getUsers()
   }, []);
+
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    }
 
   const getUsers = async () => {
     const token = localStorage.getItem("token");
@@ -89,8 +101,10 @@ const AdminUsersTab = (props) => {
       setUsers(data.users)
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
+      // alert the user
+      setDialogText("Unauthorized access. Please contact your system administrator.")
+      handleOpenDialog()
       props.history.push('login');
-      // probably alert the user
     } else { // this is to check if there are errors not being addressed already
       console.log(data)
     }
@@ -120,8 +134,10 @@ const AdminUsersTab = (props) => {
       setUsers(data.users)
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
+      // alert the user
+      setDialogText("Unauthorized access. Please contact your system administrator.")
+      handleOpenDialog()
       props.history.push('login');
-      // probably alert the user
     } else { // this is to check if there are errors not being addressed already
       console.log(data)
     }
@@ -150,8 +166,10 @@ const AdminUsersTab = (props) => {
       // alert(`Successfully deleted user`)
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
+      // alert the user
+      setDialogText("Unauthorized access. Please contact your system administrator.")
+      handleOpenDialog()
       props.history.push('login');
-      // probably alert the user
     } else { // this is to check if there are errors not being addressed already
       console.log(data)
     }
@@ -179,6 +197,9 @@ const AdminUsersTab = (props) => {
       // localStorage.setItem("tab", 0);
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
+      // alert the user
+      setDialogText("Unauthorized access. Please contact your system administrator.")
+      handleOpenDialog()
       props.history.push('login');
       // probably alert the user
     } else { // this is to check if there are errors not being addressed already
@@ -269,6 +290,14 @@ const AdminUsersTab = (props) => {
           </Table>
         </TableContainer>
       </Paper>
+      <DialogComponent
+        open={openDialog}
+        text={dialogText}
+        onClose={handleCloseDialog}
+        buttons={[
+            {text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog}
+        ]}
+      />
     </div>
   );
 }

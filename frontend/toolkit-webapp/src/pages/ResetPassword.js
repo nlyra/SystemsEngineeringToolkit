@@ -6,6 +6,8 @@ import TopNavBar from '../components/TopNavBar'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Avatar from '@material-ui/core/Avatar';
 import videoSource from '../img/PEOSTRI.mp4'
+import dialogStyles from '../styles/dialogStyle'
+import DialogComponent from '../components/DialogComponent'
 import jwt_decode from "jwt-decode";
 
 function ResetPassword(props) {
@@ -13,8 +15,11 @@ function ResetPassword(props) {
     const [password, setPassword] = useState('')
     const [passwordCopy, setPasswordCopy] = useState('')
     const [tokenProp, setTokenProp] = useState('')
+    const [dialogText, setDialogText] = useState('')
+    const [openDialog, setOpenDialog] = useState(false);
 
     const classes = loginStyles()
+    const dialogClasses = dialogStyles()
 
     useEffect(() => {
         const pathname = window.location.pathname.split('/') //returns the current path
@@ -25,6 +30,13 @@ function ResetPassword(props) {
         setTokenProp(resetToken)
 
     }, []);
+
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    }
 
     const checkCreds = async (resetToken) => {
 
@@ -53,13 +65,17 @@ function ResetPassword(props) {
     const onSubmit = (e) => {
         e.preventDefault()
         if (!password || !passwordCopy) {
-            alert('Please fill in both blanks')
+            setDialogText("Please fill in both password text fields.")
+            handleOpenDialog()
+            //alert('Please fill in both blanks')
             return
         }
 
         if(password !== passwordCopy)
         {
-            alert('Passwords must match!')
+            setDialogText("Passwords must match!")
+            handleOpenDialog()
+            //alert('Passwords must match!')
             return
         }
 
@@ -88,7 +104,9 @@ function ResetPassword(props) {
         }
         else
         {
-            alert('Something went wrong! Try inputting your new password again')
+            setDialogText("Something went wrong! Try inputting your new password again or contact your system administrator.")
+            handleOpenDialog()
+            //alert('Something went wrong! Try inputting your new password again')
             return
         }
        
@@ -156,6 +174,14 @@ function ResetPassword(props) {
                     </form>
                 </div>
             </div>
+            <DialogComponent
+                open={openDialog}
+                text={dialogText}
+                onClose={handleCloseDialog}
+                buttons={[
+                    { text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog }
+                ]}
+            />
         </div>
         
     )

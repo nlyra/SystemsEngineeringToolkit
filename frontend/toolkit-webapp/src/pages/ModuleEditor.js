@@ -10,6 +10,8 @@ import QuizCreator from '../components/QuizCreatorModule'
 import VideoCreator from '../components/VideoCreatorModule'
 import PDFCreator from '../components/PDFCreatorModule'
 import FileCreator from '../components/FileCreatorModule'
+import dialogStyles from '../styles/dialogStyle'
+import DialogComponent from '../components/DialogComponent'
 
 function ModuleEditor(props) {
 
@@ -20,11 +22,21 @@ function ModuleEditor(props) {
     const [description, setDescription] = useState(module.description)
     const [courseID, setCourseID] = useState('')
     const [gradeToPass, setGradeToPass] = useState(module.gradeToPass)
+    const [dialogText, setDialogText] = useState('')
+    const [openDialog, setOpenDialog] = useState(false);
 
     const classes = useStyles()
+    const dialogClasses = dialogStyles()
     const [file, setFile] = useState()
     const [video, setVideo] = useState()
     const [pdf, setPDF] = useState()
+
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    }
 
     function getExtention(filename) {
         var parts = filename.split('.');
@@ -79,7 +91,9 @@ function ModuleEditor(props) {
     const onSubmit = (e) => {
         e.preventDefault()
         if (!title || !type || !description) {
-            alert('Please enter all required fields')
+            setDialogText("Please enter all required fields.")
+            handleOpenDialog()
+            //alert('Please enter all required fields')
             return
         }
 
@@ -90,9 +104,11 @@ function ModuleEditor(props) {
             quiz = JSON.parse(sessionStorage.getItem("quiz"))
             sessionStorage.clear()
             onFinish({ title, type, description, quiz, gradeToPass })
-        } else if (type === 'PDF' && pdf !== null && typeof (pdf) !== 'undefined') {
-            if (isPDF(pdf.name) === false) {
-                alert("File must be a PDF")
+        }else if(type === 'PDF' && pdf !== null && typeof(pdf) !== 'undefined'){
+            if(isPDF(pdf.name) === false){
+                setDialogText("File must be a PDF")
+                handleOpenDialog()
+                //alert("File must be a PDF")
             } else {
                 console.log('works for PDF')
                 onFinish({ title, type, description, pdf })
@@ -100,10 +116,12 @@ function ModuleEditor(props) {
         } else if (type === 'File' && file !== null && typeof (file) !== 'undefined') {
             console.log('works for File')
             onFinish({ title, type, description, file })
-
-        } else if (type === 'Video' && video !== null && typeof (video) !== 'undefined') {
-            if (isVideo(video.name) === false) {
-                alert("File must be a video")
+            
+        }else if(type === 'Video' && video !== null && typeof(video) !== 'undefined'){
+            if(isVideo(video.name) === false){
+                setDialogText("File must be a video.")
+                handleOpenDialog()
+                //alert("File must be a video")
             } else {
                 console.log('works for Video')
                 onFinish({ title, type, description, video })
@@ -113,7 +131,9 @@ function ModuleEditor(props) {
             onFinish({ title, type, description })
         }
         else {
-            alert("Please attach proper file corresponding to module type.")
+            setDialogText("Please attach proper file corresponding to module type.")
+            handleOpenDialog()
+            //alert("Please attach proper file corresponding to module type.")
         }
     }
 
@@ -160,7 +180,9 @@ function ModuleEditor(props) {
 
                 // Input contains non-alphanumeric values so we must alert the user to rename the file 
                 if (isValid === false) {
-                    alert('Invalid file type. Please upload a PDF for which name is alphanumeric and has no spaces.')
+                    setDialogText("Invalid file type. Please upload a PDF for which name is alphanumeric and has no spaces.")
+                    handleOpenDialog()
+                    //alert('Invalid file type. Please upload a PDF for which name is alphanumeric and has no spaces.')
                     return
                 }
 
@@ -216,7 +238,9 @@ function ModuleEditor(props) {
 
                 // Input contains non-alphanumeric values so we must alert the user to rename the file 
                 if (isValid === false) {
-                    alert('Invalid file type. Please upload a file for which name is alphanumeric and has no spaces.')
+                    setDialogText("Invalid file type. Please upload a file for which name is alphanumeric and has no spaces.")
+                    handleOpenDialog()
+                    //alert('Invalid file type. Please upload a file for which name is alphanumeric and has no spaces.')
                     return
                 }
 
@@ -271,7 +295,9 @@ function ModuleEditor(props) {
 
                 // Input contains non-alphanumeric values so we must alert the user to rename the file 
                 if (isValid === false) {
-                    alert('Invalid file type. Please upload a video for which name is alphanumeric and has no spaces.')
+                    setDialogText("Invalid file type. Please upload a video for which name is alphanumeric and has no spaces.")
+                    handleOpenDialog()
+                    //alert('Invalid file type. Please upload a video for which name is alphanumeric and has no spaces.')
                     return
                 }
 
@@ -311,7 +337,7 @@ function ModuleEditor(props) {
                     if (data2.message === "unauthorized") {
                         props.history.push('dashboard');
                     } else if (data2.status === 'Success') {
-                        alert("Successfully Edited video module")
+                        alert("Successfully Edited video module.")
                         props.history.push('/course/' + courseID)
                     } //else need to do something, not sure what rn
                 } else { // this is to check if there are errors not being addressed already
@@ -336,7 +362,7 @@ function ModuleEditor(props) {
                 if (data.message === "unauthorized") {
                     props.history.push('dashboard');
                 } else if (data.message === undefined) {
-                    alert('worked')
+                    alert('Success.')
                     props.history.push('/course/' + courseID)
                 }
                 else { // this is to check if there are errors not being addressed already
@@ -423,6 +449,14 @@ function ModuleEditor(props) {
                     </form>
                 </div>
             </Container>
+            <DialogComponent
+                open={openDialog}
+                text={dialogText}
+                onClose={handleCloseDialog}
+                buttons={[
+                    { text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog }
+                ]}
+            />
         </div>
     )
 }

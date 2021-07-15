@@ -6,12 +6,24 @@ import TopNavBar from '../components/TopNavBar'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Avatar from '@material-ui/core/Avatar';
 import videoSource from '../img/PEOSTRI.mp4'
+import dialogStyles from '../styles/dialogStyle'
+import DialogComponent from '../components/DialogComponent'
 
 function Login(props) {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [dialogText, setDialogText] = useState('')
+    const [openDialog, setOpenDialog] = useState(false);
     const classes = loginStyles()
+    const dialogClasses = dialogStyles()
+
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    }
 
     const onRegister = (e) => {
         props.history.push('registration');
@@ -23,7 +35,9 @@ function Login(props) {
     const onSubmit = (e) => {
         e.preventDefault()
         if (!email || !password) {
-            alert('Please enter Email and Password')
+            setDialogText("Please enter both email and password.")
+            handleOpenDialog()
+            //alert('Please enter Email and Password')
             return
         }
         onLogin({ email, password })
@@ -47,7 +61,9 @@ function Login(props) {
             props.history.push('dashboard')
 
         } else if (data.message === "wrong email or password") {
-            alert("Wrong email or password, please try again.");
+            setDialogText("Wrong email or password, please try again or recover password.")
+            handleOpenDialog()
+            //alert("Wrong email or password, please try again.");
         } else { // this is to check if there are errors not being addressed already
             console.log(data)
         }
@@ -115,6 +131,14 @@ function Login(props) {
                     </form>
                 </div>
             </div>
+            <DialogComponent
+                open={openDialog}
+                text={dialogText}
+                onClose={handleCloseDialog}
+                buttons={[
+                    { text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog }
+                ]}
+            />
         </div>
         
     )

@@ -4,6 +4,8 @@ import useStyles from '../styles/moduleStyle'
 import { Delete, Edit, ArrowUpward, ArrowDownward } from '@material-ui/icons'
 import MultipleChoice from '../components/MultipleChoiceCreator'
 import TorF from '../components/TrueOrFalseCreator'
+import dialogStyles from '../styles/dialogStyle'
+import DialogComponent from '../components/DialogComponent'
 
 
 var questions = {
@@ -24,6 +26,11 @@ const QuizCreator = (props) => {
     const [open, setOpen] = React.useState(false)
     const [editOpen, setEdit] = React.useState(false)
     const [selected, setSelected] = React.useState([]);
+    const [dialogText, setDialogText] = useState('')
+    const [openDialog, setOpenDialog] = useState(false);
+
+    const classes = useStyles()
+    const dialogClasses = dialogStyles()
 
     sessionStorage.setItem('editing', '')
 
@@ -34,7 +41,12 @@ const QuizCreator = (props) => {
         }
     }, []);
 
-    const classes = useStyles()
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
 
     const isSelected = (question) => selected.indexOf(question) !== -1
 
@@ -49,11 +61,17 @@ const QuizCreator = (props) => {
         }
 
         if (type === '') {
-            alert("Select a question type")
+            setDialogText("Select a question type")
+            handleOpenDialog()
+            //alert("Select a question type")
         } else if (questions.question === '' || questions.answers[0].answerText === '') {
-            alert("Requires a question and an answer.")
+            setDialogText("Requires a question and an answer.")
+            handleOpenDialog()
+            //alert("Requires a question and an answer.")
         } else if (dup === 1) {
-            alert("No Duplicate questions")
+            setDialogText("No duplicate questions allowed.")
+            handleOpenDialog()
+            //alert("No Duplicate questions")
         } else {
             quiz.push(questions)
 
@@ -99,9 +117,13 @@ const QuizCreator = (props) => {
 
     const handleUp = () => {
         if (selected.length > 1) {
-            alert("Select only one question.")
+            setDialogText("Please select only one question at a time.")
+            handleOpenDialog()
+            //alert("Select only one question.")
         } else if (selected.length < 1) {
-            alert("Please select a question.")
+            setDialogText("Please make a question selection.")
+            handleOpenDialog()
+            //alert("Please select a question.")
         } else {
             for (var i = 0; i < quiz.length; i++) {
                 if (isSelected(quiz[i].question)) {
@@ -119,9 +141,13 @@ const QuizCreator = (props) => {
 
     const handleDown = () => {
         if (selected.length > 1) {
-            alert("Select only one question.")
+            setDialogText("Please select only one question.")
+            handleOpenDialog()
+            //alert("Select only one question.")
         } else if (selected.length < 1) {
-            alert("Please select a question.")
+            setDialogText("Please make a question selection.")
+            handleOpenDialog()
+            //alert("Please select a question.")
         } else {
             for (var i = 0; i < quiz.length; i++) {
                 if (isSelected(quiz[i].question)) {
@@ -140,9 +166,13 @@ const QuizCreator = (props) => {
     const handleEdit = () => {
         sessionStorage.setItem('editing', 'yes')
         if (selected.length > 1) {
-            alert("Select only one question.")
+            setDialogText("Please select only one question.")
+            handleOpenDialog()
+            //alert("Select only one question.")
         } else if (selected.length < 1) {
-            alert("Please select a question.")
+            setDialogText("Please make a question selection.")
+            handleOpenDialog()
+            //alert("Please select a question.")
         } else {
             for (var i = 0; i < quiz.length; i++) {
                 if (isSelected(quiz[i].question)) {
@@ -169,9 +199,13 @@ const QuizCreator = (props) => {
         }
 
         if (questions.question === '' || questions.answers[0].answerText === '') {
-            alert('Ensure there is a question and an Answer.')
+            setDialogText("Please ensure that there is both a question and an answer.")
+            handleOpenDialog()
+            //alert('Ensure there is a question and an Answer.')
         } else if (dup === 1 && check !== parseInt(sessionStorage.getItem('index'))) {
-            alert('No Duplicate Questions')
+            setDialogText("No duplicate questions allowed.")
+            handleOpenDialog()
+            //alert('No Duplicate Questions')
         } else {
             for (i = 0; i < quiz.length; i++) {
                 if (isSelected(quiz[i].question)) {
@@ -403,6 +437,14 @@ const QuizCreator = (props) => {
                     </Button>
                 </DialogActions>
             </Dialog>
+            <DialogComponent
+                open={openDialog}
+                text={dialogText}
+                onClose={handleCloseDialog}
+                buttons={[
+                    { text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog }
+                ]}
+            />
         </div>
     )
 }

@@ -175,7 +175,7 @@ router.post('/info', VerifyToken, async (req, res) => {
 
   try {
     let courses = []
-    let totalCourses = await Course.find().countDocuments()
+    let totalCourses = await Course.find({isEnabled: true}).countDocuments()
 
     if (req.body.search_query != undefined) {
       const query = req.body.search_query;
@@ -192,7 +192,7 @@ router.post('/info', VerifyToken, async (req, res) => {
       else
         res.json({ "status": "search", "courses": courses, "totalCourses": totalCourses });
     } else {
-      courses = await Course.find({}, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
+      courses = await Course.find({isEnabled: true}, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
 
       if (req.body.newToken != undefined)
         res.json({ "status": "loading", "courses": courses, "totalCourses": totalCourses, "newToken": req.body.newToken });
@@ -409,7 +409,6 @@ router.post('/deleteCreatedCourse', VerifyToken, GetRole, async (req, res) => {
 
     fs.rmdirSync('public/' + req.body.courseID, { recursive: true });
 
-
     if (req.body.newToken != undefined)
       res.sendStatus(400).json({ "newToken": req.body.newToken });
     else
@@ -514,8 +513,8 @@ router.post('/module/score', VerifyToken, async (req, res) => {
 
     let courses = await User.findOne({ _id: req.body.userID }, 'coursesData');
 
-    if (courses.coursesData[0] == undefined)
-      courses.coursesData.append({})
+    // if (courses.coursesData[0] == undefined)
+    //   courses.coursesData.append({})
 
     courses = courses.coursesData[0];
     if (courses === undefined)

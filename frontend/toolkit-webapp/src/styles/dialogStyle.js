@@ -1,48 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
 
-const myCoursesStyle = makeStyles((theme) => ({
-
-    header:
-    {
-        fontSize: '20px',
-        textAlign: "center",
-        justifyContent: "center",
-        paddingLeft: "33%"
-    },
-
-    divider:
-    {
-        margin: theme.spacing(3, 3),
-        width: "100%"
-    },
-
-    div: {
-        display: 'flex'
-    },
-
-    container:
-    {
-        marginTop: theme.spacing(10)
-    },
-
-    card:
-    {
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        // marginBottom: '50px'
-    },
-
-    cardMedia:
-    {
-        paddingTop: '56.25%',
-        size: '30%'
-    },
-
-    CardContent:
-    {
-        flexGrow: 1,
-    },
+const dialogStyles = makeStyles((theme) => ({
 
     dialogComponent:
     {
@@ -92,24 +50,8 @@ const myCoursesStyle = makeStyles((theme) => ({
             color: 'white'
         },
         marginLeft: '10px'
-    },
-
-    grow:
-    {
-        flexGrow: 1
-    },
-    
-    removeButton:
-    {
-        width: "100%",
-        // marginBottom: '50px'
-    },
-
-    // buttonDiv:
-    // {
-    //     marginBottom: '50px'
-    // }
+    }
 
 }))
 
-export default myCoursesStyle;
+export default dialogStyles;
