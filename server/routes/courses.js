@@ -15,7 +15,7 @@ router.post('/course', VerifyToken, GetRole, async (req, res) => {
     let course = {}
 
     if (req.body.roleID == 1) { // course for creator
-      course = await Course.findOne({ "_id": req.body.id, "author": req.body.userID }, '_id name description urlImage modules author isEnabled skillLevel intendedAudience prerequisite');
+      course = await Course.findOne({ "_id": req.body.id, "author": req.body.userID }, '_id name description urlImage categories modules author isEnabled skillLevel intendedAudience prerequisite');
       if (course == null || course == {}) // course for students (only enabled courses)
         course = await Course.findOne({ "_id": req.body.id, "isEnabled": true }, '_id name description urlImage modules author skillLevel intendedAudience prerequisite');
     } else
@@ -82,6 +82,7 @@ router.post('/course/update', VerifyToken, GetRole, async (req, res) => {
           name: req.body.name,
           description: req.body.description,
           skillLevel: req.body.skillLevel,
+          categories: req.body.categories,
           intendedAudience: req.body.intendedAudience,
           prerequisite: req.body.prerequisite,
         }
@@ -175,7 +176,7 @@ router.post('/info', VerifyToken, async (req, res) => {
 
   try {
     let courses = []
-    let totalCourses = await Course.find().countDocuments()
+    let totalCourses = await Course.find({isEnabled: true}).countDocuments()
 
     if (req.body.search_query != undefined) {
       const query = req.body.search_query;
@@ -192,7 +193,7 @@ router.post('/info', VerifyToken, async (req, res) => {
       else
         res.json({ "status": "search", "courses": courses, "totalCourses": totalCourses });
     } else {
-      courses = await Course.find({}, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
+      courses = await Course.find({isEnabled: true}, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
 
       if (req.body.newToken != undefined)
         res.json({ "status": "loading", "courses": courses, "totalCourses": totalCourses, "newToken": req.body.newToken });
