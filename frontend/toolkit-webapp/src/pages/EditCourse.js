@@ -32,7 +32,7 @@ function EditCourse(props) {
     // as opposed to after every time the form is rendered (as long as the array at the end remains empty).
     useEffect(() => {
         getAuthorization();
-        
+
         const getOldCats = () => {
             setCategories(props.location.course.categories.map((cat) => (cat)))
         }
@@ -178,7 +178,7 @@ function EditCourse(props) {
                     if (data2.message === "unauthorized") {
                         props.history.push('dashboard');
                     } else if (data2.status === 'Success') {
-                        alert("Successfully created course!")
+                        alert("Edits have been successfully made")
                         props.history.push('/course/' + course._id) // needs to be changed to course manager
                     } //else need to do something, not sure what rn
                 }
@@ -199,13 +199,13 @@ function EditCourse(props) {
                     })
 
                 })
-                
+
                 const data2 = await res.json()
 
                 if (data2.message === "unauthorized") {
                     props.history.push('dashboard');
                 } else if (data2.status === 'Success') {
-                    alert("Successfully created course!")
+                    alert("Edits have been successfully made")
                     props.history.push('/course/' + course._id)// needs to be changed to course manager
                 } //else need to do something, not sure what rn
             }
@@ -219,7 +219,6 @@ function EditCourse(props) {
     }
 
     const onTagsChange = (event, values) => {
-        // console.log(values)
         setCategories(values)
     }
 
