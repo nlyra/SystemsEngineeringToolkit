@@ -121,12 +121,19 @@ function ModuleCreator(props) {
         }
 
         if (type === 'Quiz' && JSON.parse(sessionStorage.getItem('quiz')) !== null) {
-            console.log('works for Quiz')
-            var quiz = []
+            if(gradeToPass<1){
+                setDialogText("The number of correct answers required must be greater than 0.")
+                handleOpenDialog()
+                //alert("File must be a PDF")
+            } else{
 
-            quiz = JSON.parse(sessionStorage.getItem("quiz"))
-            sessionStorage.clear()
-            onFinish({ title, type, description, quiz })
+                console.log('works for Quiz')
+                var quiz = []
+
+                quiz = JSON.parse(sessionStorage.getItem("quiz"))
+                sessionStorage.clear()
+                onFinish({ title, type, description, quiz })
+            }
         } else if (type === 'PDF' && pdf !== null && typeof (pdf) !== 'undefined') {
             if (isPDF(pdf.name) === false) {
                 setDialogText("File must be a PDF")

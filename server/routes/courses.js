@@ -14,7 +14,7 @@ router.post('/course', VerifyToken, GetRole, async (req, res) => {
     // get course info
     let course = {}
 
-    if (req.body.roleID == 1) { // course for creator
+    if (req.body.roleID == 1 || req.body.roleID == 2) { // course for creator
       course = await Course.findOne({ "_id": req.body.id, "author": req.body.userID }, '_id name description urlImage modules author isEnabled skillLevel intendedAudience prerequisite');
       if (course == null || course == {}) // course for students (only enabled courses)
         course = await Course.findOne({ "_id": req.body.id, "isEnabled": true }, '_id name description urlImage modules author skillLevel intendedAudience prerequisite');
@@ -70,7 +70,7 @@ router.post('/course', VerifyToken, GetRole, async (req, res) => {
 
 router.post('/course/update', VerifyToken, GetRole, async (req, res) => {
   try {
-    if (req.body.roleID != 1) {
+    if (req.body.roleID != 1 && req.body.roleID != 2) {
       res.json({ message: "unauthorized" })
       return
     }
@@ -102,7 +102,7 @@ router.post('/course/update', VerifyToken, GetRole, async (req, res) => {
 
 router.post('/course/updateImage', VerifyToken, GetRole, async (req, res) => {
   try {
-    if (req.body.roleID != 1) {
+    if (req.body.roleID != 1 && req.body.roleID != 2) {
       res.json({ message: "unauthorized" })
       return
     }
@@ -210,7 +210,7 @@ router.post('/info', VerifyToken, async (req, res) => {
 router.post('/myCreatedCoursesInfo', VerifyToken, GetRole, async (req, res) => {
 
   try {
-    if (req.body.roleID != 1) {
+    if (req.body.roleID != 1 && req.body.roleID != 2) {
       res.json({ message: "unauthorized" })
       return
     }
@@ -276,7 +276,7 @@ router.post('/myCoursesInfo', VerifyToken, async (req, res) => {
 
 router.post('/create', VerifyToken, GetRole, async (req, res) => {
   try {
-    if (req.body.roleID != 1) {
+    if (req.body.roleID != 1 && req.body.roleID != 2) {
       res.json({ message: "unauthorized" })
       return
     }
@@ -358,7 +358,7 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
 
 // TODO: Need to move this to fileMulter once I figure out why it's not getting called when it sits in fileMulter
 router.post('/removeFile', VerifyToken, GetRole, async (req, res) => {
-  if (req.body.roleID != 1) {
+  if (req.body.roleID != 1 && req.body.roleID != 2) {
     res.json({ message: "unauthorized" })
     return
   }
@@ -395,7 +395,7 @@ router.post('/removeFile', VerifyToken, GetRole, async (req, res) => {
 router.post('/deleteCreatedCourse', VerifyToken, GetRole, async (req, res) => {
 
   try {
-    if (req.body.roleID != 1) {
+    if (req.body.roleID != 1 && req.body.roleID != 2) {
       res.json({ message: "unauthorized" })
       return
     }
@@ -422,7 +422,7 @@ router.post('/deleteCreatedCourse', VerifyToken, GetRole, async (req, res) => {
 })
 
 router.post('/module/create', VerifyToken, GetRole, async (req, res) => {
-  if (req.body.roleID != 1) {
+  if (req.body.roleID != 1 && req.body.roleID != 2) {
     res.json({ message: "unauthorized" })
     return
   }
@@ -604,7 +604,7 @@ router.post('/module/score', VerifyToken, async (req, res) => {
 
 router.post('/module/update', VerifyToken, GetRole, async (req, res) => {
   
-  if (req.body.roleID != 1) {
+  if (req.body.roleID != 1 && req.body.roleID != 2) {
     res.json({ message: "unauthorized" })
     return
   }
@@ -693,7 +693,7 @@ router.post('/module/update', VerifyToken, GetRole, async (req, res) => {
 router.post('/module/delete', VerifyToken, GetRole, async (req, res) => {
 
   try {
-    if (req.body.roleID != 1) {
+    if (req.body.roleID != 1 && req.body.roleID != 2) {
       res.json({ message: "unauthorized" })
       return
     }
@@ -717,7 +717,7 @@ router.post('/module/delete', VerifyToken, GetRole, async (req, res) => {
 router.post('/isenabled', VerifyToken, GetRole, async (req, res) => {
 
   try {
-    if (req.body.roleID != 1) {
+    if (req.body.roleID != 1 && req.body.roleID != 2) {
       res.json({ message: "unauthorized" })
       return
     }
@@ -737,7 +737,7 @@ router.post('/isenabled', VerifyToken, GetRole, async (req, res) => {
 router.post('/isenabled', VerifyToken, GetRole, async (req, res) => {
 
   try {
-    if (req.body.roleID != 1) {
+    if (req.body.roleID != 1 && req.body.roleID != 2) {
       res.json({ message: "unauthorized" })
       return
     }

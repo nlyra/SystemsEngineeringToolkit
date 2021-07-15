@@ -236,7 +236,7 @@ router.post('/iscreator', verifyToken, getRole, async (req, res) => {
         if (req.body.newToken != undefined)
             payload["newToken"] = req.body.newToken;
 
-        if (req.body.roleID == 1) {
+        if (req.body.roleID == 1 || req.body.roleID == 2) {
             payload["message"] = "yes"
             res.json(payload)
         } else {
