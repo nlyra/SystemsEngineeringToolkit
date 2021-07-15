@@ -18,6 +18,8 @@ import courseStyles from '../styles/courseStyle';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { green, grey } from '@material-ui/core/colors';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import dialogStyles from '../styles/dialogStyle'
+import DialogComponent from '../components/DialogComponent'
 
 
 const Course = (props) => {
@@ -36,10 +38,13 @@ const Course = (props) => {
   const [isOwner, setIsOwner] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
 
+  const [dialogText, setDialogText] = useState('')
+  const [openDialog, setOpenDialog] = useState(false);
 
+  const classes = courseStyles()
+  const dialogClasses = dialogStyles()
 
   let validImageTypes = ["PNG", "JPEG", "GIF", "TIF", "RAW", "JPG"]
-  const classes = courseStyles()
 
   const onEditCourseTitle = (e) => {
     setEditCourseInfo(true);
@@ -53,6 +58,13 @@ const Course = (props) => {
     getAuthorization();
 
   }, []);
+
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    }
 
   const getAuthorization = async () => {
     const token = localStorage.getItem("token");
@@ -442,6 +454,14 @@ const Course = (props) => {
           ))}
         </Grid>
       </Grid>
+      <DialogComponent
+        open={openDialog}
+        text={dialogText}
+        onClose={handleCloseDialog}
+        buttons={[
+            {text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog}
+        ]}
+      />
     </div >
   )
 }
