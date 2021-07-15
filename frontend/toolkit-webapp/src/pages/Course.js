@@ -388,9 +388,9 @@ const Course = (props) => {
               <Grid item xs={12} className={classes.enableButton}>
                 <div>
                   {isEnabled ?
-                    <Button variant="outlined" color="secondary" onClick={() => enableCourse(false)}>Disable</Button>
+                    <Button variant="outlined" color="secondary" onClick={() => enableCourse(false)}>Hide</Button>
                     :
-                    <Button variant="outlined" color="primary" onClick={() => enableCourse(true)}>Enable</Button>
+                    <Button variant="outlined" color="primary" onClick={() => enableCourse(true)}>Show</Button>
                   }
                 </div>
                 <div>
