@@ -61,6 +61,7 @@ router.post('/forgotPassword', async (req, res) => {
 
             })
 
+            console.log("getting to here")
             const mailOptions = {
                 from: config.emailInfo.emailUsername,
                 to: user.email,
@@ -70,7 +71,7 @@ router.post('/forgotPassword', async (req, res) => {
                     `http://localhost:3000/reset/${resetPasswordToken}\n\n`
             }
 
-
+            console.log(mailOptions)
             transporter.sendMail(mailOptions, (err, response) => {
                 if (err) {
                     console.error('there was an error: ', err);
@@ -235,7 +236,7 @@ router.post('/iscreator', verifyToken, getRole, async (req, res) => {
         if (req.body.newToken != undefined)
             payload["newToken"] = req.body.newToken;
 
-        if (req.body.roleID == 1) {
+        if (req.body.roleID == 1 || req.body.roleID == 2) {
             payload["message"] = "yes"
             res.json(payload)
         } else {

@@ -7,11 +7,23 @@ import resetPassStyle from '../styles/registerStyle'
 // import '../css/Registration.css';
 import TopNavBar from '../components/TopNavBar'
 import videoSource from '../img/PEOSTRI.mp4'
+import dialogStyles from '../styles/dialogStyle'
+import DialogComponent from '../components/DialogComponent'
 
 const ForgotPassword = (props) => {
     
     const [email, setEmail] = useState('')
+    const [dialogText, setDialogText] = useState('')
+    const [openDialog, setOpenDialog] = useState(false);
+    const dialogClasses = dialogStyles()
     const classes = resetPassStyle()
+
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    }
 
     const onLogin = (e) => {
         props.history.push('login');
@@ -22,7 +34,9 @@ const ForgotPassword = (props) => {
 
         if(email == '')
         {
-            alert('Please enter an email in the text box.')
+            setDialogText("Please enter an email in the text box.")
+            handleOpenDialog()
+            //alert('Please enter an email in the text box.')
             return
         }
 
@@ -35,7 +49,9 @@ const ForgotPassword = (props) => {
         })
 
         const data = await res.json()
-        alert('An email has been sent to the email listed, if registered.')
+        setDialogText("An email has been sent to the email listed, if registered.")
+        handleOpenDialog()
+        //alert('An email has been sent to the email listed, if registered.')
         setEmail('')
 
     }
@@ -81,6 +97,14 @@ const ForgotPassword = (props) => {
                         </Paper>
                     </form>
                 </div>
+                <DialogComponent
+                    open={openDialog}
+                    text={dialogText}
+                    onClose={handleCloseDialog}
+                    buttons={[
+                        { text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog }
+                    ]}
+                />
             </div>
         </>
     )
