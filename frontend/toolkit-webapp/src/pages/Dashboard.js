@@ -14,7 +14,7 @@ const Dashboard = (props) => {
     const [next, setHasNext] = useState(0)
     const [hasNextPage, setHasNextPage] = useState(true);
     const [totalCourses, setTotalCourses] = useState(0)
-    const cardAmount = 10
+    const cardAmount = 8
 
     const classes = dashStyles()
 
@@ -26,7 +26,7 @@ const Dashboard = (props) => {
 
     const loadMoreCourses = useCallback(() => {
 
-        if ((totalCourses === courses.length))
+        if (totalCourses === undefined || totalCourses === courses.length)
             return
 
         loadCourses(undefined, next + 1)
@@ -62,6 +62,9 @@ const Dashboard = (props) => {
         else if (data.status === "search") {
             setCourses(data.courses);
             setTotalCourses(data.totalCourses)
+
+            // if(query !== "")
+            //     setTotalCourses(undefined)
         }
 
         if (data.message === "wrong token") {
@@ -122,10 +125,10 @@ const Dashboard = (props) => {
                     </Grid>
                 </div>
                 
-                { totalCourses !== courses.length && (courses.length - totalCourses > cardAmount) && 
+                { totalCourses !== undefined && totalCourses !== courses.length && 
                     
                     <div className={classes.expandMoreIcon}>
-                    <IconButton disableRipple size='large' style={{ backgroundColor: 'transparent' }}>{totalCourses} {courses.length} Scroll for More<ExpandMoreIcon /></IconButton>
+                    <IconButton disableRipple size='large' style={{ backgroundColor: 'transparent' }}> Scroll for More<ExpandMoreIcon /></IconButton>
                     </div>
                 }
             </Container>
