@@ -59,12 +59,12 @@ const Course = (props) => {
 
   }, []);
 
-    const handleOpenDialog = () => {
-        setOpenDialog(true);
-    }
-    const handleCloseDialog = () => {
-        setOpenDialog(false);
-    }
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  }
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  }
 
   const getAuthorization = async () => {
     const token = localStorage.getItem("token");
@@ -291,9 +291,9 @@ const Course = (props) => {
             <Grid item xs={12} className={classes.enableButton}>
               <div>
                 {isEnabled ?
-                  <Button variant="outlined" color="secondary" onClick={() => enableCourse(false)}>Disable</Button>
+                  <Button variant="outlined" color="secondary" onClick={() => enableCourse(false)}>Hide</Button>
                   :
-                  <Button variant="outlined" color="primary" onClick={() => enableCourse(true)}>Enable</Button>
+                  <Button variant="outlined" color="primary" onClick={() => enableCourse(true)}>Show</Button>
                 }
               </div>
               <div>
@@ -459,7 +459,7 @@ const Course = (props) => {
         text={dialogText}
         onClose={handleCloseDialog}
         buttons={[
-            {text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog}
+          { text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog }
         ]}
       />
     </div >
