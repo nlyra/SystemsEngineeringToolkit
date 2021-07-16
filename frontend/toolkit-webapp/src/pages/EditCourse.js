@@ -2,225 +2,40 @@ import React, { useState, useEffect } from 'react'
 import { Button, Container, TextField, Typography, Box, Paper, Select, MenuItem, FormControl, InputLabel } from '@material-ui/core'
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import ClearIcon from '@material-ui/icons/Clear';
 import Chip from '@material-ui/core/Chip';
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 import courseStyles from '../styles/courseCreatorStyle'
-import dialogStyles from '../styles/dialogStyle'
-import DialogComponent from '../components/DialogComponent'
 import '../css/Login.css';
 
-function NewCourse(props) {
+
+function EditCourse(props) {
 
     const classes = courseStyles()
-    const dialogClasses = dialogStyles()
 
-    const [courseTitle, setCourseTitle] = useState('')
+    const [course, setCourse] = useState(props.location.course)
+    const [courseTitle, setCourseTitle] = useState(props.location.course.name)
     const [categories, setCategories] = useState([])
-    const [description, setDescription] = useState('')
-    const [skillLevel, setSkillLevel] = useState('Easy')
-    const [intendedAudience, setIntendedAudience] = useState('')
-    const [prerequisite, setPrerequisite] = useState('')
-    const [image, setImage] = useState()
+    const [description, setDescription] = useState(props.location.course.description)
+    const [skillLevel, setSkillLevel] = useState(props.location.course.skillLevel)
+    const [intendedAudience, setIntendedAudience] = useState(props.location.course.intendedAudience)
+    const [prerequisite, setPrerequisite] = useState(props.location.course.prerequisite)
+    const [oldCourseImage, setOldCourseImage] = useState(props.location.course.urlImage)
+    const [currCourseImage, setCurrCourseImage] = useState(undefined)
     const [dialogData, setDialogData] = useState([]);
-    const [dialogText, setDialogText] = useState('')
-    const [openDialog, setOpenDialog] = useState(false);
     const filter = createFilterOptions();
 
     let validImageTypes = ["PNG", "JPEG", "GIF", "TIF", "RAW", "JPG"]
-
-    const handleOpenDialog = () => {
-        setOpenDialog(true);
-    }
-    const handleCloseDialog = () => {
-        setOpenDialog(false);
-    }
-
-    const onSubmit = (e) => {
-        e.preventDefault()
-        if (!courseTitle || !categories || !description) {
-            setDialogText("Please enter all required fields.")
-            handleOpenDialog()
-            //alert('Please enter all required fields')
-            return
-        }
-        // console.log("categories on submit: " + categories)
-        onFinish({ courseTitle, categories, description })
-    }
-
-
-    const onFinish = async (creds) => {
-
-        const token = localStorage.getItem("token");
-
-        if (image !== undefined) { //if there is an image
-
-            const imageTypePath = image.name.split('.')
-
-            const imageType = imageTypePath[imageTypePath.length - 1]
-            const validInput = validImageTypes.includes(imageType.toUpperCase());
-
-            // If it isn't, return and allow user to input valid image
-            if (!validInput) {
-                setDialogText("Invalid file type. Please upload an image with the proper file extension.")
-                handleOpenDialog()
-                //alert('Invalid file type. Please upload an image with a proper image extension')
-                return
-            }
-
-            // Grabbing the actual filename minus extension so that we can validate alphanumeric inputs
-            var val = imageTypePath[imageTypePath.length - 2];
-            var RegEx = /[^0-9a-z]/i;
-            var isValid = !(RegEx.test(val));
-
-            // Input contains non-alphanumeric values so we must alert the user to rename the file 
-            if (isValid === false) {
-                setDialogText("Invalid file type. Please upload an image for which the name is alphanumeric.")
-                handleOpenDialog()
-                //alert('Invalid file type. Please upload an image for which name is alphanumeric.')
-                return
-            }
-
-            // handle image
-            const imageData = new FormData();
-            imageData.append('file', image)
-
-            const res = await fetch(config.server_url + config.paths.createCourse, {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "token": token,
-                    "modules": [],
-                    "name": creds.courseTitle,
-                    "categories": creds.categories,
-                    "description": creds.description,
-                    "skillLevel": skillLevel,
-                    "intendedAudience": intendedAudience,
-                    "prerequisite": prerequisite,
-                    "urlImage": `http://localhost:4000/${image.name}`
-                })
-            })
-
-            // Check if there are any new categories that need to be added to the DB categories collection.
-            for (const newTag of categories) {
-                if (dialogData.find(c => c.label === newTag.label)) continue;
-
-                const res = await fetch(config.server_url + config.paths.addCategories, {
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        "token": token,
-                        "label": newTag.label
-                    }),
-                })
-                const data = await res.json()
-
-                if (data.message === "unauthorized") {
-                    props.history.push('dashboard');
-                }
-            }
-
-            const data = await res.json()
-
-
-            if (data.newToken != undefined)
-                localStorage.setItem("token", data.newToken)
-
-
-            if (data.message === "unauthorized") {
-                props.history.push('dashboard');
-            } else if (data.message === undefined) {
-                const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + data._id + "&imageName=" + image.name, {
-                    method: 'POST',
-                    body: imageData
-                })
-                const data2 = await res.json()
-
-                if (data2.message === "unauthorized") {
-                    props.history.push('dashboard');
-                } else if (data2.status === 'Success') {
-                    setDialogText("Successfully created course!")
-                    handleOpenDialog()
-                    //alert("Successfully created course!")
-                    props.history.push('/course/' + data._id)// needs to be changed to course manager
-                } //else need to do something, not sure what rn
-            }
-            else { // this is to check if there are errors not being addressed already
-                console.log(data)
-            }
-
-        } else {// if there is not an image
-
-            for (const newTag of categories) {
-                if (dialogData.find(c => c.label === newTag.label)) continue;
-
-                const res = await fetch(config.server_url + config.paths.addCategories, {
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        "token": token,
-                        "label": newTag.label
-                    }),
-                })
-                const data = await res.json()
-
-                if (data.message === "unauthorized") {
-                    props.history.push('dashboard');
-                }
-            }
-
-            const res2 = await fetch(config.server_url + config.paths.createCourse, {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "token": token,
-                    "modules": [],
-                    "name": creds.courseTitle,
-                    "categories": creds.categories,
-                    "description": creds.description,
-                    "skillLevel": skillLevel,
-                    "intendedAudience": intendedAudience,
-                    "prerequisite": prerequisite,
-                    "urlImage": `http://localhost:4000/misc_files/logo.jpg`
-                })
-            }
-            )
-            const data = await res2.json()
-
-            if(data.newToken != undefined)
-            localStorage.setItem("token", data.newToken)
-
-
-            if (data.message === "unauthorized") {
-                props.history.push('dashboard');
-            } else if (data.message === undefined) {
-                setDialogText("Successfully created course!")
-                    handleOpenDialog()
-                    //alert("Successfully created course!")
-                props.history.push('/course/' + data._id)// needs to be changed to course manager
-            } else { // this is to check if there are errors not being addressed already
-                console.log(data)
-            }
-        }
-    }
-
-    const onTagsChange = (event, values) => {
-        // console.log(values)
-        setCategories(values)
-    }
 
     // useEffect() hook will make it so it only gets rendered once, once the page loads,
     // as opposed to after every time the form is rendered (as long as the array at the end remains empty).
     useEffect(() => {
         getAuthorization();
+
+        const getOldCats = () => {
+            setCategories(props.location.course.categories.map((cat) => (cat)))
+        }
 
         const categoriesCollection = async () => {
             const token = localStorage.getItem("token");
@@ -241,6 +56,8 @@ function NewCourse(props) {
             } else
                 setDialogData(fetchedCategories.categories)
         }
+        getOldCats()
+        console.log(categories)
         categoriesCollection()
 
     }, []);
@@ -259,15 +76,150 @@ function NewCourse(props) {
         })
 
         const data = await res.json()
-
-        if (data.newToken != undefined)
-            localStorage.setItem("token", data.newToken)
-
         // console.log(data.message)
         if (data.message !== "yes") {
             props.history.push('/dashboard');
         }
 
+    }
+
+    const onSubmit = (e) => {
+        e.preventDefault()
+        if (!courseTitle || !categories || !description || !intendedAudience || !prerequisite) {
+            alert('Please enter all required fields')
+            return
+        }
+        // console.log("categories on submit: " + categories)
+        onFinish()
+    }
+
+
+    const onFinish = async (creds) => {
+
+        // e.preventDefault()
+        // console.log("these are the final categories " + JSON.stringify(categories))
+        const token = localStorage.getItem("token");
+        const res = await fetch(config.server_url + config.paths.updateCourseInfo, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                'token': token,
+                'courseID': course._id,
+                "name": courseTitle,
+                "categories": categories,
+                "description": description,
+                "skillLevel": skillLevel,
+                "intendedAudience": intendedAudience,
+                "prerequisite": prerequisite,
+            })
+        })
+
+        const data = await res.json()
+
+        if (data.message === "unauthorized")
+            props.history.push('/dashboard');
+        else {
+
+            // No new image assigned to course so only refresh to show other updates
+            if (currCourseImage === undefined) {
+                props.history.push('/course/' + course._id)
+                return
+            }
+
+            // We have a new image being passed in so delete old file
+            const res2 = await fetch(config.server_url + config.paths.removeFile, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'token': token,
+                    'courseID': course._id
+                })
+            })
+
+
+            const imageData = new FormData();
+            imageData.append('file', currCourseImage)
+
+            // Checking to see if the file inputted is not an actual image
+            const imageTypePath = currCourseImage.name.split('.')
+            const imageType = imageTypePath[imageTypePath.length - 1]
+            const validInput = validImageTypes.includes(imageType.toUpperCase());
+
+            // If it isn't, return and allow user to input valid image
+            if (!validInput) {
+                alert('Invalid file type. Please upload an image with a proper image extension')
+                return
+            }
+
+            // Check that the input given is alphanumeric to avoid the possibility of commands being 
+            // passed in to the backend
+            var val = imageTypePath[imageTypePath.length - 2];
+            var RegEx = /[^0-9a-z]/i;
+            var isValid = !(RegEx.test(val));
+
+            if (isValid === false) {
+                alert('Invalid file type. Please upload an image for which name is alphanumeric.')
+                return
+            }
+
+            if (currCourseImage.name !== oldCourseImage.name) {
+
+                if (data.message === undefined) {
+                    const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + course._id + "&imageName=" + currCourseImage.name, {
+                        method: 'POST',
+                        body: imageData
+                    })
+                    const data2 = await res.json()
+
+                    if (data2.message === "unauthorized") {
+                        props.history.push('dashboard');
+                    } else if (data2.status === 'Success') {
+                        alert("Edits have been successfully made")
+                        props.history.push('/course/' + course._id) // needs to be changed to course manager
+                    } //else need to do something, not sure what rn
+                }
+                else { // this is to check if there are errors not being addressed already
+                    console.log(data)
+                }
+            }
+            else {
+                const res = await fetch(config.server_url + config.paths.updateCourseImage, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'token': token,
+                        'courseID': course._id,
+                        "imageLink": currCourseImage,
+                    })
+
+                })
+
+                const data2 = await res.json()
+
+                if (data2.message === "unauthorized") {
+                    props.history.push('dashboard');
+                } else if (data2.status === 'Success') {
+                    alert("Edits have been successfully made")
+                    props.history.push('/course/' + course._id)// needs to be changed to course manager
+                } //else need to do something, not sure what rn
+            }
+            // props.history.push('/course/' + course._id)
+            // window.location.reload();
+        }
+    }
+
+    const onCancel = () => {
+        props.history.push('/course/' + course._id)
+    }
+
+    const onTagsChange = (event, values) => {
+        setCategories(values)
     }
 
     return (
@@ -302,6 +254,7 @@ function NewCourse(props) {
                                     id="multiple-limit-tags"
                                     options={dialogData}
                                     freeSolo
+                                    value={categories}
                                     onChange={onTagsChange}
                                     renderTags={(value, getTagProps) =>
                                         value.map((option, index) => (
@@ -389,7 +342,11 @@ function NewCourse(props) {
                                     </Select>
                                 </FormControl>
                             </div>
-                            <input type="file" name="picture" accept="image/*" onChange={e => setImage(e.target.files[0])} />
+                            <input style={{ marginLeft: '4vw' }} type="file" name="picture" accept="image/*" className={classes.currCourseImageStyle} onChange={e => setCurrCourseImage(e.target.files[0])} />
+                            {/* <input type="file" name="picture" accept="image/*" onChange={e => setImage(e.target.files[0])} /> */}
+                            <Button type='submit' className={classes.button4} color="secondary" size="medium" variant="contained" startIcon={<ClearIcon />} onClick={onCancel}>
+                                Cancel
+                            </Button>
                             <Button type='submit' className={classes.button4} size="medium" variant="contained" startIcon={<ArrowForwardIcon />} onClick={onSubmit}>
                                 Submit
                             </Button>
@@ -397,16 +354,8 @@ function NewCourse(props) {
                     </form>
                 </div>
             </Container>
-            <DialogComponent
-                open={openDialog}
-                text={dialogText}
-                onClose={handleCloseDialog}
-                buttons={[
-                    { text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog }
-                ]}
-            />
         </div>
     )
 }
 
-export default NewCourse;
+export default EditCourse;

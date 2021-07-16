@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
     // height: '5vh',
   },
 
-  
   dialog:
   {
     position: 'absolute',
@@ -443,455 +442,455 @@ export default function TopNavBar(props) {
                 className={clsx(classes.menuButton, {
                   [classes.hide]: open,
                 })}
-            >
-               
-                                <MenuIcon style={{ color: "white" }}></MenuIcon>
-                            </IconButton>
-                            {window.location.pathname === "/dashboard" ||
-                                window.location.pathname === "/MyCourses" ||
-                                window.location.pathname === "/ManageMyCourses" ?
-                                <div className={classes.search}>
-                                    <div className={classes.searchIcon}>
-                                        <SearchIcon></SearchIcon>
-                                    </div>
+              >
 
-                                    < InputBase
-                                        placeholder="Search..."
-                                        classes={{
-                                            root: classes.inputRoot,
-                                            input: classes.inputInput,
-                                        }}
-                                        inputProps={{ 'aria-label': 'search' }}
-                                        onChange={e => props.search(e.target.value)}
-                                    />
+                <MenuIcon style={{ color: "white" }}></MenuIcon>
+              </IconButton>
+              {window.location.pathname === "/dashboard" ||
+                window.location.pathname === "/MyCourses" ||
+                window.location.pathname === "/ManageMyCourses" ?
+                <div className={classes.search}>
+                  <div className={classes.searchIcon}>
+                    <SearchIcon></SearchIcon>
+                  </div>
+
+                  < InputBase
+                    placeholder="Search..."
+                    classes={{
+                      root: classes.inputRoot,
+                      input: classes.inputInput,
+                    }}
+                    inputProps={{ 'aria-label': 'search' }}
+                    onChange={e => props.search(e.target.value)}
+                  />
+                </div>
+                :
+                <Link href="/dashboard" underline='none' color="inherit">
+                  {/* <div className={classes.searchIcon2}> */}
+                  <SearchIcon></SearchIcon>
+                  {/* </div> */}
+                </Link>
+              }
+            </>
+            : null}
+          <div className={classes.horizontalCenteringLogo}>
+            <img src={logo_url} alt="logo" className={classes.logoStyle} />
+          </div>
+          <div>
+            {/* <IconButton aria-label="show 4 new mails" color="inherit"> */}
+            {/* <Badge badgeContent={4} color="secondary"> */}
+            {/* <MailIcon /> */}
+            {/* </Badge> */}
+            {/* </IconButton> */}
+            {/* <IconButton aria-label="show 17 new notifications" color="inherit"> */}
+            {/* <Badge badgeContent={17} color="secondary"> */}
+            {/* <NotificationsIcon /> */}
+            {/* </Badge> */}
+            {/* </IconButton> */}
+            {props.hideComponents !== true ?
+              <Tooltip title="My Profile" >
+                <IconButton
+                  edge="end"
+                  aria-label="account of current user"
+                  //aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={handleClickOpen}
+                  color="inherit"
+                  className={classes.iconbutton}
+                >
+                  <AccountCircle />
+                </IconButton>
+              </Tooltip>
+
+              : null}
+
+
+
+            {openDialog === true ?
+
+              <div className={classes.dialog}>
+                <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={openDialog}>
+                  <div className={classes.dialogTitleDiv}>
+                    <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleClose}>
+                      <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar>
+                      {/* Your Profile */}
+                    </DialogTitle>
+                  </div>
+                  <DialogContent className={classes.dialogContent}>
+                    {roleInfo === 0 ?
+                      <form autoComplete="off">
+                        {/* <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar> */}
+                        <div className={classes.TextBox} alignItems="center">
+                          <TextField color='primary'
+                            alignContent="center"
+                            size='small'
+                            variant="outlined"
+                            label='First Name'
+                            inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                            type="text"
+                            defaultValue={user.first_name}
+                            margin="normal"
+                            required={false}
+                            fullWidth
+                          />
+                          <br />
+                          <TextField color='primary'
+                            size='small'
+                            variant="outlined"
+                            inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                            label='Last Name'
+                            type="text"
+                            defaultValue={user.last_name}
+                            margin="normal"
+                            required={false}
+                            fullWidth
+                          />
+                          <br />
+                          <TextField color='primary'
+                            size='small'
+                            variant="outlined"
+                            inputProps={{ min: 0, style: { textAlign: 'center' } }}
+                            label="Email"
+                            type="email"
+                            defaultValue={user.email}
+                            onChange={e => setNewEmail(e.target.value)}
+                            margin="normal"
+                            required={true}
+                            fullWidth
+                          />
+                          <Grid container direction="row" alignItems='center' className={classes.roleGrid}>
+                            <Grid item xs={6} sm={6} lg={6} >
+                              <div className={classes.roleStatContent}>
+                                <div className={classes.roleText}>
+                                  <h3>User Role</h3>
                                 </div>
-                                :
-                                <Link href="/dashboard" underline='none' color="inherit">
-                                    {/* <div className={classes.searchIcon2}> */}
-                                    <SearchIcon></SearchIcon>
-                                    {/* </div> */}
-                                </Link>
-                            }
-                        </>
-                        : null}
-                    <div className={classes.horizontalCenteringLogo}>
-                        <img src={logo_url} alt="logo" className={classes.logoStyle} />
-                    </div>
-                    <div>
-                        {/* <IconButton aria-label="show 4 new mails" color="inherit"> */}
-                        {/* <Badge badgeContent={4} color="secondary"> */}
-                        {/* <MailIcon /> */}
-                        {/* </Badge> */}
-                        {/* </IconButton> */}
-                        {/* <IconButton aria-label="show 17 new notifications" color="inherit"> */}
-                        {/* <Badge badgeContent={17} color="secondary"> */}
-                        {/* <NotificationsIcon /> */}
-                        {/* </Badge> */}
-                        {/* </IconButton> */}
-                        {props.hideComponents !== true ?
-                            <Tooltip title="My Profile" >
-                                <IconButton
-                                    edge="end"
-                                    aria-label="account of current user"
-                                    //aria-controls={menuId}
-                                    aria-haspopup="true"
-                                    onClick={handleClickOpen}
-                                    color="inherit"
-                                    className={classes.iconbutton}
+                              </div>
+                            </Grid>
+                            <Grid item xs={6} sm={6} lg={6} >
+                              <Typography className={classes.roleDescription}>
+                                {roles[user.roleID]}
+                                <Tooltip
+                                  title={
+                                    <React.Fragment>
+                                      <Typography align="center" color="inherit">User Role Information</Typography>
+                                      {"The student role allows the user to take courses but does not given them access to course or module creation"}
+                                    </React.Fragment>
+                                  }
+                                  placement="top"
+                                  enterDelay={200}
+                                  // leaveDelay={200}
+                                  arrow
                                 >
-                                    <AccountCircle />
-                                </IconButton>
-                            </Tooltip>
-
-                            : null}
-
-
-
-                        {openDialog === true ?
-
-                            <div className={classes.dialog}>
-                                <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={openDialog}>
-                                    <div className={classes.dialogTitleDiv}>
-                                        <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleClose}>
-                                            <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar>
-                                            {/* Your Profile */}
-                                        </DialogTitle>
-                                    </div>
-                                    <DialogContent className={classes.dialogContent}>
-                                        {roleInfo === 0 ?
-                                            <form autoComplete="off">
-                                                {/* <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar> */}
-                                                <div className={classes.TextBox} alignItems="center">
-                                                    <TextField color='primary'
-                                                        alignContent="center"
-                                                        size='small'
-                                                        variant="outlined"
-                                                        label='First Name'
-                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
-                                                        type="text"
-                                                        defaultValue={user.first_name}
-                                                        margin="normal"
-                                                        required={false}
-                                                        fullWidth
-                                                    />
-                                                    <br />
-                                                    <TextField color='primary'
-                                                        size='small'
-                                                        variant="outlined"
-                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
-                                                        label='Last Name'
-                                                        type="text"
-                                                        defaultValue={user.last_name}
-                                                        margin="normal"
-                                                        required={false}
-                                                        fullWidth
-                                                    />
-                                                    <br />
-                                                    <TextField color='primary'
-                                                        size='small'
-                                                        variant="outlined"
-                                                        inputProps={{ min: 0, style: { textAlign: 'center' } }}
-                                                        label="Email"
-                                                        type="email"
-                                                        defaultValue={user.email}
-                                                        onChange={e => setNewEmail(e.target.value)}
-                                                        margin="normal"
-                                                        required={true}
-                                                        fullWidth
-                                                    />
-                                                    <Grid container direction="row" alignItems='center' className={classes.roleGrid}>
-                                                        <Grid item xs={6} sm={6} lg={6} >
-                                                            <div className={classes.roleStatContent}>
-                                                                <div className={classes.roleText}>
-                                                                    <h3>User Role</h3>
-                                                                </div>
-                                                            </div>
-                                                        </Grid>
-                                                        <Grid item xs={6} sm={6} lg={6} >
-                                                            <Typography className={classes.roleDescription}>
-                                                                {roles[user.roleID]}
-                                                                <Tooltip
-                                                                    title={
-                                                                        <React.Fragment>
-                                                                            <Typography align="center" color="inherit">User Role Information</Typography>
-                                                                            {"The student role allows the user to take courses but does not given them access to course or module creation"}
-                                                                        </React.Fragment>
-                                                                    }
-                                                                    placement="top"
-                                                                    enterDelay={200}
-                                                                    // leaveDelay={200}
-                                                                    arrow
-                                                                >
-                                                                    <IconButton size='small'><HelpIcon /></IconButton>
-                                                                </Tooltip>
-                                                            </Typography>
-                                                        </Grid>
-                                                    </Grid>
-
-                                                    <Grid item xs={12}>
-                                                        <Divider variant='fullWidth' className={classes.divider} />
-                                                    </Grid>
-                                                    <div className={classes.statsTitle}>
-                                                        <h1>Stats</h1>
-                                                    </div>
-
-                                                    <Grid container direction="row" >
-                                                        <Grid item xs={6} sm={6} lg={6} >
-                                                            <div className={classes.statContent}>
-                                                                <div className={classes.statText}>
-                                                                    <h5>Enrolled Courses</h5>
-                                                                </div>
-                                                                <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
-                                                            </div>
-                                                        </Grid>
-                                                        <Grid item xs={6} sm={6} lg={6} >
-                                                            <div className={classes.statContent}>
-                                                                <div className={classes.statText}>
-                                                                    <h5>Completed Courses</h5>
-                                                                </div>
-                                                                <Avatar className={classes.statsAvi}>{user.completedCourses.length}</Avatar>
-                                                            </div>
-                                                        </Grid>
-                                                    </Grid>
-                                                </div>
-                                            </form>
-                                            : null}
-
-                                        {roleInfo === 1 ?
-                                            <form autoComplete="off">
-                                                <div className={classes.TextBox} alignItems="center">
-                                                    <TextField color='primary'
-                                                        alignContent="center"
-                                                        size='small'
-                                                        variant="outlined"
-                                                        label='First Name'
-                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
-                                                        type="text"
-                                                        defaultValue={user.first_name}
-                                                        margin="normal"
-                                                        required={false}
-                                                        fullWidth
-                                                    />
-                                                    <br />
-                                                    <TextField color='primary'
-                                                        size='small'
-                                                        variant="outlined"
-                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
-                                                        label='Last Name'
-                                                        type="text"
-                                                        defaultValue={user.last_name}
-                                                        margin="normal"
-                                                        required={false}
-                                                        fullWidth
-                                                    />
-                                                    <br />
-                                                    <TextField color='primary'
-                                                        size='small'
-                                                        variant="outlined"
-                                                        inputProps={{ min: 0, style: { textAlign: 'center' } }}
-                                                        label='Email'
-                                                        type="email"
-                                                        defaultValue={user.email}
-                                                        onChange={e => setNewEmail(e.target.value)}
-                                                        margin="normal"
-                                                        required={true}
-                                                        fullWidth
-                                                    />
-                                                    <Grid container direction="row" alignItems='center' className={classes.roleGrid}>
-                                                        <Grid item xs={6} sm={6} lg={6} >
-                                                            <div className={classes.roleStatContent}>
-                                                                <div className={classes.roleText}>
-                                                                    <h3>User Role</h3>
-                                                                </div>
-                                                            </div>
-                                                        </Grid>
-                                                        <Grid item xs={6} sm={6} lg={6} >
-                                                            <Typography className={classes.roleDescription}>
-                                                                {roles[user.roleID]}
-                                                                <Tooltip
-                                                                    title={
-                                                                        <React.Fragment>
-                                                                            <Typography align="center" color="inherit">User Role Information</Typography>
-                                                                            {"The creator role allows the user to create and manage courses. This role also allows the user to create and manage modules within courses they have made. The following options are available for management of both courses and modules: Add, Edit, and Delete. Creators can also take courses as a student would"}
-                                                                        </React.Fragment>
-                                                                    }
-                                                                    placement="top"
-                                                                    enterDelay={200}
-                                                                    // leaveDelay={200}
-                                                                    arrow
-                                                                >
-                                                                    <IconButton size='small'><HelpIcon /></IconButton>
-                                                                </Tooltip>
-                                                            </Typography>
-                                                        </Grid>
-                                                    </Grid>
-
-                                                    <Grid item xs={12}>
-                                                        <Divider variant='fullWidth' className={classes.divider} />
-                                                    </Grid>
-                                                    <div className={classes.statsTitle}>
-                                                        <h1>Stats</h1>
-                                                    </div>
-
-                                                    <Grid container direction="row" >
-                                                        <Grid item xs={4} sm={4} lg={4} >
-                                                            <div className={classes.statContent}>
-                                                                <div className={classes.statText}>
-                                                                    <h5>Courses Enrolled In</h5>
-                                                                </div>
-                                                                <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
-                                                            </div>
-                                                        </Grid>
-                                                        <Grid item xs={4} sm={4} lg={4} >
-                                                            <div className={classes.statContent}>
-                                                                <div className={classes.statText}>
-                                                                    <h5>Courses Completed</h5>
-                                                                </div>
-                                                                <Avatar className={classes.statsAvi}>{user.completedCourses.length}</Avatar>
-                                                            </div>
-                                                        </Grid>
-                                                        <Grid item xs={4} sm={4} lg={4} >
-                                                            <div className={classes.statContent}>
-                                                                <div className={classes.statText}>
-                                                                    <h5>Courses Created</h5>
-                                                                </div>
-                                                                <Avatar className={classes.statsAvi}>{user.createdCourses.length}</Avatar>
-                                                            </div>
-                                                        </Grid>
-                                                    </Grid>
-                                                </div>
-                                            </form>
-                                            : null}
-
-                                        {roleInfo === 2 ?
-                                            <form autoComplete="off">
-                                                <div className={classes.TextBox} alignItems="center">
-                                                    <TextField color='primary'
-                                                        alignContent="center"
-                                                        size='small'
-                                                        variant="outlined"
-                                                        label='First Name'
-                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
-                                                        type="text"
-                                                        defaultValue={user.first_name}
-                                                        margin="normal"
-                                                        required={false}
-                                                        fullWidth
-                                                    />
-                                                    <br />
-                                                    <TextField color='primary'
-                                                        size='small'
-                                                        variant="outlined"
-                                                        inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
-                                                        label='Last Name'
-                                                        type="text"
-                                                        defaultValue={user.last_name}
-                                                        margin="normal"
-                                                        required={false}
-                                                        fullWidth
-                                                    />
-                                                    <br />
-                                                    <TextField color='primary'
-                                                        size='small'
-                                                        variant="outlined"
-                                                        inputProps={{ min: 0, style: { textAlign: 'center' } }}
-                                                        label='Email'
-                                                        type="email"
-                                                        defaultValue={user.email}
-                                                        onChange={e => setNewEmail(e.target.value)}
-                                                        margin="normal"
-                                                        required={true}
-                                                        fullWidth
-                                                    />
-                                                    <Grid container direction="row" alignItems='center' className={classes.roleGrid}>
-                                                        <Grid item xs={6} sm={6} lg={6} >
-                                                            <div className={classes.roleStatContent}>
-                                                                <div className={classes.roleText}>
-                                                                    <h3>User Role</h3>
-                                                                </div>
-                                                            </div>
-                                                        </Grid>
-                                                        <Grid item xs={6} sm={6} lg={6} >
-                                                            <Typography className={classes.roleDescription}>                                                                {roles[user.roleID]}
-                                                                <Tooltip
-                                                                    title={
-                                                                        <React.Fragment>
-                                                                            <Typography align="center" color="inherit">User Role Information</Typography>
-                                                                            {"The Admin role allows the user to have full access to the application. The Admin can access the admin dashboard which gives them the access to: edit user roles, delete users, delete courses, delete categories, and see a whole host of statistics. The Admin is also able to create courses and take courses as a creator and student would respectively"}
-                                                                        </React.Fragment>
-                                                                    }
-                                                                    placement="top"
-                                                                    enterDelay={200}
-                                                                    // leaveDelay={200}
-                                                                    arrow
-                                                                >
-                                                                    <IconButton size='small'><HelpIcon /></IconButton>
-                                                                </Tooltip>
-                                                            </Typography>
-                                                        </Grid>
-                                                    </Grid>
-
-                                                    <Grid item xs={12}>
-                                                        <Divider variant='fullWidth' className={classes.divider} />
-                                                    </Grid>
-                                                    <div className={classes.statsTitle}>
-                                                        <h2>Database Info</h2>
-                                                    </div>
-                                                    <Grid container direction="row" >
-                                                        <Grid item xs={6} sm={6} lg={6} >
-                                                            <div className={classes.statContent}>
-                                                                <div className={classes.statText}>
-                                                                    <h5>Users In System</h5>
-                                                                </div>
-                                                                <Avatar className={classes.statsAvi}>{numUsers}</Avatar>
-                                                            </div>
-                                                        </Grid>
-                                                        <Grid item xs={6} sm={6} lg={6} >
-                                                            <div className={classes.statContent}>
-                                                                <div className={classes.statText}>
-                                                                    <h5>Total Courses</h5>
-                                                                </div>
-                                                                <Avatar className={classes.statsAvi}>{numCourses}</Avatar>
-                                                            </div>
-                                                        </Grid>
-                                                    </Grid>
-                                                    <br />
-                                                    <Grid item xs={12}>
-                                                        <Divider variant='fullWidth' className={classes.divider} />
-                                                    </Grid>
-                                                    <div className={classes.statsTitle}>
-                                                        <h2>My Stats</h2>
-                                                    </div>
-                                                    <Grid container direction="row" >
-                                                        <Grid item xs={4} sm={4} lg={4} >
-                                                            <div className={classes.statContent}>
-                                                                <div className={classes.statText}>
-                                                                    <h5>Courses Enrolled In</h5>
-                                                                </div>
-                                                                <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
-                                                            </div>
-                                                        </Grid>
-                                                        <Grid item xs={4} sm={4} lg={4} >
-                                                            <div className={classes.statContent}>
-                                                                <div className={classes.statText}>
-                                                                    <h5>Courses Completed</h5>
-                                                                </div>
-                                                                <Avatar className={classes.statsAvi}>{user.completedCourses.length}</Avatar>
-                                                            </div>
-                                                        </Grid>
-                                                        <Grid item xs={4} sm={4} lg={4} >
-                                                            <div className={classes.statContent}>
-                                                                <div className={classes.statText}>
-                                                                    <h5>Courses Created</h5>
-                                                                </div>
-                                                                <Avatar className={classes.statsAvi}>{user.createdCourses.length}</Avatar>
-                                                            </div>
-                                                        </Grid>
-                                                    </Grid>
-                                                </div>
-                                            </form>
-                                            : null}
-
-
-                                    </DialogContent>
-                                    <DialogActions>
-                                    <Button className={classes.closeButton} color="primary" onClick={handleClose}>
-                                            Close
-                                        </Button>
-                                        <Button autoFocus color="primary" onClick={handleChanges}>
-                                            Save Changes
-                                        </Button>
-                                    </DialogActions>
-                                </Dialog>
-                            </div>
-
-                            : null}
-
-                        {window.location.pathname !== "/" &&
-                            window.location.pathname !== "/registration" &&
-                            window.location.pathname !== "/forgot" &&
-                            window.location.pathname !== "/reset/" + props.tokenProp &&
-                            window.location.pathname !== "/reset/" &&
-                            window.location.pathname !== "/login" ?
-                            <Link href="/dashboard" underline='none' color="inherit">
-                                <Tooltip title="Home Screen" >
-                                    <IconButton
-                                        edge="end"
-                                        aria-label="homescreen"
-                                        aria-haspopup="true"
-                                        color="inherit"
-                                    >
-                                        <HomeIcon />
-                                    </IconButton>
+                                  <IconButton size='small'><HelpIcon /></IconButton>
                                 </Tooltip>
-                            </Link>
+                              </Typography>
+                            </Grid>
+                          </Grid>
 
-                            : null}
-                    </div>
-                </Toolbar>
-            </AppBar>
+                          <Grid item xs={12}>
+                            <Divider variant='fullWidth' className={classes.divider} />
+                          </Grid>
+                          <div className={classes.statsTitle}>
+                            <h1>Stats</h1>
+                          </div>
 
-  
+                          <Grid container direction="row" >
+                            <Grid item xs={6} sm={6} lg={6} >
+                              <div className={classes.statContent}>
+                                <div className={classes.statText}>
+                                  <h5>Enrolled Courses</h5>
+                                </div>
+                                <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
+                              </div>
+                            </Grid>
+                            <Grid item xs={6} sm={6} lg={6} >
+                              <div className={classes.statContent}>
+                                <div className={classes.statText}>
+                                  <h5>Completed Courses</h5>
+                                </div>
+                                <Avatar className={classes.statsAvi}>{user.completedCourses.length}</Avatar>
+                              </div>
+                            </Grid>
+                          </Grid>
+                        </div>
+                      </form>
+                      : null}
+
+                    {roleInfo === 1 ?
+                      <form autoComplete="off">
+                        <div className={classes.TextBox} alignItems="center">
+                          <TextField color='primary'
+                            alignContent="center"
+                            size='small'
+                            variant="outlined"
+                            label='First Name'
+                            inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                            type="text"
+                            defaultValue={user.first_name}
+                            margin="normal"
+                            required={false}
+                            fullWidth
+                          />
+                          <br />
+                          <TextField color='primary'
+                            size='small'
+                            variant="outlined"
+                            inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                            label='Last Name'
+                            type="text"
+                            defaultValue={user.last_name}
+                            margin="normal"
+                            required={false}
+                            fullWidth
+                          />
+                          <br />
+                          <TextField color='primary'
+                            size='small'
+                            variant="outlined"
+                            inputProps={{ min: 0, style: { textAlign: 'center' } }}
+                            label='Email'
+                            type="email"
+                            defaultValue={user.email}
+                            onChange={e => setNewEmail(e.target.value)}
+                            margin="normal"
+                            required={true}
+                            fullWidth
+                          />
+                          <Grid container direction="row" alignItems='center' className={classes.roleGrid}>
+                            <Grid item xs={6} sm={6} lg={6} >
+                              <div className={classes.roleStatContent}>
+                                <div className={classes.roleText}>
+                                  <h3>User Role</h3>
+                                </div>
+                              </div>
+                            </Grid>
+                            <Grid item xs={6} sm={6} lg={6} >
+                              <Typography className={classes.roleDescription}>
+                                {roles[user.roleID]}
+                                <Tooltip
+                                  title={
+                                    <React.Fragment>
+                                      <Typography align="center" color="inherit">User Role Information</Typography>
+                                      {"The creator role allows the user to create and manage courses. This role also allows the user to create and manage modules within courses they have made. The following options are available for management of both courses and modules: Add, Edit, and Delete. Creators can also take courses as a student would"}
+                                    </React.Fragment>
+                                  }
+                                  placement="top"
+                                  enterDelay={200}
+                                  // leaveDelay={200}
+                                  arrow
+                                >
+                                  <IconButton size='small'><HelpIcon /></IconButton>
+                                </Tooltip>
+                              </Typography>
+                            </Grid>
+                          </Grid>
+
+                          <Grid item xs={12}>
+                            <Divider variant='fullWidth' className={classes.divider} />
+                          </Grid>
+                          <div className={classes.statsTitle}>
+                            <h1>Stats</h1>
+                          </div>
+
+                          <Grid container direction="row" >
+                            <Grid item xs={4} sm={4} lg={4} >
+                              <div className={classes.statContent}>
+                                <div className={classes.statText}>
+                                  <h5>Courses Enrolled In</h5>
+                                </div>
+                                <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
+                              </div>
+                            </Grid>
+                            <Grid item xs={4} sm={4} lg={4} >
+                              <div className={classes.statContent}>
+                                <div className={classes.statText}>
+                                  <h5>Courses Completed</h5>
+                                </div>
+                                <Avatar className={classes.statsAvi}>{user.completedCourses.length}</Avatar>
+                              </div>
+                            </Grid>
+                            <Grid item xs={4} sm={4} lg={4} >
+                              <div className={classes.statContent}>
+                                <div className={classes.statText}>
+                                  <h5>Courses Created</h5>
+                                </div>
+                                <Avatar className={classes.statsAvi}>{user.createdCourses.length}</Avatar>
+                              </div>
+                            </Grid>
+                          </Grid>
+                        </div>
+                      </form>
+                      : null}
+
+                    {roleInfo === 2 ?
+                      <form autoComplete="off">
+                        <div className={classes.TextBox} alignItems="center">
+                          <TextField color='primary'
+                            alignContent="center"
+                            size='small'
+                            variant="outlined"
+                            label='First Name'
+                            inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                            type="text"
+                            defaultValue={user.first_name}
+                            margin="normal"
+                            required={false}
+                            fullWidth
+                          />
+                          <br />
+                          <TextField color='primary'
+                            size='small'
+                            variant="outlined"
+                            inputProps={{ min: 0, readOnly: true, style: { textAlign: 'center' } }}
+                            label='Last Name'
+                            type="text"
+                            defaultValue={user.last_name}
+                            margin="normal"
+                            required={false}
+                            fullWidth
+                          />
+                          <br />
+                          <TextField color='primary'
+                            size='small'
+                            variant="outlined"
+                            inputProps={{ min: 0, style: { textAlign: 'center' } }}
+                            label='Email'
+                            type="email"
+                            defaultValue={user.email}
+                            onChange={e => setNewEmail(e.target.value)}
+                            margin="normal"
+                            required={true}
+                            fullWidth
+                          />
+                          <Grid container direction="row" alignItems='center' className={classes.roleGrid}>
+                            <Grid item xs={6} sm={6} lg={6} >
+                              <div className={classes.roleStatContent}>
+                                <div className={classes.roleText}>
+                                  <h3>User Role</h3>
+                                </div>
+                              </div>
+                            </Grid>
+                            <Grid item xs={6} sm={6} lg={6} >
+                              <Typography className={classes.roleDescription}>                                                                {roles[user.roleID]}
+                                <Tooltip
+                                  title={
+                                    <React.Fragment>
+                                      <Typography align="center" color="inherit">User Role Information</Typography>
+                                      {"The Admin role allows the user to have full access to the application. The Admin can access the admin dashboard which gives them the access to: edit user roles, delete users, delete courses, delete categories, and see a whole host of statistics. The Admin is also able to create courses and take courses as a creator and student would respectively"}
+                                    </React.Fragment>
+                                  }
+                                  placement="top"
+                                  enterDelay={200}
+                                  // leaveDelay={200}
+                                  arrow
+                                >
+                                  <IconButton size='small'><HelpIcon /></IconButton>
+                                </Tooltip>
+                              </Typography>
+                            </Grid>
+                          </Grid>
+
+                          <Grid item xs={12}>
+                            <Divider variant='fullWidth' className={classes.divider} />
+                          </Grid>
+                          <div className={classes.statsTitle}>
+                            <h2>Database Info</h2>
+                          </div>
+                          <Grid container direction="row" >
+                            <Grid item xs={6} sm={6} lg={6} >
+                              <div className={classes.statContent}>
+                                <div className={classes.statText}>
+                                  <h5>Users In System</h5>
+                                </div>
+                                <Avatar className={classes.statsAvi}>{numUsers}</Avatar>
+                              </div>
+                            </Grid>
+                            <Grid item xs={6} sm={6} lg={6} >
+                              <div className={classes.statContent}>
+                                <div className={classes.statText}>
+                                  <h5>Total Courses</h5>
+                                </div>
+                                <Avatar className={classes.statsAvi}>{numCourses}</Avatar>
+                              </div>
+                            </Grid>
+                          </Grid>
+                          <br />
+                          <Grid item xs={12}>
+                            <Divider variant='fullWidth' className={classes.divider} />
+                          </Grid>
+                          <div className={classes.statsTitle}>
+                            <h2>My Stats</h2>
+                          </div>
+                          <Grid container direction="row" >
+                            <Grid item xs={4} sm={4} lg={4} >
+                              <div className={classes.statContent}>
+                                <div className={classes.statText}>
+                                  <h5>Courses Enrolled In</h5>
+                                </div>
+                                <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
+                              </div>
+                            </Grid>
+                            <Grid item xs={4} sm={4} lg={4} >
+                              <div className={classes.statContent}>
+                                <div className={classes.statText}>
+                                  <h5>Courses Completed</h5>
+                                </div>
+                                <Avatar className={classes.statsAvi}>{user.completedCourses.length}</Avatar>
+                              </div>
+                            </Grid>
+                            <Grid item xs={4} sm={4} lg={4} >
+                              <div className={classes.statContent}>
+                                <div className={classes.statText}>
+                                  <h5>Courses Created</h5>
+                                </div>
+                                <Avatar className={classes.statsAvi}>{user.createdCourses.length}</Avatar>
+                              </div>
+                            </Grid>
+                          </Grid>
+                        </div>
+                      </form>
+                      : null}
+
+
+                  </DialogContent>
+                  <DialogActions>
+                    <Button className={classes.closeButton} color="primary" onClick={handleClose}>
+                      Close
+                    </Button>
+                    <Button autoFocus color="primary" onClick={handleChanges}>
+                      Save Changes
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
+
+              : null}
+
+            {window.location.pathname !== "/" &&
+              window.location.pathname !== "/registration" &&
+              window.location.pathname !== "/forgot" &&
+              window.location.pathname !== "/reset/" + props.tokenProp &&
+              window.location.pathname !== "/reset/" &&
+              window.location.pathname !== "/login" ?
+              <Link href="/dashboard" underline='none' color="inherit">
+                <Tooltip title="Home Screen" >
+                  <IconButton
+                    edge="end"
+                    aria-label="homescreen"
+                    aria-haspopup="true"
+                    color="inherit"
+                  >
+                    <HomeIcon />
+                  </IconButton>
+                </Tooltip>
+              </Link>
+
+              : null}
+          </div>
+        </Toolbar>
+      </AppBar>
+
+
       {props.hideComponents !== true ?
         <Drawer
           variant="permanent"
@@ -914,7 +913,7 @@ export default function TopNavBar(props) {
           <Divider />
           <List>
 
-            {isCreator &&
+            {(isCreator || isAdmin) &&
               <Link href="/newCourse" underline='none' color="inherit">
                 <Tooltip title="Create Course" enterDelay={500}>
                   <ListItem button>
@@ -934,14 +933,14 @@ export default function TopNavBar(props) {
               </Tooltip>
             </Link>
 
-            <Link href="/MyFiles" underline='none' color="inherit">
+            {/*<Link href="/MyFiles" underline='none' color="inherit">
               <Tooltip title="My Files" enterDelay={500}>
                 <ListItem button>
                   <ListItemIcon><DescriptionIcon /></ListItemIcon>
                   <ListItemText primary="My Files" />
                 </ListItem>
               </Tooltip>
-            </Link>
+            </Link>*/}
 
             {isAdmin &&
               <Tooltip title="Admin Dashboard" enterDelay={500}>
@@ -955,7 +954,7 @@ export default function TopNavBar(props) {
             }
 
             {/* <Tooltip title="Calendar" enterDelay={500}>*/}
-            {isCreator &&
+            {(isCreator || isAdmin) &&
               <Link href="/ManageMyCourses" underline='none' color="inherit">
                 <Tooltip title="My Created Courses" enterDelay={500}>
                   <ListItem button>
@@ -994,6 +993,8 @@ export default function TopNavBar(props) {
         </Drawer>
         : null}
     </div>
+
+
 
 
   )
