@@ -32,7 +32,8 @@ function EditCourse(props) {
     // as opposed to after every time the form is rendered (as long as the array at the end remains empty).
     useEffect(() => {
         getAuthorization();
-
+        // console.log(props.location.course)
+        // props.location.course.categories.map((cat) => (console.log(cat)))
         const getOldCats = () => {
             setCategories(props.location.course.categories.map((cat) => (cat)))
         }
@@ -57,7 +58,7 @@ function EditCourse(props) {
                 setDialogData(fetchedCategories.categories)
         }
         getOldCats()
-        console.log(categories)
+        // console.log(categories)
         categoriesCollection()
 
     }, []);

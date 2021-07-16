@@ -15,7 +15,7 @@ router.post('/course', VerifyToken, GetRole, async (req, res) => {
     let course = {}
 
     if (req.body.roleID == 1 || req.body.roleID == 2) { // course for creator
-      course = await Course.findOne({ "_id": req.body.id, "author": req.body.userID }, '_id name description urlImage modules author isEnabled skillLevel intendedAudience prerequisite');
+      course = await Course.findOne({ "_id": req.body.id, "author": req.body.userID }, '_id name categories description urlImage modules author isEnabled skillLevel intendedAudience prerequisite');
       if (course == null || course == {}) // course for students (only enabled courses)
         course = await Course.findOne({ "_id": req.body.id, "isEnabled": true }, '_id name description urlImage modules author skillLevel intendedAudience prerequisite');
     } else
