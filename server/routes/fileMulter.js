@@ -23,7 +23,7 @@ const upload = multer({ storage: fileStorageEngine })
 router.post('/single', VerifyToken, GetRole, upload.single('file'), async (req, res) => {
 
   // req.body.roleID is undefined in the scope of this function, so we must use the query data
-  if (req.query.roleID != 1) {
+  if (req.body.roleID != 1 && req.body.roleID != 2) {
     res.json({ message: "unauthorized" })
     return
   }

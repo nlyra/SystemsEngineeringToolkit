@@ -10,6 +10,8 @@ import QuizCreator from '../components/QuizCreatorModule'
 import VideoCreator from '../components/VideoCreatorModule'
 import PDFCreator from '../components/PDFCreatorModule'
 import FileCreator from '../components/FileCreatorModule'
+import dialogStyles from '../styles/dialogStyle'
+import DialogComponent from '../components/DialogComponent'
 
 function ModuleEditor(props) {
 
@@ -20,11 +22,21 @@ function ModuleEditor(props) {
     const [description, setDescription] = useState(module.description)
     const [courseID, setCourseID] = useState('')
     const [gradeToPass, setGradeToPass] = useState(module.gradeToPass)
+    const [dialogText, setDialogText] = useState('')
+    const [openDialog, setOpenDialog] = useState(false);
 
     const classes = useStyles()
+    const dialogClasses = dialogStyles()
     const [file, setFile] = useState()
     const [video, setVideo] = useState()
     const [pdf, setPDF] = useState()
+
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    }
 
     function getExtention(filename) {
         var parts = filename.split('.');
@@ -79,41 +91,90 @@ function ModuleEditor(props) {
     const onSubmit = (e) => {
         e.preventDefault()
         if (!title || !type || !description) {
-            alert('Please enter all required fields')
+            setDialogText("Please enter all required fields.")
+            handleOpenDialog()
+            //alert('Please enter all required fields')
             return
         }
 
         if (type === 'Quiz' && JSON.parse(sessionStorage.getItem('quiz')) !== null) {
-            console.log('works for Quiz')
-            var quiz = []
+            if(gradeToPass<1){
+                setDialogText("The number of correct answers required must be greater than 0.")
+                handleOpenDialog()
+                //alert("The number of correct answers required must be greater than 0.")
+            } else{
 
-            quiz = JSON.parse(sessionStorage.getItem("quiz"))
-            sessionStorage.clear()
-            onFinish({ title, type, description, quiz, gradeToPass })
-        } else if (type === 'PDF' && pdf !== null && typeof (pdf) !== 'undefined') {
-            if (isPDF(pdf.name) === false) {
-                alert("File must be a PDF")
-            } else {
-                console.log('works for PDF')
-                onFinish({ title, type, description, pdf })
-            }
-        } else if (type === 'File' && file !== null && typeof (file) !== 'undefined') {
-            console.log('works for File')
-            onFinish({ title, type, description, file })
+                console.log('works for Quiz')
+                var quiz = []
 
-        } else if (type === 'Video' && video !== null && typeof (video) !== 'undefined') {
-            if (isVideo(video.name) === false) {
-                alert("File must be a video")
-            } else {
-                console.log('works for Video')
-                onFinish({ title, type, description, video })
+                quiz = JSON.parse(sessionStorage.getItem("quiz"))
+                if(gradeToPass>quiz.length){
+                    setDialogText("The number of correct answers may not be greater than the number of questions.")
+                    handleOpenDialog()
+                    //alert("The number of correct answers may not be greater than the number of questions.")
+                } else{
+                    sessionStorage.clear()
+                    onFinish({ title, type, description, quiz })
+                }
             }
-        } else if (type === 'Text') {
-            console.log('works')
+        }else if(type === 'PDF'){
+            if(pdf !== null && typeof(pdf) !== 'undefined'){
+                if(isPDF(pdf.name) === false){
+                    setDialogText("File must be a PDF")
+                    handleOpenDialog()
+                    //alert("File must be a PDF")
+                } else {
+                    console.log('works for PDF')
+                    onFinish({ title, type, description, pdf })
+                }
+            }else if(module.type==="PDF"){
+                const fileName=module.urlFile
+                onFinish({title, type, description, fileName}) 
+            } else {
+                setDialogText("Please attach proper file corresponding to module type.")
+                handleOpenDialog()
+                //alert("Please attach proper file corresponding to module type.")
+            }
+
+        } else if(type === 'File'){
+            if(file !== null && typeof(file) !== 'undefined'){
+                console.log('works for File')
+                onFinish({ title, type, description, file })
+            } else if(module.type==="File"){
+                const fileName=module.urlFile
+                onFinish({ title, type, description, fileName })
+            }else {
+                setDialogText("Please attach proper file corresponding to module type.")
+                handleOpenDialog()
+                //alert("Please attach proper file corresponding to module type.")
+            }
+            
+        }else if(type === 'Video'){
+            if(video !== null && typeof(video) !== 'undefined'){
+                if(isVideo(video.name) === false){
+                    setDialogText("File must be a video.")
+                    handleOpenDialog()
+                    //alert("File must be a video")
+                } else {
+                    console.log('works for Video')
+                    onFinish({ title, type, description, video })
+                }
+            } else if(module.type === "Video"){
+                const videoName = module.urlVideo
+                onFinish({title, type, description, videoName })
+            } else{
+                setDialogText("Please attach proper file corresponding to module type.")
+                handleOpenDialog()
+                //alert("Please attach proper file corresponding to module type.")
+            }
+        }else if (type === 'Text') {
+            console.log('Works for Text')
             onFinish({ title, type, description })
         }
         else {
-            alert("Please attach proper file corresponding to module type.")
+            setDialogText("Please attach proper file corresponding to module type.")
+            handleOpenDialog()
+            //alert("Please attach proper file corresponding to module type.")
         }
     }
 
@@ -145,177 +206,265 @@ function ModuleEditor(props) {
                 if (data.message === "unauthorized") {
                     props.history.push('dashboard');
                 } else {
-                    alert("Successfully Edited Quiz module")
+                    setDialogText("Successfully Edited Quiz module")
+                    handleOpenDialog()
+                    //alert("Successfully Edited Quiz module")
                     props.history.push('/course/' + courseID)
                 }
 
-            } else if (module.type === "PDF" && (typeof (module.pdf) !== 'undefined')) {
-
-                const pdfTypePath = module.pdf.name.split('.')
-
-                // Grabbing the actual filename minus extension so that we can validate alphanumeric inputs
-                var val = pdfTypePath[pdfTypePath.length - 2];
-                var RegEx = /[^0-9a-z]/i;
-                var isValid = !(RegEx.test(val));
-
-                // Input contains non-alphanumeric values so we must alert the user to rename the file 
-                if (isValid === false) {
-                    alert('Invalid file type. Please upload a PDF for which name is alphanumeric and has no spaces.')
-                    return
-                }
-
-                const newFile = new FormData();
-                newFile.append('file', module.pdf)
-
-                const res = await fetch(config.server_url + config.paths.editModule, {
-                    method: 'POST',
-                    headers: {
+            }else if(module.type === "PDF"){
+               if(typeof(module.pdf) === 'undefined'){
+                    const res = await fetch(config.server_url + config.paths.editModule, {
+                        method: 'POST',
+                        headers: {
                         'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        "token": token,
-                        'moduleID': props.location.moduleIndex,
-                        'courseID': courseID,
-                        "title": module.title,
-                        'description': module.description,
-                        'type': module.type,
-                        "urlFile": `http://localhost:4000/` + courseID + `/moduleData/${module.pdf.name}`
+                        },
+                        body: JSON.stringify({
+                            "token": token,
+                            'moduleID': props.location.moduleIndex,
+                            'courseID': courseID,
+                            "title": module.title,
+                            'description': module.description,
+                            'type': module.type,
+                            "urlFile": module.fileName
+                        })
                     })
-                })
-                const data = await res.json()
 
-                if (data.newToken != undefined)
-                    localStorage.setItem("token", data.newToken)
+                    const data = await res.json()
 
-                if (data.message === "unauthorized") {
-                    props.history.push('dashboard');
-                } else if (data.message === undefined) {
-                    const res = await fetch(config.server_url + config.paths.moduleFileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.pdf.name, {
+                    if (data.message === "unauthorized") {
+                        props.history.push('dashboard');
+                    } else {
+                        setDialogText("Successfully Edited PDF module")
+                        handleOpenDialog()
+                        //alert("Successfully Edited PDF module")
+                        props.history.push('/course/' + courseID)
+                    }
+               }
+                else{
+                    const pdfTypePath = module.pdf.name.split('.')
+                    // Grabbing the actual filename minus extension so that we can validate alphanumeric inputs
+                    var val = pdfTypePath[pdfTypePath.length - 2];
+                    var RegEx = /[^0-9a-z]/i;
+                    var isValid = !(RegEx.test(val));
+
+                    // Input contains non-alphanumeric values so we must alert the user to rename the file 
+                    if (isValid === false) {
+                        setDialogText('Invalid file type. Please upload a PDF for which name is alphanumeric and has no spaces.')
+                        handleOpenDialog()
+                        //alert('Invalid file type. Please upload a PDF for which name is alphanumeric and has no spaces.')
+                        return
+                    }
+
+                    const newFile = new FormData();
+                    newFile.append('file', module.pdf)
+
+                    const res = await fetch(config.server_url + config.paths.editModule, {
+                        method: 'POST',
+                        headers: {
+                        'Content-type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            "token": token,
+                            'moduleID': props.location.moduleIndex,
+                            'courseID': courseID,
+                            "title": module.title,
+                            'description': module.description,
+                            'type': module.type,
+                            "urlFile": `http://localhost:4000/`+courseID+`/moduleData/${module.pdf.name}`
+                        })
+                    })
+                    const data = await res.json()
+                    if (data.message === "unauthorized") {
+                        props.history.push('dashboard');
+                    } else if (data.message === undefined) {
+                        const res = await fetch(config.server_url + config.paths.moduleFileUpload +"?token=" + token + "&courseID=" + courseID + "&imageName=" + module.pdf.name, {
                         method: 'POST',
                         body: newFile
-                    })
-                    const data2 = await res.json()
+                        })
+                        const data2 = await res.json()
 
-                    if (data2.message === "unauthorized") {
-                        props.history.push('dashboard');
-                    } else if (data2.status === 'Success') {
-                        alert("Successfully Edited PDF module")
-                        props.history.push('/course/' + courseID)
-                    } //else need to do something, not sure what rn
-                } else { // this is to check if there are errors not being addressed already
-                    console.log(data)
+                        if (data2.message === "unauthorized") {
+                            props.history.push('dashboard');
+                        } else if (data2.status === 'Success') {
+                            setDialogText("Successfully Edited PDF module")
+                            handleOpenDialog()
+                            //alert("Successfully Edited PDF module")
+                            props.history.push('/course/' + courseID)
+                        } //else need to do something, not sure what rn
+                    } else { // this is to check if there are errors not being addressed already
+                        console.log(data)
+                    }
                 }
-            } else if (module.type === "File" && (typeof (module.file) !== 'undefined')) {
-
-                const fileTypePath = module.file.name.split('.')
-
-                // Grabbing the actual filename minus extension so that we can validate alphanumeric inputs
-                var val = fileTypePath[fileTypePath.length - 2];
-                var RegEx = /[^0-9a-z]/i;
-                var isValid = !(RegEx.test(val));
-
-                // Input contains non-alphanumeric values so we must alert the user to rename the file 
-                if (isValid === false) {
-                    alert('Invalid file type. Please upload a file for which name is alphanumeric and has no spaces.')
-                    return
-                }
-
-                const newFile = new FormData();
-                newFile.append('file', module.file)
-
-                const res = await fetch(config.server_url + config.paths.editModule, {
-                    method: 'POST',
-                    headers: {
+            } else if(module.type === "File"){
+                if(typeof(module.file) === 'undefined'){
+                    const res = await fetch(config.server_url + config.paths.editModule, {
+                        method: 'POST',
+                        headers: {
                         'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        "token": token,
-                        'moduleID': props.location.moduleIndex,
-                        'courseID': courseID,
-                        "title": module.title,
-                        'description': module.description,
-                        'type': module.type,
-                        "urlFile": `http://localhost:4000/` + courseID + `/moduleData/${module.file.name}`
+                        },
+                        body: JSON.stringify({
+                            "token": token,
+                            'moduleID': props.location.moduleIndex,
+                            'courseID': courseID,
+                            "title": module.title,
+                            'description': module.description,
+                            'type': module.type,
+                            "urlFile": module.fileName
+                        })
                     })
-                })
-                const data = await res.json()
 
-                if (data.newToken != undefined)
-                    localStorage.setItem("token", data.newToken)
+                    const data = await res.json()
 
-                if (data.message === "unauthorized") {
-                    props.history.push('dashboard');
-                } else if (data.message === undefined) {
-                    const res = await fetch(config.server_url + config.paths.moduleFileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.file.name, {
+                    if (data.message === "unauthorized") {
+                        props.history.push('dashboard');
+                    } else {
+                        setDialogText("Successfully Edited File module")
+                        handleOpenDialog()
+                        //alert("Successfully Edited File module")
+                        props.history.push('/course/' + courseID)
+                    }
+               }else {
+
+                    const fileTypePath = module.file.name.split('.')
+
+                    // Grabbing the actual filename minus extension so that we can validate alphanumeric inputs
+                    var val = fileTypePath[fileTypePath.length - 2];
+                    var RegEx = /[^0-9a-z]/i;
+                    var isValid = !(RegEx.test(val));
+
+                    // Input contains non-alphanumeric values so we must alert the user to rename the file 
+                    if (isValid === false) {
+                        setDialogText('Invalid file type. Please upload a file for which name is alphanumeric and has no spaces.')
+                        handleOpenDialog()
+                        //alert('Invalid file type. Please upload a file for which name is alphanumeric and has no spaces.')
+                        return
+                    }
+
+                    const newFile = new FormData();
+                    newFile.append('file', module.file)
+
+                    const res = await fetch(config.server_url + config.paths.editModule, {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            "token": token,
+                            'moduleID': props.location.moduleIndex,
+                            'courseID': courseID,
+                            "title": module.title,
+                            'description': module.description,
+                            'type': module.type,
+                            "urlFile": `http://localhost:4000/`+courseID+`/moduleData/${module.file.name}`
+                        })
+                    })
+                    const data = await res.json()
+                    if (data.message === "unauthorized") {
+                        props.history.push('dashboard');
+                    } else if (data.message === undefined) {
+                        const res = await fetch(config.server_url + config.paths.moduleFileUpload +"?token=" + token + "&courseID=" + courseID + "&imageName=" + module.file.name, {
                         method: 'POST',
                         body: newFile
-                    })
-                    const data2 = await res.json()
-
-                    if (data2.message === "unauthorized") {
+                        })
+                        const data2 = await res.json()
+                    
+                        if (data2.message === "unauthorized") {
                         props.history.push('dashboard');
-                    } else if (data2.status === 'Success') {
-                        alert("Successfully Edited File module")
-                        props.history.push('/course/' + courseID)
-                    } //else need to do something, not sure what rn
-                } else { // this is to check if there are errors not being addressed already
-                    console.log(data)
+                        } else if (data2.status === 'Success') {
+                            setDialogText("Successfully Edited File module")
+                            handleOpenDialog()
+                            //alert("Successfully Edited File module")
+                            props.history.push('/course/' + courseID)
+                        } //else need to do something, not sure what rn
+                    } else { // this is to check if there are errors not being addressed already
+                        console.log(data)
+                    }
                 }
-            } else if (module.type === "Video" && (typeof (module.video) !== 'undefined')) {
-
-                const videoTypePath = module.video.name.split('.')
-                var val = videoTypePath[videoTypePath.length - 2];
-
-                var RegEx = /[^0-9a-z]/i;
-                var isValid = !(RegEx.test(val));
-
-                // Input contains non-alphanumeric values so we must alert the user to rename the file 
-                if (isValid === false) {
-                    alert('Invalid file type. Please upload a video for which name is alphanumeric and has no spaces.')
-                    return
-                }
-
-                const newVideo = new FormData();
-                newVideo.append('file', module.video)
-                const res = await fetch(config.server_url + config.paths.editModule, {
-                    method: 'POST',
-                    headers: {
+            }else if(module.type === "Video"){
+                if(typeof(module.video) === 'undefined'){
+                    const res = await fetch(config.server_url + config.paths.editModule, {
+                        method: 'POST',
+                        headers: {
                         'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        "token": token,
-                        'moduleID': props.location.moduleIndex,
-                        'courseID': courseID,
-                        "title": module.title,
-                        'description': module.description,
-                        'type': module.type,
-                        "urlVideo": `http://localhost:4000/` + courseID + `/moduleData/${module.video.name}`,
+                        },
+                        body: JSON.stringify({
+                            "token": token,
+                            'moduleID': props.location.moduleIndex,
+                            'courseID': courseID,
+                            "title": module.title,
+                            'description': module.description,
+                            'type': module.type,
+                            "urlVideo": module.videoName
+                        })
                     })
 
-                })
+                    const data = await res.json()
 
-                const data = await res.json()
+                    if (data.message === "unauthorized") {
+                        props.history.push('dashboard');
+                    } else {
+                        setDialogText("Successfully Edited Video module")
+                        handleOpenDialog()
+                        //alert("Successfully Edited Video module")
+                        props.history.push('/course/' + courseID)
+                    }
+               } else {
 
-                if (data.newToken != undefined)
-                    localStorage.setItem("token", data.newToken)
+                    const videoTypePath = module.video.name.split('.')
+                    var val = videoTypePath[videoTypePath.length - 2];
 
-                if (data.message === "unauthorized") {
-                    props.history.push('dashboard');
-                } else if (data.message === undefined) {
-                    const res = await fetch(config.server_url + config.paths.moduleFileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.video.name, {
+                    var RegEx = /[^0-9a-z]/i;
+                    var isValid = !(RegEx.test(val));
+
+                    // Input contains non-alphanumeric values so we must alert the user to rename the file 
+                    if (isValid === false) {
+                        setDialogText("Invalid file type. Please upload a video for which name is alphanumeric and has no spaces.")
+                        handleOpenDialog()
+                        //alert('Invalid file type. Please upload a video for which name is alphanumeric and has no spaces.')
+                        return
+                    }
+    
+                    const newVideo = new FormData();
+                    newVideo.append('file', module.video)
+                    const res = await fetch(config.server_url + config.paths.editModule, {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            "token": token,
+                            'moduleID': props.location.moduleIndex,
+                            'courseID': courseID,
+                            "title": module.title,
+                            'description': module.description,
+                            'type': module.type,
+                            "urlVideo": `http://localhost:4000/`+courseID+`/moduleData/${module.video.name}`,
+                        })
+
+                    })
+
+                    const data = await res.json()
+                    if (data.message === "unauthorized") {
+                        props.history.push('dashboard');
+                    } else if (data.message === undefined) {
+                        const res = await fetch(config.server_url + config.paths.moduleFileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.video.name, {
                         method: 'POST',
                         body: newVideo
-                    })
-                    const data2 = await res.json()
+                        })
+                        const data2 = await res.json()
 
-                    if (data2.message === "unauthorized") {
-                        props.history.push('dashboard');
-                    } else if (data2.status === 'Success') {
-                        alert("Successfully Edited video module")
-                        props.history.push('/course/' + courseID)
-                    } //else need to do something, not sure what rn
-                } else { // this is to check if there are errors not being addressed already
-                    console.log(data)
+                        if (data2.message === "unauthorized") {
+                            props.history.push('dashboard');
+                        } else if (data2.status === 'Success') {
+                            setCourseID("Successfully Edited video module")
+                            handleOpenDialog()
+                            //alert("Successfully Edited video module")
+                            props.history.push('/course/' + courseID)
+                        } //else need to do something, not sure what rn
+                    } else { // this is to check if there are errors not being addressed already
+                        console.log(data)
+                    }
                 }
             } else {
                 res = await fetch(config.server_url + config.paths.editModule, {
@@ -336,7 +485,9 @@ function ModuleEditor(props) {
                 if (data.message === "unauthorized") {
                     props.history.push('dashboard');
                 } else if (data.message === undefined) {
-                    alert('worked')
+                    setCourseID('Successfully Edited Text Module')
+                    handleOpenDialog()
+                    //alert('Successfully Edited Text Module')
                     props.history.push('/course/' + courseID)
                 }
                 else { // this is to check if there are errors not being addressed already
@@ -398,8 +549,8 @@ function ModuleEditor(props) {
                                         <option aria-label="None" value="" />
                                         <option value={"Quiz"}>Quiz</option>
                                         <option value={"Video"}>Video</option>
-                                        <option value={"File"}>File</option>
                                         <option value={"PDF"}>PDF</option>
+                                        <option value={"File"}>File</option>
                                         <option value={"Text"}>Text</option>
                                     </Select>
                                     <FormHelperText>Required</FormHelperText>
@@ -423,6 +574,14 @@ function ModuleEditor(props) {
                     </form>
                 </div>
             </Container>
+            <DialogComponent
+                open={openDialog}
+                text={dialogText}
+                onClose={handleCloseDialog}
+                buttons={[
+                    { text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog }
+                ]}
+            />
         </div>
     )
 }
