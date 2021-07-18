@@ -137,7 +137,7 @@ const useStyles = makeStyles((theme) => ({
       
       closeButton:
       {
-        marginRight: '20%'
+        // marginRight: '70%'
       },
       
       search: {
@@ -854,13 +854,22 @@ export default function TopNavBar(props) {
 
                   </DialogContent>
                   <DialogActions>
-                    <Button className={classes.closeButton} color="primary" onClick={handleClose}>
-                      Close
-                    </Button>
-                    <Button autoFocus color="primary" onClick={handleChanges}>
-                      Save Changes
-                    </Button>
+                    <Grid container>
+                      <Grid item xs={6} sm={6} lg={6}>
+                      <Button className={classes.closeButton} color="primary" onClick={handleClose}>
+                        Close
+                      </Button>
+                      </Grid>
+                      <Grid item xs={6} sm={6} lg={6}>
+                      {newEmail != user.email &&
+                        <Button color="primary" onClick={handleChanges}>
+                          Save Changes
+                        </Button>
+                      }
+                      </Grid>
+                    </Grid>
                   </DialogActions>
+
                 </Dialog>
               </div>
 
