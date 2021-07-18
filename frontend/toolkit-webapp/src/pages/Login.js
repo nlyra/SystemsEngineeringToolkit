@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Container, TextField, Typography, Paper, Box } from '@material-ui/core'
 import config from '../config.json'
 import loginStyles from '../styles/loginStyle'
@@ -17,6 +17,11 @@ function Login(props) {
     const [openDialog, setOpenDialog] = useState(false);
     const classes = loginStyles()
     const dialogClasses = dialogStyles()
+
+    useEffect(() => {
+        if(localStorage.getItem("token") != null)
+            localStorage.removeItem("token")    
+      }, []);
 
     const handleOpenDialog = () => {
         setOpenDialog(true);

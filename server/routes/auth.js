@@ -130,9 +130,9 @@ function verifyToken(req, res, next) {
         token = req.query.token
     else
         token = req.body.token;
-
-    if (token === undefined) {
+    if (token == '' || token == undefined || token == null) {
         res.sendStatus(403);
+        return
     }
 
     jwt.verify(token, config.key, function (err, decoded) {

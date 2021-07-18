@@ -283,7 +283,8 @@ export default function TopNavBar(props) {
 
   // function that will run when page is loaded
   useEffect(() => {
-    getAuthorization();
+    if (props.hideComponents === true)
+      getAuthorization();
   }, []);
 
   const getAuthorization = async () => {
