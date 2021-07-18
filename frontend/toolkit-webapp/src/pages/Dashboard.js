@@ -14,7 +14,7 @@ const Dashboard = (props) => {
     const [next, setHasNext] = useState(0)
     const [hasNextPage, setHasNextPage] = useState(true);
     const [totalCourses, setTotalCourses] = useState(0)
-    const cardAmount = 8
+    const cardAmount = 15
 
     const classes = dashStyles()
 
