@@ -180,6 +180,7 @@ function ModuleEditor(props) {
 
     // We ideally want to redirect to module manager page, but we do not have that yet
     const cancel = () => {
+        sessionStorage.clear()
         props.history.push(`/course/${courseID}`)
     }
 
