@@ -179,9 +179,11 @@ router.post('/info', VerifyToken, async (req, res) => {
   try {
     let courses = []
     let totalCourses = await Course.find({isEnabled: true}).countDocuments()
-
-    if (req.body.search_query != undefined) {
+    if (req.body.search_query != undefined && req.body.search_query.length > 0) {
+      
       const query = req.body.search_query;
+      totalCourses = undefined
+
       courses = await Course.find({
         isEnabled: true,
         $or: [
@@ -189,18 +191,15 @@ router.post('/info', VerifyToken, async (req, res) => {
           { "name": { "$regex": query, $options: 'i' } },
         ]
       }, '_id name description urlImage categories');
+      // }, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
+      // console.log(courses)
+      res.json({ "status": "search", "courses": courses, "totalCourses": totalCourses });
 
-      if (req.body.newToken != undefined)
-        res.json({ "status": "search", "courses": courses, "totalCourses": totalCourses, "newToken": req.body.newToken });
-      else
-        res.json({ "status": "search", "courses": courses, "totalCourses": totalCourses });
     } else {
       courses = await Course.find({isEnabled: true}, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
+      // courses = await Course.find({ isEnabled: true }, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
+      res.json({ "status": "loading", "courses": courses, "totalCourses": totalCourses });
 
-      if (req.body.newToken != undefined)
-        res.json({ "status": "loading", "courses": courses, "totalCourses": totalCourses, "newToken": req.body.newToken });
-      else
-        res.json({ "status": "loading", "courses": courses, "totalCourses": totalCourses });
     }
 
   } catch (e) {
