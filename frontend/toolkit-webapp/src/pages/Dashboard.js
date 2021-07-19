@@ -18,6 +18,8 @@ const Dashboard = (props) => {
 
     const classes = dashStyles()
 
+    sessionStorage.clear()
+
     // function that will run when page is loaded
     useEffect(() => {
         loadCourses(undefined, next + 1);
