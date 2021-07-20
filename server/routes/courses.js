@@ -115,7 +115,7 @@ router.post('/course/updateImage', VerifyToken, GetRole, async (req, res) => {
       { _id: req.body.courseID },
       {
         $set: {
-          urlImage: config.server_url + '/' + req.body.courseID + '/' + imageName
+          urlImage: '/' + req.body.courseID + '/' + imageName
         }
       })
 

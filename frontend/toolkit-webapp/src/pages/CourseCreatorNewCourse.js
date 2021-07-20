@@ -99,7 +99,7 @@ function NewCourse(props) {
                     "skillLevel": skillLevel,
                     "intendedAudience": intendedAudience,
                     "prerequisite": prerequisite,
-                    "urlImage": `http://localhost:4000/${image.name}`
+                    "urlImage": `/${image.name}`
                 })
             })
 
@@ -189,7 +189,7 @@ function NewCourse(props) {
                     "skillLevel": skillLevel,
                     "intendedAudience": intendedAudience,
                     "prerequisite": prerequisite,
-                    "urlImage": `http://localhost:4000/misc_files/logo.jpg`
+                    "urlImage": `/misc_files/logo.jpg`
                 })
             }
             )

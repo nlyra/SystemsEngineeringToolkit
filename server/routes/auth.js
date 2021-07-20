@@ -194,7 +194,6 @@ router.post('/resetPassApproved', async (req, res) => {
 })
 
 async function getRole(req, res, next) {
-    console.log(req.path)
     const role = await User.findOne({ _id: req.body.userID }, 'roleID')
     req.body.roleID = role.roleID;
 
