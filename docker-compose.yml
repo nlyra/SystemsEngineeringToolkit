@@ -1,59 +1,45 @@
 version: '3.7'
 
 services:
-  server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    image: myapp-server
-    container_name: myapp-node-server
-    command: /usr/src/app/node_modules/.bin/nodemon server.js
-    volumes:
-      - ./server/:/usr/src/app
-      - /usr/src/app/node_modules
-    ports:
-      - "4000:4000"
-    depends_on:
-      - mongo
-    environment:
-      - NODE_ENV=development
-    networks:
-      - app-network
-  mongo:
-    image: mongo
-    container_name: mongo
-    # environment:
-    #   MONGO_INITDB_ROOT_USERNAME: root
-    #   MONGO_INITDB_ROOT_PASSWORD: example
-    volumes:
-      - data-volume:/data/db
-    ports:
-      - 27018:27018
-    networks:
-      - app-network
   client:
-    build:
-      context: ./frontend/toolkit-webapp
-      dockerfile: Dockerfile
     image: myapp-frontend
-    container_name: myapp-react-frontend
-    command: npm start
-    volumes:
-      - ./client/:/usr/app
-      - /usr/app/node_modules
-    depends_on:
-      - server
+    build: ./frontend/toolkit-webapp
+    stdin_open: true
     ports:
       - "3000:3000"
     networks:
       - app-network
+    command: npm start
+    volumes:
+      - ./frontend/toolkit-webapp/:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - server
+  server:
+    image: myapp-server
+    build: ./server
+    ports:
+      - "4000:4000"
+    networks:
+      - app-network
+    depends_on:
+      - mongo
+    volumes:
+      - ./server/:/usr/src/app
+      - /usr/src/app/node_modules
+  mongo:
+    image: mongo:4.4-bionic
+    ports:
+      - 27017:27017
+    networks:
+      - app-network
+    volumes:
+      - mongo-data:/data/db
 
 networks:
     app-network:
         driver: bridge
 
 volumes:
-    data-volume:
-    node_modules:
-    web-root:
+    mongo-data:
       driver: local

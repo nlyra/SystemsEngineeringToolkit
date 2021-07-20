@@ -138,6 +138,7 @@ function verifyToken(req, res, next) {
     jwt.verify(token, config.key, function (err, decoded) {
         if (err) {
             res.json({ 'message': 'wrong token' });
+            return
         }
 
         req.body.userID = decoded.id;
@@ -193,7 +194,7 @@ router.post('/resetPassApproved', async (req, res) => {
 })
 
 async function getRole(req, res, next) {
-
+    console.log(req.path)
     const role = await User.findOne({ _id: req.body.userID }, 'roleID')
     req.body.roleID = role.roleID;
 

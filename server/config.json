@@ -1,5 +1,7 @@
 {
-    "db_url": "mongodb://mongo:27018/se_toolkit",
+    "db_url": "mongodb+srv://Daniel:se_toolkit3@cluster0.g65gk.mongodb.net/se_toolkit",
+    "db_url2": "mongodb://localhost:27017/se_toolkit",
+    "db_url3": "mongodb://mongo:27017/se_toolkit",
     "server_url": "http://localhost:4000",
     "key": "veryhardkey",
     "emailInfo": {
