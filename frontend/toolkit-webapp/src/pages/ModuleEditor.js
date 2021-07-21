@@ -98,28 +98,28 @@ function ModuleEditor(props) {
         }
 
         if (type === 'Quiz' && JSON.parse(sessionStorage.getItem('quiz')) !== null) {
-            if(gradeToPass<1){
+            if (gradeToPass < 1) {
                 setDialogText("The number of correct answers required must be greater than 0.")
                 handleOpenDialog()
                 //alert("The number of correct answers required must be greater than 0.")
-            } else{
+            } else {
 
                 console.log('works for Quiz')
                 var quiz = []
 
                 quiz = JSON.parse(sessionStorage.getItem("quiz"))
-                if(gradeToPass>quiz.length){
+                if (gradeToPass > quiz.length) {
                     setDialogText("The number of correct answers may not be greater than the number of questions.")
                     handleOpenDialog()
                     //alert("The number of correct answers may not be greater than the number of questions.")
-                } else{
+                } else {
                     sessionStorage.clear()
                     onFinish({ title, type, description, quiz })
                 }
             }
-        }else if(type === 'PDF'){
-            if(pdf !== null && typeof(pdf) !== 'undefined'){
-                if(isPDF(pdf.name) === false){
+        } else if (type === 'PDF') {
+            if (pdf !== null && typeof (pdf) !== 'undefined') {
+                if (isPDF(pdf.name) === false) {
                     setDialogText("File must be a PDF")
                     handleOpenDialog()
                     //alert("File must be a PDF")
@@ -127,31 +127,31 @@ function ModuleEditor(props) {
                     console.log('works for PDF')
                     onFinish({ title, type, description, pdf })
                 }
-            }else if(module.type==="PDF"){
-                const fileName=module.urlFile
-                onFinish({title, type, description, fileName}) 
+            } else if (module.type === "PDF") {
+                const fileName = module.urlFile
+                onFinish({ title, type, description, fileName })
             } else {
                 setDialogText("Please attach proper file corresponding to module type.")
                 handleOpenDialog()
                 //alert("Please attach proper file corresponding to module type.")
             }
 
-        } else if(type === 'File'){
-            if(file !== null && typeof(file) !== 'undefined'){
+        } else if (type === 'File') {
+            if (file !== null && typeof (file) !== 'undefined') {
                 console.log('works for File')
                 onFinish({ title, type, description, file })
-            } else if(module.type==="File"){
-                const fileName=module.urlFile
+            } else if (module.type === "File") {
+                const fileName = module.urlFile
                 onFinish({ title, type, description, fileName })
-            }else {
+            } else {
                 setDialogText("Please attach proper file corresponding to module type.")
                 handleOpenDialog()
                 //alert("Please attach proper file corresponding to module type.")
             }
-            
-        }else if(type === 'Video'){
-            if(video !== null && typeof(video) !== 'undefined'){
-                if(isVideo(video.name) === false){
+
+        } else if (type === 'Video') {
+            if (video !== null && typeof (video) !== 'undefined') {
+                if (isVideo(video.name) === false) {
                     setDialogText("File must be a video.")
                     handleOpenDialog()
                     //alert("File must be a video")
@@ -159,15 +159,15 @@ function ModuleEditor(props) {
                     console.log('works for Video')
                     onFinish({ title, type, description, video })
                 }
-            } else if(module.type === "Video"){
+            } else if (module.type === "Video") {
                 const videoName = module.urlVideo
-                onFinish({title, type, description, videoName })
-            } else{
+                onFinish({ title, type, description, videoName })
+            } else {
                 setDialogText("Please attach proper file corresponding to module type.")
                 handleOpenDialog()
                 //alert("Please attach proper file corresponding to module type.")
             }
-        }else if (type === 'Text') {
+        } else if (type === 'Text') {
             console.log('Works for Text')
             onFinish({ title, type, description })
         }
@@ -180,6 +180,7 @@ function ModuleEditor(props) {
 
     // We ideally want to redirect to module manager page, but we do not have that yet
     const cancel = () => {
+        sessionStorage.clear()
         props.history.push(`/course/${courseID}`)
     }
 
@@ -212,12 +213,12 @@ function ModuleEditor(props) {
                     props.history.push('/course/' + courseID)
                 }
 
-            }else if(module.type === "PDF"){
-               if(typeof(module.pdf) === 'undefined'){
+            } else if (module.type === "PDF") {
+                if (typeof (module.pdf) === 'undefined') {
                     const res = await fetch(config.server_url + config.paths.editModule, {
                         method: 'POST',
                         headers: {
-                        'Content-type': 'application/json'
+                            'Content-type': 'application/json'
                         },
                         body: JSON.stringify({
                             "token": token,
@@ -240,8 +241,8 @@ function ModuleEditor(props) {
                         //alert("Successfully Edited PDF module")
                         props.history.push('/course/' + courseID)
                     }
-               }
-                else{
+                }
+                else {
                     const pdfTypePath = module.pdf.name.split('.')
                     // Grabbing the actual filename minus extension so that we can validate alphanumeric inputs
                     var val = pdfTypePath[pdfTypePath.length - 2];
@@ -262,7 +263,7 @@ function ModuleEditor(props) {
                     const res = await fetch(config.server_url + config.paths.editModule, {
                         method: 'POST',
                         headers: {
-                        'Content-type': 'application/json'
+                            'Content-type': 'application/json'
                         },
                         body: JSON.stringify({
                             "token": token,
@@ -278,9 +279,9 @@ function ModuleEditor(props) {
                     if (data.message === "unauthorized") {
                         props.history.push('dashboard');
                     } else if (data.message === undefined) {
-                        const res = await fetch(config.server_url + config.paths.moduleFileUpload +"?token=" + token + "&courseID=" + courseID + "&imageName=" + module.pdf.name, {
-                        method: 'POST',
-                        body: newFile
+                        const res = await fetch(config.server_url + config.paths.moduleFileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.pdf.name, {
+                            method: 'POST',
+                            body: newFile
                         })
                         const data2 = await res.json()
 
@@ -296,12 +297,12 @@ function ModuleEditor(props) {
                         console.log(data)
                     }
                 }
-            } else if(module.type === "File"){
-                if(typeof(module.file) === 'undefined'){
+            } else if (module.type === "File") {
+                if (typeof (module.file) === 'undefined') {
                     const res = await fetch(config.server_url + config.paths.editModule, {
                         method: 'POST',
                         headers: {
-                        'Content-type': 'application/json'
+                            'Content-type': 'application/json'
                         },
                         body: JSON.stringify({
                             "token": token,
@@ -324,7 +325,7 @@ function ModuleEditor(props) {
                         //alert("Successfully Edited File module")
                         props.history.push('/course/' + courseID)
                     }
-               }else {
+                } else {
 
                     const fileTypePath = module.file.name.split('.')
 
@@ -363,14 +364,14 @@ function ModuleEditor(props) {
                     if (data.message === "unauthorized") {
                         props.history.push('dashboard');
                     } else if (data.message === undefined) {
-                        const res = await fetch(config.server_url + config.paths.moduleFileUpload +"?token=" + token + "&courseID=" + courseID + "&imageName=" + module.file.name, {
-                        method: 'POST',
-                        body: newFile
+                        const res = await fetch(config.server_url + config.paths.moduleFileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.file.name, {
+                            method: 'POST',
+                            body: newFile
                         })
                         const data2 = await res.json()
-                    
+
                         if (data2.message === "unauthorized") {
-                        props.history.push('dashboard');
+                            props.history.push('dashboard');
                         } else if (data2.status === 'Success') {
                             setDialogText("Successfully Edited File module")
                             handleOpenDialog()
@@ -381,12 +382,12 @@ function ModuleEditor(props) {
                         console.log(data)
                     }
                 }
-            }else if(module.type === "Video"){
-                if(typeof(module.video) === 'undefined'){
+            } else if (module.type === "Video") {
+                if (typeof (module.video) === 'undefined') {
                     const res = await fetch(config.server_url + config.paths.editModule, {
                         method: 'POST',
                         headers: {
-                        'Content-type': 'application/json'
+                            'Content-type': 'application/json'
                         },
                         body: JSON.stringify({
                             "token": token,
@@ -409,7 +410,7 @@ function ModuleEditor(props) {
                         //alert("Successfully Edited Video module")
                         props.history.push('/course/' + courseID)
                     }
-               } else {
+                } else {
 
                     const videoTypePath = module.video.name.split('.')
                     var val = videoTypePath[videoTypePath.length - 2];
@@ -424,7 +425,7 @@ function ModuleEditor(props) {
                         //alert('Invalid file type. Please upload a video for which name is alphanumeric and has no spaces.')
                         return
                     }
-    
+
                     const newVideo = new FormData();
                     newVideo.append('file', module.video)
                     const res = await fetch(config.server_url + config.paths.editModule, {
@@ -449,8 +450,8 @@ function ModuleEditor(props) {
                         props.history.push('dashboard');
                     } else if (data.message === undefined) {
                         const res = await fetch(config.server_url + config.paths.moduleFileUpload + "?token=" + token + "&courseID=" + courseID + "&imageName=" + module.video.name, {
-                        method: 'POST',
-                        body: newVideo
+                            method: 'POST',
+                            body: newVideo
                         })
                         const data2 = await res.json()
 
