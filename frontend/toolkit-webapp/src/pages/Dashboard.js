@@ -24,24 +24,24 @@ const Dashboard = (props) => {
     const loadMoreCourses = useCallback(() => {
         // console.log(cur)
         //if (currQuery == undefined) {
-    
-            if ((totalCourses === undefined || totalCourses === courses.length))
-                return
 
-            loadCourses(undefined, next + 1)
-        }
+        if ((totalCourses === undefined || totalCourses === courses.length))
+            return
+
+        loadCourses(undefined, next + 1)
+    }
     )
 
     // function to get the courses 
     const loadCourses = async (query, currNext) => {
 
-        if (query != undefined && query.length > 0) {
-            setCurrQuery(query)
+        // if (query != undefined && query.length > 0) {
+        //     setCurrQuery(query)
 
-        } else if (query == '') {
-            setCurrQuery(undefined)
-            currNext = 1
-        }
+        // } else if (query == '') {
+        //     setCurrQuery(undefined)
+        //     currNext = 1
+        // }
 
         if (query != undefined) {
             window.scrollTo({
@@ -66,12 +66,12 @@ const Dashboard = (props) => {
         })
 
         const data = await res.json()
-        
+
         if (data.newToken != undefined)
             localStorage.setItem("token", data.newToken)
 
         if (data.status === "loading") {
-    
+
             if (query === "") {
                 setCourses(data.courses)
             } else
@@ -145,13 +145,13 @@ const Dashboard = (props) => {
                     </Grid>
                 </div>
                 {/* <Pagination count={6} page={page} onChange={handlePage} variant="outlined" shape="rounded" /> */}
-                
-                { totalCourses !== undefined && totalCourses !== courses.length &&  
-                    
-                         <div className={classes.expandMoreIcon}>
+
+                {totalCourses !== undefined && totalCourses !== courses.length &&
+
+                    <div className={classes.expandMoreIcon}>
                         <IconButton disableRipple size='large' style={{ backgroundColor: 'transparent' }}> Scroll for More<ExpandMoreIcon /></IconButton>
-                        </div>
-    //                 
+                    </div>
+                    //                 
                 }
             </Container>
         </div>
