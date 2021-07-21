@@ -66,8 +66,7 @@ const ManageMyCourses = (props) => {
         setOpenDialog(false);
     };
 
-    const deleteCourse = async (id) => 
-    {
+    const deleteCourse = async (id) => {
         let res = undefined
         const token = localStorage.getItem("token");
 
@@ -105,7 +104,6 @@ const ManageMyCourses = (props) => {
         <div className={classes.div}>
             <TopNavBar
                 search={loadCourses}
-            // page={page}
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
@@ -138,53 +136,28 @@ const ManageMyCourses = (props) => {
                                         <Typography gutterBottom>
                                             {course.description.length < 100 ? course.description : course.description.substr(0, 100) + '...'}
                                         </Typography>
-                                        {/* <CardActions>
-                                        </CardActions> */}
                                     </CardContent>
                                     <Grid container spacing={3}>
                                     </Grid>
                                 </Card>
 
-                               
+
                                 <div className={classes.buttonDiv}>
                                     <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick={() => handleOpenDialog(course._id)}>
                                         Delete Course
                                     </Button>
                                 </div>
 
-                                <DialogComponent 
-                                    open={openDialog} 
+                                <DialogComponent
+                                    open={openDialog}
                                     text={"Are you sure you wish to delete this course permanently?"}
                                     onClose={handleCloseDialog}
                                     buttons={[
-                                        {text: "Yes", style: dialogClasses.dialogButton1, onClick: () => deleteCourse(courseID)}, 
-                                        {text: "No", style: dialogClasses.dialogButton2, onClick: handleCloseDialog}
+                                        { text: "Yes", style: dialogClasses.dialogButton1, onClick: () => deleteCourse(courseID) },
+                                        { text: "No", style: dialogClasses.dialogButton2, onClick: handleCloseDialog }
                                     ]}
                                 />
 
-                                {/* {openDialog === true ?
-
-                                    <div className={classes.dialog}>
-                                        <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" classes={{paper: classes.dialogPaper}} BackdropProps={{ style: { backgroundColor: 'rgba(193, 193, 187, 0.2)' } }} open={openDialog}>
-                                            <div className={classes.dialogTitleDiv}>
-                                                <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleCloseDialog}>
-                                                    Are you sure you wish to delete this course permanently?
-                                                </DialogTitle>
-                                            </div>
-                                            <DialogContent className={classes.dialogContent}>
-                                                
-                                                <Button className={classes.dialogButton1} size="small" variant="contained" type= 'submit' onClick={() => deleteCourse(course._id)}>
-                                                        Yes
-                                                    </Button>
-                                                    <Button className={classes.dialogButton2}  size="small" variant="contained" type='submit' onClick={handleCloseDialog} >
-                                                        No
-                                                    </Button>
-                                               
-                                            </DialogContent>
-                                        </Dialog>
-                                    </div>
-
-                                    : null} */}
                             </Grid>
 
                         ))}
@@ -192,7 +165,6 @@ const ManageMyCourses = (props) => {
 
                     </Grid>
                 </div>
-                {/* <Pagination count={6} page={page} onChange={handlePage} variant="outlined" shape="rounded" /> */}
             </Container>
         </div>
     )

@@ -42,13 +42,10 @@ const Dashboard = (props) => {
                 behavior: "smooth"
             });
         }
-        // console.log('hello')
         const token = localStorage.getItem("token");
         let res = undefined
 
-        // console.log('currNext= ' + currNext)
         let skip = (currNext - 1) * cardAmount
-        // console.log(skip)
 
         res = await fetch(config.server_url + config.paths.dashboardCourses, {
             method: 'POST',
@@ -85,7 +82,7 @@ const Dashboard = (props) => {
             props.history.push('login');
             // probably alert the user
         } else { // this is to check if there are errors not being addressed already
-            // console.log(data)
+            console.log(data)
         }
     }
 
@@ -99,7 +96,6 @@ const Dashboard = (props) => {
         <div className={classes.div} >
             <TopNavBar
                 search={loadCourses}
-            // page={page}
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container} >
@@ -129,7 +125,6 @@ const Dashboard = (props) => {
                                     </CardContent>
                                 </Card>
 
-                                {/* {courses.length < 5 && (<Waypoint onEnter={testing}/>)} */}
                             </Grid>
 
                         ))}
@@ -137,7 +132,6 @@ const Dashboard = (props) => {
 
                     </Grid>
                 </div>
-                {/* <Pagination count={6} page={page} onChange={handlePage} variant="outlined" shape="rounded" /> */}
                 
                 { totalCourses !== undefined && totalCourses !== courses.length &&  
                     

@@ -4,7 +4,6 @@ import Avatar from '@material-ui/core/Avatar'
 import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import config from '../config.json'
 import resetPassStyle from '../styles/registerStyle'
-// import '../css/Registration.css';
 import TopNavBar from '../components/TopNavBar'
 import videoSource from '../img/PEOSTRI.mp4'
 import dialogStyles from '../styles/dialogStyle'
@@ -36,7 +35,6 @@ const ForgotPassword = (props) => {
         {
             setDialogText("Please enter an email in the text box.")
             handleOpenDialog()
-            //alert('Please enter an email in the text box.')
             return
         }
 

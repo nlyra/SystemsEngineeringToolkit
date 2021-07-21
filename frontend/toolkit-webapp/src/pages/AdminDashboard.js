@@ -41,6 +41,7 @@ const adminStyles = makeStyles((theme) => ({
   },
 
 }))
+
 const AdminDashboard = (props) => {
   const [currTab, setCurrTab] = useState(Number(new URLSearchParams(props.location.search).get('tab')) || 0)
 

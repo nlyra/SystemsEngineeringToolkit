@@ -42,7 +42,6 @@ function Login(props) {
         if (!email || !password) {
             setDialogText("Please enter both email and password.")
             handleOpenDialog()
-            //alert('Please enter Email and Password')
             return
         }
         onLogin({ email, password })
@@ -68,7 +67,6 @@ function Login(props) {
         } else if (data.message === "wrong email or password") {
             setDialogText("Wrong email or password, please try again or recover password.")
             handleOpenDialog()
-            //alert("Wrong email or password, please try again.");
         } else { // this is to check if there are errors not being addressed already
             console.log(data)
         }

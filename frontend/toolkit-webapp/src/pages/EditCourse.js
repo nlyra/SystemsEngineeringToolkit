@@ -29,12 +29,31 @@ function EditCourse(props) {
     // useEffect() hook will make it so it only gets rendered once, once the page loads,
     // as opposed to after every time the form is rendered (as long as the array at the end remains empty).
     useEffect(() => {
-        getAuthorization();
 
+        const getAuthorization = async () => {
+            const token = localStorage.getItem("token");
+
+            const res = await fetch(config.server_url + config.paths.getIsCreator, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "token": token
+                })
+            })
+
+            const data = await res.json()
+            if (data.message !== "yes") {
+                props.history.push('/dashboard');
+            }
+
+        }
+        
         const getOldCats = () => {
             setCategories(props.location.course.categories.map((cat) => (cat)))
         }
-
+        
         const categoriesCollection = async () => {
             const token = localStorage.getItem("token");
             const res = await fetch(config.server_url + config.paths.categories, {
@@ -46,40 +65,21 @@ function EditCourse(props) {
                     "token": token
                 })
             })
-
+            
             const fetchedCategories = await res.json()
             if (fetchedCategories.message === "unauthorized") {
-                console.log(fetchedCategories.message)
                 props.history.push('dashboard');
             } else
-                setDialogData(fetchedCategories.categories)
+            setDialogData(fetchedCategories.categories)
         }
+
+        getAuthorization();
         getOldCats()
-        console.log(categories)
         categoriesCollection()
 
-    }, []);
+    }, [props]);
 
-    const getAuthorization = async () => {
-        const token = localStorage.getItem("token");
 
-        const res = await fetch(config.server_url + config.paths.getIsCreator, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                "token": token
-            })
-        })
-
-        const data = await res.json()
-        // console.log(data.message)
-        if (data.message !== "yes") {
-            props.history.push('/dashboard');
-        }
-
-    }
 
     const onSubmit = (e) => {
         e.preventDefault()
@@ -87,15 +87,12 @@ function EditCourse(props) {
             alert('Please enter all required fields')
             return
         }
-        // console.log("categories on submit: " + categories)
         onFinish()
     }
 
 
     const onFinish = async (creds) => {
 
-        // e.preventDefault()
-        // console.log("these are the final categories " + JSON.stringify(categories))
         const token = localStorage.getItem("token");
         const res = await fetch(config.server_url + config.paths.updateCourseInfo, {
             method: 'POST',
@@ -211,8 +208,6 @@ function EditCourse(props) {
                     props.history.push('/course/' + course._id)// needs to be changed to course manager
                 } //else need to do something, not sure what rn
             }
-            // props.history.push('/course/' + course._id)
-            // window.location.reload();
         }
     }
 
@@ -336,7 +331,6 @@ function EditCourse(props) {
                                         defaultValue={skillLevel}
                                         onChange={(e) => setSkillLevel(e.target.value)}
                                         label="Skill Label"
-                                    // className={classes.select}
                                     >
                                         <MenuItem value={"Easy"}>Easy</MenuItem>
                                         <MenuItem value={"Medium"}>Medium</MenuItem>
@@ -345,7 +339,6 @@ function EditCourse(props) {
                                 </FormControl>
                             </div>
                             <input style={{ marginLeft: '4vw' }} type="file" name="picture" accept="image/*" className={classes.currCourseImageStyle} onChange={e => setCurrCourseImage(e.target.files[0])} />
-                            {/* <input type="file" name="picture" accept="image/*" onChange={e => setImage(e.target.files[0])} /> */}
                             <Button type='submit' className={classes.button4} color="secondary" size="medium" variant="contained" startIcon={<ClearIcon />} onClick={onCancel}>
                                 Cancel
                             </Button>

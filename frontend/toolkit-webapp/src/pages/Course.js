@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import { IconButton, Chip, FormControlLabel, Divider,  Grid, Typography, Button } from '@material-ui/core'
+import { IconButton, Chip, FormControlLabel, Divider, Grid, Typography, Button } from '@material-ui/core'
 import { Link as ReactLink } from 'react-router-dom';
 import VideoModule from '../components/VideoModule'
 import PdfModule from '../components/PdfModule'
@@ -36,7 +36,7 @@ const Course = (props) => {
 
     const getAuthorization = async () => {
       const token = localStorage.getItem("token");
-  
+
       const res = await fetch(config.server_url + config.paths.getIsCreator, {
         method: 'POST',
         headers: {
@@ -46,12 +46,12 @@ const Course = (props) => {
           "token": token
         })
       })
-  
+
       const data = await res.json()
-  
+
       if (data.newToken !== undefined)
         localStorage.setItem("token", data.newToken)
-  
+
       if (data.message === "yes") {
         setIsCreator(true);
       } else
@@ -61,7 +61,7 @@ const Course = (props) => {
     const getCourse = async (id) => {
       const token = localStorage.getItem("token");
       let res = undefined
-  
+
       res = await fetch(config.server_url + config.paths.course, {
         method: 'POST',
         headers: {
@@ -69,22 +69,15 @@ const Course = (props) => {
         },
         body: JSON.stringify({ "token": token, "id": id })
       })
-  
+
       const data = await res.json()
-  
+
       if (data.newToken !== undefined)
         localStorage.setItem("token", data.newToken)
-  
+
       if (data.message === undefined) {
         setCourse(data.course);
         setCourseID(id);
-        // setOldCourseImage(data.course.urlImage);
-        // setCurrCourseImage(data.course.urlImage);
-        // setCourseTitle(data.course.name);
-        // setCourseDescription(data.course.description);
-        // setSkillLevel(data.course.skillLevel);
-        // setIntendedAudience(data.course.intendedAudience);
-        // setPrerequisite(data.course.prerequisite);
         setModules(data.course.modules);
         setIsEnabled(data.course.isEnabled);
         if (data.course.author === "yes")
@@ -123,7 +116,6 @@ const Course = (props) => {
       body: JSON.stringify({
         'token': token,
         'courseID': course._id,
-        // 'moduleID': indexOf(module),
         'title': module.title,
         'description': module.description,
       })
@@ -233,7 +225,7 @@ const Course = (props) => {
           <Grid item alignItems="center" xs={12}>
             <Grid container className={classes.topItem}>
               <Grid item xs={3} sm={2} lg={1} >
-                <img src={config.server_url + course.urlImage} className={classes.currCourseImageStyle} />
+                <img src={config.server_url + course.urlImage} alt="cover" className={classes.currCourseImageStyle} />
               </Grid>
               <Grid item xs={8} sm={9} lg={9}>
                 <h1
@@ -264,13 +256,13 @@ const Course = (props) => {
         </div>
 
         <br></br>
-          <Grid item xs={12}>
-            <div className={classes.statsDiv}>
-              <Chip label={"Skill Level: " + course.skillLevel} variant="outlined" />
-              <Chip label={"Audience: " + course.intendedAudience} variant="outlined" />
-              <Chip label={"Pre Requisite: " + course.prerequisite} variant="outlined" />
-            </div>
-          </Grid>
+        <Grid item xs={12}>
+          <div className={classes.statsDiv}>
+            <Chip label={"Skill Level: " + course.skillLevel} variant="outlined" />
+            <Chip label={"Audience: " + course.intendedAudience} variant="outlined" />
+            <Chip label={"Pre Requisite: " + course.prerequisite} variant="outlined" />
+          </div>
+        </Grid>
         <Grid item xs={12}>
           <Divider className={classes.divider} />
         </Grid>
@@ -366,7 +358,6 @@ const Course = (props) => {
                     <div className={classes.accordionDiv}>
                       <Typography >
 
-                        {/* Type: {module.type} */}
                         {module.type === "Quiz" &&
                           <div>
                             <Typography >Grade: {module.grade}/{module.quiz.length}</Typography>
@@ -387,9 +378,6 @@ const Course = (props) => {
                       <br />
                       {module.type !== "Quiz" &&
                         <div className={classes.completeDiv}>
-                          {/* {module.completed === 1 ?
-                            <Button disabled>Complete!</Button> */}
-                          {/* : */}
                           <Button
                             variant="contained"
                             onClick={() => handleComplete(modules.indexOf(module))}
@@ -397,7 +385,6 @@ const Course = (props) => {
                           >
                             Complete!
                           </Button>
-                          {/* } */}
                         </div>
                       }
                     </div>

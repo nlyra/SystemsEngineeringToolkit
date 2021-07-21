@@ -41,10 +41,8 @@ function NewCourse(props) {
         if (!courseTitle || !categories || !description || !intendedAudience || !prerequisite) {
             setDialogText("Please enter all required fields.")
             handleOpenDialog()
-            //alert('Please enter all required fields')
             return
         }
-        // console.log("categories on submit: " + categories)
         onFinish({ courseTitle, categories, description })
     }
 
@@ -64,7 +62,6 @@ function NewCourse(props) {
             if (!validInput) {
                 setDialogText("Invalid file type. Please upload an image with the proper file extension.")
                 handleOpenDialog()
-                //alert('Invalid file type. Please upload an image with a proper image extension')
                 return
             }
 
@@ -77,7 +74,6 @@ function NewCourse(props) {
             if (isValid === false) {
                 setDialogText("Invalid file type. Please upload an image for which the name is alphanumeric.")
                 handleOpenDialog()
-                //alert('Invalid file type. Please upload an image for which name is alphanumeric.')
                 return
             }
 
@@ -145,7 +141,6 @@ function NewCourse(props) {
                 } else if (data2.status === 'Success') {
                     setDialogText("Successfully created course!")
                     handleOpenDialog()
-                    //alert("Successfully created course!")
                     props.history.push('/course/' + data._id)// needs to be changed to course manager
                 } //else need to do something, not sure what rn
             }
@@ -195,16 +190,15 @@ function NewCourse(props) {
             )
             const data = await res2.json()
 
-            if(data.newToken !== undefined)
-            localStorage.setItem("token", data.newToken)
+            if (data.newToken !== undefined)
+                localStorage.setItem("token", data.newToken)
 
 
             if (data.message === "unauthorized") {
                 props.history.push('dashboard');
             } else if (data.message === undefined) {
                 setDialogText("Successfully created course!")
-                    handleOpenDialog()
-                    //alert("Successfully created course!")
+                handleOpenDialog()
                 props.history.push('/course/' + data._id)// needs to be changed to course manager
             } else { // this is to check if there are errors not being addressed already
                 console.log(data)
@@ -213,14 +207,37 @@ function NewCourse(props) {
     }
 
     const onTagsChange = (event, values) => {
-        // console.log(values)
         setCategories(values)
     }
 
     // useEffect() hook will make it so it only gets rendered once, once the page loads,
     // as opposed to after every time the form is rendered (as long as the array at the end remains empty).
     useEffect(() => {
-        getAuthorization();
+
+        const getAuthorization = async () => {
+            const token = localStorage.getItem("token");
+
+            const res = await fetch(config.server_url + config.paths.getIsCreator, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "token": token
+                })
+            })
+
+            const data = await res.json()
+
+            if (data.newToken !== undefined)
+                localStorage.setItem("token", data.newToken)
+
+            if (data.message !== "yes") {
+                props.history.push('/dashboard');
+            }
+
+        }
+
 
         const categoriesCollection = async () => {
             const token = localStorage.getItem("token");
@@ -236,39 +253,17 @@ function NewCourse(props) {
 
             const fetchedCategories = await res.json()
             if (fetchedCategories.message === "unauthorized") {
-                console.log(fetchedCategories.message)
                 props.history.push('dashboard');
             } else
                 setDialogData(fetchedCategories.categories)
         }
+
+        getAuthorization();
+
         categoriesCollection()
 
-    }, []);
+    }, [props]);
 
-    const getAuthorization = async () => {
-        const token = localStorage.getItem("token");
-
-        const res = await fetch(config.server_url + config.paths.getIsCreator, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                "token": token
-            })
-        })
-
-        const data = await res.json()
-
-        if (data.newToken !== undefined)
-            localStorage.setItem("token", data.newToken)
-
-        // console.log(data.message)
-        if (data.message !== "yes") {
-            props.history.push('/dashboard');
-        }
-
-    }
 
     return (
         <div>
@@ -381,7 +376,6 @@ function NewCourse(props) {
                                         defaultValue={skillLevel}
                                         onChange={(e) => setSkillLevel(e.target.value)}
                                         label="Skill Label"
-                                    // className={classes.select}
                                     >
                                         <MenuItem value={"Easy"}>Easy</MenuItem>
                                         <MenuItem value={"Medium"}>Medium</MenuItem>
