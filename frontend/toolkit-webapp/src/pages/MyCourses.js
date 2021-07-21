@@ -12,6 +12,7 @@ const MyCourses = (props) => {
     const [courses, setCourses] = useState([])
     const [searchQuery, setSearchQuery] = useState('')
     const [openDialog, setOpenDialog] = useState(false);
+    const [courseID, setCourseID] = useState('')
 
     const classes = myCoursesStyles()
 
@@ -56,7 +57,8 @@ const MyCourses = (props) => {
         }
     }
 
-    const handleOpenDialog = () => {
+    const handleOpenDialog = (id) => {
+        setCourseID(id);
         setOpenDialog(true);
     }
     const handleCloseDialog = () => {
@@ -142,7 +144,7 @@ const MyCourses = (props) => {
                                 </Card>
 
                                 <div className={classes.buttonDiv}>
-                                    <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick={() => {handleOpenDialog()}}>
+                                    <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick={() => {handleOpenDialog(course._id)}}>
                                         Disenroll Course
                                     </Button>
                                 </div>
@@ -158,7 +160,7 @@ const MyCourses = (props) => {
                                             </div>
                                             <DialogContent className={classes.dialogContent}>
                                                 
-                                                <Button className={classes.dialogButton1} size="small" variant="contained" type= 'submit' onClick={() => removeEnrollment(course._id)}>
+                                                <Button className={classes.dialogButton1} size="small" variant="contained" type= 'submit' onClick={() => removeEnrollment(courseID)}>
                                                         Yes
                                                     </Button>
                                                     <Button className={classes.dialogButton2}  size="small" variant="contained" type='submit' onClick={handleCloseDialog} >
