@@ -2,11 +2,8 @@ const Course = require('../models/course');
 const User = require('../models/user');
 const VerifyToken = require('./auth').verifyToken;
 const express = require('express');
-const jwt_decode = require('jwt-decode');
 const router = express.Router();
-const fs = require('fs')
 const GetRole = require('./auth').getRole;
-
 router.post('/userInfo', VerifyToken, GetRole, async (req, res) => {
   try {
 
@@ -45,11 +42,11 @@ router.post('/updateUserInfo', VerifyToken, async (req, res) => {
       { $set: { email: req.body.email } }
     )
 
-    
+
     if (req.body.newToken != undefined)
-    res.json({ 'status': 'success', "newToken": req.body.newToken })
+      res.json({ 'status': 'success', "newToken": req.body.newToken })
     else
-    res.json({ 'status': 'success' })
+      res.json({ 'status': 'success' })
 
   } catch (e) {
     console.log(e);

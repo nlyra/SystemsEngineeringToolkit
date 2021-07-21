@@ -3,30 +3,25 @@ const User = require('../models/user');
 const VerifyToken = require('./auth').verifyToken;
 const GetRole = require('./auth').getRole;
 const express = require('express');
-const jwt_decode = require('jwt-decode');
 const router = express.Router();
 const fs = require('fs')
-const config = require('../config.json');
 
 
 router.post('/course', VerifyToken, GetRole, async (req, res) => {
   try {
     // get course info
     let course = undefined
-    // req.body.roleID == 1 || "author": req.body.userID
-    if (req.body.roleID == 2) { // course for creator
+    if (req.body.roleID == 2) { // course for admin
       course = await Course.findOne({ "_id": req.body.id },
         '_id name description categories urlImage modules author isEnabled skillLevel intendedAudience prerequisite');
-    } else if (req.body.roleID == 1) { // course for students (only enabled courses)
+    } else if (req.body.roleID == 1) { // course for creator
       course = await Course.findOne({ "_id": req.body.id, "author": req.body.userID },
         '_id name description categories urlImage modules author isEnabled skillLevel intendedAudience prerequisite');
     }
     if (course == null || course == {} || course == undefined) {
-      console.log(course)
       course = await Course.findOne({ "_id": req.body.id, "isEnabled": true },
         '_id name description urlImage modules author skillLevel intendedAudience prerequisite');
     }
-    console.log(course)
 
     if (course != {} && course != null) {
       for (let i = 0; i < course.modules.length; i++) {
@@ -95,7 +90,6 @@ router.post('/course/update', VerifyToken, GetRole, async (req, res) => {
         }
       })
 
-    // console.log('here')
 
     if (req.body.newToken != undefined)
       res.json({ 'status': 'course updated', "newToken": req.body.newToken });
@@ -140,45 +134,6 @@ router.post('/course/updateImage', VerifyToken, GetRole, async (req, res) => {
 
 })
 
-// router.post('/course/enrollment', VerifyToken, async (req, res) => {
-
-//   try {
-
-//     // studentExists is a variable that will tell me if the course contains the user as an enrolled student
-//     let studentExists = {}
-//     studentExists = await Course.findOne({ "_id": req.body.courseID, "studentsEnrolled": req.body.userID }, '_id studentsEnrolled')
-
-//     if (studentExists === null) {
-
-//       const updateCourse = await Course.updateOne(
-//         { _id: req.body.courseID },
-//         {
-//           $push: {
-//             studentsEnrolled:
-//               req.body.userID
-//           },
-//           $inc: { totalStudents: 1 }
-//         });
-
-//       const updateUser = await User.updateOne(
-//         { _id: req.body.userID },
-//         {
-//           $push: {
-//             enrolledClasses:
-//               req.body.courseID
-//           }
-
-//         });
-
-//       res.json({ 'status': 'student enrolled in course' });
-//     }
-
-//   } catch (e) {
-//     console.log(e);
-//     res.sendStatus(500);
-//   }
-
-// })
 
 router.post('/info', VerifyToken, async (req, res) => {
 
@@ -197,13 +152,10 @@ router.post('/info', VerifyToken, async (req, res) => {
           { "name": { "$regex": query, $options: 'i' } },
         ]
       }, '_id name description urlImage categories');
-      // }, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
-      // console.log(courses)
       res.json({ "status": "search", "courses": courses, "totalCourses": totalCourses });
 
     } else {
       courses = await Course.find({isEnabled: true}, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
-      // courses = await Course.find({ isEnabled: true }, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
       res.json({ "status": "loading", "courses": courses, "totalCourses": totalCourses });
 
     }
@@ -305,8 +257,6 @@ router.post('/create', VerifyToken, GetRole, async (req, res) => {
 
     findCourse = await Course.findOne({ "name": req.body.name, "description": req.body.description }, '_id')
 
-
-    // console.log(findCourse._id)
     const updateUser = await User.updateOne(
       { _id: req.body.userID },
       {
@@ -316,7 +266,6 @@ router.post('/create', VerifyToken, GetRole, async (req, res) => {
         }
       });
 
-    // console.log('added course ', savedCourse._id);
 
 
     if (req.body.newToken != undefined)
@@ -365,7 +314,6 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
 
 })
 
-// TODO: Need to move this to fileMulter once I figure out why it's not getting called when it sits in fileMulter
 router.post('/removeFile', VerifyToken, GetRole, async (req, res) => {
   
   if (req.body.roleID === 0) {
@@ -523,9 +471,6 @@ router.post('/module/score', VerifyToken, async (req, res) => {
     gradeToPass = modules.modules[req.body.moduleID].gradeToPass
 
     let courses = await User.findOne({ _id: req.body.userID }, 'coursesData');
-
-    // if (courses.coursesData[0] == undefined)
-    //   courses.coursesData.append({})
 
     courses = courses.coursesData[0];
     if (courses === undefined)
@@ -815,7 +760,6 @@ router.post('/module/completed', VerifyToken, async (req, res) => {
 
           });
 
-        // res.json({ 'status': 'student enrolled in course' });
       }
     }
 

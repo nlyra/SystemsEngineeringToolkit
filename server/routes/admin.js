@@ -160,8 +160,6 @@ router.post('/users/search', VerifyToken, GetRole, async (req, res) => {
     const query = req.body.query;
     const users = await User.find({
       $or: [
-        // for some reason doesn't work for ids
-        // { "_id": { "$regex": ObjectID(query), $options: 'i' } },
         { "first_name": { "$regex": query, $options: 'i' } },
         { "last_name": { "$regex": query, $options: 'i' } },
         { "email": { "$regex": query, $options: 'i' } },
@@ -188,8 +186,6 @@ router.post('/courses/search', VerifyToken, GetRole, async (req, res) => {
     const query = req.body.query;
     const courses = await Course.find({
       $or: [
-        // for some reason doesn't work for ids
-        // { "_id": { "$regex": ObjectID(query), $options: 'i' } },
         { "name": { "$regex": query, $options: 'i' } },
         { "author": { "$regex": query, $options: 'i' } },
 
@@ -216,8 +212,6 @@ router.post('/categories/search', VerifyToken, GetRole, async (req, res) => {
     const query = req.body.query;
     const categories = await Category.find({
       $or: [
-        // for some reason doesn't work for ids
-        // { "_id": { "$regex": ObjectID(query), $options: 'i' } },
         { "label": { "$regex": query, $options: 'i' } },
       ]
     });

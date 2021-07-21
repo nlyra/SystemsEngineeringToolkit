@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 const config = require('../config.json');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
-const e = require('express');
 const router = express.Router();
 
 router.post('/registration', async (req, res) => {
@@ -22,8 +21,6 @@ router.post('/registration', async (req, res) => {
             });
 
             const savedUser = await user.save();
-
-            console.log('added user ', savedUser._id);
 
             res.json({ 'message': 'added user' });
         }
@@ -61,7 +58,6 @@ router.post('/forgotPassword', async (req, res) => {
 
             })
 
-            console.log("getting to here")
             const mailOptions = {
                 from: config.emailInfo.emailUsername,
                 to: user.email,
@@ -71,13 +67,11 @@ router.post('/forgotPassword', async (req, res) => {
                     `http://localhost:3000/reset/${resetPasswordToken}\n\n`
             }
 
-            console.log(mailOptions)
             transporter.sendMail(mailOptions, (err, response) => {
                 if (err) {
                     console.error('there was an error: ', err);
                 }
                 else {
-                    console.log('here is the res: ', response);
                     res.status(200).json('recovery email sent');
                 }
             })
@@ -96,7 +90,6 @@ router.post('/login', async (req, res) => {
     try {
         // get user from DB
         const user = await User.findOne({ email: req.body.email });
-        // console.log(user._id)
 
         if (user != undefined) {
             // check if passwords match
@@ -149,7 +142,6 @@ function verifyToken(req, res, next) {
 
     });
 
-    // res.body.newToken = "token";
 
     next();
 
