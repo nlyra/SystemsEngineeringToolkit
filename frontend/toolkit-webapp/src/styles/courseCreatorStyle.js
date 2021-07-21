@@ -10,7 +10,7 @@ const courseStyles = makeStyles((theme) => ({
     container: {
         height: "100%",
     },
-    
+
     paper:
     {
         maxWidth: '65vw',
@@ -57,7 +57,6 @@ const courseStyles = makeStyles((theme) => ({
 
     darkOverlay:
     {
-        // backgroundColor: 'rgba(0, 0, 0, 0.596)',
         position: 'absolute',
         top: 0,
         left: 0,
@@ -74,7 +73,6 @@ const courseStyles = makeStyles((theme) => ({
         listStyle: 'none',
         padding: theme.spacing(0.5),
         margin: 0,
-        // maxWidth: '550px',
         minHeight: "40px"
     },
 

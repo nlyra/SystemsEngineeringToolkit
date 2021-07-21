@@ -19,10 +19,9 @@ const dialogStyles = makeStyles((theme) => ({
 
     dialogContent:
     {
-        
-      width: '100%',
-      textAlign: 'center',
-    //   backgroundColor: 'yellow'
+
+        width: '100%',
+        textAlign: 'center',
     },
 
     dialogButtons:

@@ -6,8 +6,6 @@ const topNavBarStyles = makeStyles((theme) => ({
 
   root:
   {
-    // display: 'flex',
-    // height: '5vh',
   },
 
   dialog:
@@ -55,10 +53,6 @@ const topNavBarStyles = makeStyles((theme) => ({
     alignSelf: 'center'
   },
 
-  // statsDiv:
-  // {
-  //     width: '100%',
-  // },
 
   statsTitle:
   {
@@ -82,9 +76,7 @@ const topNavBarStyles = makeStyles((theme) => ({
     color: 'black',
     fontSize: '2.4vh',
     fontWeight: '500',
-    marginTop: '3%',
-    // alignContent: "center",
-
+    marginTop: '3%'
 
   },
 
@@ -113,7 +105,6 @@ const topNavBarStyles = makeStyles((theme) => ({
 
   closeButton:
   {
-    // marginRight: '70%'
   },
 
   search: {
@@ -197,7 +188,6 @@ const topNavBarStyles = makeStyles((theme) => ({
   },
   toolbar: {
     display: 'flex',
-    // alignItems: 'center',
     justifyContent: 'flex-end',
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
@@ -230,11 +220,6 @@ const topNavBarStyles = makeStyles((theme) => ({
     backgroundColor: grey[50],
     border: '2px solid white'
   },
-
-  // iconbutton:{
-  //     position:'relative',
-  //     paddingLeft:theme.spacing(0,2)
-  // }
 
 }))
 
