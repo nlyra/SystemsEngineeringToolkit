@@ -10,8 +10,6 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Course from './pages/Course'
 import ModuleCreator from './pages/ModuleCreator'
 import ModuleEditor from './pages/ModuleEditor'
-// import background from "./img/image0.png";
-import videoSource from "./img/PEOSTRI.mp4"
 import VideoModule from "./components/VideoModule" 
 import ManageMyCourses from './pages/ManageMyCourses'
 import MyCourses from './pages/MyCourses'
@@ -20,8 +18,7 @@ import AdminDashboard from './pages/AdminDashboard'
 function App() {
   return (
     <Router>
-      {/* these two lines should have 'Login' not 'Dashboard' */}
-      <Route path='/' exact component={Login} /> {/* should we make like a landing page, or the sanding page is login */}
+      <Route path='/' exact component={Login} /> 
       <Route path='/login' component={Login} />
       <Route path='/reset' component={ResetPassword} />
       <Route path='/Dashboard' component={Dashboard} />
