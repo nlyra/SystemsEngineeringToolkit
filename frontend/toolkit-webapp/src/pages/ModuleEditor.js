@@ -309,6 +309,7 @@ function ModuleEditor(props) {
 
                     // Grabbing the actual filename minus extension so that we can validate alphanumeric inputs
                     val = fileTypePath[fileTypePath.length - 2];
+                    var RegEx = /[^0-9a-z]/i;
                     isValid = !(RegEx.test(val));
 
                     // Input contains non-alphanumeric values so we must alert the user to rename the file 
@@ -388,6 +389,7 @@ function ModuleEditor(props) {
 
                     const videoTypePath = module.video.name.split('.')
                     val = videoTypePath[videoTypePath.length - 2];
+                    var RegEx = /[^0-9a-z]/i;
                     isValid = !(RegEx.test(val));
 
                     // Input contains non-alphanumeric values so we must alert the user to rename the file 
