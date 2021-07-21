@@ -332,8 +332,10 @@ router.post('/removeFile', VerifyToken, GetRole, async (req, res) => {
       // Special case for when first cover image change involves original PEO STRI logo
       if (pathname[pathname.length - 2] !== 'misc_files') {
         const path = 'public/' + req.body.courseID + '/' + imageName
-
-        fs.unlinkSync(path)
+        try {
+          fs.unlinkSync(path)
+        } catch (error) {
+        }
       }
 
       if (req.body.newToken != undefined)
