@@ -13,6 +13,7 @@ import { Link } from '@material-ui/core';
 const ManageMyCourses = (props) => {
     const [courses, setCourses] = useState([])
     const [searchQuery, setSearchQuery] = useState('')
+    const [courseID, setCourseID] = useState('')
     const [openDialog, setOpenDialog] = useState(false);
 
     const classes = myCoursesStyles()
@@ -62,7 +63,8 @@ const ManageMyCourses = (props) => {
         }
     }
 
-    const handleOpenDialog = () => {
+    const handleOpenDialog = (id) => {
+        setCourseID(id);
         setOpenDialog(true);
     }
     const handleCloseDialog = () => {
@@ -150,7 +152,7 @@ const ManageMyCourses = (props) => {
 
                                
                                 <div className={classes.buttonDiv}>
-                                    <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick={handleOpenDialog}>
+                                    <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick={() => handleOpenDialog(course._id)}>
                                         Delete Course
                                     </Button>
                                 </div>
@@ -160,7 +162,7 @@ const ManageMyCourses = (props) => {
                                     text={"Are you sure you wish to delete this course permanently?"}
                                     onClose={handleCloseDialog}
                                     buttons={[
-                                        {text: "Yes", style: dialogClasses.dialogButton1, onClick: () => deleteCourse(course._id)}, 
+                                        {text: "Yes", style: dialogClasses.dialogButton1, onClick: () => deleteCourse(courseID)}, 
                                         {text: "No", style: dialogClasses.dialogButton2, onClick: handleCloseDialog}
                                     ]}
                                 />

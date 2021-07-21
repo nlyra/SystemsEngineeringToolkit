@@ -38,7 +38,7 @@ function NewCourse(props) {
 
     const onSubmit = (e) => {
         e.preventDefault()
-        if (!courseTitle || !categories || !description) {
+        if (!courseTitle || !categories || !description || !intendedAudience || !prerequisite) {
             setDialogText("Please enter all required fields.")
             handleOpenDialog()
             //alert('Please enter all required fields')
