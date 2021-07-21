@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Card, CardActions, Container, CssBaseline, Divider, makeStyles, TextField, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
+import { Button, Card, Container, CssBaseline, Divider, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-// import Pagination from '@material-ui/lab/Pagination'
-import { Dialog, DialogTitle, DialogActions, DialogContent } from '@material-ui/core'
 import myCoursesStyles from '../styles/myCoursesStyle'
 import dialogStyles from '../styles/dialogStyle'
 import DialogComponent from '../components/DialogComponent'
-import jwt_decode from "jwt-decode";
-import { Link } from '@material-ui/core';
 
 const ManageMyCourses = (props) => {
     const [courses, setCourses] = useState([])
-    const [searchQuery, setSearchQuery] = useState('')
     const [courseID, setCourseID] = useState('')
     const [openDialog, setOpenDialog] = useState(false);
 
@@ -44,7 +39,7 @@ const ManageMyCourses = (props) => {
 
         const data = await res.json()
 
-        if (data.newToken != undefined)
+        if (data.newToken !== undefined)
             localStorage.setItem("token", data.newToken)
 
         if (data.message === "unauthorized") {
@@ -89,7 +84,7 @@ const ManageMyCourses = (props) => {
 
         const data = await res.json()
 
-        if (data.newToken != undefined)
+        if (data.newToken !== undefined)
             localStorage.setItem("token", data.newToken)
 
         if (data.message === "unauthorized") {

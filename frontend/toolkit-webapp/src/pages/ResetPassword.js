@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Container, TextField, Typography, Paper, Box } from '@material-ui/core'
+import { Button, TextField, Typography, Paper, Box } from '@material-ui/core'
 import config from '../config.json'
 import loginStyles from '../styles/loginStyle'
 import TopNavBar from '../components/TopNavBar'
@@ -8,7 +8,6 @@ import Avatar from '@material-ui/core/Avatar';
 import videoSource from '../img/PEOSTRI.mp4'
 import dialogStyles from '../styles/dialogStyle'
 import DialogComponent from '../components/DialogComponent'
-import jwt_decode from "jwt-decode";
 
 function ResetPassword(props) {
 
@@ -25,7 +24,6 @@ function ResetPassword(props) {
         const pathname = window.location.pathname.split('/') //returns the current path
         const resetToken = pathname[pathname.length - 1]
         
-        let res = undefined
         checkCreds(resetToken)
         setTokenProp(resetToken)
 

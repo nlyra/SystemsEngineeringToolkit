@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Card, CardActions, Container, CssBaseline, Divider, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
-import { Dialog, DialogTitle, DialogActions, DialogContent } from '@material-ui/core'
+import { Button, Card, Container, CssBaseline, Divider, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
+import { Dialog, DialogTitle, DialogContent } from '@material-ui/core'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-// import Pagination from '@material-ui/lab/Pagination'
 import myCoursesStyles from '../styles/myCoursesStyle'
-import jwt_decode from "jwt-decode";
-import { Link } from '@material-ui/core';
 
 const MyCourses = (props) => {
     const [courses, setCourses] = useState([])
-    const [searchQuery, setSearchQuery] = useState('')
     const [openDialog, setOpenDialog] = useState(false);
     const [courseID, setCourseID] = useState('')
 
@@ -40,7 +36,7 @@ const MyCourses = (props) => {
 
         const data = await res.json()
 
-        if (data.newToken != undefined)
+        if (data.newToken !== undefined)
             localStorage.setItem("token", data.newToken)
 
         if (data.message === undefined) {
@@ -85,7 +81,7 @@ const MyCourses = (props) => {
 
         const data = await res.json()
         
-        if(data.newToken != undefined)
+        if(data.newToken !== undefined)
           localStorage.setItem("token", data.newToken)
           
 

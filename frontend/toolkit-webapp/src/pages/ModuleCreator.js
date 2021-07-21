@@ -102,7 +102,7 @@ function ModuleCreator(props) {
 
         const data = await res.json()
 
-        if (data.newToken != undefined)
+        if (data.newToken !== undefined)
             localStorage.setItem("token", data.newToken)
 
         if (data.message !== "yes") {
@@ -195,7 +195,7 @@ function ModuleCreator(props) {
 
                 const data = await res.json();
 
-                if (data.newToken != undefined)
+                if (data.newToken !== undefined)
                     localStorage.setItem("token", data.newToken)
 
                     if (data.message === "unauthorized") {
@@ -250,7 +250,7 @@ function ModuleCreator(props) {
                 })
                 const data = await res.json()
 
-                if (data.newToken != undefined)
+                if (data.newToken !== undefined)
                     localStorage.setItem("token", data.newToken)
 
                 if (data.message === "unauthorized") {
@@ -278,9 +278,8 @@ function ModuleCreator(props) {
                 const fileTypePath = module.file.name.split('.')
 
                 // Grabbing the actual filename minus extension so that we can validate alphanumeric inputs
-                var val = fileTypePath[fileTypePath.length - 2];
-                var RegEx = /[^0-9a-z]/i;
-                var isValid = !(RegEx.test(val));
+                val = fileTypePath[fileTypePath.length - 2];
+                isValid = !(RegEx.test(val));
 
                 // Input contains non-alphanumeric values so we must alert the user to rename the file 
                 if (isValid === false) {
@@ -309,7 +308,7 @@ function ModuleCreator(props) {
                 })
                 const data = await res.json()
 
-                if (data.newToken != undefined)
+                if (data.newToken !== undefined)
                     localStorage.setItem("token", data.newToken)
 
                 if (data.message === "unauthorized") {
@@ -337,10 +336,8 @@ function ModuleCreator(props) {
                 const videoTypePath = module.video.name.split('.')
 
                 // Grabbing the actual filename minus extension so that we can validate alphanumeric inputs
-                var val = videoTypePath[videoTypePath.length - 2];
-
-                var RegEx = /[^0-9a-z]/i;
-                var isValid = !(RegEx.test(val));
+                val = videoTypePath[videoTypePath.length - 2];
+                isValid = !(RegEx.test(val));
 
                 // Input contains non-alphanumeric values so we must alert the user to rename the file 
                 if (isValid === false) {
@@ -370,7 +367,7 @@ function ModuleCreator(props) {
 
                 const data = await res.json()
 
-                if (data.newToken != undefined)
+                if (data.newToken !== undefined)
                     localStorage.setItem("token", data.newToken)
 
                 if (data.message === "unauthorized") {
@@ -405,7 +402,7 @@ function ModuleCreator(props) {
 
                 const data = await res.json()
 
-                if (data.newToken != undefined)
+                if (data.newToken !== undefined)
                     localStorage.setItem("token", data.newToken)
 
 
@@ -487,7 +484,7 @@ function ModuleCreator(props) {
                                 {type === 'PDF' && <PDFCreator setPDF={setPDF} pdf={pdf} />}
                                 {type === 'Video' && <VideoCreator setVideo={setVideo} video={video} />}
                                 {type === 'File' && <FileCreator setFile={setFile} file={file} />}
-                                {type == 'Quiz' && <QuizCreator gradeToPass={gradeToPass} setGradeToPass={setGradeToPass} />}
+                                {type === 'Quiz' && <QuizCreator gradeToPass={gradeToPass} setGradeToPass={setGradeToPass} />}
 
                             </div>
                             <Container className={classes.buttonGroup}>

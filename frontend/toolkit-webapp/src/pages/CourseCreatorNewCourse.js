@@ -127,7 +127,7 @@ function NewCourse(props) {
             const data = await res.json()
 
 
-            if (data.newToken != undefined)
+            if (data.newToken !== undefined)
                 localStorage.setItem("token", data.newToken)
 
 
@@ -195,7 +195,7 @@ function NewCourse(props) {
             )
             const data = await res2.json()
 
-            if(data.newToken != undefined)
+            if(data.newToken !== undefined)
             localStorage.setItem("token", data.newToken)
 
 
@@ -260,7 +260,7 @@ function NewCourse(props) {
 
         const data = await res.json()
 
-        if (data.newToken != undefined)
+        if (data.newToken !== undefined)
             localStorage.setItem("token", data.newToken)
 
         // console.log(data.message)

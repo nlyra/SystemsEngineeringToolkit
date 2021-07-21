@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Container, TextField, makeStyles, Typography, Paper, Box } from '@material-ui/core'
+import { Button, TextField, Typography, Paper, Box } from '@material-ui/core'
 import Avatar from '@material-ui/core/Avatar'
 import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import config from '../config.json'
@@ -32,7 +32,7 @@ const ForgotPassword = (props) => {
     const resetLink = async (e) => {
         e.preventDefault()
 
-        if(email == '')
+        if(email === '')
         {
             setDialogText("Please enter an email in the text box.")
             handleOpenDialog()
@@ -49,10 +49,14 @@ const ForgotPassword = (props) => {
         })
 
         const data = await res.json()
-        setDialogText("An email has been sent to the email listed, if registered.")
-        handleOpenDialog()
-        //alert('An email has been sent to the email listed, if registered.')
-        setEmail('')
+
+        if(data.message === 'Success!')
+        {
+            setDialogText("An email has been sent to the email listed, if registered.")
+            handleOpenDialog()
+            setEmail('')
+
+        }
 
     }
 

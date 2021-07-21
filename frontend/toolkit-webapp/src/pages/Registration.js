@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
-import { Button, Container, TextField, makeStyles, Typography, Paper, Box } from '@material-ui/core'
+import { Button, TextField, Typography, Paper, Box } from '@material-ui/core'
 import Avatar from '@material-ui/core/Avatar'
 import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import config from '../config.json'
 import registerStyles from '../styles/loginStyle'
-// import '../css/Registration.css';
 import TopNavBar from '../components/TopNavBar'
 import videoSource from '../img/PEOSTRI.mp4'
 import dialogStyles from '../styles/dialogStyle'
@@ -45,7 +44,7 @@ function Registration(props) {
             //alert('Please enter all fields')
             return
         }
-        if (password != passwordCopy) {
+        if (password !== passwordCopy) {
             setDialogText("Passwords do not match! Please try again.")
             handleOpenDialog()
             //alert('Passwords do not match!')
@@ -77,7 +76,7 @@ function Registration(props) {
 
         const data = await res.json()
 
-        if (data.message == "added user") {
+        if (data.message === "added user") {
             // setDialogText("Registration successful.")
             // handleOpenDialog()
             alert("User successfully created!");

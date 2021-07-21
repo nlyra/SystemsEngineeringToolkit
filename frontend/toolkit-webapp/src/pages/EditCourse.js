@@ -7,21 +7,19 @@ import Chip from '@material-ui/core/Chip';
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 import courseStyles from '../styles/courseCreatorStyle'
-import '../css/Login.css';
-
 
 function EditCourse(props) {
 
     const classes = courseStyles()
 
-    const [course, setCourse] = useState(props.location.course)
+    const [course] = useState(props.location.course)
     const [courseTitle, setCourseTitle] = useState(props.location.course.name)
     const [categories, setCategories] = useState([])
     const [description, setDescription] = useState(props.location.course.description)
     const [skillLevel, setSkillLevel] = useState(props.location.course.skillLevel)
     const [intendedAudience, setIntendedAudience] = useState(props.location.course.intendedAudience)
     const [prerequisite, setPrerequisite] = useState(props.location.course.prerequisite)
-    const [oldCourseImage, setOldCourseImage] = useState(props.location.course.urlImage)
+    const [oldCourseImage] = useState(props.location.course.urlImage)
     const [currCourseImage, setCurrCourseImage] = useState(undefined)
     const [dialogData, setDialogData] = useState([]);
     const filter = createFilterOptions();
@@ -140,6 +138,10 @@ function EditCourse(props) {
                 })
             })
 
+            const data = await res2.json()
+
+            if (data.newToken !== undefined)
+                localStorage.setItem("token", data.newToken)
 
             const imageData = new FormData();
             imageData.append('file', currCourseImage)

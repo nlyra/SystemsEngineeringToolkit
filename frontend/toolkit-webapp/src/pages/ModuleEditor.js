@@ -16,7 +16,7 @@ import DialogComponent from '../components/DialogComponent'
 function ModuleEditor(props) {
 
 
-    const [module, setModule] = useState(JSON.parse(localStorage.getItem("module")))
+    const module = JSON.parse(localStorage.getItem("module"))
     const [title, setTitle] = useState(module.title)
     const [type, setType] = useState(module.type)
     const [description, setDescription] = useState(module.description)
@@ -200,7 +200,7 @@ function ModuleEditor(props) {
                 const data = await res.json()
 
 
-                if (data.newToken != undefined)
+                if (data.newToken !== undefined)
                     localStorage.setItem("token", data.newToken)
 
 
@@ -330,9 +330,8 @@ function ModuleEditor(props) {
                     const fileTypePath = module.file.name.split('.')
 
                     // Grabbing the actual filename minus extension so that we can validate alphanumeric inputs
-                    var val = fileTypePath[fileTypePath.length - 2];
-                    var RegEx = /[^0-9a-z]/i;
-                    var isValid = !(RegEx.test(val));
+                    val = fileTypePath[fileTypePath.length - 2];
+                    isValid = !(RegEx.test(val));
 
                     // Input contains non-alphanumeric values so we must alert the user to rename the file 
                     if (isValid === false) {
@@ -413,10 +412,8 @@ function ModuleEditor(props) {
                 } else {
 
                     const videoTypePath = module.video.name.split('.')
-                    var val = videoTypePath[videoTypePath.length - 2];
-
-                    var RegEx = /[^0-9a-z]/i;
-                    var isValid = !(RegEx.test(val));
+                    val = videoTypePath[videoTypePath.length - 2];
+                    isValid = !(RegEx.test(val));
 
                     // Input contains non-alphanumeric values so we must alert the user to rename the file 
                     if (isValid === false) {
@@ -479,7 +476,7 @@ function ModuleEditor(props) {
 
                 const data = await res.json()
 
-                if (data.newToken != undefined)
+                if (data.newToken !== undefined)
                     localStorage.setItem("token", data.newToken)
 
 
@@ -506,7 +503,7 @@ function ModuleEditor(props) {
                     <form autoComplete="off" onSubmit={onSubmit}>
                         <Paper className={classes.paper} elevation={3} square={false}>
                             <Box m={2} pt={2}>
-                                <Typography className={classes.Title} variant="h5">{title == "" ? 'New Module' : title}</Typography>
+                                <Typography className={classes.Title} variant="h5">{title === "" ? 'New Module' : title}</Typography>
                             </Box>
                             <div className={classes.TextBox}>
                                 <TextField color='primary'
@@ -560,7 +557,7 @@ function ModuleEditor(props) {
                                 {type === 'PDF' && <PDFCreator setPDF={setPDF} pdf={pdf} />}
                                 {type === 'Video' && <VideoCreator setVideo={setVideo} video={video} />}
                                 {type === 'File' && <FileCreator setFile={setFile} file={file} />}
-                                {type == 'Quiz' && <QuizCreator gradeToPass={gradeToPass} setGradeToPass={setGradeToPass} />}
+                                {type === 'Quiz' && <QuizCreator gradeToPass={gradeToPass} setGradeToPass={setGradeToPass} />}
 
                             </div>
                             <Container className={classes.buttonGroup}>

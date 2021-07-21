@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import { IconButton, Chip, InputLabel, Select, MenuItem, FormControl, Link, FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
+import { IconButton, Chip, FormControlLabel, Divider,  Grid, Typography, Button } from '@material-ui/core'
 import { Link as ReactLink } from 'react-router-dom';
 import VideoModule from '../components/VideoModule'
 import PdfModule from '../components/PdfModule'
@@ -18,37 +18,16 @@ import courseStyles from '../styles/courseStyle';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { green, grey } from '@material-ui/core/colors';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-import dialogStyles from '../styles/dialogStyle'
-import DialogComponent from '../components/DialogComponent'
-
 
 const Course = (props) => {
   const [course, setCourse] = useState({})
   const [modules, setModules] = useState([])
-  const [oldCourseImage, setOldCourseImage] = useState('')
-  const [currCourseImage, setCurrCourseImage] = useState('')
-  const [courseTitle, setCourseTitle] = useState('')
-  const [courseDescription, setCourseDescription] = useState('')
-  const [intendedAudience, setIntendedAudience] = useState('')
-  const [prerequisite, setPrerequisite] = useState('')
-  const [skillLevel, setSkillLevel] = useState('')
-  const [editCourseInfo, setEditCourseInfo] = useState(false)
   const [courseID, setCourseID] = useState('')
   const [isCreator, setIsCreator] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
 
-  const [dialogText, setDialogText] = useState('')
-  const [openDialog, setOpenDialog] = useState(false);
-
   const classes = courseStyles()
-  const dialogClasses = dialogStyles()
-
-  let validImageTypes = ["PNG", "JPEG", "GIF", "TIF", "RAW", "JPG"]
-
-  const onEditCourseTitle = (e) => {
-    setEditCourseInfo(true);
-  };
 
   // function that will run when page is loaded
   useEffect(() => {
@@ -58,13 +37,6 @@ const Course = (props) => {
     getAuthorization();
 
   }, []);
-
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
-  }
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  }
 
   const getAuthorization = async () => {
     const token = localStorage.getItem("token");
@@ -81,7 +53,7 @@ const Course = (props) => {
 
     const data = await res.json()
 
-    if (data.newToken != undefined)
+    if (data.newToken !== undefined)
       localStorage.setItem("token", data.newToken)
 
     if (data.message === "yes") {
@@ -110,19 +82,19 @@ const Course = (props) => {
 
     const data = await res.json()
 
-    if (data.newToken != undefined)
+    if (data.newToken !== undefined)
       localStorage.setItem("token", data.newToken)
 
     if (data.message === undefined) {
       setCourse(data.course);
       setCourseID(id);
-      setOldCourseImage(data.course.urlImage);
-      setCurrCourseImage(data.course.urlImage);
-      setCourseTitle(data.course.name);
-      setCourseDescription(data.course.description);
-      setSkillLevel(data.course.skillLevel);
-      setIntendedAudience(data.course.intendedAudience);
-      setPrerequisite(data.course.prerequisite);
+      // setOldCourseImage(data.course.urlImage);
+      // setCurrCourseImage(data.course.urlImage);
+      // setCourseTitle(data.course.name);
+      // setCourseDescription(data.course.description);
+      // setSkillLevel(data.course.skillLevel);
+      // setIntendedAudience(data.course.intendedAudience);
+      // setPrerequisite(data.course.prerequisite);
       setModules(data.course.modules);
       setIsEnabled(data.course.isEnabled);
       if (data.course.author === "yes")
@@ -157,7 +129,7 @@ const Course = (props) => {
 
     const data = await res.json()
 
-    if (data.newToken != undefined)
+    if (data.newToken !== undefined)
       localStorage.setItem("token", data.newToken)
 
 
@@ -167,25 +139,6 @@ const Course = (props) => {
       window.location.reload();
   }
 
-  const enroll = async (module) => {
-
-    if (modules.indexOf(module) === 0) {
-
-      const token = localStorage.getItem("token");
-
-      const res = await fetch(config.server_url + config.paths.enrollment, {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json'
-        },
-        body: JSON.stringify({
-          "courseID": course._id,
-          "token": token
-        })
-      })
-    }
-
-  }
 
   const isDisabled = (index) => {
     if (index >= 3) {
@@ -248,7 +201,7 @@ const Course = (props) => {
 
     const data = await res.json()
 
-    if (data.newToken != undefined)
+    if (data.newToken !== undefined)
       localStorage.setItem("token", data.newToken)
 
     if (data.message === undefined) {
@@ -309,7 +262,6 @@ const Course = (props) => {
         </div>
 
         <br></br>
-        {editCourseInfo !== true &&
           <Grid item xs={12}>
             <div className={classes.statsDiv}>
               <Chip label={"Skill Level: " + course.skillLevel} variant="outlined" />
@@ -317,7 +269,6 @@ const Course = (props) => {
               <Chip label={"Pre Requisite: " + course.prerequisite} variant="outlined" />
             </div>
           </Grid>
-        }
         <Grid item xs={12}>
           <Divider className={classes.divider} />
         </Grid>
@@ -414,7 +365,7 @@ const Course = (props) => {
                       <Typography >
 
                         {/* Type: {module.type} */}
-                        {module.type == "Quiz" &&
+                        {module.type === "Quiz" &&
                           <div>
                             <Typography >Grade: {module.grade}/{module.quiz.length}</Typography>
                             <Typography>Grade needed to pass: {module.gradeToPass}/{module.quiz.length}</Typography>
@@ -454,14 +405,6 @@ const Course = (props) => {
           ))}
         </Grid>
       </Grid>
-      <DialogComponent
-        open={openDialog}
-        text={dialogText}
-        onClose={handleCloseDialog}
-        buttons={[
-          { text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog }
-        ]}
-      />
     </div >
   )
 }

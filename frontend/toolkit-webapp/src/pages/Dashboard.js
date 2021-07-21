@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { Button, Card, CardActions, Container, CssBaseline, IconButton, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
+import { Card, CardActions, Container, CssBaseline, IconButton, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -11,7 +11,6 @@ const Dashboard = (props) => {
     const [courses, setCourses] = useState([])
     const [next, setHasNext] = useState(0)
     const [totalCourses, setTotalCourses] = useState(0)
-    const [currQuery, setCurrQuery] = useState(undefined)
     const cardAmount = 8
 
     const classes = dashStyles()
@@ -23,28 +22,21 @@ const Dashboard = (props) => {
 
 
     const loadMoreCourses = useCallback(() => {
-        // console.log(cur)
-        //if (currQuery == undefined) {
-    
-            if ((totalCourses === undefined || totalCourses === courses.length))
-                return
 
-            loadCourses(undefined, next + 1)
-        }
-    )
+        if ((totalCourses === undefined || totalCourses === courses.length))
+            return
+
+        loadCourses(undefined, next + 1)
+    })
 
     // function to get the courses 
     const loadCourses = async (query, currNext) => {
 
-        if (query != undefined && query.length > 0) {
-            setCurrQuery(query)
-
-        } else if (query == '') {
-            setCurrQuery(undefined)
+        if (query === '') {
             currNext = 1
         }
 
-        if (query != undefined) {
+        if (query !== undefined) {
             window.scrollTo({
                 top: 0,
                 behavior: "smooth"
@@ -68,7 +60,7 @@ const Dashboard = (props) => {
 
         const data = await res.json()
         
-        if (data.newToken != undefined)
+        if (data.newToken !== undefined)
             localStorage.setItem("token", data.newToken)
 
         if (data.status === "loading") {
