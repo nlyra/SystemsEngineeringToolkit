@@ -9,7 +9,6 @@ const ModuleSchema = mongoose.Schema({
 
   type: {
     type: String,
-    // required: true
   },
 
   description: {
