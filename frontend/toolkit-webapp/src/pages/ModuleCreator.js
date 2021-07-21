@@ -124,15 +124,21 @@ function ModuleCreator(props) {
             if(gradeToPass<1){
                 setDialogText("The number of correct answers required must be greater than 0.")
                 handleOpenDialog()
-                //alert("File must be a PDF")
+                //alert("The number of correct answers required must be greater than 0.")
             } else{
 
                 console.log('works for Quiz')
                 var quiz = []
 
                 quiz = JSON.parse(sessionStorage.getItem("quiz"))
-                sessionStorage.clear()
-                onFinish({ title, type, description, quiz })
+                if(gradeToPass>quiz.length){
+                    setDialogText("The number of correct answers may not be greater than the number of questions.")
+                    handleOpenDialog()
+                    //alert("The number of correct answers may not be greater than the number of questions.")
+                } else{
+                    sessionStorage.clear()
+                    onFinish({ title, type, description, quiz })
+                }
             }
         } else if (type === 'PDF' && pdf !== null && typeof (pdf) !== 'undefined') {
             if (isPDF(pdf.name) === false) {
@@ -169,6 +175,7 @@ function ModuleCreator(props) {
 
     // We ideally want to redirect to module manager page, but we do not have that yet
     const cancel = () => {
+        sessionStorage.clear()
         props.history.push(`/course/${courseID}`)
     }
 
@@ -238,7 +245,7 @@ function ModuleCreator(props) {
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "urlFile": `http://localhost:4000/` + courseID + `/moduleData/${module.pdf.name}`
+                        "urlFile": `/` + courseID + `/moduleData/${module.pdf.name}`
                     })
                 })
                 const data = await res.json()
@@ -297,7 +304,7 @@ function ModuleCreator(props) {
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "urlFile": `http://localhost:4000/` + courseID + `/moduleData/${module.file.name}`
+                        "urlFile": `/` + courseID + `/moduleData/${module.file.name}`
                     })
                 })
                 const data = await res.json()
@@ -356,7 +363,7 @@ function ModuleCreator(props) {
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "urlVideo": `http://localhost:4000/` + courseID + `/moduleData/${module.video.name}`,
+                        "urlVideo": `/` + courseID + `/moduleData/${module.video.name}`,
                     })
 
                 })

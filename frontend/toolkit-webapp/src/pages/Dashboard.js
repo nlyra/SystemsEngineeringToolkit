@@ -1,9 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { Button, Card, CardActions, Container, CssBaseline, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
+import { Button, Card, CardActions, Container, CssBaseline, IconButton, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import { Waypoint } from "react-waypoint";
-// import Pagination from '@material-ui/lab/Pagination'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import dashStyles from '../styles/dashboardStyle'
 
 import { useBottomScrollListener } from 'react-bottom-scroll-listener';
@@ -11,7 +10,6 @@ import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 const Dashboard = (props) => {
     const [courses, setCourses] = useState([])
     const [next, setHasNext] = useState(0)
-    const [hasNextPage, setHasNextPage] = useState(true);
     const [totalCourses, setTotalCourses] = useState(0)
     const cardAmount = 12
 
@@ -24,19 +22,40 @@ const Dashboard = (props) => {
 
 
     const loadMoreCourses = useCallback(() => {
+        // console.log(cur)
+        //if (currQuery == undefined) {
+    
+            if ((totalCourses === undefined || totalCourses === courses.length))
+                return
 
-        if ((totalCourses === courses.length))
-            return
-
-        loadCourses(undefined, next + 1)
-    })
+            loadCourses(undefined, next + 1)
+        }
+    )
 
     // function to get the courses 
-    const loadCourses = async (query, next) => {
+    const loadCourses = async (query, currNext) => {
 
+        if (query != undefined && query.length > 0) {
+            setCurrQuery(query)
+
+        } else if (query == '') {
+            setCurrQuery(undefined)
+            currNext = 1
+        }
+
+        if (query != undefined) {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
+        // console.log('hello')
         const token = localStorage.getItem("token");
         let res = undefined
-        let skip = (next - 1) * cardAmount
+
+        // console.log('currNext= ' + currNext)
+        let skip = (currNext - 1) * cardAmount
+        // console.log(skip)
 
         res = await fetch(config.server_url + config.paths.dashboardCourses, {
             method: 'POST',
@@ -47,20 +66,25 @@ const Dashboard = (props) => {
         })
 
         const data = await res.json()
-
+        
         if (data.newToken != undefined)
             localStorage.setItem("token", data.newToken)
 
         if (data.status === "loading") {
+    
+            if (query === "") {
+                setCourses(data.courses)
+            } else
+                setCourses(courses.concat(data.courses));
 
-            setCourses(courses.concat(data.courses));
             setTotalCourses(data.totalCourses)
-            setHasNext(next)
+            setHasNext(currNext)
 
         }
         else if (data.status === "search") {
             setCourses(data.courses);
             setTotalCourses(data.totalCourses)
+
         }
 
         if (data.message === "wrong token") {
@@ -68,7 +92,7 @@ const Dashboard = (props) => {
             props.history.push('login');
             // probably alert the user
         } else { // this is to check if there are errors not being addressed already
-            console.log(data)
+            // console.log(data)
         }
     }
 
@@ -97,7 +121,7 @@ const Dashboard = (props) => {
                                 >
                                     <CardMedia
                                         className={classes.cardMedia}
-                                        image={course.urlImage}
+                                        image={config.server_url + course.urlImage}
                                         title="Title"
                                     />
                                     <CardContent className={classes.CardContent}>
@@ -121,6 +145,14 @@ const Dashboard = (props) => {
                     </Grid>
                 </div>
                 {/* <Pagination count={6} page={page} onChange={handlePage} variant="outlined" shape="rounded" /> */}
+                
+                { totalCourses !== undefined && totalCourses !== courses.length &&  
+                    
+                         <div className={classes.expandMoreIcon}>
+                        <IconButton disableRipple size='large' style={{ backgroundColor: 'transparent' }}> Scroll for More<ExpandMoreIcon /></IconButton>
+                        </div>
+    //                 
+                }
             </Container>
         </div>
     )
