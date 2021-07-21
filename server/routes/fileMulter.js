@@ -21,7 +21,6 @@ const fileStorageEngine = multer.diskStorage({
 const upload = multer({ storage: fileStorageEngine })
 
 router.post('/single', VerifyToken, GetRole, upload.single('file'), async (req, res) => {
-
   // req.body.roleID is undefined in the scope of this function, so we must use the query data
   
   if (req.query.roleID === 0) {
@@ -69,15 +68,15 @@ router.post('/single', VerifyToken, GetRole, upload.single('file'), async (req, 
 
     const update = await Course.updateOne(
       { _id: req.query.courseID },
-      { $set: { "urlImage": config.server_url + "/" + req.query.courseID + "/" + req.query.imageName } }
+      { $set: { "urlImage": "/" + req.query.courseID + "/" + req.query.imageName } }
     )
 
     res.send({ "status": "Success" })
   }
-  catch (e){
+  catch (e) {
     console.log(e);
   }
-  
+
 })
 
 router.post('/singleModuleFile', VerifyToken, upload.single('file'), async (req, res) => {
@@ -119,7 +118,7 @@ router.post('/singleModuleFile', VerifyToken, upload.single('file'), async (req,
     {
       $set: {
         [`modules.${req.body.moduleID}`]: {
-            urlFile: config.server_url + "/" + req.query.courseID + "/moduleData/" + req.query.imageName,
+          urlFile: "/" + req.query.courseID + "/moduleData/" + req.query.imageName,
         }
       }
     });

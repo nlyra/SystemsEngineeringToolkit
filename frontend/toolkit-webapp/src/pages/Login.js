@@ -19,9 +19,9 @@ function Login(props) {
     const dialogClasses = dialogStyles()
 
     useEffect(() => {
-        if(localStorage.getItem("token") != null)
-            localStorage.removeItem("token")    
-      }, []);
+        if (localStorage.getItem("token") != null)
+            localStorage.removeItem("token")
+    }, []);
 
     const handleOpenDialog = () => {
         setOpenDialog(true);
@@ -51,11 +51,11 @@ function Login(props) {
     }
 
     const onLogin = async (creds) => {
-    const res = await fetch(config.server_url + config.paths.login, {
-        method: 'POST',
-        headers: {
-            'Content-type': 'application/json'
-        },
+        const res = await fetch(config.server_url + config.paths.login, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
             body: JSON.stringify({ "email": creds.email, "password": creds.password })
         })
 
@@ -76,22 +76,22 @@ function Login(props) {
     }
 
     return (
-        <div style={{height:'100vh', width:'100vw'}}>
-            <TopNavBar hideComponents={true}/>
+        <div style={{ height: '100vh', width: '100vw' }}>
+            <TopNavBar hideComponents={true} />
             <div className={classes.darkOverlay}>
                 <video className={classes.video} autoPlay loop muted playsInline>
                     <source src={videoSource} type="video/mp4" />
-                Your browser does not support the video tag.
+                    Your browser does not support the video tag.
                 </video>
             </div>
             <div className={classes.container}>
                 <div className={classes.block}>
                     <form autoComplete="off" onSubmit={onSubmit}>
                         <Paper className={classes.paper} elevation={5} square={false}>
-                        <Avatar className={classes.avatar}>
-                            <LockOutlinedIcon />
-                        </Avatar>
-                            <Box m={2} pt={2} style={{justifyContent: 'center'}}>
+                            <Avatar className={classes.avatar}>
+                                <LockOutlinedIcon />
+                            </Avatar>
+                            <Box m={2} pt={2} style={{ justifyContent: 'center' }}>
                                 <Typography className={classes.Title} variant="h5">Sign In</Typography>
                             </Box>
                             <div className={classes.TextBox}>
@@ -105,7 +105,7 @@ function Login(props) {
                                     margin="normal"
                                     required={true}
                                     fullWidth
-                                    style={{backgroundColor: "rgba(255,255,255,0.8)"}}
+                                    style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                                 />
 
                                 <TextField
@@ -118,7 +118,7 @@ function Login(props) {
                                     margin="normal"
                                     required={true}
                                     fullWidth
-                                    style={{backgroundColor: "rgba(255,255,255,0.8)"}}
+                                    style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                                 />
 
                             </div>
@@ -145,7 +145,7 @@ function Login(props) {
                 ]}
             />
         </div>
-        
+
     )
 }
 

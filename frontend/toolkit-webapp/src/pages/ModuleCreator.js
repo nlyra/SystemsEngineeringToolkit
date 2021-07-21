@@ -245,7 +245,7 @@ function ModuleCreator(props) {
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "urlFile": `http://localhost:4000/` + courseID + `/moduleData/${module.pdf.name}`
+                        "urlFile": `/` + courseID + `/moduleData/${module.pdf.name}`
                     })
                 })
                 const data = await res.json()
@@ -304,7 +304,7 @@ function ModuleCreator(props) {
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "urlFile": `http://localhost:4000/` + courseID + `/moduleData/${module.file.name}`
+                        "urlFile": `/` + courseID + `/moduleData/${module.file.name}`
                     })
                 })
                 const data = await res.json()
@@ -363,7 +363,7 @@ function ModuleCreator(props) {
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "urlVideo": `http://localhost:4000/` + courseID + `/moduleData/${module.video.name}`,
+                        "urlVideo": `/` + courseID + `/moduleData/${module.video.name}`,
                     })
 
                 })

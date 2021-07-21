@@ -278,7 +278,7 @@ const Course = (props) => {
           <Grid item alignItems="center" xs={12}>
             <Grid container className={classes.topItem}>
               <Grid item xs={3} sm={2} lg={1} >
-                <img src={course.urlImage} className={classes.currCourseImageStyle} />
+                <img src={config.server_url + course.urlImage} className={classes.currCourseImageStyle} />
               </Grid>
               <Grid item xs={8} sm={9} lg={9}>
                 <h1
@@ -426,9 +426,9 @@ const Course = (props) => {
                       <br />
                       <br />
                       <div className={classes.fileDiv}>
-                        {module.type === "Video" && <VideoModule videoUrl={module.urlVideo} />}
-                        {module.type === "PDF" && <PdfModule fileUrl={module.urlFile} />}
-                        {module.type === "File" && <FileModule fileUrl={module.urlFile} />}
+                        {module.type === "Video" && <VideoModule videoUrl={config.server_url + module.urlVideo} />}
+                        {module.type === "PDF" && <PdfModule fileUrl={config.server_url + module.urlFile} />}
+                        {module.type === "File" && <FileModule fileUrl={config.server_url + module.urlFile} />}
                         {module.type === "Quiz" && <QuizModule quiz={module.quiz} moduleIndex={modules.indexOf(module)} courseID={courseID} grade={module.grade} />}
                       </div>
                       <br />

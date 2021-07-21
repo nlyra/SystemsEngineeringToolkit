@@ -133,7 +133,7 @@ const ManageMyCourses = (props) => {
                                 >
                                     <CardMedia
                                         className={classes.cardMedia}
-                                        image={course.urlImage}
+                                        image={config.server_url + course.urlImage}
                                         title="Title"
                                     />
                                     <CardContent className={classes.CardContent}>
