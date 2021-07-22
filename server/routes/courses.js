@@ -18,7 +18,7 @@ router.post('/course', VerifyToken, GetRole, async (req, res) => {
       course = await Course.findOne({ "_id": req.body.id, "author": req.body.userID },
         '_id name description categories urlImage modules author isEnabled skillLevel intendedAudience prerequisite');
     }
-    if (course == null || course == {} || course == undefined) {
+    if (course == null || course == {} || course == undefined) { // course for everyone else
       course = await Course.findOne({ "_id": req.body.id, "isEnabled": true },
         '_id name description urlImage modules author skillLevel intendedAudience prerequisite');
     }
@@ -54,8 +54,6 @@ router.post('/course', VerifyToken, GetRole, async (req, res) => {
         course.author = "yes"
       }
 
-
-
       if (req.body.newToken != undefined)
         res.json({ "course": course, "newToken": req.body.newToken });
       else if (course != {})
@@ -66,11 +64,10 @@ router.post('/course', VerifyToken, GetRole, async (req, res) => {
     console.log(e);
     res.sendStatus(500);
   }
-
 })
 
 router.post('/course/update', VerifyToken, GetRole, async (req, res) => {
-  
+
   if (req.body.roleID === 0) {
     res.json({ message: "unauthorized" })
     return
@@ -103,7 +100,7 @@ router.post('/course/update', VerifyToken, GetRole, async (req, res) => {
 })
 
 router.post('/course/updateImage', VerifyToken, GetRole, async (req, res) => {
-  
+
   if (req.body.roleID === 0) {
     res.json({ message: "unauthorized" })
     return
@@ -134,14 +131,16 @@ router.post('/course/updateImage', VerifyToken, GetRole, async (req, res) => {
 
 })
 
-
+// gains all courses for the dashboard, if the course "isEnabled" === true then it will be shown on the dashboard else it will not
+// this also has the logic for the endless scrolling feature
 router.post('/info', VerifyToken, async (req, res) => {
 
   try {
     let courses = []
-    let totalCourses = await Course.find({isEnabled: true}).countDocuments()
+    let totalCourses = await Course.find({ isEnabled: true }).countDocuments()
+    // the following if/else statements have the logic for endless scrolling; "totalCourses" is being used as a flag to monitor the endless scrolling
     if (req.body.search_query != undefined && req.body.search_query.length > 0) {
-      
+
       const query = req.body.search_query;
       totalCourses = undefined
 
@@ -155,7 +154,7 @@ router.post('/info', VerifyToken, async (req, res) => {
       res.json({ "status": "search", "courses": courses, "totalCourses": totalCourses });
 
     } else {
-      courses = await Course.find({isEnabled: true}, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
+      courses = await Course.find({ isEnabled: true }, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
       res.json({ "status": "loading", "courses": courses, "totalCourses": totalCourses });
 
     }
@@ -235,7 +234,7 @@ router.post('/myCoursesInfo', VerifyToken, async (req, res) => {
 })
 
 router.post('/create', VerifyToken, GetRole, async (req, res) => {
-  
+
   if (req.body.roleID === 0) {
     res.json({ message: "unauthorized" })
     return
@@ -315,7 +314,7 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
 })
 
 router.post('/removeFile', VerifyToken, GetRole, async (req, res) => {
-  
+
   if (req.body.roleID === 0) {
     res.json({ message: "unauthorized" })
     return
@@ -381,7 +380,7 @@ router.post('/deleteCreatedCourse', VerifyToken, GetRole, async (req, res) => {
 })
 
 router.post('/module/create', VerifyToken, GetRole, async (req, res) => {
-  
+
   if (req.body.roleID === 0) {
     res.json({ message: "unauthorized" })
     return
@@ -541,13 +540,8 @@ router.post('/module/score', VerifyToken, async (req, res) => {
             }
 
           });
-
       }
-
-
     }
-
-
 
     if (req.body.newToken != undefined)
       res.json({ 'status': 'grade saved', "newToken": req.body.newToken });
@@ -560,7 +554,7 @@ router.post('/module/score', VerifyToken, async (req, res) => {
 })
 
 router.post('/module/update', VerifyToken, GetRole, async (req, res) => {
-  
+
   if (req.body.roleID === 0) {
     res.json({ message: "unauthorized" })
     return
