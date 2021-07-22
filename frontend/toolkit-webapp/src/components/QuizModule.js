@@ -17,6 +17,7 @@ const QuizModule = (props) => {
   const [value, setValue] = React.useState({});
 
   const handleSubmit = () => {
+    
     let temp = 0;
     for (let i = 0; i < questions.length; i++) {
       if (answers[i] === 1) {
@@ -127,9 +128,11 @@ const QuizModule = (props) => {
           <div >
             {/* <Typography>Your score is: {score}/{questions.length}</Typography> */}
             <br />
-            <Button variant="contained" onClick={() => window.confirm('Are you sure you wish to try again?') && handleAgain()}>Try again?</Button>
+          <Button variant="contained" onClick={() => window.confirm('Are you sure you wish to try again?') && handleAgain()}>Try again?</Button>
+          { props.grade >= props.gradeToPass && 
             <Button variant="contained" onClick={() => window.confirm('Are you sure you wish to show answers?') && setState(3)}>Show answers</Button>
-          </div>
+          }
+        </div>
         </div>
       }
       {state === 3 &&
