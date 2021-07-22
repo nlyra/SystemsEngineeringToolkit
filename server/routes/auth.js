@@ -64,7 +64,7 @@ router.post('/forgotPassword', async (req, res) => {
                 subject: 'Link to reset password',
                 text:
                     'Click the following link to reset your PEO STRI account password ' +
-                    `${config.server_url}/reset/${resetPasswordToken}\n\n`
+                    `${config.frontend_url}/reset/${resetPasswordToken}\n\n`
             }
 
             transporter.sendMail(mailOptions, (err, response) => {
