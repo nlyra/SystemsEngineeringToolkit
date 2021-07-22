@@ -27,6 +27,7 @@ const ManageMyCourses = (props) => {
 
         let res = undefined
 
+        // pull in courses from the database that pertain to the user's created courses
         res = await fetch(config.server_url + config.paths.myCreatedCourses, {
             method: 'POST',
             headers: {
@@ -34,8 +35,6 @@ const ManageMyCourses = (props) => {
             },
             body: JSON.stringify({ "token": token, "search_query": query })
         })
-        // }
-
 
         const data = await res.json()
 
@@ -52,8 +51,8 @@ const ManageMyCourses = (props) => {
         } else if (data.message === "wrong token") {
             localStorage.removeItem('token');
             props.history.push('login');
-            // probably alert the user
-        } else { // this is to check if there are errors not being addressed already
+        } else { 
+            // this is to check if there are errors not being addressed already
             console.log(data)
         }
     }
@@ -66,10 +65,12 @@ const ManageMyCourses = (props) => {
         setOpenDialog(false);
     };
 
+    // User wants to delete the course, so this function passes the course ID and proceeds to delete it from the system
     const deleteCourse = async (id) => {
         let res = undefined
         const token = localStorage.getItem("token");
 
+        // Call to the backend with the course ID, to allow for permanent course deletion
         res = await fetch(config.server_url + config.paths.deleteCreatedCourse, {
             method: 'POST',
             headers: {
@@ -78,6 +79,7 @@ const ManageMyCourses = (props) => {
             body: JSON.stringify({ "token": token, "courseID": id })
         })
 
+        // Close the dialog that opened when the user asked to delete the course. Reload the page to reflect the changes made
         handleCloseDialog()
         window.location.reload()
 
@@ -89,9 +91,7 @@ const ManageMyCourses = (props) => {
         if (data.message === "unauthorized") {
             props.history.push('dashboard');
         }
-        // This splits the array correctly and updates courses array with courses the user is still enrolled in
-        // const newVal = courses.filter((courses) => courses._id !== id);
-        // setCourses(newVal)
+    
     }
 
 
@@ -110,7 +110,7 @@ const ManageMyCourses = (props) => {
                 <Grid container spacing={3}>
                     <div className={classes.header}>
                         <h1>
-                            Manage My Courses
+                            My Created Courses
                         </h1>
                     </div>
                 </Grid>
@@ -141,7 +141,7 @@ const ManageMyCourses = (props) => {
                                     </Grid>
                                 </Card>
 
-
+                                // Button opens a dialog that will ask the user if they truly want to remove the course from the database.
                                 <div className={classes.buttonDiv}>
                                     <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick={() => handleOpenDialog(course._id)}>
                                         Delete Course

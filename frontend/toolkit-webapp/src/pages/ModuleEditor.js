@@ -95,7 +95,6 @@ function ModuleEditor(props) {
                 handleOpenDialog()
             } else {
 
-                console.log('works for Quiz')
                 var quiz = []
 
                 quiz = JSON.parse(sessionStorage.getItem("quiz"))
@@ -113,7 +112,6 @@ function ModuleEditor(props) {
                     setDialogText("File must be a PDF")
                     handleOpenDialog()
                 } else {
-                    console.log('works for PDF')
                     onFinish({ title, type, description, pdf })
                 }
             } else if (module.type === "PDF") {
@@ -126,7 +124,6 @@ function ModuleEditor(props) {
 
         } else if (type === 'File') {
             if (file !== null && typeof (file) !== 'undefined') {
-                console.log('works for File')
                 onFinish({ title, type, description, file })
             } else if (module.type === "File") {
                 const fileName = module.urlFile
@@ -142,7 +139,6 @@ function ModuleEditor(props) {
                     setDialogText("File must be a video.")
                     handleOpenDialog()
                 } else {
-                    console.log('works for Video')
                     onFinish({ title, type, description, video })
                 }
             } else if (module.type === "Video") {
@@ -153,7 +149,6 @@ function ModuleEditor(props) {
                 handleOpenDialog()
             }
         } else if (type === 'Text') {
-            console.log('Works for Text')
             onFinish({ title, type, description })
         }
         else {
@@ -271,8 +266,9 @@ function ModuleEditor(props) {
                             setDialogText("Successfully Edited PDF module")
                             handleOpenDialog()
                             props.history.push('/course/' + courseID)
-                        } //else need to do something, not sure what rn
-                    } else { // this is to check if there are errors not being addressed already
+                        } 
+                    } else { 
+                        // this is to check if there are errors not being addressed already
                         console.log(data)
                     }
                 }
@@ -353,8 +349,9 @@ function ModuleEditor(props) {
                             setDialogText("Successfully Edited File module")
                             handleOpenDialog()
                             props.history.push('/course/' + courseID)
-                        } //else need to do something, not sure what rn
-                    } else { // this is to check if there are errors not being addressed already
+                        } 
+                    } else { 
+                        // this is to check if there are errors not being addressed already
                         console.log(data)
                     }
                 }
@@ -434,8 +431,9 @@ function ModuleEditor(props) {
                             setCourseID("Successfully Edited video module")
                             handleOpenDialog()
                             props.history.push('/course/' + courseID)
-                        } //else need to do something, not sure what rn
-                    } else { // this is to check if there are errors not being addressed already
+                        } 
+                    } else { 
+                        // this is to check if there are errors not being addressed already
                         console.log(data)
                     }
                 }
@@ -462,7 +460,8 @@ function ModuleEditor(props) {
                     handleOpenDialog()
                     props.history.push('/course/' + courseID)
                 }
-                else { // this is to check if there are errors not being addressed already
+                else { 
+                    // this is to check if there are errors not being addressed already
                     console.log(data)
                 }
             }

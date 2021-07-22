@@ -101,7 +101,7 @@ function ModuleCreator(props) {
         }
         getAuthorization();
 
-        const pathname = window.location.pathname.split('/') //returns the current path
+        const pathname = window.location.pathname.split('/') 
         setCourseID(pathname[pathname.length - 1])
     }, [props]);
 
@@ -113,14 +113,15 @@ function ModuleCreator(props) {
             handleOpenDialog()
             return
         }
+        // Following if else cases check the module type and process the data accordingly 
 
         if (type === 'Quiz' && JSON.parse(sessionStorage.getItem('quiz')) !== null) {
+
             if (gradeToPass < 1) {
                 setDialogText("The number of correct answers required must be greater than 0.")
                 handleOpenDialog()
             } else {
 
-                console.log('works for Quiz')
                 var quiz = []
 
                 quiz = JSON.parse(sessionStorage.getItem("quiz"))
@@ -137,11 +138,9 @@ function ModuleCreator(props) {
                 setDialogText("File must be a PDF")
                 handleOpenDialog()
             } else {
-                console.log('works for PDF')
                 onFinish({ title, type, description, pdf })
             }
         } else if (type === 'File' && file !== null && typeof (file) !== 'undefined') {
-            console.log('works for File')
             onFinish({ title, type, description, file })
 
         } else if (type === 'Video' && video !== null && typeof (video) !== 'undefined') {
@@ -149,11 +148,9 @@ function ModuleCreator(props) {
                 setDialogText("File must be a Video")
                 handleOpenDialog()
             } else {
-                console.log('works for Video')
                 onFinish({ title, type, description, video })
             }
         } else if (type === 'Text') {
-            console.log('works for Text')
             onFinish({ title, type, description })
         }
         else {
@@ -248,8 +245,9 @@ function ModuleCreator(props) {
                         setDialogText("Successfully added PDF module")
                         handleOpenDialog()
                         props.history.push('/course/' + courseID)
-                    } //else need to do something, not sure what rn
-                } else { // this is to check if there are errors not being addressed already
+                    } 
+                } else { 
+                    // this is to check if there are errors not being addressed already
                     console.log(data)
                 }
             } else if (module.type === "File") {
@@ -305,8 +303,9 @@ function ModuleCreator(props) {
                         setDialogText("Successfully added File module")
                         handleOpenDialog()
                         props.history.push('/course/' + courseID)
-                    } //else need to do something, not sure what rn
-                } else { // this is to check if there are errors not being addressed already
+                    } 
+                } else { 
+                    // this is to check if there are errors not being addressed already
                     console.log(data)
                 }
             } else if (module.type === "Video") {
@@ -316,7 +315,6 @@ function ModuleCreator(props) {
                 val = videoTypePath[videoTypePath.length - 2];
                 var RegEx = /[^0-9a-z]/i;
                 isValid = !(RegEx.test(val));
-                // console.log(isValid)
 
                 // Input contains non-alphanumeric values so we must alert the user to rename the file 
                 if (isValid === false) {
@@ -363,8 +361,9 @@ function ModuleCreator(props) {
                         setDialogText("Successfully added Video module")
                         handleOpenDialog()
                         props.history.push('/course/' + courseID)
-                    } //else need to do something, not sure what rn
-                } else { // this is to check if there are errors not being addressed already
+                    } 
+                } else { 
+                    // this is to check if there are errors not being addressed already
                     console.log(data)
                 }
             } else if (module.type === 'Text') {
@@ -390,7 +389,8 @@ function ModuleCreator(props) {
                     handleOpenDialog()
                     props.history.push('/course/' + courseID)
                 }
-                else { // this is to check if there are errors not being addressed already
+                else { 
+                    // this is to check if there are errors not being addressed already
                     console.log(data)
                 }
             }

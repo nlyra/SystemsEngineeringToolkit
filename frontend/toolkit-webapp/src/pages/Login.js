@@ -18,6 +18,7 @@ function Login(props) {
     const classes = loginStyles()
     const dialogClasses = dialogStyles()
 
+    // Reset the token since the user should not have one until they log in
     useEffect(() => {
         if (localStorage.getItem("token") != null)
             localStorage.removeItem("token")
@@ -64,10 +65,12 @@ function Login(props) {
             localStorage.setItem("token", data.token);
             props.history.push('dashboard')
 
+        // Wrong credentials
         } else if (data.message === "wrong email or password") {
-            setDialogText("Wrong email or password, please try again or recover password.")
+            setDialogText("Wrong email or password, please try again or try resetting your password.")
             handleOpenDialog()
-        } else { // this is to check if there are errors not being addressed already
+        } else { 
+            // this is to check if there are errors not being addressed already
             console.log(data)
         }
 

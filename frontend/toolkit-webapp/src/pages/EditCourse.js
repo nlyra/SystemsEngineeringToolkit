@@ -26,8 +26,7 @@ function EditCourse(props) {
 
     let validImageTypes = ["PNG", "JPEG", "GIF", "TIF", "RAW", "JPG"]
 
-    // useEffect() hook will make it so it only gets rendered once, once the page loads,
-    // as opposed to after every time the form is rendered (as long as the array at the end remains empty).
+    // useEffect() hook will go off as the page loads, checking for permissions and pulling in the course info needed
     useEffect(() => {
 
         const getAuthorization = async () => {
@@ -50,10 +49,12 @@ function EditCourse(props) {
 
         }
         
+        // pull in categories specific to the course, from the db
         const getOldCats = () => {
             setCategories(props.location.course.categories.map((cat) => (cat)))
         }
         
+        // pull in all categories from the db 
         const categoriesCollection = async () => {
             const token = localStorage.getItem("token");
             const res = await fetch(config.server_url + config.paths.categories, {
@@ -66,6 +67,7 @@ function EditCourse(props) {
                 })
             })
             
+            // check if the user is allowed to be on this page
             const fetchedCategories = await res.json()
             if (fetchedCategories.message === "unauthorized") {
                 props.history.push('dashboard');
@@ -80,7 +82,7 @@ function EditCourse(props) {
     }, [props]);
 
 
-
+    // Submitted changes to edit page: update db in another function
     const onSubmit = (e) => {
         e.preventDefault()
         if (!courseTitle || !categories || !description || !intendedAudience || !prerequisite) {
@@ -94,6 +96,8 @@ function EditCourse(props) {
     const onFinish = async (creds) => {
 
         const token = localStorage.getItem("token");
+
+        // Call backend to update the course info with the changes the user made
         const res = await fetch(config.server_url + config.paths.updateCourseInfo, {
             method: 'POST',
             headers: {
@@ -123,7 +127,7 @@ function EditCourse(props) {
                 return
             }
 
-            // We have a new image being passed in so delete old file
+            // We have a new image being passed in so delete old image file in the folder (within 'public')
             const res2 = await fetch(config.server_url + config.paths.removeFile, {
                 method: 'POST',
                 headers: {
@@ -143,7 +147,7 @@ function EditCourse(props) {
             const imageData = new FormData();
             imageData.append('file', currCourseImage)
 
-            // Checking to see if the file inputted is not an actual image
+            // Checking to see if the file inputted is not an actual valid image
             const imageTypePath = currCourseImage.name.split('.')
             const imageType = imageTypePath[imageTypePath.length - 1]
             const validInput = validImageTypes.includes(imageType.toUpperCase());
@@ -165,6 +169,7 @@ function EditCourse(props) {
                 return
             }
 
+            // If the image has been changed, we must update the image file in the backend
             if (currCourseImage.name !== oldCourseImage.name) {
 
                 if (data.message === undefined) {
@@ -178,14 +183,16 @@ function EditCourse(props) {
                         props.history.push('dashboard');
                     } else if (data2.status === 'Success') {
                         alert("Edits have been successfully made")
-                        props.history.push('/course/' + course._id) // needs to be changed to course manager
-                    } //else need to do something, not sure what rn
+                        props.history.push('/course/' + course._id) 
+                    } 
                 }
-                else { // this is to check if there are errors not being addressed already
+                else { 
+                    // this is to check if there are errors not being addressed already
                     console.log(data)
                 }
             }
             else {
+
                 const res = await fetch(config.server_url + config.paths.updateCourseImage, {
                     method: 'POST',
                     headers: {
@@ -205,12 +212,13 @@ function EditCourse(props) {
                     props.history.push('dashboard');
                 } else if (data2.status === 'Success') {
                     alert("Edits have been successfully made")
-                    props.history.push('/course/' + course._id)// needs to be changed to course manager
-                } //else need to do something, not sure what rn
+                    props.history.push('/course/' + course._id)
+                } 
             }
         }
     }
 
+    // Go back to course page
     const onCancel = () => {
         props.history.push('/course/' + course._id)
     }
@@ -274,7 +282,7 @@ function EditCourse(props) {
                                         return filtered;
                                     }}
                                     getOptionLabel={(option) => {
-                                        // e.g value selected with enter, right from the input
+                                        // e.g value selected right from the input
                                         if (typeof option === 'string') {
                                             return option;
                                         }

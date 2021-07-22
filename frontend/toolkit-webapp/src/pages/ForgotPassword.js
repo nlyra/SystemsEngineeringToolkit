@@ -28,6 +28,7 @@ const ForgotPassword = (props) => {
         props.history.push('login');
     }
 
+    // Function that handles sending the email link to the user, if they are registered
     const resetLink = async (e) => {
         e.preventDefault()
 
@@ -38,6 +39,7 @@ const ForgotPassword = (props) => {
             return
         }
 
+        // Passing email value to backend functions, to send user the email 
         const res = await fetch(config.server_url + config.paths.forgotPassword, {
             method: 'POST',
             headers: {
@@ -48,6 +50,7 @@ const ForgotPassword = (props) => {
 
         const data = await res.json()
 
+        // API call succeeded, so let the user know an email has been sent 
         if(data.message === 'Success!')
         {
             setDialogText("An email has been sent to the email listed, if registered.")
