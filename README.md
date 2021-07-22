@@ -45,6 +45,7 @@
   {
       "db_url": (insert mongo db url for docker: "mongodb://mongo:27017/se_toolkit"),
       "server_url": (insert server url),
+      "frontend_url": (insert front end url),
       "key": (insert key, preferably a strong one, this if for encryption of passwords),
       "emailInfo": { (this is for forgot password, so preferably an email dedicated to that)
           "service": (mail provider like gmail, outlook, hotmail),
