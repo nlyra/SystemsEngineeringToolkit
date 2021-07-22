@@ -4,6 +4,7 @@ const VerifyToken = require('./auth').verifyToken;
 const express = require('express');
 const router = express.Router();
 const GetRole = require('./auth').getRole;
+
 router.post('/userInfo', VerifyToken, GetRole, async (req, res) => {
   try {
 

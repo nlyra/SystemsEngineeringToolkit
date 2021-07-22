@@ -33,6 +33,7 @@ router.post('/registration', async (req, res) => {
     }
 });
 
+// Main API for forgotPassword - email is being sent from here to the user
 router.post('/forgotPassword', async (req, res) => {
     try {
 
@@ -41,6 +42,7 @@ router.post('/forgotPassword', async (req, res) => {
         if (user !== null) {
             const userID = user._id.toString()
 
+            // encrypt the reset token that we send the user via email
             resetPasswordToken = crypto.randomBytes(20).toString('hex')
 
             const update = await User.updateOne(
@@ -48,7 +50,7 @@ router.post('/forgotPassword', async (req, res) => {
                 { $set: { resetPassToken: resetPasswordToken, resetPassExpires: (new Date()).setHours((new Date()).getHours() + 1) } }
             )
 
-
+            // create an object to hold the info of the email we will use to send the email 
             const transporter = nodemailer.createTransport({
                 service: config.emailInfo.service,
                 auth: {
@@ -58,6 +60,7 @@ router.post('/forgotPassword', async (req, res) => {
 
             })
 
+            // mailOptions contains the mail content that the user will receive
             const mailOptions = {
                 from: config.emailInfo.emailUsername,
                 to: user.email,
@@ -67,6 +70,7 @@ router.post('/forgotPassword', async (req, res) => {
                     `${config.frontend_url}/reset/${resetPasswordToken}\n\n`
             }
 
+            // Attempt to send the email; prints error if it does not go through
             transporter.sendMail(mailOptions, (err, response) => {
                 if (err) {
                     console.error('there was an error: ', err);
@@ -128,6 +132,7 @@ function verifyToken(req, res, next) {
         return
     }
 
+    // Check that the token is valid 
     jwt.verify(token, config.key, function (err, decoded) {
         if (err) {
             res.json({ 'message': 'wrong token' });
@@ -136,6 +141,8 @@ function verifyToken(req, res, next) {
 
         req.body.userID = decoded.id;
         const timestamp = Math.floor(Date.now() / 1000); // get unix time in seconds
+
+        // reset the token if it expires in less than 15 minutes
         if (decoded.exp - timestamp < 900) {
             req.body.newToken = jwt.sign({ id: decoded.id, email: decoded.email }, config.key, { expiresIn: '2h' });
         }
@@ -147,6 +154,7 @@ function verifyToken(req, res, next) {
 
 }
 
+// Check that the user has valid reset token
 router.post('/checkResetCreds', async (req, res) => {
 
     const user = await User.findOne({ resetPassToken: req.body.resetToken, resetPassExpires: { $gt: Date.now() } }, '_id')
@@ -168,6 +176,7 @@ router.post('/resetPassApproved', async (req, res) => {
 
         if (user !== undefined) {
 
+            // Create new password for the user
             const pass = bcrypt.hashSync(req.body.password, 10);
 
             const update = await User.updateOne(
