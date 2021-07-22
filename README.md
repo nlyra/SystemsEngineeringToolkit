@@ -1,11 +1,11 @@
-### SystemsEngineeringToolkit
+# SystemsEngineeringToolkit
 
 ## To run (regular way).
 
 - Download Node.js.
 - Set up a Mongo Database (Atlas or Local).
 
-# Set up and run the server:
+### Set up and run the server:
 
 - In cmd inside folder (./server/), run ```npm install```.
 - In the config.json add the fields:
@@ -21,14 +21,14 @@
   }
 - run in CMD ```npm start```.
 
-# Set up and run front end:
+### Set up and run front end:
 
 - in cmd inside folder (./frontend/toolkit-webapp/), run: ```npm install```.
 - In the config.json add the fields:
   "server_url": (server url)
 - run in CMD ```npm start```.
 
-# create an admin user.
+### create an admin user.
 
 - first create a regular student user on the website by registering.
 - once created go to mongo and update the user field roleID to 2 (int).
@@ -39,7 +39,7 @@
 
 - run docker.
 
-# Server side changes:
+### Server side changes:
 
 - In the config.json add the fields:
   {
@@ -54,17 +54,17 @@
   }
 
 
-# Front end side changes:
+### Front end side changes:
 - In the config.json add the fields:
   "server_url": (server url).
 
-# Docker instructions:
+### Docker instructions:
 
 - on cmd inside folder (./SystemsEngineeringToolkit/).
 - run ```docker-compose build``` this is to build the website, once finished continue.
 - run ```docker-compose up``` this is to run the website, the front end might take a minute or two.
 
-# create an admin user:
+### create an admin user:
 
 - first create a regular student user on the website by registering.
 - once created go to the docker command line and run mongo ```mongo```.
