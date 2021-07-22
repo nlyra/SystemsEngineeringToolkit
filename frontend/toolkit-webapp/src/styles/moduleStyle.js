@@ -1,4 +1,4 @@
-import {makeStyles} from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 
 const moduleStyles = makeStyles((theme) => ({
 
@@ -7,15 +7,15 @@ const moduleStyles = makeStyles((theme) => ({
         fontWeight: "bold",
         alignItems: 'center'
     },
-    h5: 
+    h5:
     {
         align: 'center'
     },
 
     container: {
         height: "100%",
-        paddingTop: '5%',
-        marginLeft: '10%'
+        display: 'flex',
+        justifyContent: 'center'
     },
 
     paper:
