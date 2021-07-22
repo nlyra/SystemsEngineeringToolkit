@@ -439,7 +439,7 @@ export default function TopNavBar(props) {
                             <Grid item xs={4} sm={4} lg={4} >
                               <div className={classes.statContent}>
                                 <div className={classes.statText}>
-                                  <h5>Courses Enrolled In</h5>
+                                  <h5>Enrolled Courses</h5>
                                 </div>
                                 <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
                               </div>
@@ -567,7 +567,7 @@ export default function TopNavBar(props) {
                             <Grid item xs={4} sm={4} lg={4} >
                               <div className={classes.statContent}>
                                 <div className={classes.statText}>
-                                  <h5>Courses Enrolled In</h5>
+                                  <h5>Enrolled Courses</h5>
                                 </div>
                                 <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
                               </div>

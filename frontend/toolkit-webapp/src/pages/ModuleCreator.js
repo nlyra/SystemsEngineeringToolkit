@@ -125,7 +125,7 @@ function ModuleCreator(props) {
 
                 quiz = JSON.parse(sessionStorage.getItem("quiz"))
                 if (gradeToPass > quiz.length) {
-                    setDialogText("The number of correct answers may not be greater than the number of questions.")
+                    setDialogText("The number of correct answers required to pass the quiz cannot be greater than the total number of questions.")
                     handleOpenDialog()
                 } else {
                     sessionStorage.clear()

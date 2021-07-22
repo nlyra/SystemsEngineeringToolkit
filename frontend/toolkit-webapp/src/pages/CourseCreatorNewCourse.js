@@ -8,7 +8,6 @@ import TopNavBar from '../components/TopNavBar'
 import courseStyles from '../styles/courseCreatorStyle'
 import dialogStyles from '../styles/dialogStyle'
 import DialogComponent from '../components/DialogComponent'
-import '../css/Login.css';
 
 function NewCourse(props) {
 
@@ -77,10 +76,11 @@ function NewCourse(props) {
                 return
             }
 
-            // handle image
+            // store the image data 
             const imageData = new FormData();
             imageData.append('file', image)
 
+            // API call to create the course in the DB with the input from the user
             const res = await fetch(config.server_url + config.paths.createCourse, {
                 method: 'POST',
                 headers: {
@@ -129,6 +129,8 @@ function NewCourse(props) {
 
             if (data.message === "unauthorized") {
                 props.history.push('dashboard');
+
+            // call API to update folder system for course, within 'public' folder
             } else if (data.message === undefined) {
                 const res = await fetch(config.server_url + config.paths.fileUpload + "?token=" + token + "&courseID=" + data._id + "&imageName=" + image.name, {
                     method: 'POST',
@@ -141,15 +143,16 @@ function NewCourse(props) {
                 } else if (data2.status === 'Success') {
                     setDialogText("Successfully created course!")
                     handleOpenDialog()
-                    props.history.push('/course/' + data._id)// needs to be changed to course manager
-                } //else need to do something, not sure what rn
+                    props.history.push('/course/' + data._id)
+                } 
             }
             else { // this is to check if there are errors not being addressed already
                 console.log(data)
             }
 
-        } else {// if there is not an image
-
+        } else {
+            
+            // User did not select an image to upload
             for (const newTag of categories) {
                 if (dialogData.find(c => c.label === newTag.label)) continue;
 
@@ -170,6 +173,7 @@ function NewCourse(props) {
                 }
             }
 
+            // API call to create the course in the DB with the input from the user
             const res2 = await fetch(config.server_url + config.paths.createCourse, {
                 method: 'POST',
                 headers: {
@@ -210,8 +214,8 @@ function NewCourse(props) {
         setCategories(values)
     }
 
-    // useEffect() hook will make it so it only gets rendered once, once the page loads,
-    // as opposed to after every time the form is rendered (as long as the array at the end remains empty).
+    // useEffect() hook will go off as the page loads, checking for permissions and pulling in the existing categories 
+    // available to the user, from the DB.
     useEffect(() => {
 
         const getAuthorization = async () => {
@@ -238,7 +242,7 @@ function NewCourse(props) {
 
         }
 
-
+        // Pull in categories array from the DB
         const categoriesCollection = async () => {
             const token = localStorage.getItem("token");
             const res = await fetch(config.server_url + config.paths.categories, {
@@ -319,7 +323,7 @@ function NewCourse(props) {
                                         return filtered;
                                     }}
                                     getOptionLabel={(option) => {
-                                        // e.g value selected with enter, right from the input
+                                        // e.g value selected right from the input
                                         if (typeof option === 'string') {
                                             return option;
                                         }

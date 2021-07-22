@@ -31,9 +31,10 @@ const Course = (props) => {
 
   // function that will run when page is loaded
   useEffect(() => {
-    const pathname = window.location.pathname.split('/') //returns the current path
+    const pathname = window.location.pathname.split('/') 
     const id = pathname[pathname.length - 1]
 
+    // Check to see if user is allowed to make changes to the course
     const getAuthorization = async () => {
       const token = localStorage.getItem("token");
 
@@ -49,15 +50,18 @@ const Course = (props) => {
 
       const data = await res.json()
 
+      // Reset token if new token was created 
       if (data.newToken !== undefined)
         localStorage.setItem("token", data.newToken)
 
+      // User is creator so they can edit the course
       if (data.message === "yes") {
         setIsCreator(true);
       } else
         setIsCreator(false);
     }
 
+    // Pull in course from DB
     const getCourse = async (id) => {
       const token = localStorage.getItem("token");
       let res = undefined
@@ -75,21 +79,23 @@ const Course = (props) => {
       if (data.newToken !== undefined)
         localStorage.setItem("token", data.newToken)
 
+      // Successful api call so update course data for local variables
       if (data.message === undefined) {
         setCourse(data.course);
         setCourseID(id);
         setModules(data.course.modules);
         setIsEnabled(data.course.isEnabled);
+
         if (data.course.author === "yes")
           setIsOwner(true);
+      
+        // token expired - return to login page
       } else if (data.message === "wrong token") {
         localStorage.removeItem('token');
         props.history.push('login');
-        // probably alert the user
       } else if (data.message === "course not available") {
         props.history.push('/dashboard');
-        // probably alert the user
-      } else { // this is to check if there are errors not being addressed already
+      } else { 
         console.log(data)
       }
     }
@@ -100,12 +106,14 @@ const Course = (props) => {
   }, [props]);
 
 
+  // Creating a new module
   const addModule = () => {
     sessionStorage.clear()
     props.history.push(`/newModule/${courseID}`)
   }
 
 
+  // API call for deleting a module if permissions allow
   const deleteModule = async (module) => {
     const token = localStorage.getItem("token");
     const res = await fetch(config.server_url + config.paths.deleteModule, {
@@ -133,7 +141,7 @@ const Course = (props) => {
       window.location.reload();
   }
 
-
+  // Check for show/hidden button - only visible to creator of course and admin
   const isDisabled = (index) => {
     if (index >= 3) {
       if (modules[index - 1].completed === 1) {
@@ -144,6 +152,7 @@ const Course = (props) => {
     return false
   }
 
+  // update status of course - shown to other users, or hidden
   const enableCourse = async (val) => {
 
 
@@ -170,16 +179,16 @@ const Course = (props) => {
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
-      // probably alert the user
-
-    } else { // this is to check if there are errors not being addressed already
+    } else { 
+      // this is to check if there are errors not being addressed already
       console.log(data)
     }
 
   }
 
   const handleComplete = async (index) => {
-    // send the completed news to db
+
+    // update db to show the module is now completed
     const token = localStorage.getItem("token");
     const res = await fetch(config.server_url + config.paths.completedModule, {
       method: 'POST',
@@ -198,6 +207,7 @@ const Course = (props) => {
     if (data.newToken !== undefined)
       localStorage.setItem("token", data.newToken)
 
+    // Successful API call - update local variables
     if (data.message === undefined) {
       let temp = modules;
       temp[index]["completed"] = 1
@@ -207,9 +217,9 @@ const Course = (props) => {
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
-      // probably alert the user
 
-    } else { // this is to check if there are errors not being addressed already
+    } else { 
+      // this is to check if there are errors not being addressed already
       console.log(data)
     }
 
