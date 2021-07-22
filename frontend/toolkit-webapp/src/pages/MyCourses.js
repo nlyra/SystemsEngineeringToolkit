@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Card, CardActions, Container, CssBaseline, Divider, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
-import { Dialog, DialogTitle, DialogActions, DialogContent } from '@material-ui/core'
+import { Button, Card, Container, CssBaseline, Divider, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
+import { Dialog, DialogTitle, DialogContent } from '@material-ui/core'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-// import Pagination from '@material-ui/lab/Pagination'
 import myCoursesStyles from '../styles/myCoursesStyle'
-import jwt_decode from "jwt-decode";
-import { Link } from '@material-ui/core';
 
 const MyCourses = (props) => {
     const [courses, setCourses] = useState([])
-    const [searchQuery, setSearchQuery] = useState('')
     const [openDialog, setOpenDialog] = useState(false);
     const [courseID, setCourseID] = useState('')
 
@@ -40,7 +36,7 @@ const MyCourses = (props) => {
 
         const data = await res.json()
 
-        if (data.newToken != undefined)
+        if (data.newToken !== undefined)
             localStorage.setItem("token", data.newToken)
 
         if (data.message === undefined) {
@@ -66,8 +62,7 @@ const MyCourses = (props) => {
     };
 
 
-    const removeEnrollment = async (id) => 
-    {
+    const removeEnrollment = async (id) => {
         let res = undefined
         const token = localStorage.getItem("token");
 
@@ -84,10 +79,10 @@ const MyCourses = (props) => {
         // setCourses(newVal)
 
         const data = await res.json()
-        
-        if(data.newToken != undefined)
-          localStorage.setItem("token", data.newToken)
-          
+
+        if (data.newToken !== undefined)
+            localStorage.setItem("token", data.newToken)
+
 
         window.location.reload()
 
@@ -103,7 +98,6 @@ const MyCourses = (props) => {
         <div className={classes.div}>
             <TopNavBar
                 search={loadCourses}
-            // page={page}
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
@@ -136,15 +130,13 @@ const MyCourses = (props) => {
                                         <Typography gutterBottom>
                                             {course.description.length < 100 ? course.description : course.description.substr(0, 100) + '...'}
                                         </Typography>
-                                        {/* <CardActions>
-                                        </CardActions> */}
                                     </CardContent>
                                     <Grid container spacing={3}>
                                     </Grid>
                                 </Card>
 
                                 <div className={classes.buttonDiv}>
-                                    <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick={() => {handleOpenDialog(course._id)}}>
+                                    <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick={() => { handleOpenDialog(course._id) }}>
                                         Disenroll Course
                                     </Button>
                                 </div>
@@ -152,34 +144,33 @@ const MyCourses = (props) => {
                                 {openDialog === true ?
 
                                     <div className={classes.dialog}>
-                                        <Dialog onClose={handleCloseDialog} classes={{paper: classes.dialogPaper}} BackdropProps={{ style: { backgroundColor: 'rgba(193, 193, 187, 0.2)' } }} aria-labelledby="customized-dialog-title" open={openDialog}>
+                                        <Dialog onClose={handleCloseDialog} classes={{ paper: classes.dialogPaper }} BackdropProps={{ style: { backgroundColor: 'rgba(193, 193, 187, 0.2)' } }} aria-labelledby="customized-dialog-title" open={openDialog}>
                                             <div className={classes.dialogTitleDiv}>
                                                 <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleCloseDialog}>
-                                                    Are you sure you wish to disenroll from this course? 
+                                                    Are you sure you wish to disenroll from this course?
                                                 </DialogTitle>
                                             </div>
                                             <DialogContent className={classes.dialogContent}>
-                                                
-                                                <Button className={classes.dialogButton1} size="small" variant="contained" type= 'submit' onClick={() => removeEnrollment(courseID)}>
-                                                        Yes
-                                                    </Button>
-                                                    <Button className={classes.dialogButton2}  size="small" variant="contained" type='submit' onClick={handleCloseDialog} >
-                                                        No
-                                                    </Button>
-                                               
+
+                                                <Button className={classes.dialogButton1} size="small" variant="contained" type='submit' onClick={() => removeEnrollment(courseID)}>
+                                                    Yes
+                                                </Button>
+                                                <Button className={classes.dialogButton2} size="small" variant="contained" type='submit' onClick={handleCloseDialog} >
+                                                    No
+                                                </Button>
+
                                             </DialogContent>
                                         </Dialog>
                                     </div>
 
                                     : null}
-                                
+
                             </Grid>
                         ))}
 
 
                     </Grid>
                 </div>
-                {/* <Pagination count={6} page={page} onChange={handlePage} variant="outlined" shape="rounded" /> */}
             </Container>
         </div>
     )

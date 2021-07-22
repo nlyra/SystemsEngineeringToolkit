@@ -7,15 +7,8 @@ import PdfModule from '../components/PdfModule'
 import '../css/dashboard.css'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import Pagination from '@material-ui/lab/Pagination'
 import dashStyles from '../styles/dashboardStyle'
 
-const changeParams = (start, finish) => {
-    start = start + 1
-    finish = finish + 1
-    console.log("start " + start)
-
-}
 const useRowStyles = makeStyles({
     root: {
         '& > *': {
@@ -131,7 +124,6 @@ const Dashboard = (props) => {
                         </TableBody>
                     </Table>
                 </div>
-                {/* <Pagination count={6} page={page} onChange={handlePage} variant="outlined" shape="rounded" /> */}
             </Container>
         </div>
     )

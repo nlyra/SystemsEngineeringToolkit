@@ -14,13 +14,8 @@ const moduleStyles = makeStyles((theme) => ({
 
     container: {
         height: "100%",
-        
-        // Added these two fields 
         paddingTop: '5%',
         marginLeft: '10%'
-
-        // paddingRight: '10%'
-        // whiteSpace: 'nowrap'
     },
 
     paper:
@@ -41,7 +36,6 @@ const moduleStyles = makeStyles((theme) => ({
     {
         marginTop: theme.spacing(2),
         marginBottom: theme.spacing(2),
-        // background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
         fontSize: 10,
         paddingTop: theme.spacing(1)
     },
@@ -49,18 +43,10 @@ const moduleStyles = makeStyles((theme) => ({
     button1:
     {
         marginRight: 25
-        // fontSize: 10,
-        // background: 'linear-gradient(45deg, #90a4ae 10%, #e0e0e0 90%)',
-        // marginBottom: theme.spacing(2),
-        // marginLeft:  theme.spacing(2),
-        // paddingTop: theme.spacing(5)
     },
 
     button2:
     {
-        // marginTop: theme.spacing(2),
-        // marginBottom: theme.spacing(2),
-        // marginRight: theme.spacing(35)
     },
 
 

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Button, FormControl, Container, TextField, Typography, Box, Select, InputLabel, FormHelperText, Paper } from '@material-ui/core'
-// import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-// import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 import useStyles from '../styles/moduleStyle'
@@ -16,7 +14,7 @@ import DialogComponent from '../components/DialogComponent'
 function ModuleEditor(props) {
 
 
-    const [module, setModule] = useState(JSON.parse(localStorage.getItem("module")))
+    const module = JSON.parse(localStorage.getItem("module"))
     const [title, setTitle] = useState(module.title)
     const [type, setType] = useState(module.type)
     const [description, setDescription] = useState(module.description)
@@ -78,11 +76,6 @@ function ModuleEditor(props) {
         return false;
     }
 
-    const handleChange = (event) => {
-        setType(event.target.type);
-        // handleDisplayedContent(type)
-    }
-
     useEffect(() => {
         const pathname = window.location.pathname.split('/') //returns the current path
         setCourseID(pathname[pathname.length - 1])
@@ -93,7 +86,6 @@ function ModuleEditor(props) {
         if (!title || !type || !description) {
             setDialogText("Please enter all required fields.")
             handleOpenDialog()
-            //alert('Please enter all required fields')
             return
         }
 
@@ -101,17 +93,14 @@ function ModuleEditor(props) {
             if (gradeToPass < 1) {
                 setDialogText("The number of correct answers required must be greater than 0.")
                 handleOpenDialog()
-                //alert("The number of correct answers required must be greater than 0.")
             } else {
 
-                console.log('works for Quiz')
                 var quiz = []
 
                 quiz = JSON.parse(sessionStorage.getItem("quiz"))
                 if (gradeToPass > quiz.length) {
                     setDialogText("The number of correct answers may not be greater than the number of questions.")
                     handleOpenDialog()
-                    //alert("The number of correct answers may not be greater than the number of questions.")
                 } else {
                     sessionStorage.clear()
                     onFinish({ title, type, description, quiz })
@@ -122,9 +111,7 @@ function ModuleEditor(props) {
                 if (isPDF(pdf.name) === false) {
                     setDialogText("File must be a PDF")
                     handleOpenDialog()
-                    //alert("File must be a PDF")
                 } else {
-                    console.log('works for PDF')
                     onFinish({ title, type, description, pdf })
                 }
             } else if (module.type === "PDF") {
@@ -133,12 +120,10 @@ function ModuleEditor(props) {
             } else {
                 setDialogText("Please attach proper file corresponding to module type.")
                 handleOpenDialog()
-                //alert("Please attach proper file corresponding to module type.")
             }
 
         } else if (type === 'File') {
             if (file !== null && typeof (file) !== 'undefined') {
-                console.log('works for File')
                 onFinish({ title, type, description, file })
             } else if (module.type === "File") {
                 const fileName = module.urlFile
@@ -146,7 +131,6 @@ function ModuleEditor(props) {
             } else {
                 setDialogText("Please attach proper file corresponding to module type.")
                 handleOpenDialog()
-                //alert("Please attach proper file corresponding to module type.")
             }
 
         } else if (type === 'Video') {
@@ -154,9 +138,7 @@ function ModuleEditor(props) {
                 if (isVideo(video.name) === false) {
                     setDialogText("File must be a video.")
                     handleOpenDialog()
-                    //alert("File must be a video")
                 } else {
-                    console.log('works for Video')
                     onFinish({ title, type, description, video })
                 }
             } else if (module.type === "Video") {
@@ -165,20 +147,16 @@ function ModuleEditor(props) {
             } else {
                 setDialogText("Please attach proper file corresponding to module type.")
                 handleOpenDialog()
-                //alert("Please attach proper file corresponding to module type.")
             }
         } else if (type === 'Text') {
-            console.log('Works for Text')
             onFinish({ title, type, description })
         }
         else {
             setDialogText("Please attach proper file corresponding to module type.")
             handleOpenDialog()
-            //alert("Please attach proper file corresponding to module type.")
         }
     }
 
-    // We ideally want to redirect to module manager page, but we do not have that yet
     const cancel = () => {
         sessionStorage.clear()
         props.history.push(`/course/${courseID}`)
@@ -200,7 +178,7 @@ function ModuleEditor(props) {
                 const data = await res.json()
 
 
-                if (data.newToken != undefined)
+                if (data.newToken !== undefined)
                     localStorage.setItem("token", data.newToken)
 
 
@@ -209,7 +187,6 @@ function ModuleEditor(props) {
                 } else {
                     setDialogText("Successfully Edited Quiz module")
                     handleOpenDialog()
-                    //alert("Successfully Edited Quiz module")
                     props.history.push('/course/' + courseID)
                 }
 
@@ -238,7 +215,6 @@ function ModuleEditor(props) {
                     } else {
                         setDialogText("Successfully Edited PDF module")
                         handleOpenDialog()
-                        //alert("Successfully Edited PDF module")
                         props.history.push('/course/' + courseID)
                     }
                 }
@@ -253,7 +229,6 @@ function ModuleEditor(props) {
                     if (isValid === false) {
                         setDialogText('Invalid file type. Please upload a PDF for which name is alphanumeric and has no spaces.')
                         handleOpenDialog()
-                        //alert('Invalid file type. Please upload a PDF for which name is alphanumeric and has no spaces.')
                         return
                     }
 
@@ -272,7 +247,7 @@ function ModuleEditor(props) {
                             "title": module.title,
                             'description': module.description,
                             'type': module.type,
-                            "urlFile": `/`+courseID+`/moduleData/${module.pdf.name}`
+                            "urlFile": `/` + courseID + `/moduleData/${module.pdf.name}`
                         })
                     })
                     const data = await res.json()
@@ -290,10 +265,10 @@ function ModuleEditor(props) {
                         } else if (data2.status === 'Success') {
                             setDialogText("Successfully Edited PDF module")
                             handleOpenDialog()
-                            //alert("Successfully Edited PDF module")
                             props.history.push('/course/' + courseID)
-                        } //else need to do something, not sure what rn
-                    } else { // this is to check if there are errors not being addressed already
+                        } 
+                    } else { 
+                        // this is to check if there are errors not being addressed already
                         console.log(data)
                     }
                 }
@@ -322,7 +297,6 @@ function ModuleEditor(props) {
                     } else {
                         setDialogText("Successfully Edited File module")
                         handleOpenDialog()
-                        //alert("Successfully Edited File module")
                         props.history.push('/course/' + courseID)
                     }
                 } else {
@@ -330,15 +304,14 @@ function ModuleEditor(props) {
                     const fileTypePath = module.file.name.split('.')
 
                     // Grabbing the actual filename minus extension so that we can validate alphanumeric inputs
-                    var val = fileTypePath[fileTypePath.length - 2];
+                    val = fileTypePath[fileTypePath.length - 2];
                     var RegEx = /[^0-9a-z]/i;
-                    var isValid = !(RegEx.test(val));
+                    isValid = !(RegEx.test(val));
 
                     // Input contains non-alphanumeric values so we must alert the user to rename the file 
                     if (isValid === false) {
                         setDialogText('Invalid file type. Please upload a file for which name is alphanumeric and has no spaces.')
                         handleOpenDialog()
-                        //alert('Invalid file type. Please upload a file for which name is alphanumeric and has no spaces.')
                         return
                     }
 
@@ -357,7 +330,7 @@ function ModuleEditor(props) {
                             "title": module.title,
                             'description': module.description,
                             'type': module.type,
-                            "urlFile": `/`+courseID+`/moduleData/${module.file.name}`
+                            "urlFile": `/` + courseID + `/moduleData/${module.file.name}`
                         })
                     })
                     const data = await res.json()
@@ -375,10 +348,10 @@ function ModuleEditor(props) {
                         } else if (data2.status === 'Success') {
                             setDialogText("Successfully Edited File module")
                             handleOpenDialog()
-                            //alert("Successfully Edited File module")
                             props.history.push('/course/' + courseID)
-                        } //else need to do something, not sure what rn
-                    } else { // this is to check if there are errors not being addressed already
+                        } 
+                    } else { 
+                        // this is to check if there are errors not being addressed already
                         console.log(data)
                     }
                 }
@@ -407,22 +380,19 @@ function ModuleEditor(props) {
                     } else {
                         setDialogText("Successfully Edited Video module")
                         handleOpenDialog()
-                        //alert("Successfully Edited Video module")
                         props.history.push('/course/' + courseID)
                     }
                 } else {
 
                     const videoTypePath = module.video.name.split('.')
-                    var val = videoTypePath[videoTypePath.length - 2];
-
+                    val = videoTypePath[videoTypePath.length - 2];
                     var RegEx = /[^0-9a-z]/i;
-                    var isValid = !(RegEx.test(val));
+                    isValid = !(RegEx.test(val));
 
                     // Input contains non-alphanumeric values so we must alert the user to rename the file 
                     if (isValid === false) {
                         setDialogText("Invalid file type. Please upload a video for which name is alphanumeric and has no spaces.")
                         handleOpenDialog()
-                        //alert('Invalid file type. Please upload a video for which name is alphanumeric and has no spaces.')
                         return
                     }
 
@@ -440,7 +410,7 @@ function ModuleEditor(props) {
                             "title": module.title,
                             'description': module.description,
                             'type': module.type,
-                            "urlVideo": `/`+courseID+`/moduleData/${module.video.name}`,
+                            "urlVideo": `/` + courseID + `/moduleData/${module.video.name}`,
                         })
 
                     })
@@ -460,10 +430,10 @@ function ModuleEditor(props) {
                         } else if (data2.status === 'Success') {
                             setCourseID("Successfully Edited video module")
                             handleOpenDialog()
-                            //alert("Successfully Edited video module")
                             props.history.push('/course/' + courseID)
-                        } //else need to do something, not sure what rn
-                    } else { // this is to check if there are errors not being addressed already
+                        } 
+                    } else { 
+                        // this is to check if there are errors not being addressed already
                         console.log(data)
                     }
                 }
@@ -479,7 +449,7 @@ function ModuleEditor(props) {
 
                 const data = await res.json()
 
-                if (data.newToken != undefined)
+                if (data.newToken !== undefined)
                     localStorage.setItem("token", data.newToken)
 
 
@@ -488,10 +458,10 @@ function ModuleEditor(props) {
                 } else if (data.message === undefined) {
                     setCourseID('Successfully Edited Text Module')
                     handleOpenDialog()
-                    //alert('Successfully Edited Text Module')
                     props.history.push('/course/' + courseID)
                 }
-                else { // this is to check if there are errors not being addressed already
+                else { 
+                    // this is to check if there are errors not being addressed already
                     console.log(data)
                 }
             }
@@ -506,7 +476,7 @@ function ModuleEditor(props) {
                     <form autoComplete="off" onSubmit={onSubmit}>
                         <Paper className={classes.paper} elevation={3} square={false}>
                             <Box m={2} pt={2}>
-                                <Typography className={classes.Title} variant="h5">{title == "" ? 'New Module' : title}</Typography>
+                                <Typography className={classes.Title} variant="h5">{title === "" ? 'New Module' : title}</Typography>
                             </Box>
                             <div className={classes.TextBox}>
                                 <TextField color='primary'
@@ -540,7 +510,6 @@ function ModuleEditor(props) {
                                     <Select
                                         native
                                         value={type}
-                                        onChange={handleChange}
                                         name="Module Type"
                                         inputProps={{
                                             id: 'category-native-required',
@@ -560,7 +529,7 @@ function ModuleEditor(props) {
                                 {type === 'PDF' && <PDFCreator setPDF={setPDF} pdf={pdf} />}
                                 {type === 'Video' && <VideoCreator setVideo={setVideo} video={video} />}
                                 {type === 'File' && <FileCreator setFile={setFile} file={file} />}
-                                {type == 'Quiz' && <QuizCreator gradeToPass={gradeToPass} setGradeToPass={setGradeToPass} />}
+                                {type === 'Quiz' && <QuizCreator gradeToPass={gradeToPass} setGradeToPass={setGradeToPass} />}
 
                             </div>
                             <Container className={classes.buttonGroup}>

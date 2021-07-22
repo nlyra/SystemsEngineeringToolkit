@@ -72,8 +72,39 @@ const AdminCoursesTab = (props) => {
 
   // function that will run when page is loaded
   useEffect(() => {
+    const getCourses = async () => {
+      const token = localStorage.getItem("token");
+  
+      const res = await fetch(config.server_url + config.paths.getCourses, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({ "token": token })
+      })
+  
+      const data = await res.json()
+      
+      if(data.newToken !== undefined)
+      localStorage.setItem("token", data.newToken)
+      
+      if (data.message === "unauthorized") {
+        props.isUnauthorized()
+      } else if (data.message === undefined) {
+        setCourses(data.courses)
+      } else if (data.message === "wrong token") {
+        localStorage.removeItem('token');
+        props.history.push('login');
+  
+        // alert the user
+        setDialogText("Unauthorized access. Please contact your system administrator.")
+        handleOpenDialog()
+      } else { // this is to check if there are errors not being addressed already
+        console.log(data)
+      }
+    }
     getCourses()
-  }, []);
+  }, [props]);
 
     const handleOpenDialog = () => {
         setOpenDialog(true);
@@ -82,42 +113,10 @@ const AdminCoursesTab = (props) => {
         setOpenDialog(false);
     }
 
-  const getCourses = async () => {
-    const token = localStorage.getItem("token");
-
-    const res = await fetch(config.server_url + config.paths.getCourses, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({ "token": token })
-    })
-
-    const data = await res.json()
-    
-    if(data.newToken != undefined)
-    localStorage.setItem("token", data.newToken)
-    
-    if (data.message === "unauthorized") {
-      props.isUnauthorized()
-    } else if (data.message === undefined) {
-      setCourses(data.courses)
-    } else if (data.message === "wrong token") {
-      localStorage.removeItem('token');
-      props.history.push('login');
-
-      // alert the user
-      setDialogText("Unauthorized access. Please contact your system administrator.")
-      handleOpenDialog()
-    } else { // this is to check if there are errors not being addressed already
-      console.log(data)
-    }
-  }
 
 
   const getSearch = async (query) => {
     setSearch(query)
-    // console.log(query)
     const token = localStorage.getItem("token");
 
     const res = await fetch(config.server_url + config.paths.getCoursesSearch, {
@@ -130,7 +129,7 @@ const AdminCoursesTab = (props) => {
 
     const data = await res.json()
     
-    if(data.newToken != undefined)
+    if(data.newToken !== undefined)
     localStorage.setItem("token", data.newToken)
     
     if (data.message === "unauthorized") {
@@ -161,13 +160,12 @@ const AdminCoursesTab = (props) => {
 
     const data = await res.json()
     
-    if(data.newToken != undefined)
+    if(data.newToken !== undefined)
     localStorage.setItem("token", data.newToken)
     
     if (data.message === "unauthorized") {
       props.isUnauthorized()
     } else if (data.message === undefined) {
-      // localStorage.setItem("tab", 1);
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
@@ -222,7 +220,6 @@ const AdminCoursesTab = (props) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
                     {columns.map((column) => {
-                      const value = row[column.id];
                       return (
                         <TableCell key={column.id}>
                           {(column.id === '_id' ||

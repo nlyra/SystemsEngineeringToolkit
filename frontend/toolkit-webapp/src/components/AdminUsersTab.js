@@ -69,8 +69,38 @@ const AdminUsersTab = (props) => {
 
   // function that will run when page is loaded
   useEffect(() => {
+    const getUsers = async () => {
+      const token = localStorage.getItem("token");
+  
+      const res = await fetch(config.server_url + config.paths.getUsers, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({ "token": token })
+      })
+  
+      const data = await res.json()
+      
+      if(data.newToken !== undefined)
+      localStorage.setItem("token", data.newToken)
+      
+      if (data.message === "unauthorized") {
+        props.isUnauthorized()
+      } else if (data.message === undefined) {
+        setUsers(data.users)
+      } else if (data.message === "wrong token") {
+        localStorage.removeItem('token');
+        // alert the user
+        setDialogText("Unauthorized access. Please contact your system administrator.")
+        handleOpenDialog()
+        props.history.push('login');
+      } else { // this is to check if there are errors not being addressed already
+        console.log(data)
+      }
+    }
     getUsers()
-  }, []);
+  }, [props]);
 
     const handleOpenDialog = () => {
         setOpenDialog(true);
@@ -79,40 +109,9 @@ const AdminUsersTab = (props) => {
         setOpenDialog(false);
     }
 
-  const getUsers = async () => {
-    const token = localStorage.getItem("token");
-
-    const res = await fetch(config.server_url + config.paths.getUsers, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({ "token": token })
-    })
-
-    const data = await res.json()
-    
-    if(data.newToken != undefined)
-    localStorage.setItem("token", data.newToken)
-    
-    if (data.message === "unauthorized") {
-      props.isUnauthorized()
-    } else if (data.message === undefined) {
-      setUsers(data.users)
-    } else if (data.message === "wrong token") {
-      localStorage.removeItem('token');
-      // alert the user
-      setDialogText("Unauthorized access. Please contact your system administrator.")
-      handleOpenDialog()
-      props.history.push('login');
-    } else { // this is to check if there are errors not being addressed already
-      console.log(data)
-    }
-  }
 
   const getSearch = async (query) => {
     setSearch(query)
-    // console.log(query)
     const token = localStorage.getItem("token");
 
     const res = await fetch(config.server_url + config.paths.getUsersSearch, {
@@ -125,7 +124,7 @@ const AdminUsersTab = (props) => {
 
     const data = await res.json()
     
-    if(data.newToken != undefined)
+    if(data.newToken !== undefined)
     localStorage.setItem("token", data.newToken)
     
     if (data.message === "unauthorized") {
@@ -157,7 +156,7 @@ const AdminUsersTab = (props) => {
 
     const data = await res.json()
     
-    if(data.newToken != undefined)
+    if(data.newToken !== undefined)
     localStorage.setItem("token", data.newToken)
     
     if (data.message === "unauthorized") {
@@ -188,13 +187,12 @@ const AdminUsersTab = (props) => {
 
     const data = await res.json()
     
-    if(data.newToken != undefined)
+    if(data.newToken !== undefined)
     localStorage.setItem("token", data.newToken)
     
     if (data.message === "unauthorized") {
       props.isUnauthorized()
     } else if (data.message === "success") {
-      // localStorage.setItem("tab", 0);
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       // alert the user
@@ -250,7 +248,6 @@ const AdminUsersTab = (props) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
                     {columns.map((column) => {
-                      const value = row[column.id];
                       return (
                         <TableCell key={column.id}>
                           {(column.id === '_id' || column.id === 'email') && row[column.id]}

@@ -3,6 +3,7 @@
     "db_url2": "mongodb://localhost:27017/se_toolkit",
     "db_url3": "mongodb://mongo:27017/se_toolkit",
     "server_url": "http://localhost:4000",
+    "frontend_url": "http://localhost:3000",
     "key": "veryhardkey",
     "emailInfo": {
         "service": "gmail",

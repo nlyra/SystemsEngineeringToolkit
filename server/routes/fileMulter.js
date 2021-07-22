@@ -2,7 +2,6 @@ const multer = require('multer');
 const express = require('express');
 const VerifyToken = require('./auth').verifyToken;
 const GetRole = require('./auth').getRole;
-const config = require('../config.json');
 const Course = require('../models/course');
 const fs = require("fs");
 const mkdirp = require('mkdirp')
@@ -21,8 +20,8 @@ const fileStorageEngine = multer.diskStorage({
 const upload = multer({ storage: fileStorageEngine })
 
 router.post('/single', VerifyToken, GetRole, upload.single('file'), async (req, res) => {
-  // req.body.roleID is undefined in the scope of this function, so we must use the query data
   
+  // req.body.roleID is undefined in the scope of this function, so we must use the query data
   if (req.query.roleID === 0) {
     res.json({ message: "unauthorized" })
     console.log('here')
@@ -104,7 +103,6 @@ router.post('/singleModuleFile', VerifyToken, upload.single('file'), async (req,
 
   const made = mkdirp.sync(__dirname + "/../public/" + req.query.courseID + "/moduleData")
 
-  // console.log(req.query)
   fs.rename(currPath, newPath, function (err) {
     if (err) {
       throw err

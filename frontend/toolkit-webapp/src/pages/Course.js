@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-import { IconButton, Chip, InputLabel, Select, MenuItem, FormControl, Link, FormControlLabel, Divider, makeStyles, Grid, Typography, TextField, Button, Container } from '@material-ui/core'
+import { IconButton, Chip, FormControlLabel, Divider, Grid, Typography, Button } from '@material-ui/core'
 import { Link as ReactLink } from 'react-router-dom';
 import VideoModule from '../components/VideoModule'
 import PdfModule from '../components/PdfModule'
@@ -18,127 +18,102 @@ import courseStyles from '../styles/courseStyle';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { green, grey } from '@material-ui/core/colors';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-import dialogStyles from '../styles/dialogStyle'
-import DialogComponent from '../components/DialogComponent'
-
 
 const Course = (props) => {
   const [course, setCourse] = useState({})
   const [modules, setModules] = useState([])
-  const [oldCourseImage, setOldCourseImage] = useState('')
-  const [currCourseImage, setCurrCourseImage] = useState('')
-  const [courseTitle, setCourseTitle] = useState('')
-  const [courseDescription, setCourseDescription] = useState('')
-  const [intendedAudience, setIntendedAudience] = useState('')
-  const [prerequisite, setPrerequisite] = useState('')
-  const [skillLevel, setSkillLevel] = useState('')
-  const [editCourseInfo, setEditCourseInfo] = useState(false)
   const [courseID, setCourseID] = useState('')
   const [isCreator, setIsCreator] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
 
-  const [dialogText, setDialogText] = useState('')
-  const [openDialog, setOpenDialog] = useState(false);
-
   const classes = courseStyles()
-  const dialogClasses = dialogStyles()
-
-  let validImageTypes = ["PNG", "JPEG", "GIF", "TIF", "RAW", "JPG"]
-
-  const onEditCourseTitle = (e) => {
-    setEditCourseInfo(true);
-  };
 
   // function that will run when page is loaded
   useEffect(() => {
-    const pathname = window.location.pathname.split('/') //returns the current path
+    const pathname = window.location.pathname.split('/') 
     const id = pathname[pathname.length - 1]
+
+    // Check to see if user is allowed to make changes to the course
+    const getAuthorization = async () => {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch(config.server_url + config.paths.getIsCreator, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          "token": token
+        })
+      })
+
+      const data = await res.json()
+
+      // Reset token if new token was created 
+      if (data.newToken !== undefined)
+        localStorage.setItem("token", data.newToken)
+
+      // User is creator so they can edit the course
+      if (data.message === "yes") {
+        setIsCreator(true);
+      } else
+        setIsCreator(false);
+    }
+
+    // Pull in course from DB
+    const getCourse = async (id) => {
+      const token = localStorage.getItem("token");
+      let res = undefined
+
+      res = await fetch(config.server_url + config.paths.course, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({ "token": token, "id": id })
+      })
+
+      const data = await res.json()
+
+      if (data.newToken !== undefined)
+        localStorage.setItem("token", data.newToken)
+
+      // Successful api call so update course data for local variables
+      if (data.message === undefined) {
+        setCourse(data.course);
+        setCourseID(id);
+        setModules(data.course.modules);
+        setIsEnabled(data.course.isEnabled);
+
+        if (data.course.author === "yes")
+          setIsOwner(true);
+      
+        // token expired - return to login page
+      } else if (data.message === "wrong token") {
+        localStorage.removeItem('token');
+        props.history.push('login');
+      } else if (data.message === "course not available") {
+        props.history.push('/dashboard');
+      } else { 
+        console.log(data)
+      }
+    }
+
     getCourse(id)
     getAuthorization();
 
-  }, []);
+  }, [props]);
 
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
-  }
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  }
 
-  const getAuthorization = async () => {
-    const token = localStorage.getItem("token");
-
-    const res = await fetch(config.server_url + config.paths.getIsCreator, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        "token": token
-      })
-    })
-
-    const data = await res.json()
-
-    if (data.newToken != undefined)
-      localStorage.setItem("token", data.newToken)
-
-    if (data.message === "yes") {
-      setIsCreator(true);
-    } else
-      setIsCreator(false);
-
-  }
-
+  // Creating a new module
   const addModule = () => {
     sessionStorage.clear()
     props.history.push(`/newModule/${courseID}`)
   }
 
-  const getCourse = async (id) => {
-    const token = localStorage.getItem("token");
-    let res = undefined
 
-    res = await fetch(config.server_url + config.paths.course, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({ "token": token, "id": id })
-    })
-
-    const data = await res.json()
-
-    if (data.newToken != undefined)
-      localStorage.setItem("token", data.newToken)
-
-    if (data.message === undefined) {
-      setCourse(data.course);
-      setCourseID(id);
-      setOldCourseImage(data.course.urlImage);
-      setCurrCourseImage(data.course.urlImage);
-      setCourseTitle(data.course.name);
-      setCourseDescription(data.course.description);
-      setSkillLevel(data.course.skillLevel);
-      setIntendedAudience(data.course.intendedAudience);
-      setPrerequisite(data.course.prerequisite);
-      setModules(data.course.modules);
-      setIsEnabled(data.course.isEnabled);
-      if (data.course.author === "yes")
-        setIsOwner(true);
-    } else if (data.message === "wrong token") {
-      localStorage.removeItem('token');
-      props.history.push('login');
-      // probably alert the user
-    } else if (data.message === "course not available") {
-      props.history.push('/dashboard');
-      // probably alert the user
-    } else { // this is to check if there are errors not being addressed already
-      console.log(data)
-    }
-  }
-
+  // API call for deleting a module if permissions allow
   const deleteModule = async (module) => {
     const token = localStorage.getItem("token");
     const res = await fetch(config.server_url + config.paths.deleteModule, {
@@ -149,7 +124,6 @@ const Course = (props) => {
       body: JSON.stringify({
         'token': token,
         'courseID': course._id,
-        // 'moduleID': indexOf(module),
         'title': module.title,
         'description': module.description,
       })
@@ -157,7 +131,7 @@ const Course = (props) => {
 
     const data = await res.json()
 
-    if (data.newToken != undefined)
+    if (data.newToken !== undefined)
       localStorage.setItem("token", data.newToken)
 
 
@@ -167,26 +141,7 @@ const Course = (props) => {
       window.location.reload();
   }
 
-  const enroll = async (module) => {
-
-    if (modules.indexOf(module) === 0) {
-
-      const token = localStorage.getItem("token");
-
-      const res = await fetch(config.server_url + config.paths.enrollment, {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json'
-        },
-        body: JSON.stringify({
-          "courseID": course._id,
-          "token": token
-        })
-      })
-    }
-
-  }
-
+  // Check for show/hidden button - only visible to creator of course and admin
   const isDisabled = (index) => {
     if (index >= 3) {
       if (modules[index - 1].completed === 1) {
@@ -197,6 +152,7 @@ const Course = (props) => {
     return false
   }
 
+  // update status of course - shown to other users, or hidden
   const enableCourse = async (val) => {
 
 
@@ -223,16 +179,16 @@ const Course = (props) => {
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
-      // probably alert the user
-
-    } else { // this is to check if there are errors not being addressed already
+    } else { 
+      // this is to check if there are errors not being addressed already
       console.log(data)
     }
 
   }
 
   const handleComplete = async (index) => {
-    // send the completed news to db
+
+    // update db to show the module is now completed
     const token = localStorage.getItem("token");
     const res = await fetch(config.server_url + config.paths.completedModule, {
       method: 'POST',
@@ -248,9 +204,10 @@ const Course = (props) => {
 
     const data = await res.json()
 
-    if (data.newToken != undefined)
+    if (data.newToken !== undefined)
       localStorage.setItem("token", data.newToken)
 
+    // Successful API call - update local variables
     if (data.message === undefined) {
       let temp = modules;
       temp[index]["completed"] = 1
@@ -260,9 +217,9 @@ const Course = (props) => {
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
-      // probably alert the user
 
-    } else { // this is to check if there are errors not being addressed already
+    } else { 
+      // this is to check if there are errors not being addressed already
       console.log(data)
     }
 
@@ -278,7 +235,7 @@ const Course = (props) => {
           <Grid item alignItems="center" xs={12}>
             <Grid container className={classes.topItem}>
               <Grid item xs={3} sm={2} lg={1} >
-                <img src={config.server_url + course.urlImage} className={classes.currCourseImageStyle} />
+                <img src={config.server_url + course.urlImage} alt="cover" className={classes.currCourseImageStyle} />
               </Grid>
               <Grid item xs={8} sm={9} lg={9}>
                 <h1
@@ -309,15 +266,13 @@ const Course = (props) => {
         </div>
 
         <br></br>
-        {editCourseInfo !== true &&
-          <Grid item xs={12}>
-            <div className={classes.statsDiv}>
-              <Chip label={"Skill Level: " + course.skillLevel} variant="outlined" />
-              <Chip label={"Audience: " + course.intendedAudience} variant="outlined" />
-              <Chip label={"Pre Requisite: " + course.prerequisite} variant="outlined" />
-            </div>
-          </Grid>
-        }
+        <Grid item xs={12}>
+          <div className={classes.statsDiv}>
+            <Chip label={"Skill Level: " + course.skillLevel} variant="outlined" />
+            <Chip label={"Audience: " + course.intendedAudience} variant="outlined" />
+            <Chip label={"Pre Requisite: " + course.prerequisite} variant="outlined" />
+          </div>
+        </Grid>
         <Grid item xs={12}>
           <Divider className={classes.divider} />
         </Grid>
@@ -413,8 +368,7 @@ const Course = (props) => {
                     <div className={classes.accordionDiv}>
                       <Typography >
 
-                        {/* Type: {module.type} */}
-                        {module.type == "Quiz" &&
+                        {module.type === "Quiz" &&
                           <div>
                             <Typography >Grade: {module.grade}/{module.quiz.length}</Typography>
                             <Typography>Grade needed to pass: {module.gradeToPass}/{module.quiz.length}</Typography>
@@ -429,14 +383,11 @@ const Course = (props) => {
                         {module.type === "Video" && <VideoModule videoUrl={config.server_url + module.urlVideo} />}
                         {module.type === "PDF" && <PdfModule fileUrl={config.server_url + module.urlFile} />}
                         {module.type === "File" && <FileModule fileUrl={config.server_url + module.urlFile} />}
-                        {module.type === "Quiz" && <QuizModule quiz={module.quiz} moduleIndex={modules.indexOf(module)} courseID={courseID} grade={module.grade} />}
+                        {module.type === "Quiz" && <QuizModule quiz={module.quiz} moduleIndex={modules.indexOf(module)} courseID={courseID} grade={module.grade} gradeToPass={module.gradeToPass}/>}
                       </div>
                       <br />
                       {module.type !== "Quiz" &&
                         <div className={classes.completeDiv}>
-                          {/* {module.completed === 1 ?
-                            <Button disabled>Complete!</Button> */}
-                          {/* : */}
                           <Button
                             variant="contained"
                             onClick={() => handleComplete(modules.indexOf(module))}
@@ -444,7 +395,6 @@ const Course = (props) => {
                           >
                             Complete!
                           </Button>
-                          {/* } */}
                         </div>
                       }
                     </div>
@@ -454,14 +404,6 @@ const Course = (props) => {
           ))}
         </Grid>
       </Grid>
-      <DialogComponent
-        open={openDialog}
-        text={dialogText}
-        onClose={handleCloseDialog}
-        buttons={[
-          { text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog }
-        ]}
-      />
     </div >
   )
 }
