@@ -141,7 +141,6 @@ const ManageMyCourses = (props) => {
                                     </Grid>
                                 </Card>
 
-                                // Button opens a dialog that will ask the user if they truly want to remove the course from the database.
                                 <div className={classes.buttonDiv}>
                                     <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick={() => handleOpenDialog(course._id)}>
                                         Delete Course

@@ -141,7 +141,6 @@ const Dashboard = (props) => {
                     </Grid>
                 </div>
                 
-                // Only show the 'Scroll For More' value if we are not searching for courses, or if we have not loaded in all courses
                 { totalCourses !== undefined && totalCourses !== courses.length &&  
                     
                          <div className={classes.expandMoreIcon}>
