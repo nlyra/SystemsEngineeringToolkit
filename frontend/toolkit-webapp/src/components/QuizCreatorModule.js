@@ -257,10 +257,6 @@ const QuizCreator = (props) => {
         { id: 'fake3', numeric: false, disablePadding: false, label: 'Incorrect' },
     ]
 
-    const handleChange = (event) => {
-        setType(event.target.type);
-    }
-
     return (
         <div>
             <TextField color='primary'
@@ -280,7 +276,6 @@ const QuizCreator = (props) => {
                 <Select
                     native
                     value={type}
-                    onChange={handleChange}
                     name="Question Type"
                     inputProps={{
                         id: 'category-native-required',
@@ -417,7 +412,6 @@ const QuizCreator = (props) => {
                         <Select
                             native
                             value={type}
-                            onChange={handleChange}
                             name="Question Type"
                             inputProps={{
                                 id: 'category-native-required',

@@ -7,37 +7,54 @@ import Chip from '@material-ui/core/Chip';
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 import courseStyles from '../styles/courseCreatorStyle'
-import '../css/Login.css';
-
 
 function EditCourse(props) {
 
     const classes = courseStyles()
 
-    const [course, setCourse] = useState(props.location.course)
+    const [course] = useState(props.location.course)
     const [courseTitle, setCourseTitle] = useState(props.location.course.name)
     const [categories, setCategories] = useState([])
     const [description, setDescription] = useState(props.location.course.description)
     const [skillLevel, setSkillLevel] = useState(props.location.course.skillLevel)
     const [intendedAudience, setIntendedAudience] = useState(props.location.course.intendedAudience)
     const [prerequisite, setPrerequisite] = useState(props.location.course.prerequisite)
-    const [oldCourseImage, setOldCourseImage] = useState(props.location.course.urlImage)
+    const [oldCourseImage] = useState(props.location.course.urlImage)
     const [currCourseImage, setCurrCourseImage] = useState(undefined)
     const [dialogData, setDialogData] = useState([]);
     const filter = createFilterOptions();
 
     let validImageTypes = ["PNG", "JPEG", "GIF", "TIF", "RAW", "JPG"]
 
-    // useEffect() hook will make it so it only gets rendered once, once the page loads,
-    // as opposed to after every time the form is rendered (as long as the array at the end remains empty).
+    // useEffect() hook will go off as the page loads, checking for permissions and pulling in the course info needed
     useEffect(() => {
-        getAuthorization();
-        // console.log(props.location.course)
-        // props.location.course.categories.map((cat) => (console.log(cat)))
+
+        const getAuthorization = async () => {
+            const token = localStorage.getItem("token");
+
+            const res = await fetch(config.server_url + config.paths.getIsCreator, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "token": token
+                })
+            })
+
+            const data = await res.json()
+            if (data.message !== "yes") {
+                props.history.push('/dashboard');
+            }
+
+        }
+        
+        // pull in categories specific to the course, from the db
         const getOldCats = () => {
             setCategories(props.location.course.categories.map((cat) => (cat)))
         }
-
+        
+        // pull in all categories from the db 
         const categoriesCollection = async () => {
             const token = localStorage.getItem("token");
             const res = await fetch(config.server_url + config.paths.categories, {
@@ -49,57 +66,38 @@ function EditCourse(props) {
                     "token": token
                 })
             })
-
+            
+            // check if the user is allowed to be on this page
             const fetchedCategories = await res.json()
             if (fetchedCategories.message === "unauthorized") {
-                console.log(fetchedCategories.message)
                 props.history.push('dashboard');
             } else
-                setDialogData(fetchedCategories.categories)
+            setDialogData(fetchedCategories.categories)
         }
+
+        getAuthorization();
         getOldCats()
-        // console.log(categories)
         categoriesCollection()
 
-    }, []);
+    }, [props]);
 
-    const getAuthorization = async () => {
-        const token = localStorage.getItem("token");
 
-        const res = await fetch(config.server_url + config.paths.getIsCreator, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                "token": token
-            })
-        })
-
-        const data = await res.json()
-        // console.log(data.message)
-        if (data.message !== "yes") {
-            props.history.push('/dashboard');
-        }
-
-    }
-
+    // Submitted changes to edit page: update db in another function
     const onSubmit = (e) => {
         e.preventDefault()
         if (!courseTitle || !categories || !description || !intendedAudience || !prerequisite) {
             alert('Please enter all required fields')
             return
         }
-        // console.log("categories on submit: " + categories)
         onFinish()
     }
 
 
     const onFinish = async (creds) => {
 
-        // e.preventDefault()
-        // console.log("these are the final categories " + JSON.stringify(categories))
         const token = localStorage.getItem("token");
+
+        // Call backend to update the course info with the changes the user made
         const res = await fetch(config.server_url + config.paths.updateCourseInfo, {
             method: 'POST',
             headers: {
@@ -129,7 +127,7 @@ function EditCourse(props) {
                 return
             }
 
-            // We have a new image being passed in so delete old file
+            // We have a new image being passed in so delete old image file in the folder (within 'public')
             const res2 = await fetch(config.server_url + config.paths.removeFile, {
                 method: 'POST',
                 headers: {
@@ -141,11 +139,15 @@ function EditCourse(props) {
                 })
             })
 
+            const data = await res2.json()
+
+            if (data.newToken !== undefined)
+                localStorage.setItem("token", data.newToken)
 
             const imageData = new FormData();
             imageData.append('file', currCourseImage)
 
-            // Checking to see if the file inputted is not an actual image
+            // Checking to see if the file inputted is not an actual valid image
             const imageTypePath = currCourseImage.name.split('.')
             const imageType = imageTypePath[imageTypePath.length - 1]
             const validInput = validImageTypes.includes(imageType.toUpperCase());
@@ -167,6 +169,7 @@ function EditCourse(props) {
                 return
             }
 
+            // If the image has been changed, we must update the image file in the backend
             if (currCourseImage.name !== oldCourseImage.name) {
 
                 if (data.message === undefined) {
@@ -180,14 +183,16 @@ function EditCourse(props) {
                         props.history.push('dashboard');
                     } else if (data2.status === 'Success') {
                         alert("Edits have been successfully made")
-                        props.history.push('/course/' + course._id) // needs to be changed to course manager
-                    } //else need to do something, not sure what rn
+                        props.history.push('/course/' + course._id) 
+                    } 
                 }
-                else { // this is to check if there are errors not being addressed already
+                else { 
+                    // this is to check if there are errors not being addressed already
                     console.log(data)
                 }
             }
             else {
+
                 const res = await fetch(config.server_url + config.paths.updateCourseImage, {
                     method: 'POST',
                     headers: {
@@ -207,14 +212,13 @@ function EditCourse(props) {
                     props.history.push('dashboard');
                 } else if (data2.status === 'Success') {
                     alert("Edits have been successfully made")
-                    props.history.push('/course/' + course._id)// needs to be changed to course manager
-                } //else need to do something, not sure what rn
+                    props.history.push('/course/' + course._id)
+                } 
             }
-            // props.history.push('/course/' + course._id)
-            // window.location.reload();
         }
     }
 
+    // Go back to course page
     const onCancel = () => {
         props.history.push('/course/' + course._id)
     }
@@ -278,7 +282,7 @@ function EditCourse(props) {
                                         return filtered;
                                     }}
                                     getOptionLabel={(option) => {
-                                        // e.g value selected with enter, right from the input
+                                        // e.g value selected right from the input
                                         if (typeof option === 'string') {
                                             return option;
                                         }
@@ -335,7 +339,6 @@ function EditCourse(props) {
                                         defaultValue={skillLevel}
                                         onChange={(e) => setSkillLevel(e.target.value)}
                                         label="Skill Label"
-                                    // className={classes.select}
                                     >
                                         <MenuItem value={"Easy"}>Easy</MenuItem>
                                         <MenuItem value={"Medium"}>Medium</MenuItem>
@@ -344,7 +347,6 @@ function EditCourse(props) {
                                 </FormControl>
                             </div>
                             <input style={{ marginLeft: '4vw' }} type="file" name="picture" accept="image/*" className={classes.currCourseImageStyle} onChange={e => setCurrCourseImage(e.target.files[0])} />
-                            {/* <input type="file" name="picture" accept="image/*" onChange={e => setImage(e.target.files[0])} /> */}
                             <Button type='submit' className={classes.button4} color="secondary" size="medium" variant="contained" startIcon={<ClearIcon />} onClick={onCancel}>
                                 Cancel
                             </Button>

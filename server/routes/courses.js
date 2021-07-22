@@ -3,30 +3,25 @@ const User = require('../models/user');
 const VerifyToken = require('./auth').verifyToken;
 const GetRole = require('./auth').getRole;
 const express = require('express');
-const jwt_decode = require('jwt-decode');
 const router = express.Router();
 const fs = require('fs')
-const config = require('../config.json');
 
 
 router.post('/course', VerifyToken, GetRole, async (req, res) => {
   try {
     // get course info
     let course = undefined
-    // req.body.roleID == 1 || "author": req.body.userID
-    if (req.body.roleID == 2) { // course for creator
+    if (req.body.roleID == 2) { // course for admin
       course = await Course.findOne({ "_id": req.body.id },
         '_id name description categories urlImage modules author isEnabled skillLevel intendedAudience prerequisite');
-    } else if (req.body.roleID == 1) { // course for students (only enabled courses)
+    } else if (req.body.roleID == 1) { // course for creator
       course = await Course.findOne({ "_id": req.body.id, "author": req.body.userID },
         '_id name description categories urlImage modules author isEnabled skillLevel intendedAudience prerequisite');
     }
-    if (course == null || course == {} || course == undefined) {
-      console.log(course)
+    if (course == null || course == {} || course == undefined) { // course for everyone else
       course = await Course.findOne({ "_id": req.body.id, "isEnabled": true },
         '_id name description urlImage modules author skillLevel intendedAudience prerequisite');
     }
-    console.log(course)
 
     if (course != {} && course != null) {
       for (let i = 0; i < course.modules.length; i++) {
@@ -59,8 +54,6 @@ router.post('/course', VerifyToken, GetRole, async (req, res) => {
         course.author = "yes"
       }
 
-
-
       if (req.body.newToken != undefined)
         res.json({ "course": course, "newToken": req.body.newToken });
       else if (course != {})
@@ -71,11 +64,10 @@ router.post('/course', VerifyToken, GetRole, async (req, res) => {
     console.log(e);
     res.sendStatus(500);
   }
-
 })
 
 router.post('/course/update', VerifyToken, GetRole, async (req, res) => {
-  
+
   if (req.body.roleID === 0) {
     res.json({ message: "unauthorized" })
     return
@@ -95,7 +87,6 @@ router.post('/course/update', VerifyToken, GetRole, async (req, res) => {
         }
       })
 
-    // console.log('here')
 
     if (req.body.newToken != undefined)
       res.json({ 'status': 'course updated', "newToken": req.body.newToken });
@@ -109,7 +100,7 @@ router.post('/course/update', VerifyToken, GetRole, async (req, res) => {
 })
 
 router.post('/course/updateImage', VerifyToken, GetRole, async (req, res) => {
-  
+
   if (req.body.roleID === 0) {
     res.json({ message: "unauthorized" })
     return
@@ -140,53 +131,16 @@ router.post('/course/updateImage', VerifyToken, GetRole, async (req, res) => {
 
 })
 
-// router.post('/course/enrollment', VerifyToken, async (req, res) => {
-
-//   try {
-
-//     // studentExists is a variable that will tell me if the course contains the user as an enrolled student
-//     let studentExists = {}
-//     studentExists = await Course.findOne({ "_id": req.body.courseID, "studentsEnrolled": req.body.userID }, '_id studentsEnrolled')
-
-//     if (studentExists === null) {
-
-//       const updateCourse = await Course.updateOne(
-//         { _id: req.body.courseID },
-//         {
-//           $push: {
-//             studentsEnrolled:
-//               req.body.userID
-//           },
-//           $inc: { totalStudents: 1 }
-//         });
-
-//       const updateUser = await User.updateOne(
-//         { _id: req.body.userID },
-//         {
-//           $push: {
-//             enrolledClasses:
-//               req.body.courseID
-//           }
-
-//         });
-
-//       res.json({ 'status': 'student enrolled in course' });
-//     }
-
-//   } catch (e) {
-//     console.log(e);
-//     res.sendStatus(500);
-//   }
-
-// })
-
+// gains all courses for the dashboard, if the course "isEnabled" === true then it will be shown on the dashboard else it will not
+// this also has the logic for the endless scrolling feature
 router.post('/info', VerifyToken, async (req, res) => {
 
   try {
     let courses = []
-    let totalCourses = await Course.find({isEnabled: true}).countDocuments()
+    let totalCourses = await Course.find({ isEnabled: true }).countDocuments()
+    // the following if/else statements have the logic for endless scrolling; "totalCourses" is being used as a flag to monitor the endless scrolling
     if (req.body.search_query != undefined && req.body.search_query.length > 0) {
-      
+
       const query = req.body.search_query;
       totalCourses = undefined
 
@@ -197,13 +151,10 @@ router.post('/info', VerifyToken, async (req, res) => {
           { "name": { "$regex": query, $options: 'i' } },
         ]
       }, '_id name description urlImage categories');
-      // }, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
-      // console.log(courses)
       res.json({ "status": "search", "courses": courses, "totalCourses": totalCourses });
 
     } else {
-      courses = await Course.find({isEnabled: true}, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
-      // courses = await Course.find({ isEnabled: true }, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
+      courses = await Course.find({ isEnabled: true }, '_id name description urlImage categories', { limit: req.body.cardAmount }).skip(req.body.skip);
       res.json({ "status": "loading", "courses": courses, "totalCourses": totalCourses });
 
     }
@@ -283,7 +234,7 @@ router.post('/myCoursesInfo', VerifyToken, async (req, res) => {
 })
 
 router.post('/create', VerifyToken, GetRole, async (req, res) => {
-  
+
   if (req.body.roleID === 0) {
     res.json({ message: "unauthorized" })
     return
@@ -305,8 +256,6 @@ router.post('/create', VerifyToken, GetRole, async (req, res) => {
 
     findCourse = await Course.findOne({ "name": req.body.name, "description": req.body.description }, '_id')
 
-
-    // console.log(findCourse._id)
     const updateUser = await User.updateOne(
       { _id: req.body.userID },
       {
@@ -316,7 +265,6 @@ router.post('/create', VerifyToken, GetRole, async (req, res) => {
         }
       });
 
-    // console.log('added course ', savedCourse._id);
 
 
     if (req.body.newToken != undefined)
@@ -365,9 +313,8 @@ router.post('/removeEnrollment', VerifyToken, async (req, res) => {
 
 })
 
-// TODO: Need to move this to fileMulter once I figure out why it's not getting called when it sits in fileMulter
 router.post('/removeFile', VerifyToken, GetRole, async (req, res) => {
-  
+
   if (req.body.roleID === 0) {
     res.json({ message: "unauthorized" })
     return
@@ -384,8 +331,10 @@ router.post('/removeFile', VerifyToken, GetRole, async (req, res) => {
       // Special case for when first cover image change involves original PEO STRI logo
       if (pathname[pathname.length - 2] !== 'misc_files') {
         const path = 'public/' + req.body.courseID + '/' + imageName
-
-        fs.unlinkSync(path)
+        try {
+          fs.unlinkSync(path)
+        } catch (error) {
+        }
       }
 
       if (req.body.newToken != undefined)
@@ -431,7 +380,7 @@ router.post('/deleteCreatedCourse', VerifyToken, GetRole, async (req, res) => {
 })
 
 router.post('/module/create', VerifyToken, GetRole, async (req, res) => {
-  
+
   if (req.body.roleID === 0) {
     res.json({ message: "unauthorized" })
     return
@@ -524,9 +473,6 @@ router.post('/module/score', VerifyToken, async (req, res) => {
 
     let courses = await User.findOne({ _id: req.body.userID }, 'coursesData');
 
-    // if (courses.coursesData[0] == undefined)
-    //   courses.coursesData.append({})
-
     courses = courses.coursesData[0];
     if (courses === undefined)
       courses = {}
@@ -594,13 +540,8 @@ router.post('/module/score', VerifyToken, async (req, res) => {
             }
 
           });
-
       }
-
-
     }
-
-
 
     if (req.body.newToken != undefined)
       res.json({ 'status': 'grade saved', "newToken": req.body.newToken });
@@ -613,7 +554,7 @@ router.post('/module/score', VerifyToken, async (req, res) => {
 })
 
 router.post('/module/update', VerifyToken, GetRole, async (req, res) => {
-  
+
   if (req.body.roleID === 0) {
     res.json({ message: "unauthorized" })
     return
@@ -815,7 +756,6 @@ router.post('/module/completed', VerifyToken, async (req, res) => {
 
           });
 
-        // res.json({ 'status': 'student enrolled in course' });
       }
     }
 

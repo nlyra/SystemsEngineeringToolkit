@@ -6,7 +6,7 @@ const fileStyles = makeStyles((theme) => ({
 
 
 const FileModule = ({ fileUrl }) => {
-  const [part, setpart] = useState(fileUrl.split('/'))
+  const [part] = useState(fileUrl.split('/'))
   const classes = fileStyles()
   console.log(fileUrl)
 

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { fade, makeStyles, IconButton, AppBar, Paper, TextField, Typography } from "@material-ui/core";
+import { IconButton, AppBar, TextField, Typography } from "@material-ui/core";
 import { Toolbar, Tooltip, InputBase, Drawer, Divider, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
 import { Avatar, Dialog, DialogTitle, DialogActions, DialogContent, Grid } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu'
-import { white, deepPurple, grey, amber } from '@material-ui/core/colors';
 import config from '../config.json'
 import SearchIcon from '@material-ui/icons/Search'
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -11,261 +10,22 @@ import Button from '@material-ui/core/Button';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
-import DescriptionIcon from '@material-ui/icons/Description';
 import BookOutlinedIcon from '@material-ui/icons/BookOutlined';
 import HomeIcon from '@material-ui/icons/Home';
 import HelpIcon from '@material-ui/icons/Help';
-
+import styles from '../styles/topNavBarStyle'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
-
 import clsx from 'clsx';
 import { Link } from '@material-ui/core';
-
 const logo_url = config.server_url + "/misc_files/logo.jpg"
 
-const drawerWidth = 240;
-
-const useStyles = makeStyles((theme) => ({
-
-  root:
-  {
-    // display: 'flex',
-    // height: '5vh',
-  },
-
-  dialog:
-  {
-    position: 'absolute',
-    minWidth: '30%'
-
-  },
-
-  dialogContent:
-  {
-    width: '40vh'
-  },
-
-  divider:
-  {
-    border: '1px solid grey',
-    borderRadius: '10px',
-    backgroundColor: 'grey'
-  },
-
-  dialogTitle:
-  {
-    textAlign: 'center',
-    verticalAlign: 'middle',
-    backgroundColor: grey[900],
-    border: '2px solid white'
-  },
-
-  avatar:
-  {
-    color: theme.palette.getContrastText(deepPurple[500]),
-    backgroundColor: deepPurple[500],
-    height: '6vh',
-    width: '6vh',
-    margin: 'auto'
-  },
-
-
-  statContent:
-  {
-    verticalAlign: 'right',
-    margin: 'auto',
-    width: '100%',
-    alignSelf: 'center'
-  },
-
-  // statsDiv:
-  // {
-  //     width: '100%',
-  // },
-
-  statsTitle:
-  {
-    textAlign: 'center',
-    verticalAlign: 'middle',
-    textDecoration: 'underline'
-  },
-
-  statsAvi:
-  {
-    color: theme.palette.getContrastText(amber[600]),
-    backgroundColor: amber[600],
-    border: '1px solid black',
-    margin: 'auto'
-  },
-
-  roleDescription:
-  {
-
-    width: '100%',
-    color: 'black',
-    fontSize: '2.4vh',
-    fontWeight: '500',
-    marginTop: '3%',
-    // alignContent: "center",
-
-
-  },
-
-  roleStatContent:
-  {
-    width: '100%'
-  },
-
-  roleText:
-  {
-    width: '100%',
-    textAlign: 'center'
-
-  },
-
-  roleGrid:
-  {
-    justifyContent: 'center'
-  },
-
-  statText:
-  {
-    width: '100%',
-    textAlign: 'center'
-  },
-
-  closeButton:
-  {
-    // marginRight: '70%'
-  },
-
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-  },
-
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  searchIcon2: {
-    padding: theme.spacing(0, 5),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputRoot: {
-    color: 'inherit',
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-  logoStyle: {
-    maxWidth: '10%',
-    textAlign: 'center',
-    margin: 'auto'
-  },
-  horizontalCenteringLogo: {
-    position: 'absolute',
-    left: '66%',
-    top: '50%',
-    transform: 'translate(-50%, -50%)'
-  },
-  test: {
-    display: 'flex',
-    alignItems: 'space-between'
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-  },
-  drawerOpen: {
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerClose: {
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: 'hidden',
-    width: theme.spacing(7) + 1,
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9) + 1,
-    }
-  },
-  toolbar: {
-    display: 'flex',
-    // alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
-  appBar: {
-    background: 'black',
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-
-  logoutDialogTitle: {
-    textAlign: 'center',
-    verticalAlign: 'middle',
-    backgroundColor: grey[50],
-    border: '2px solid white'
-  },
-
-  // iconbutton:{
-  //     position:'relative',
-  //     paddingLeft:theme.spacing(0,2)
-  // }
-}))
 
 
 export default function TopNavBar(props) {
 
 
-  const classes = useStyles();
+  const classes = styles();
   const [open, setOpen] = React.useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [user, setUser] = useState({})
@@ -283,52 +43,51 @@ export default function TopNavBar(props) {
 
   // function that will run when page is loaded
   useEffect(() => {
+    const getAuthorization = async () => {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch(config.server_url + config.paths.getIsAdmin, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          "token": token
+        })
+      })
+
+      const data = await res.json()
+
+      if (data.message === "yes")
+        setIsAdmin(true);
+      else
+        setIsAdmin(false);
+
+      const res2 = await fetch(config.server_url + config.paths.getIsCreator, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          "token": token
+        })
+      })
+
+      const data2 = await res2.json()
+
+      if (data2.message === "yes")
+        setIsCreator(true);
+      else
+        setIsCreator(false);
+
+    }
     if (props.hideComponents !== true)
       getAuthorization();
-  }, []);
-
-  const getAuthorization = async () => {
-    const token = localStorage.getItem("token");
-
-    const res = await fetch(config.server_url + config.paths.getIsAdmin, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        "token": token
-      })
-    })
-
-    const data = await res.json()
-
-    if (data.message === "yes")
-      setIsAdmin(true);
-    else
-      setIsAdmin(false);
-
-    const res2 = await fetch(config.server_url + config.paths.getIsCreator, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        "token": token
-      })
-    })
-
-    const data2 = await res2.json()
-
-    if (data2.message === "yes")
-      setIsCreator(true);
-    else
-      setIsCreator(false);
-
-  }
+  }, [props]);
 
 
-  // TODO: Consider a better way to handle this, as it will be making an api call every time the user
-  // opens their profile page. 
+
+
 
   const handleClickOpen = async () => {
 
@@ -357,8 +116,6 @@ export default function TopNavBar(props) {
       setNumUsers(data.numUsers)
       setNumCourses(data.numCourses)
     }
-    // setData(data.storageData)
-    // alert(data.storageData.numUsers)
     setOpenDialog(true)
 
 
@@ -371,7 +128,7 @@ export default function TopNavBar(props) {
   const handleChanges = async () => {
 
     if (user.email !== newEmail) {
-      if (newEmail.indexOf('@') == -1) {
+      if (newEmail.indexOf('@') === -1) {
         alert('Please input a valid email format.')
         return
       }
@@ -396,6 +153,11 @@ export default function TopNavBar(props) {
 
       const data = await res.json()
 
+      if (data.message === "wrong token") {
+        localStorage.removeItem('token');
+        props.history.push('login');
+      }
+
     }
     setOpenDialog(false);
   }
@@ -409,8 +171,6 @@ export default function TopNavBar(props) {
   };
 
   const logout = () => {
-    // alert("you are now signing out")
-    // props.history.push(`/login`)
     localStorage.clear()
     sessionStorage.clear()
   }
@@ -426,7 +186,6 @@ export default function TopNavBar(props) {
   return (
     <div className={classes.root}>
       <AppBar
-        // variant="permanent"
         position="fixed"
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
@@ -467,9 +226,7 @@ export default function TopNavBar(props) {
                 </div>
                 :
                 <Link href="/dashboard" underline='none' color="inherit">
-                  {/* <div className={classes.searchIcon2}> */}
                   <SearchIcon></SearchIcon>
-                  {/* </div> */}
                 </Link>
               }
             </>
@@ -478,22 +235,11 @@ export default function TopNavBar(props) {
             <img src={logo_url} alt="logo" className={classes.logoStyle} />
           </div>
           <div>
-            {/* <IconButton aria-label="show 4 new mails" color="inherit"> */}
-            {/* <Badge badgeContent={4} color="secondary"> */}
-            {/* <MailIcon /> */}
-            {/* </Badge> */}
-            {/* </IconButton> */}
-            {/* <IconButton aria-label="show 17 new notifications" color="inherit"> */}
-            {/* <Badge badgeContent={17} color="secondary"> */}
-            {/* <NotificationsIcon /> */}
-            {/* </Badge> */}
-            {/* </IconButton> */}
             {props.hideComponents !== true ?
               <Tooltip title="My Profile" >
                 <IconButton
                   edge="end"
                   aria-label="account of current user"
-                  //aria-controls={menuId}
                   aria-haspopup="true"
                   onClick={handleClickOpen}
                   color="inherit"
@@ -514,13 +260,11 @@ export default function TopNavBar(props) {
                   <div className={classes.dialogTitleDiv}>
                     <DialogTitle id="customized-dialog-title" className={classes.dialogTitle} onClose={handleClose}>
                       <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar>
-                      {/* Your Profile */}
                     </DialogTitle>
                   </div>
                   <DialogContent className={classes.dialogContent}>
                     {roleInfo === 0 ?
                       <form autoComplete="off">
-                        {/* <Avatar className={classes.avatar}>{(firstName.charAt(0).concat(lastName.charAt(0))).toUpperCase()}</Avatar> */}
                         <div className={classes.TextBox} alignItems="center">
                           <TextField color='primary'
                             alignContent="center"
@@ -579,7 +323,6 @@ export default function TopNavBar(props) {
                                   }
                                   placement="top"
                                   enterDelay={200}
-                                  // leaveDelay={200}
                                   arrow
                                 >
                                   <IconButton size='small'><HelpIcon /></IconButton>
@@ -677,7 +420,6 @@ export default function TopNavBar(props) {
                                   }
                                   placement="top"
                                   enterDelay={200}
-                                  // leaveDelay={200}
                                   arrow
                                 >
                                   <IconButton size='small'><HelpIcon /></IconButton>
@@ -697,7 +439,7 @@ export default function TopNavBar(props) {
                             <Grid item xs={4} sm={4} lg={4} >
                               <div className={classes.statContent}>
                                 <div className={classes.statText}>
-                                  <h5>Courses Enrolled In</h5>
+                                  <h5>Enrolled Courses</h5>
                                 </div>
                                 <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
                               </div>
@@ -782,7 +524,6 @@ export default function TopNavBar(props) {
                                   }
                                   placement="top"
                                   enterDelay={200}
-                                  // leaveDelay={200}
                                   arrow
                                 >
                                   <IconButton size='small'><HelpIcon /></IconButton>
@@ -826,7 +567,7 @@ export default function TopNavBar(props) {
                             <Grid item xs={4} sm={4} lg={4} >
                               <div className={classes.statContent}>
                                 <div className={classes.statText}>
-                                  <h5>Courses Enrolled In</h5>
+                                  <h5>Enrolled Courses</h5>
                                 </div>
                                 <Avatar className={classes.statsAvi}>{user.enrolledClasses.length}</Avatar>
                               </div>
@@ -862,7 +603,7 @@ export default function TopNavBar(props) {
                         </Button>
                       </Grid>
                       <Grid item xs={6} sm={6} lg={6}>
-                        {newEmail != user.email &&
+                        {newEmail !== user.email &&
                           <Button color="primary" onClick={handleChanges}>
                             Save Changes
                           </Button>
@@ -943,14 +684,6 @@ export default function TopNavBar(props) {
               </Tooltip>
             </Link>
 
-            {/*<Link href="/MyFiles" underline='none' color="inherit">
-              <Tooltip title="My Files" enterDelay={500}>
-                <ListItem button>
-                  <ListItemIcon><DescriptionIcon /></ListItemIcon>
-                  <ListItemText primary="My Files" />
-                </ListItem>
-              </Tooltip>
-            </Link>*/}
 
             {isAdmin &&
                 <Link href="/admindashboard" underline='none' color="inherit">
@@ -963,7 +696,6 @@ export default function TopNavBar(props) {
                 </Link>
             }
 
-            {/* <Tooltip title="Calendar" enterDelay={500}>*/}
             {(isCreator || isAdmin) &&
               <Link href="/ManageMyCourses" underline='none' color="inherit">
                 <Tooltip title="My Created Courses" enterDelay={500}>

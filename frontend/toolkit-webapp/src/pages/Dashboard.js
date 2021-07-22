@@ -1,10 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { Button, Card, CardActions, Container, CssBaseline, IconButton, makeStyles, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
+import { Card, CardActions, Container, CssBaseline, IconButton, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import dashStyles from '../styles/dashboardStyle'
 
+// Allows for endless scrolling
 import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 
 const Dashboard = (props) => {
@@ -20,43 +21,37 @@ const Dashboard = (props) => {
         loadCourses(undefined, next + 1);
     }, []);
 
-
+    // Function that occurs when scrollbar hits bottom of page - disabled for search, hence the checks
     const loadMoreCourses = useCallback(() => {
-        // console.log(cur)
-        //if (currQuery == undefined) {
 
+        // total courses is set to undefined if we are in search
         if ((totalCourses === undefined || totalCourses === courses.length))
             return
 
         loadCourses(undefined, next + 1)
-    }
-    )
+    })
 
-    // function to get the courses 
+    // function to get the courses from the db
     const loadCourses = async (query, currNext) => {
 
-        // if (query != undefined && query.length > 0) {
-        //     setCurrQuery(query)
+        if (query === '') {
+            currNext = 1
+        }
 
-        // } else if (query == '') {
-        //     setCurrQuery(undefined)
-        //     currNext = 1
-        // }
-
-        if (query != undefined) {
+        // we stop searching so return to top of page
+        if (query !== undefined) {
             window.scrollTo({
                 top: 0,
                 behavior: "smooth"
             });
         }
-        // console.log('hello')
         const token = localStorage.getItem("token");
         let res = undefined
 
-        // console.log('currNext= ' + currNext)
+        // skip allows us to define how many courses to skip when loading in courses
         let skip = (currNext - 1) * cardAmount
-        // console.log(skip)
 
+        // Call backend to load courses, with skip in the body of the call to skip courses already loaded in 
         res = await fetch(config.server_url + config.paths.dashboardCourses, {
             method: 'POST',
             headers: {
@@ -67,9 +62,10 @@ const Dashboard = (props) => {
 
         const data = await res.json()
 
-        if (data.newToken != undefined)
+        if (data.newToken !== undefined)
             localStorage.setItem("token", data.newToken)
 
+        // We are in the main page, not searching
         if (data.status === "loading") {
 
             if (query === "") {
@@ -81,6 +77,7 @@ const Dashboard = (props) => {
             setHasNext(currNext)
 
         }
+        // We are searching so the courses processing must occur differently
         else if (data.status === "search") {
             setCourses(data.courses);
             setTotalCourses(data.totalCourses)
@@ -90,23 +87,23 @@ const Dashboard = (props) => {
         if (data.message === "wrong token") {
             localStorage.removeItem('token');
             props.history.push('login');
-            // probably alert the user
-        } else { // this is to check if there are errors not being addressed already
-            // console.log(data)
+        } else {
+            console.log(data)
         }
     }
 
+    // Clicking on a course brings us to the course page
     const onCourse = (course) => {
         props.history.push(`course/${course._id}`);
     }
 
+    // Calls function when scrollbar reaches bottom
     useBottomScrollListener(loadMoreCourses);
 
     return (
         <div className={classes.div} >
             <TopNavBar
                 search={loadCourses}
-            // page={page}
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container} >
@@ -136,7 +133,6 @@ const Dashboard = (props) => {
                                     </CardContent>
                                 </Card>
 
-                                {/* {courses.length < 5 && (<Waypoint onEnter={testing}/>)} */}
                             </Grid>
 
                         ))}
@@ -144,14 +140,12 @@ const Dashboard = (props) => {
 
                     </Grid>
                 </div>
-                {/* <Pagination count={6} page={page} onChange={handlePage} variant="outlined" shape="rounded" /> */}
 
                 {totalCourses !== undefined && totalCourses !== courses.length &&
 
                     <div className={classes.expandMoreIcon}>
                         <IconButton disableRipple size='large' style={{ backgroundColor: 'transparent' }}> Scroll for More<ExpandMoreIcon /></IconButton>
                     </div>
-                    //                 
                 }
             </Container>
         </div>

@@ -30,7 +30,6 @@ const myCoursesStyle = makeStyles((theme) => ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        // marginBottom: '50px'
     },
 
     cardGrid:
@@ -40,7 +39,6 @@ const myCoursesStyle = makeStyles((theme) => ({
 
     cardMedia:
     {
-        // marginTop: '100px',
         paddingTop: '56.25%',
         size: '30%'
     },
@@ -67,10 +65,9 @@ const myCoursesStyle = makeStyles((theme) => ({
 
     dialogContent:
     {
-        
-      width: '100%',
-      textAlign: 'center',
-    //   backgroundColor: 'yellow'
+
+        width: '100%',
+        textAlign: 'center',
     },
 
     dialogButtons:
@@ -104,18 +101,11 @@ const myCoursesStyle = makeStyles((theme) => ({
     {
         flexGrow: 1
     },
-    
+
     removeButton:
     {
         width: "100%",
-        // marginBottom: '50px'
     },
-
-    // buttonDiv:
-    // {
-    //     marginBottom: '50px'
-    // }
-
 }))
 
 export default myCoursesStyle;

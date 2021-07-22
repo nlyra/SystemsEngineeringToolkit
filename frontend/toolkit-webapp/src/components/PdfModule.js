@@ -2,7 +2,7 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core'
 
 const pdfStyles = makeStyles((theme) => ({
-  div:{
+  div: {
     width: '100%'
   }
 }))
@@ -14,6 +14,7 @@ const PdfModule = ({ fileUrl }) => {
   return (
     <div className={classes.div}>
       <iframe
+        title={fileUrl}
         src={fileUrl}
         width="100%"
         height="800px"
