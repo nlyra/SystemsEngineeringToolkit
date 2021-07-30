@@ -37,7 +37,7 @@
 
 ## To run (docker way).
 
-- run docker.
+- Download and run docker.
 
 ### Server side changes:
 
