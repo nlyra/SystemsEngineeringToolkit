@@ -2,7 +2,6 @@ const multer = require('multer');
 const express = require('express');
 const VerifyToken = require('./auth').verifyToken;
 const GetRole = require('./auth').getRole;
-const config = require('../config.json');
 const Course = require('../models/course');
 const fs = require("fs");
 const mkdirp = require('mkdirp')
@@ -21,15 +20,15 @@ const fileStorageEngine = multer.diskStorage({
 const upload = multer({ storage: fileStorageEngine })
 
 router.post('/single', VerifyToken, GetRole, upload.single('file'), async (req, res) => {
-
+  
   // req.body.roleID is undefined in the scope of this function, so we must use the query data
-  if (req.query.roleID != 1) {
+  if (req.query.roleID === 0) {
     res.json({ message: "unauthorized" })
+    console.log('here')
     return
   }
 
   try {
-
     // validating image types in case someone attempts to access route without using frontend
     let validImageTypes = ["PNG", "JPEG", "GIF", "TIF", "RAW", "JPG"]
 
@@ -68,19 +67,24 @@ router.post('/single', VerifyToken, GetRole, upload.single('file'), async (req, 
 
     const update = await Course.updateOne(
       { _id: req.query.courseID },
-      { $set: { "urlImage": config.server_url + "/" + req.query.courseID + "/" + req.query.imageName } }
+      { $set: { "urlImage": "/" + req.query.courseID + "/" + req.query.imageName } }
     )
 
     res.send({ "status": "Success" })
   }
-  catch (e){
+  catch (e) {
     console.log(e);
   }
-  
+
 })
 
 router.post('/singleModuleFile', VerifyToken, upload.single('file'), async (req, res) => {
 
+  if (req.query.roleID === 0) {
+    res.json({ message: "unauthorized" })
+    console.log('here')
+    return
+  }
   // splitting file name so we can validate the input
   const fileTypePath = req.query.imageName.split('.')
   // Grabbing the actual filename minus its extension so that we can validate alphanumeric inputs
@@ -99,7 +103,6 @@ router.post('/singleModuleFile', VerifyToken, upload.single('file'), async (req,
 
   const made = mkdirp.sync(__dirname + "/../public/" + req.query.courseID + "/moduleData")
 
-  // console.log(req.query)
   fs.rename(currPath, newPath, function (err) {
     if (err) {
       throw err
@@ -113,7 +116,7 @@ router.post('/singleModuleFile', VerifyToken, upload.single('file'), async (req,
     {
       $set: {
         [`modules.${req.body.moduleID}`]: {
-            urlFile: config.server_url + "/" + req.query.courseID + "/moduleData/" + req.query.imageName,
+          urlFile: "/" + req.query.courseID + "/moduleData/" + req.query.imageName,
         }
       }
     });

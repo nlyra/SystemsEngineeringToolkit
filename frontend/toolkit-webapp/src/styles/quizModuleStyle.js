@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles'
 const dashStyles = makeStyles((theme) => ({
   outerDiv: {
     width: '70vw',
-    // backgroundColor: 'grey',
     paddingBottom: '2vh'
   },
 
@@ -36,8 +35,6 @@ const dashStyles = makeStyles((theme) => ({
 
   answersDiv: {
     backgroundColor: 'grey',
-    // width: '100%',
-    // display: 'flex'
   }
 
 }))

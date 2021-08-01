@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 const config = require('../config.json');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
-const e = require('express');
 const router = express.Router();
 
 router.post('/registration', async (req, res) => {
@@ -23,8 +22,6 @@ router.post('/registration', async (req, res) => {
 
             const savedUser = await user.save();
 
-            console.log('added user ', savedUser._id);
-
             res.json({ 'message': 'added user' });
         }
         else {
@@ -36,6 +33,7 @@ router.post('/registration', async (req, res) => {
     }
 });
 
+// Main API for forgotPassword - email is being sent from here to the user
 router.post('/forgotPassword', async (req, res) => {
     try {
 
@@ -44,6 +42,7 @@ router.post('/forgotPassword', async (req, res) => {
         if (user !== null) {
             const userID = user._id.toString()
 
+            // encrypt the reset token that we send the user via email
             resetPasswordToken = crypto.randomBytes(20).toString('hex')
 
             const update = await User.updateOne(
@@ -51,7 +50,7 @@ router.post('/forgotPassword', async (req, res) => {
                 { $set: { resetPassToken: resetPasswordToken, resetPassExpires: (new Date()).setHours((new Date()).getHours() + 1) } }
             )
 
-
+            // create an object to hold the info of the email we will use to send the email 
             const transporter = nodemailer.createTransport({
                 service: config.emailInfo.service,
                 auth: {
@@ -61,22 +60,22 @@ router.post('/forgotPassword', async (req, res) => {
 
             })
 
+            // mailOptions contains the mail content that the user will receive
             const mailOptions = {
                 from: config.emailInfo.emailUsername,
                 to: user.email,
                 subject: 'Link to reset password',
                 text:
                     'Click the following link to reset your PEO STRI account password ' +
-                    `http://localhost:3000/reset/${resetPasswordToken}\n\n`
+                    `${config.frontend_url}/reset/${resetPasswordToken}\n\n`
             }
 
-
+            // Attempt to send the email; prints error if it does not go through
             transporter.sendMail(mailOptions, (err, response) => {
                 if (err) {
                     console.error('there was an error: ', err);
                 }
                 else {
-                    console.log('here is the res: ', response);
                     res.status(200).json('recovery email sent');
                 }
             })
@@ -95,7 +94,6 @@ router.post('/login', async (req, res) => {
     try {
         // get user from DB
         const user = await User.findOne({ email: req.body.email });
-        // console.log(user._id)
 
         if (user != undefined) {
             // check if passwords match
@@ -129,30 +127,34 @@ function verifyToken(req, res, next) {
         token = req.query.token
     else
         token = req.body.token;
-
-    if (token === undefined) {
+    if (token == '' || token == undefined || token == null) {
         res.sendStatus(403);
+        return
     }
 
+    // Check that the token is valid 
     jwt.verify(token, config.key, function (err, decoded) {
         if (err) {
             res.json({ 'message': 'wrong token' });
+            return
         }
 
         req.body.userID = decoded.id;
         const timestamp = Math.floor(Date.now() / 1000); // get unix time in seconds
+
+        // reset the token if it expires in less than 15 minutes
         if (decoded.exp - timestamp < 900) {
             req.body.newToken = jwt.sign({ id: decoded.id, email: decoded.email }, config.key, { expiresIn: '2h' });
         }
 
     });
 
-    // res.body.newToken = "token";
 
     next();
 
 }
 
+// Check that the user has valid reset token
 router.post('/checkResetCreds', async (req, res) => {
 
     const user = await User.findOne({ resetPassToken: req.body.resetToken, resetPassExpires: { $gt: Date.now() } }, '_id')
@@ -174,6 +176,7 @@ router.post('/resetPassApproved', async (req, res) => {
 
         if (user !== undefined) {
 
+            // Create new password for the user
             const pass = bcrypt.hashSync(req.body.password, 10);
 
             const update = await User.updateOne(
@@ -192,7 +195,6 @@ router.post('/resetPassApproved', async (req, res) => {
 })
 
 async function getRole(req, res, next) {
-
     const role = await User.findOne({ _id: req.body.userID }, 'roleID')
     req.body.roleID = role.roleID;
 
@@ -235,7 +237,7 @@ router.post('/iscreator', verifyToken, getRole, async (req, res) => {
         if (req.body.newToken != undefined)
             payload["newToken"] = req.body.newToken;
 
-        if (req.body.roleID == 1) {
+        if (req.body.roleID == 1 || req.body.roleID == 2) {
             payload["message"] = "yes"
             res.json(payload)
         } else {

@@ -21,7 +21,6 @@ const dashStyles = makeStyles((theme) => ({
     marginTop: '3vh',
     maxWidth: '35vh',
     maxHeight: '35vh',
-    // marginRight: "10%"
   },
 
   description: {

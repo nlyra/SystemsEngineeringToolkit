@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Card, CardActions, Container, CssBaseline, Divider, makeStyles, TextField, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
+import { Button, Card, Container, CssBaseline, Divider, Grid, CardMedia, CardContent, Typography } from '@material-ui/core'
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
-// import Pagination from '@material-ui/lab/Pagination'
 import myCoursesStyles from '../styles/myCoursesStyle'
-import jwt_decode from "jwt-decode";
-import { Link } from '@material-ui/core';
+import dialogStyles from '../styles/dialogStyle'
+import DialogComponent from '../components/DialogComponent'
 
 const ManageMyCourses = (props) => {
     const [courses, setCourses] = useState([])
-    const [searchQuery, setSearchQuery] = useState('')
+    const [courseID, setCourseID] = useState('')
+    const [openDialog, setOpenDialog] = useState(false);
 
     const classes = myCoursesStyles()
+    const dialogClasses = dialogStyles()
 
     // function that will run when page is loaded
     useEffect(() => {
@@ -26,6 +27,7 @@ const ManageMyCourses = (props) => {
 
         let res = undefined
 
+        // pull in courses from the database that pertain to the user's created courses
         res = await fetch(config.server_url + config.paths.myCreatedCourses, {
             method: 'POST',
             headers: {
@@ -33,12 +35,10 @@ const ManageMyCourses = (props) => {
             },
             body: JSON.stringify({ "token": token, "search_query": query })
         })
-        // }
-
 
         const data = await res.json()
 
-        if (data.newToken != undefined)
+        if (data.newToken !== undefined)
             localStorage.setItem("token", data.newToken)
 
         if (data.message === "unauthorized") {
@@ -51,16 +51,26 @@ const ManageMyCourses = (props) => {
         } else if (data.message === "wrong token") {
             localStorage.removeItem('token');
             props.history.push('login');
-            // probably alert the user
-        } else { // this is to check if there are errors not being addressed already
+        } else { 
+            // this is to check if there are errors not being addressed already
             console.log(data)
         }
     }
 
+    const handleOpenDialog = (id) => {
+        setCourseID(id);
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
+
+    // User wants to delete the course, so this function passes the course ID and proceeds to delete it from the system
     const deleteCourse = async (id) => {
         let res = undefined
         const token = localStorage.getItem("token");
 
+        // Call to the backend with the course ID, to allow for permanent course deletion
         res = await fetch(config.server_url + config.paths.deleteCreatedCourse, {
             method: 'POST',
             headers: {
@@ -69,20 +79,19 @@ const ManageMyCourses = (props) => {
             body: JSON.stringify({ "token": token, "courseID": id })
         })
 
+        // Close the dialog that opened when the user asked to delete the course. Reload the page to reflect the changes made
+        handleCloseDialog()
+        window.location.reload()
+
         const data = await res.json()
 
-        if (data.newToken != undefined)
+        if (data.newToken !== undefined)
             localStorage.setItem("token", data.newToken)
 
         if (data.message === "unauthorized") {
             props.history.push('dashboard');
         }
-        // This splits the array correctly and updates courses array with courses the user is still enrolled in
-        // const newVal = courses.filter((courses) => courses._id !== id);
-        // setCourses(newVal)
-
-        // window.location.reload()
-
+    
     }
 
 
@@ -95,14 +104,13 @@ const ManageMyCourses = (props) => {
         <div className={classes.div}>
             <TopNavBar
                 search={loadCourses}
-            // page={page}
             ></TopNavBar>
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
                 <Grid container spacing={3}>
                     <div className={classes.header}>
                         <h1>
-                            Manage My Courses
+                            My Created Courses
                         </h1>
                     </div>
                 </Grid>
@@ -111,14 +119,14 @@ const ManageMyCourses = (props) => {
                     <Grid container spacing={3}>
                         {courses.map((course) => (
 
-                            <Grid item key={course._id} xs={12} sm={4} md={3}>
+                            <Grid item key={course._id} xs={12} sm={4} md={3} className={classes.cardGrid}>
                                 <Card
                                     className={classes.card}
                                     onClick={() => onCourse(course)}
                                 >
                                     <CardMedia
                                         className={classes.cardMedia}
-                                        image={course.urlImage}
+                                        image={config.server_url + course.urlImage}
                                         title="Title"
                                     />
                                     <CardContent className={classes.CardContent}>
@@ -128,22 +136,26 @@ const ManageMyCourses = (props) => {
                                         <Typography gutterBottom>
                                             {course.description.length < 100 ? course.description : course.description.substr(0, 100) + '...'}
                                         </Typography>
-                                        {/* <CardActions>
-                                        </CardActions> */}
                                     </CardContent>
                                     <Grid container spacing={3}>
                                     </Grid>
                                 </Card>
 
-                                {/* TODO: Figure out a way to reload the page without simply linking back to the same page.  */}
+                                <div className={classes.buttonDiv}>
+                                    <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick={() => handleOpenDialog(course._id)}>
+                                        Delete Course
+                                    </Button>
+                                </div>
 
-                                <Link href="/ManageMyCourses" underline='none' color="inherit">
-                                    <div className={classes.buttonDiv}>
-                                        <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick={() => { if (window.confirm('Are you sure you wish to delete this course permanently?')) deleteCourse(course._id) }}>
-                                            Remove Course
-                                        </Button>
-                                    </div>
-                                </Link>
+                                <DialogComponent
+                                    open={openDialog}
+                                    text={"Are you sure you wish to delete this course permanently?"}
+                                    onClose={handleCloseDialog}
+                                    buttons={[
+                                        { text: "Yes", style: dialogClasses.dialogButton1, onClick: () => deleteCourse(courseID) },
+                                        { text: "No", style: dialogClasses.dialogButton2, onClick: handleCloseDialog }
+                                    ]}
+                                />
 
                             </Grid>
 
@@ -152,7 +164,6 @@ const ManageMyCourses = (props) => {
 
                     </Grid>
                 </div>
-                {/* <Pagination count={6} page={page} onChange={handlePage} variant="outlined" shape="rounded" /> */}
             </Container>
         </div>
     )

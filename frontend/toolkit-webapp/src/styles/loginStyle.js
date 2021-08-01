@@ -1,4 +1,4 @@
-import {makeStyles, withStyles} from '@material-ui/core/styles'
+import {makeStyles} from '@material-ui/core/styles'
 
 const loginStyles = makeStyles((theme) => ({
 
@@ -47,10 +47,8 @@ const loginStyles = makeStyles((theme) => ({
 
     resetPassButton:
     {
-        // paddingBottom: '2px',
         marginTop: theme.spacing(2),
         textAlign: "center",
-        // marginBottom: theme.spacing(2),
         backgroundColor: 'black',
         color: 'white',
         "&:hover": {

@@ -16,6 +16,8 @@ import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
+import dialogStyles from '../styles/dialogStyle'
+import DialogComponent from '../components/DialogComponent'
 
 const columns = [
   { id: '_id', label: 'Id' },
@@ -59,46 +61,57 @@ const useStyles = makeStyles({
 
 const AdminUsersTab = (props) => {
   const classes = useStyles();
+  const dialogClasses = dialogStyles()
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState([]);
+  const [dialogText, setDialogText] = useState('')
+  const [openDialog, setOpenDialog] = useState(false);
 
   // function that will run when page is loaded
   useEffect(() => {
-    getUsers()
-  }, []);
-
-  const getUsers = async () => {
-    const token = localStorage.getItem("token");
-
-    const res = await fetch(config.server_url + config.paths.getUsers, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({ "token": token })
-    })
-
-    const data = await res.json()
-    
-    if(data.newToken != undefined)
-    localStorage.setItem("token", data.newToken)
-    
-    if (data.message === "unauthorized") {
-      props.isUnauthorized()
-    } else if (data.message === undefined) {
-      setUsers(data.users)
-    } else if (data.message === "wrong token") {
-      localStorage.removeItem('token');
-      props.history.push('login');
-      // probably alert the user
-    } else { // this is to check if there are errors not being addressed already
-      console.log(data)
+    const getUsers = async () => {
+      const token = localStorage.getItem("token");
+  
+      const res = await fetch(config.server_url + config.paths.getUsers, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({ "token": token })
+      })
+  
+      const data = await res.json()
+      
+      if(data.newToken !== undefined)
+      localStorage.setItem("token", data.newToken)
+      
+      if (data.message === "unauthorized") {
+        props.isUnauthorized()
+      } else if (data.message === undefined) {
+        setUsers(data.users)
+      } else if (data.message === "wrong token") {
+        localStorage.removeItem('token');
+        // alert the user
+        setDialogText("Unauthorized access. Please contact your system administrator.")
+        handleOpenDialog()
+        props.history.push('login');
+      } else { // this is to check if there are errors not being addressed already
+        console.log(data)
+      }
     }
-  }
+    getUsers()
+  }, [props]);
+
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    }
+
 
   const getSearch = async (query) => {
     setSearch(query)
-    // console.log(query)
     const token = localStorage.getItem("token");
 
     const res = await fetch(config.server_url + config.paths.getUsersSearch, {
@@ -111,7 +124,7 @@ const AdminUsersTab = (props) => {
 
     const data = await res.json()
     
-    if(data.newToken != undefined)
+    if(data.newToken !== undefined)
     localStorage.setItem("token", data.newToken)
     
     if (data.message === "unauthorized") {
@@ -120,8 +133,10 @@ const AdminUsersTab = (props) => {
       setUsers(data.users)
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
+      // alert the user
+      setDialogText("Unauthorized access. Please contact your system administrator.")
+      handleOpenDialog()
       props.history.push('login');
-      // probably alert the user
     } else { // this is to check if there are errors not being addressed already
       console.log(data)
     }
@@ -141,7 +156,7 @@ const AdminUsersTab = (props) => {
 
     const data = await res.json()
     
-    if(data.newToken != undefined)
+    if(data.newToken !== undefined)
     localStorage.setItem("token", data.newToken)
     
     if (data.message === "unauthorized") {
@@ -150,8 +165,10 @@ const AdminUsersTab = (props) => {
       // alert(`Successfully deleted user`)
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
+      // alert the user
+      setDialogText("Unauthorized access. Please contact your system administrator.")
+      handleOpenDialog()
       props.history.push('login');
-      // probably alert the user
     } else { // this is to check if there are errors not being addressed already
       console.log(data)
     }
@@ -170,15 +187,17 @@ const AdminUsersTab = (props) => {
 
     const data = await res.json()
     
-    if(data.newToken != undefined)
+    if(data.newToken !== undefined)
     localStorage.setItem("token", data.newToken)
     
     if (data.message === "unauthorized") {
       props.isUnauthorized()
     } else if (data.message === "success") {
-      // localStorage.setItem("tab", 0);
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
+      // alert the user
+      setDialogText("Unauthorized access. Please contact your system administrator.")
+      handleOpenDialog()
       props.history.push('login');
       // probably alert the user
     } else { // this is to check if there are errors not being addressed already
@@ -229,7 +248,6 @@ const AdminUsersTab = (props) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
                     {columns.map((column) => {
-                      const value = row[column.id];
                       return (
                         <TableCell key={column.id}>
                           {(column.id === '_id' || column.id === 'email') && row[column.id]}
@@ -269,6 +287,14 @@ const AdminUsersTab = (props) => {
           </Table>
         </TableContainer>
       </Paper>
+      <DialogComponent
+        open={openDialog}
+        text={dialogText}
+        onClose={handleCloseDialog}
+        buttons={[
+            {text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog}
+        ]}
+      />
     </div>
   );
 }

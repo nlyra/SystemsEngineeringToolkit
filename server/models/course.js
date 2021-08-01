@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Module = require('module');
 
 const CourseSchema = mongoose.Schema({
   name: {
@@ -8,7 +7,6 @@ const CourseSchema = mongoose.Schema({
   },
   categories: {
     type: [],
-    // required: true
   },
   description: {
     type: String,

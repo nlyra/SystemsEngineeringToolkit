@@ -9,10 +9,6 @@ const TorF = () => {
 
     const classes = useStyles()
 
-    const handleChange = (event) => {
-        setAnswer(event.target.type);
-    }
-
     var questions={
         question: String,
         type: String,
@@ -63,7 +59,6 @@ const TorF = () => {
                 <Select
                     native
                     value={answer}
-                    onChange={handleChange}
                     name="Answer"
                     inputProps={{
                         id: 'category-native-required',

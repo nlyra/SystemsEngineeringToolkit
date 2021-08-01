@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post('/info', VerifyToken, GetRole, async (req, res) => {
     try {
-      if(req.body.roleID != 1){
+      if(req.body.roleID != 1  && req.body.roleID != 2){
         res.json({ message: "unauthorized" })
         return
       }
@@ -21,19 +21,9 @@ router.post('/info', VerifyToken, GetRole, async (req, res) => {
     }
 })
 
-// router.post('/add', VerifyToken, async (req, res) => {
-//     try {
-//         let newCategories = []
-
-//     } catch (e) {
-//         console.log(e)
-//         res.sendStatus(500)
-//     }
-// })
-
 router.post('/add', VerifyToken, GetRole, async (req, res) => {
 
-    if(req.body.roleID != 1){
+    if(req.body.roleID != 1 && req.body.roleID != 2){
       res.json({ message: "unauthorized" })
       return
     }

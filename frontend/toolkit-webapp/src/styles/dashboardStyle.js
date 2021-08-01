@@ -12,7 +12,7 @@ const dashStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(15),
 
     },
-    
+
     card:
     {
         height: '100%',
@@ -33,6 +33,15 @@ const dashStyles = makeStyles((theme) => ({
     grow:
     {
         flexGrow: 1
+    },
+
+    expandMoreIcon:
+    {
+        width: '100%',
+        textAlign: 'center',
+        marginTop: '8vh',
+        marginBottom: '12vh',
+        fontSize: 'default'
     },
 
     scrollListener:

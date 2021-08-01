@@ -1,17 +1,35 @@
-import React, { useState } from 'react'
-import { Button, Container, TextField, Typography, Paper, Box } from '@material-ui/core'
+import React, { useState, useEffect } from 'react'
+import { Button, TextField, Typography, Paper, Box } from '@material-ui/core'
 import config from '../config.json'
 import loginStyles from '../styles/loginStyle'
 import TopNavBar from '../components/TopNavBar'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Avatar from '@material-ui/core/Avatar';
 import videoSource from '../img/PEOSTRI.mp4'
+import dialogStyles from '../styles/dialogStyle'
+import DialogComponent from '../components/DialogComponent'
 
 function Login(props) {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [dialogText, setDialogText] = useState('')
+    const [openDialog, setOpenDialog] = useState(false);
     const classes = loginStyles()
+    const dialogClasses = dialogStyles()
+
+    // Reset the token since the user should not have one until they log in
+    useEffect(() => {
+        if (localStorage.getItem("token") != null)
+            localStorage.removeItem("token")
+    }, []);
+
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    }
 
     const onRegister = (e) => {
         props.history.push('registration');
@@ -23,7 +41,8 @@ function Login(props) {
     const onSubmit = (e) => {
         e.preventDefault()
         if (!email || !password) {
-            alert('Please enter Email and Password')
+            setDialogText("Please enter both email and password.")
+            handleOpenDialog()
             return
         }
         onLogin({ email, password })
@@ -32,11 +51,11 @@ function Login(props) {
     }
 
     const onLogin = async (creds) => {
-    const res = await fetch(config.server_url + config.paths.login, {
-        method: 'POST',
-        headers: {
-            'Content-type': 'application/json'
-        },
+        const res = await fetch(config.server_url + config.paths.login, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
             body: JSON.stringify({ "email": creds.email, "password": creds.password })
         })
 
@@ -46,31 +65,34 @@ function Login(props) {
             localStorage.setItem("token", data.token);
             props.history.push('dashboard')
 
+        // Wrong credentials
         } else if (data.message === "wrong email or password") {
-            alert("Wrong email or password, please try again.");
-        } else { // this is to check if there are errors not being addressed already
+            setDialogText("Wrong email or password, please try again or try resetting your password.")
+            handleOpenDialog()
+        } else { 
+            // this is to check if there are errors not being addressed already
             console.log(data)
         }
 
     }
 
     return (
-        <div style={{height:'100vh', width:'100vw'}}>
-            <TopNavBar hideComponents={true}/>
+        <div style={{ height: '100vh', width: '100vw' }}>
+            <TopNavBar hideComponents={true} />
             <div className={classes.darkOverlay}>
                 <video className={classes.video} autoPlay loop muted playsInline>
                     <source src={videoSource} type="video/mp4" />
-                Your browser does not support the video tag.
+                    Your browser does not support the video tag.
                 </video>
             </div>
             <div className={classes.container}>
                 <div className={classes.block}>
                     <form autoComplete="off" onSubmit={onSubmit}>
                         <Paper className={classes.paper} elevation={5} square={false}>
-                        <Avatar className={classes.avatar}>
-                            <LockOutlinedIcon />
-                        </Avatar>
-                            <Box m={2} pt={2} style={{justifyContent: 'center'}}>
+                            <Avatar className={classes.avatar}>
+                                <LockOutlinedIcon />
+                            </Avatar>
+                            <Box m={2} pt={2} style={{ justifyContent: 'center' }}>
                                 <Typography className={classes.Title} variant="h5">Sign In</Typography>
                             </Box>
                             <div className={classes.TextBox}>
@@ -84,7 +106,7 @@ function Login(props) {
                                     margin="normal"
                                     required={true}
                                     fullWidth
-                                    style={{backgroundColor: "rgba(255,255,255,0.8)"}}
+                                    style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                                 />
 
                                 <TextField
@@ -97,7 +119,7 @@ function Login(props) {
                                     margin="normal"
                                     required={true}
                                     fullWidth
-                                    style={{backgroundColor: "rgba(255,255,255,0.8)"}}
+                                    style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
                                 />
 
                             </div>
@@ -115,8 +137,16 @@ function Login(props) {
                     </form>
                 </div>
             </div>
+            <DialogComponent
+                open={openDialog}
+                text={dialogText}
+                onClose={handleCloseDialog}
+                buttons={[
+                    { text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog }
+                ]}
+            />
         </div>
-        
+
     )
 }
 

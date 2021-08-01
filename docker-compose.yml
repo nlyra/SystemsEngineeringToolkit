@@ -1,0 +1,45 @@
+version: '3.7'
+
+services:
+  client:
+    image: myapp-frontend
+    build: ./frontend/toolkit-webapp
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+    command: npm start
+    volumes:
+      - ./frontend/toolkit-webapp/:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - server
+  server:
+    image: myapp-server
+    build: ./server
+    ports:
+      - "4000:4000"
+    networks:
+      - app-network
+    depends_on:
+      - mongo
+    volumes:
+      - ./server/:/usr/src/app
+      - /usr/src/app/node_modules
+  mongo:
+    image: mongo:4.4-bionic
+    ports:
+      - 27017:27017
+    networks:
+      - app-network
+    volumes:
+      - mongo-data:/data/db
+
+networks:
+    app-network:
+        driver: bridge
+
+volumes:
+    mongo-data:
+      driver: local

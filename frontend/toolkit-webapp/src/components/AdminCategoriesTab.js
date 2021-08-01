@@ -13,6 +13,8 @@ import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
+import dialogStyles from '../styles/dialogStyle'
+import DialogComponent from '../components/DialogComponent'
 
 const columns = [
   { id: '_id', label: 'Id' },
@@ -58,48 +60,59 @@ const useStyles = makeStyles({
 
 const AdminCategoriesTab = (props) => {
   const classes = useStyles();
+  const dialogClasses = dialogStyles()
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState([]);
+  const [dialogText, setDialogText] = useState('')
+  const [openDialog, setOpenDialog] = useState(false);
 
   // function that will run when page is loaded
   useEffect(() => {
-    getCategories()
-  }, []);
-
-  const getCategories = async () => {
-    const token = localStorage.getItem("token");
-
-    // console.log(typeof(new URLSearchParams(window.location.search).get('tab')))
-
-    const res = await fetch(config.server_url + config.paths.getCategories, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({ "token": token })
-    })
-
-    const data = await res.json()
-    
-    if(data.newToken != undefined)
-    localStorage.setItem("token", data.newToken)
-    
-    if (data.message === "unauthorized") {
-      props.isUnauthorized()
-    } else if (data.message === undefined) {
-      setCategories(data.categories)
-    } else if (data.message === "wrong token") {
-      localStorage.removeItem('token');
-      props.history.push('login');
-      // probably alert the user
-    } else { // this is to check if there are errors not being addressed already
-      console.log(data)
+    const getCategories = async () => {
+      const token = localStorage.getItem("token");
+  
+  
+      const res = await fetch(config.server_url + config.paths.getCategories, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({ "token": token })
+      })
+  
+      const data = await res.json()
+      
+      if(data.newToken !== undefined)
+      localStorage.setItem("token", data.newToken)
+      
+      if (data.message === "unauthorized") {
+        props.isUnauthorized()
+      } else if (data.message === undefined) {
+        setCategories(data.categories)
+      } else if (data.message === "wrong token") {
+        localStorage.removeItem('token');
+        props.history.push('login');
+  
+        // alert the user
+        setDialogText("Unauthorized access. Please contact your system administrator.")
+        handleOpenDialog()
+      } else { // this is to check if there are errors not being addressed already
+        console.log(data)
+      }
     }
-  }
+    getCategories()
+  }, [props]);
+
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    }
+
 
   const getSearch = async (query) => {
     setSearch(query)
-    // console.log(query)
     const token = localStorage.getItem("token");
 
     const res = await fetch(config.server_url + config.paths.getCategoriesSearch, {
@@ -112,7 +125,7 @@ const AdminCategoriesTab = (props) => {
 
     const data = await res.json()
     
-    if(data.newToken != undefined)
+    if(data.newToken !== undefined)
     localStorage.setItem("token", data.newToken)
     
     if (data.message === "unauthorized") {
@@ -122,7 +135,10 @@ const AdminCategoriesTab = (props) => {
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
-      // probably alert the user
+
+      // alert the user
+      setDialogText("Unauthorized access. Please contact your system administrator.")
+      handleOpenDialog()
     } else { // this is to check if there are errors not being addressed already
       console.log(data)
     }
@@ -141,17 +157,19 @@ const AdminCategoriesTab = (props) => {
 
     const data = await res.json()
     
-    if(data.newToken != undefined)
+    if(data.newToken !== undefined)
     localStorage.setItem("token", data.newToken)
     
     if (data.message === "unauthorized") {
       props.isUnauthorized()
     } else if (data.message === undefined) {
-      // localStorage.setItem("tab", 2);
     } else if (data.message === "wrong token") {
       localStorage.removeItem('token');
       props.history.push('login');
-      // probably alert the user
+
+      // alert the user
+      setDialogText("Unauthorized access. Please contact your system administrator.")
+      handleOpenDialog()
     } else { // this is to check if there are errors not being addressed already
       console.log(data)
     }
@@ -200,7 +218,6 @@ const AdminCategoriesTab = (props) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
                     {columns.map((column) => {
-                      const value = row[column.id];
                       return (
                         <TableCell key={column.id}>
                           {(column.id === '_id' ||
@@ -224,6 +241,14 @@ const AdminCategoriesTab = (props) => {
           </Table>
         </TableContainer>
       </Paper>
+      <DialogComponent
+        open={openDialog}
+        text={dialogText}
+        onClose={handleCloseDialog}
+        buttons={[
+            {text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog}
+        ]}
+      />
     </div>
   );
 }

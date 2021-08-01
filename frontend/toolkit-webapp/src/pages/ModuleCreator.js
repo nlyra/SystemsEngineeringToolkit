@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Button, FormControl, Container, TextField, Typography, Box, Select, InputLabel, FormHelperText, Paper } from '@material-ui/core'
-// import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-// import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import config from '../config.json'
 import TopNavBar from '../components/TopNavBar'
 import useStyles from '../styles/moduleStyle'
@@ -10,24 +8,32 @@ import QuizCreator from '../components/QuizCreatorModule'
 import VideoCreator from '../components/VideoCreatorModule'
 import PDFCreator from '../components/PDFCreatorModule'
 import FileCreator from '../components/FileCreatorModule'
+import dialogStyles from '../styles/dialogStyle'
+import DialogComponent from '../components/DialogComponent'
 
 function ModuleCreator(props) {
+    const dialogClasses = dialogStyles()
+
     const [title, setTitle] = useState('')
     const [type, setType] = useState('')
     const [description, setDescription] = useState('')
     const [courseID, setCourseID] = useState('')
     const [gradeToPass, setGradeToPass] = useState('')
+    const [dialogText, setDialogText] = useState('')
+    const [openDialog, setOpenDialog] = useState(false);
 
     const classes = useStyles()
     const [file, setFile] = useState()
     const [video, setVideo] = useState()
     const [pdf, setPDF] = useState()
 
-    //const handleChange = (event) => {
-    //setType(event.target.type);
-    // handleDisplayedContent(type)
-    //}
 
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
     function getExtention(filename) {
         var parts = filename.split('.');
         return parts[parts.length - 1]
@@ -69,79 +75,92 @@ function ModuleCreator(props) {
     }
 
     useEffect(() => {
+
+        const getAuthorization = async () => {
+            const token = localStorage.getItem("token");
+
+            const res = await fetch(config.server_url + config.paths.getIsCreator, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "token": token
+                })
+            })
+
+            const data = await res.json()
+
+            if (data.newToken !== undefined)
+                localStorage.setItem("token", data.newToken)
+
+            if (data.message !== "yes") {
+                props.history.push('/dashboard');
+            }
+
+        }
         getAuthorization();
 
-        const pathname = window.location.pathname.split('/') //returns the current path
+        const pathname = window.location.pathname.split('/') 
         setCourseID(pathname[pathname.length - 1])
-    }, []);
+    }, [props]);
 
-    const getAuthorization = async () => {
-        const token = localStorage.getItem("token");
-
-        const res = await fetch(config.server_url + config.paths.getIsCreator, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                "token": token
-            })
-        })
-
-        const data = await res.json()
-
-        if (data.newToken != undefined)
-            localStorage.setItem("token", data.newToken)
-
-        if (data.message !== "yes") {
-            props.history.push('/dashboard');
-        }
-
-    }
 
     const onSubmit = (e) => {
         e.preventDefault()
         if (!title || !type || !description) {
-            alert('Please enter all required fields')
+            setDialogText('Please enter all required fields')
+            handleOpenDialog()
             return
         }
+        // Following if else cases check the module type and process the data accordingly 
 
         if (type === 'Quiz' && JSON.parse(sessionStorage.getItem('quiz')) !== null) {
-            console.log('works for Quiz')
-            var quiz = []
 
-            quiz = JSON.parse(sessionStorage.getItem("quiz"))
-            sessionStorage.clear()
-            onFinish({ title, type, description, quiz })
+            if (gradeToPass < 1) {
+                setDialogText("The number of correct answers required must be greater than 0.")
+                handleOpenDialog()
+            } else {
+
+                var quiz = []
+
+                quiz = JSON.parse(sessionStorage.getItem("quiz"))
+                if (gradeToPass > quiz.length) {
+                    setDialogText("The number of correct answers required to pass the quiz cannot be greater than the total number of questions.")
+                    handleOpenDialog()
+                } else {
+                    sessionStorage.clear()
+                    onFinish({ title, type, description, quiz })
+                }
+            }
         } else if (type === 'PDF' && pdf !== null && typeof (pdf) !== 'undefined') {
             if (isPDF(pdf.name) === false) {
-                alert("File must be a PDF")
+                setDialogText("File must be a PDF")
+                handleOpenDialog()
             } else {
-                console.log('works for PDF')
                 onFinish({ title, type, description, pdf })
             }
         } else if (type === 'File' && file !== null && typeof (file) !== 'undefined') {
-            console.log('works for File')
             onFinish({ title, type, description, file })
 
         } else if (type === 'Video' && video !== null && typeof (video) !== 'undefined') {
             if (isVideo(video.name) === false) {
-                alert("File must be a video")
+                setDialogText("File must be a Video")
+                handleOpenDialog()
             } else {
-                console.log('works for Video')
                 onFinish({ title, type, description, video })
             }
         } else if (type === 'Text') {
-            console.log('works for Text')
             onFinish({ title, type, description })
         }
         else {
-            alert("Please upload file for the respective module type selected.")
+            setDialogText("Please upload file for the respective module type selected.")
+            handleOpenDialog()
         }
     }
 
-    // We ideally want to redirect to module manager page, but we do not have that yet
     const cancel = () => {
+        sessionStorage.clear()
         props.history.push(`/course/${courseID}`)
     }
 
@@ -161,9 +180,16 @@ function ModuleCreator(props) {
 
                 const data = await res.json();
 
-                if (data.newToken != undefined)
+                if (data.newToken !== undefined)
                     localStorage.setItem("token", data.newToken)
 
+                if (data.message === "unauthorized") {
+                    props.history.push('dashboard');
+                } else {
+                    setDialogText("Successfully added Quiz module")
+                    handleOpenDialog()
+                    props.history.push('/course/' + courseID)
+                }
 
             } else if (module.type === "PDF") {
 
@@ -176,16 +202,11 @@ function ModuleCreator(props) {
 
                 // Input contains non-alphanumeric values so we must alert the user to rename the file 
                 if (isValid === false) {
-                    alert('Invalid file type. Please upload a PDF for which name is alphanumeric and has no spaces.')
+                    setDialogText('Invalid file type. Please upload a PDF for which name is alphanumeric and has no spaces.')
+                    handleOpenDialog()
                     return
                 }
 
-                // if (data.message === "unauthorized") {
-                //     props.history.push('dashboard');
-                // } else {
-                //     alert("Successfully added PDF module")
-                //     props.history.push('/course/' + courseID)
-                // }
 
                 const newFile = new FormData();
                 newFile.append('file', module.pdf)
@@ -201,12 +222,12 @@ function ModuleCreator(props) {
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "urlFile": `http://localhost:4000/` + courseID + `/moduleData/${module.pdf.name}`
+                        "urlFile": `/` + courseID + `/moduleData/${module.pdf.name}`
                     })
                 })
                 const data = await res.json()
 
-                if (data.newToken != undefined)
+                if (data.newToken !== undefined)
                     localStorage.setItem("token", data.newToken)
 
                 if (data.message === "unauthorized") {
@@ -221,10 +242,12 @@ function ModuleCreator(props) {
                     if (data2.message === "unauthorized") {
                         props.history.push('dashboard');
                     } else if (data2.status === 'Success') {
-                        alert("Successfully added PDF module")
+                        setDialogText("Successfully added PDF module")
+                        handleOpenDialog()
                         props.history.push('/course/' + courseID)
-                    } //else need to do something, not sure what rn
-                } else { // this is to check if there are errors not being addressed already
+                    } 
+                } else { 
+                    // this is to check if there are errors not being addressed already
                     console.log(data)
                 }
             } else if (module.type === "File") {
@@ -232,13 +255,14 @@ function ModuleCreator(props) {
                 const fileTypePath = module.file.name.split('.')
 
                 // Grabbing the actual filename minus extension so that we can validate alphanumeric inputs
-                var val = fileTypePath[fileTypePath.length - 2];
+                val = fileTypePath[fileTypePath.length - 2];
                 var RegEx = /[^0-9a-z]/i;
-                var isValid = !(RegEx.test(val));
+                isValid = !(RegEx.test(val));
 
                 // Input contains non-alphanumeric values so we must alert the user to rename the file 
                 if (isValid === false) {
-                    alert('Invalid file type. Please upload a file for which name is alphanumeric and has no spaces.')
+                    setDialogText('Invalid file type. Please upload a PDF for which name is alphanumeric and has no spaces.')
+                    handleOpenDialog()
                     return
                 }
 
@@ -256,12 +280,12 @@ function ModuleCreator(props) {
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "urlFile": `http://localhost:4000/` + courseID + `/moduleData/${module.file.name}`
+                        "urlFile": `/` + courseID + `/moduleData/${module.file.name}`
                     })
                 })
                 const data = await res.json()
 
-                if (data.newToken != undefined)
+                if (data.newToken !== undefined)
                     localStorage.setItem("token", data.newToken)
 
                 if (data.message === "unauthorized") {
@@ -276,25 +300,26 @@ function ModuleCreator(props) {
                     if (data2.message === "unauthorized") {
                         props.history.push('dashboard');
                     } else if (data2.status === 'Success') {
-                        alert("Successfully added File module")
+                        setDialogText("Successfully added File module")
+                        handleOpenDialog()
                         props.history.push('/course/' + courseID)
-                    } //else need to do something, not sure what rn
-                } else { // this is to check if there are errors not being addressed already
+                    } 
+                } else { 
+                    // this is to check if there are errors not being addressed already
                     console.log(data)
                 }
             } else if (module.type === "Video") {
 
                 const videoTypePath = module.video.name.split('.')
-
                 // Grabbing the actual filename minus extension so that we can validate alphanumeric inputs
-                var val = videoTypePath[videoTypePath.length - 2];
-
+                val = videoTypePath[videoTypePath.length - 2];
                 var RegEx = /[^0-9a-z]/i;
-                var isValid = !(RegEx.test(val));
+                isValid = !(RegEx.test(val));
 
                 // Input contains non-alphanumeric values so we must alert the user to rename the file 
                 if (isValid === false) {
-                    alert('Invalid file type. Please upload a video for which name is alphanumeric and has no spaces.')
+                    setDialogText('Invalid file type. Please upload a PDF for which name is alphanumeric and has no spaces.')
+                    handleOpenDialog()
                     return
                 }
 
@@ -311,14 +336,14 @@ function ModuleCreator(props) {
                         "title": module.title,
                         'description': module.description,
                         'type': module.type,
-                        "urlVideo": `http://localhost:4000/` + courseID + `/moduleData/${module.video.name}`,
+                        "urlVideo": `/` + courseID + `/moduleData/${module.video.name}`,
                     })
 
                 })
 
                 const data = await res.json()
 
-                if (data.newToken != undefined)
+                if (data.newToken !== undefined)
                     localStorage.setItem("token", data.newToken)
 
                 if (data.message === "unauthorized") {
@@ -333,10 +358,12 @@ function ModuleCreator(props) {
                     if (data2.message === "unauthorized") {
                         props.history.push('dashboard');
                     } else if (data2.status === 'Success') {
-                        alert("Successfully added video module")
+                        setDialogText("Successfully added Video module")
+                        handleOpenDialog()
                         props.history.push('/course/' + courseID)
-                    } //else need to do something, not sure what rn
-                } else { // this is to check if there are errors not being addressed already
+                    } 
+                } else { 
+                    // this is to check if there are errors not being addressed already
                     console.log(data)
                 }
             } else if (module.type === 'Text') {
@@ -351,17 +378,19 @@ function ModuleCreator(props) {
 
                 const data = await res.json()
 
-                if (data.newToken != undefined)
+                if (data.newToken !== undefined)
                     localStorage.setItem("token", data.newToken)
 
 
                 if (data.message === "unauthorized") {
                     props.history.push('dashboard');
                 } else if (data.message === undefined) {
-                    alert('worked')
+                    setDialogText('Successfully Created Text Module')
+                    handleOpenDialog()
                     props.history.push('/course/' + courseID)
                 }
-                else { // this is to check if there are errors not being addressed already
+                else { 
+                    // this is to check if there are errors not being addressed already
                     console.log(data)
                 }
             }
@@ -411,7 +440,6 @@ function ModuleCreator(props) {
                                     <Select
                                         native
                                         value={type}
-                                        //onChange={handleChange}
                                         name="Module Type"
                                         inputProps={{
                                             id: 'category-native-required',
@@ -431,7 +459,7 @@ function ModuleCreator(props) {
                                 {type === 'PDF' && <PDFCreator setPDF={setPDF} pdf={pdf} />}
                                 {type === 'Video' && <VideoCreator setVideo={setVideo} video={video} />}
                                 {type === 'File' && <FileCreator setFile={setFile} file={file} />}
-                                {type == 'Quiz' && <QuizCreator gradeToPass={gradeToPass} setGradeToPass={setGradeToPass} />}
+                                {type === 'Quiz' && <QuizCreator gradeToPass={gradeToPass} setGradeToPass={setGradeToPass} />}
 
                             </div>
                             <Container className={classes.buttonGroup}>
@@ -446,6 +474,14 @@ function ModuleCreator(props) {
                     </form>
                 </div>
             </Container>
+            <DialogComponent
+                open={openDialog}
+                text={dialogText}
+                onClose={handleCloseDialog}
+                buttons={[
+                    { text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog }
+                ]}
+            />
         </div>
     )
 }

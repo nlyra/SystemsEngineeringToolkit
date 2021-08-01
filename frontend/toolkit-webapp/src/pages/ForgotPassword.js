@@ -1,31 +1,45 @@
 import React, { useState } from 'react'
-import { Button, Container, TextField, makeStyles, Typography, Paper, Box } from '@material-ui/core'
+import { Button, TextField, Typography, Paper, Box } from '@material-ui/core'
 import Avatar from '@material-ui/core/Avatar'
 import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import config from '../config.json'
 import resetPassStyle from '../styles/registerStyle'
-// import '../css/Registration.css';
 import TopNavBar from '../components/TopNavBar'
 import videoSource from '../img/PEOSTRI.mp4'
+import dialogStyles from '../styles/dialogStyle'
+import DialogComponent from '../components/DialogComponent'
 
 const ForgotPassword = (props) => {
     
     const [email, setEmail] = useState('')
+    const [dialogText, setDialogText] = useState('')
+    const [openDialog, setOpenDialog] = useState(false);
+    const dialogClasses = dialogStyles()
     const classes = resetPassStyle()
+
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    }
 
     const onLogin = (e) => {
         props.history.push('login');
     }
 
+    // Function that handles sending the email link to the user, if they are registered
     const resetLink = async (e) => {
         e.preventDefault()
 
-        if(email == '')
+        if(email === '')
         {
-            alert('Please enter an email in the text box.')
+            setDialogText("Please enter an email in the text box.")
+            handleOpenDialog()
             return
         }
 
+        // Passing email value to backend functions, to send user the email 
         const res = await fetch(config.server_url + config.paths.forgotPassword, {
             method: 'POST',
             headers: {
@@ -35,8 +49,15 @@ const ForgotPassword = (props) => {
         })
 
         const data = await res.json()
-        alert('An email has been sent to the email listed, if registered.')
-        setEmail('')
+
+        // API call succeeded, so let the user know an email has been sent 
+        if(data.message === 'Success!')
+        {
+            setDialogText("An email has been sent to the email listed, if registered.")
+            handleOpenDialog()
+            setEmail('')
+
+        }
 
     }
 
@@ -81,6 +102,14 @@ const ForgotPassword = (props) => {
                         </Paper>
                     </form>
                 </div>
+                <DialogComponent
+                    open={openDialog}
+                    text={dialogText}
+                    onClose={handleCloseDialog}
+                    buttons={[
+                        { text: "Ok", style: dialogClasses.dialogButton1, onClick: handleCloseDialog }
+                    ]}
+                />
             </div>
         </>
     )
