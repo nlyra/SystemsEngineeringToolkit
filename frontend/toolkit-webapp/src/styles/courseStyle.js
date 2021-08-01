@@ -5,6 +5,9 @@ const dashStyles = makeStyles((theme) => ({
     display: 'flex',
     position: 'relative'
   },
+  div2: {
+    width: "100%"
+  },
 
   title: {
     fontSize: '50px',
@@ -75,7 +78,7 @@ const dashStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end'
   },
 
-  enableButton:{
+  enableButton: {
     display: 'flex',
     justifyContent: 'flex-end',
     paddingBottom: '1vh',
@@ -93,7 +96,7 @@ const dashStyles = makeStyles((theme) => ({
     },
   },
 
-  addButton:{
+  addButton: {
     marginLeft: '2vw'
   },
 

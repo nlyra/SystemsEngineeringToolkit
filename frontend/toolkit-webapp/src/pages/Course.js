@@ -230,7 +230,7 @@ const Course = (props) => {
     <div className={classes.div}>
       <TopNavBar >
       </TopNavBar>
-      <div>
+      <div className={classes.div2}>
       <Grid container direction="column" className={classes.div}>
         <div maxWidth>
           <Grid item alignItems="center" xs={12}>
