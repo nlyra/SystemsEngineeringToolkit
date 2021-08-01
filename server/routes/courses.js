@@ -222,9 +222,9 @@ router.post('/myCoursesInfo', VerifyToken, async (req, res) => {
 
 
     if (req.body.newToken != undefined)
-      res.json({ "courses": courses, "newToken": req.body.newToken });
+      res.json({ "courses": courses, "completedCourses": user.completedCourses, "newToken": req.body.newToken });
     else
-      res.json({ "courses": courses });
+      res.json({ "courses": courses, "completedCourses": user.completedCourses});
 
   } catch (e) {
     console.log(e);

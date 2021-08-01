@@ -9,7 +9,7 @@ const MyCourses = (props) => {
     const [courses, setCourses] = useState([])
     const [openDialog, setOpenDialog] = useState(false);
     const [courseID, setCourseID] = useState('')
-
+    const [coursesCompleted, setCoursesCompleted] = useState([])
     const classes = myCoursesStyles()
 
     // function that will run when page is loaded
@@ -42,7 +42,9 @@ const MyCourses = (props) => {
         if (data.message === undefined) {
 
             setCourses(data.courses);
-
+            setCoursesCompleted(data.completedCourses)
+            // console.log('hello')
+             console.log(coursesCompleted.includes("60cb5e29a389673be19a9148"))
 
         } else if (data.message === "wrong token") {
             localStorage.removeItem('token');
@@ -134,12 +136,13 @@ const MyCourses = (props) => {
                                     <Grid container spacing={3}>
                                     </Grid>
                                 </Card>
-
-                                <div className={classes.buttonDiv}>
-                                    <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick={() => { handleOpenDialog(course._id) }}>
-                                        Disenroll Course
-                                    </Button>
-                                </div>
+                                { !coursesCompleted.includes(course._id) &&
+                                    <div className={classes.buttonDiv}>
+                                        <Button type='submit' className={classes.removeButton} size="small" color="inherit" variant="contained" onClick={() => { handleOpenDialog(course._id) }}>
+                                            Disenroll Course
+                                        </Button>
+                                    </div>
+                                }
 
                                 {openDialog === true ?
 
